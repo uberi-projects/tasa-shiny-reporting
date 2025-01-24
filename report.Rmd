@@ -54,7 +54,7 @@ head(pressure)
 
 #### Header 4
 
-![](calico.jpg){width=100px height=100px}
+![](TASA_logo.png){width=250px height=100px}
 
 
 ##### Header 5
