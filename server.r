@@ -1,0 +1,23 @@
+## server.R
+
+# Define server ---------------------------
+server <- function(input, output) {
+    output$report <- downloadHandler(
+        filename = "report.docx",
+        content = function(file) {
+            src <- normalizePath(c("report.Rmd", "report_template.docx", "calico.jpg"))
+
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c("report.Rmd", "report_template.docx", "calico.jpg"), overwrite = TRUE)
+
+            out <- render(
+                "report.Rmd",
+                params = list(user_name = input$name),
+                envir = new.env(parent = globalenv())
+            )
+
+            file.rename(out, file)
+        }
+    )
+}
