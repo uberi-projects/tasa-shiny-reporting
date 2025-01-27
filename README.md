@@ -14,7 +14,7 @@ By following the contributor guidelines outlined in this section, we can ensure 
 
 ## 🔄 Workflow
 
-Please follow the described workflow below when working on the project. 
+Please follow the described workflow below when working on the project. With the exception of supervisors, all merges into main must be done with a pull request.
 
 1. **Choose an Issue**:
     - Check the **Issues** tab on the GitHub repository to select an issue which you can contribute to.
@@ -72,7 +72,7 @@ Please test all code changes locally before commiting. Do not create a pull requ
 
 If you notice a bug or otherwise unsatisfactory feature on the app, feel free to open an issue. Clearly explain the issue in the description and with a descriptive issue title, and tag the issue appropriately. Please include enough detail so that others are able to reproduce the issue, which will be necessary to resolve the problem. 
 
-All contributors are expected to do their best to ensure any code submitted through a pull request is of high quality, and follows the standards of this document.
+All contributors are expected to do their best to ensure any code submitted through a pull request is of high quality, and follows the standards of this document. Supervisors are expected to validate CSS and HTML code using [w3](https://validator.w3.org/) prior to merging in major frontend changes. Supervisors are also excepted to communicate with project clients to ensure that the project quality is in line with established expectations between the parties at regular intervals.
 
 ### AI Use
 
