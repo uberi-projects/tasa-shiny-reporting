@@ -42,6 +42,10 @@ Occasionally, contributors will receive tasks from their supervisor outside of t
 
 ## 🎨 Styling
 
+### General Guidelines
+
+Code should be clear, tidy, and concise where possible, with meaningful variable names and inline notes to explain code where necessary. Sections of a file should be indicated by meaningful section titles. Personal notes should not be included in project files, but should be written in a file labelled notes.txt. notes.txt will only be accessible on your personal computer and will not appear to other contributors or in the project codebase on GitHub. 
+
 ### R
 
 When performing statistical analyses, creating visualizations for outputs or internal reports, or creating a Shiny app, R should be preferably used. R code should be formatted in scripts (.R) according to the [tidyverse style guide](https://style.tidyverse.org/index.html), established by Hadley Wickham. To make this process easier, the packages [styler](https://styler.r-lib.org/) and [lintr](https://github.com/r-lib/lintr) may be used to automatically style according to this standard. Please read the tidyverse style guide to familiarize with conventions for file names, variable and function names, syntax, formatting, and more. 
@@ -53,7 +57,6 @@ Python code should be formatted according to [PEP 8 style guide standards](https
 ### Git
 
 Git branches should be titled all lowercase, with words separated by dashes. Where possible, standard sub-directory and file names should be used, for example .server and .ui R files for creating a shiny app, instead of project-specific names. Title commits, issues, and pull requests in present tense. Refer to [GitHub's best practices](https://docs.github.com/en/contributing/writing-for-github-docs/best-practices-for-github-docs) for more details.
-
 
 ## 🌟 Management Structure
 
