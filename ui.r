@@ -76,7 +76,8 @@ ui <- dashboardPage(
     ),
     dashboardBody(
         use_theme(theme_dashboard),
-        includeCSS("www/custom.css"),
+        includeCSS("www/modern-normalize.css"),
+        includeCSS("www/styles.css"),
         tabItems(
             tabItem(
                 "home",
