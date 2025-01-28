@@ -12,56 +12,12 @@ source("theme.r")
 # Define ui ---------------------------
 ui <- dashboardPage(
     dashboardHeader(
-        title = tags$a(
-            img(
-                src = "images/TASA_logo_full_white.png", height = "50px"
-            )
-        ),
-        tags$li(
-            class = "dropdown",
-            actionBttn(
-                inputId = "button_header_1",
-                label = "Source Code",
-                style = "jelly",
-                color = "primary"
-            ),
-            tags$style(HTML("
-    #button_header_1 {
-      margin-right: 20px;
-    }
-  "))
-        ),
-        tags$li(
-            class = "dropdown",
-            actionBttn(
-                inputId = "button_header_2",
-                label = "Manual",
-                style = "jelly",
-                color = "primary"
-            ),
-            tags$style(HTML("
-    #button_header_2 {
-      margin-right: 20px;
-    }
-  "))
-        ),
-        tags$li(
-            class = "dropdown",
-            actionBttn(
-                inputId = "button_header_3",
-                label = "Datasheet Templates",
-                style = "jelly",
-                color = "primary"
-            ),
-            tags$style(HTML("
-    #button_header_3 {
-      margin-right: 20px;
-    }
-  "))
-        )
+        title = tags$a(href = "#home", tags$img(src = "images/TASA_logo_full_white.png", alt = "Logo")),
+        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_1", label = "Source Code", style = "jelly", color = "primary")),
+        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_2", label = "Manual", style = "jelly", color = "primary")),
+        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_3", label = "Datasheet Templates", style = "jelly", color = "primary"))
     ),
     dashboardSidebar(
-        tags$style(".left-side, .main-sidebar {padding-top: 80px}"),
         sidebarMenu(
             id = "tabs",
             menuItem("Home", tabName = "home", icon = icon("home")),
@@ -83,8 +39,7 @@ ui <- dashboardPage(
                 "home",
                 h1("Demo Report", align = "left"),
                 textInput("name", "Your Name: ", value = ""),
-                downloadButton("report", "Generate report"),
-                column(width = 12, div(style = "height: 20px;"))
+                downloadButton("report", "Generate Report")
             )
         )
     )
