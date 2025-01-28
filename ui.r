@@ -2,45 +2,29 @@
 
 # Load packages ---------------------------
 library(shiny)
-library(shinydashboard)
-library(shinyWidgets)
 library(rmarkdown)
 
-# Source code ---------------------------
-source("theme.r")
-
 # Define ui ---------------------------
-ui <- dashboardPage(
-    dashboardHeader(
-        title = tags$a(href = "#home", tags$img(src = "images/TASA_logo_full_white.png", alt = "Logo")),
-        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_1", label = "Source Code", style = "jelly", color = "primary")),
-        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_2", label = "Manual", style = "jelly", color = "primary")),
-        tags$li(class = "dropdown header_button", actionBttn(inputId = "button_header_3", label = "Datasheet Templates", style = "jelly", color = "primary"))
+ui <- fluidPage(
+    includeCSS("www/modern-normalize.css"),
+    includeCSS("www/styles.css"),
+    img(class = "background-image", src = "images/ocean.jpg", style = "position: absolute"),
+    div(class = "top-border"),
+    div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
+    div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo")),
+    div(
+        class = "nav-bar",
+        a(href = "#Home", "Home"),
+        a(href = "#Report", "Create Report"),
+        a(href = "#Manual", "Manual"),
+        a(href = "#Template", "Data Templates"),
+        a(href = "#Source", "Source Code")
     ),
-    dashboardSidebar(
-        sidebarMenu(
-            id = "tabs",
-            menuItem("Home", tabName = "home", icon = icon("home")),
-            menuItem("Create Reports",
-                icon = icon("list-alt"),
-                menuSubItem("Queen Conch", tabName = "conch"),
-                menuSubItem("LAMP", tabName = "lamp"),
-                menuSubItem("SPAG", tabName = "spag"),
-                menuSubItem("Fisheries Catch", tabName = "catch")
-            )
-        )
-    ),
-    dashboardBody(
-        use_theme(theme_dashboard),
-        includeCSS("www/modern-normalize.css"),
-        includeCSS("www/styles.css"),
-        tabItems(
-            tabItem(
-                "home",
-                h1("Demo Report", align = "left"),
-                textInput("name", "Your Name: ", value = ""),
-                downloadButton("report", "Generate Report")
-            )
-        )
+    div(
+        class = "content-box",
+        p("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim."),
+        p("Sed lectus. Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa. Sed cursus turpis vitae tortor. Donec posuere vulputate arcu. Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Donec elit libero, sodales nec, volutpat a, suscipit non, turpis. Nullam sagittis. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Ut varius tincidunt libero. Phasellus dolor. Maecenas vestibulum mollis"),
+        p("Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae nemo ad alias dicta ab laudantium soluta natus veniam quo velit
+        quisquam non eligendi reprehenderit architecto accusamus nulla, quam quod vero.")
     )
 )

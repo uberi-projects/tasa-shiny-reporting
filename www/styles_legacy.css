@@ -1,0 +1,54 @@
+/* Import Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* Typography */
+* {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+h1 {
+  margin-top: 0px;
+}
+
+/* Header Styles */
+.main-header {
+  max-height: 80px;
+}
+.main-header .logo {
+  height: 80px;
+  padding: 10px 0px 0px 0px;
+}
+.main-header .sidebar-toggle {
+  height: 80px;
+  font-size: x-large;
+  padding-top: 25px;
+}
+.navbar {
+  min-height: 80px;
+}
+.main-header .dropdown {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+.main-header img {
+  height: 65px;
+}
+
+/* Sidebar Styles */
+.left-side,
+.main-sidebar {
+  padding-top: 80px;
+}
+
+/* Button Styles */
+.header_button {
+  margin-right: 20px;
+}
+.bttn-jelly {
+  font-size: 18px;
+}
+.bttn-jelly.bttn-primary {
+  background-color: #2ca0d9;
+}

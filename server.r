@@ -1,7 +1,8 @@
 ## server.R
 
 # Define server ---------------------------
-server <- function(input, output) {
+server <- function(input, output, session) {
+    # Create demo report
     output$report <- downloadHandler(
         filename = "report.docx",
         content = function(file) {

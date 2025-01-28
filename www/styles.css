@@ -1,3 +1,19 @@
+/* styles.css */
+
+/* Background */
+.container-fluid {
+  padding: 0px;
+}
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
 /* Import Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
@@ -7,48 +23,66 @@
   font-weight: 400;
   font-style: normal;
 }
-h1 {
-  margin-top: 0px;
+body {
+  font-size: 1.5rem;
 }
 
 /* Header Styles */
-.main-header {
-  max-height: 80px;
+.top-border {
+  background-color: #00a09a;
+  width: 100%;
+  height: 20px;
 }
-.main-header .logo {
-  height: 80px;
-  padding: 10px 0px 0px 0px;
-}
-.main-header .sidebar-toggle {
-  height: 80px;
-  font-size: x-large;
-  padding-top: 25px;
-}
-.navbar {
-  min-height: 80px;
-}
-.main-header .dropdown {
-  height: 80px;
+.header-title {
+  color: #00a09a;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
-.main-header img {
-  height: 65px;
+.h1,
+h1 {
+  font-size: 1.5rem;
+}
+.header-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
 }
 
-/* Sidebar Styles */
-.left-side,
-.main-sidebar {
-  padding-top: 80px;
+/* Navbar Styles */
+.nav-bar {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00a09a;
 }
-
-/* Button Styles */
-.header_button {
-  margin-right: 20px;
+.nav-bar a {
+  font-size: 1.5rem;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
 }
-.bttn-jelly {
-  font-size: 18px;
-}
-.bttn-jelly.bttn-primary {
+.nav-bar a:hover {
   background-color: #2ca0d9;
+  text-decoration: none;
+}
+
+/* Content Styles */
+.content-box {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  margin-top: 30px;
+  padding: 30px;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0) 5%,
+    rgba(255, 255, 255, 1) 40%,
+    rgba(255, 255, 255, 1) 60%,
+    rgba(255, 255, 255, 0) 95%
+  );
 }
