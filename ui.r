@@ -16,9 +16,9 @@ ui <- navbarPage(
         class = "header", checked = NA,
         list(
             tags$img(class = "background-image", src = "images/ocean.jpg"),
-            tags$div(class = "top-border"),
-            tags$div(class = "header-title", tags$h1("Turneffe Reef-Monitoring Data Reporting Tool")),
-            tags$div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo"))
+            tags$div(class = "top-border fixed-header"),
+            tags$div(class = "header-title fixed-header", tags$h1("Turneffe Reef-Monitoring Data Reporting Tool")),
+            tags$div(img(class = "header-logo fixed-header", src = "images/TASA_logo_full_color.png", alt = "Logo"))
         )
     ),
     tabPanel(
