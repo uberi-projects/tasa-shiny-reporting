@@ -2,8 +2,8 @@
 
 # Define server ---------------------------
 server <- function(input, output, session) {
- # Create demo report
-    output$report <- downloadHandler(
+    # Create demo report
+    output$report_test <- downloadHandler(
         filename = "report.docx",
         content = function(file) {
             src <- normalizePath(c("report.Rmd", "report_template.docx", "www/images/TASA_logo.png"))

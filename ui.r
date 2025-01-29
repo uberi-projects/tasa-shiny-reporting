@@ -4,6 +4,9 @@
 library(shiny)
 library(rmarkdown)
 
+# Source Objects ---------------------------
+dummy_text <- paste(readLines("text/dummy.txt"))
+
 # Define ui ---------------------------
 ui <- navbarPage(
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
@@ -18,41 +21,95 @@ ui <- navbarPage(
             tags$div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo"))
         )
     ),
-    tabPanel("Home", tags$div(class = "content-box", tags$p("Welcome to Home"))),
+    tabPanel(
+        "Home",
+        tags$div(
+            class = "first-body-element content-box",
+            p("Home Page Content"),
+            p(dummy_text[1]),
+            p(dummy_text[2])
+        ),
+        tags$div(
+            class = "content-box",
+            p(dummy_text[3])
+        )
+    ),
     navbarMenu(
         "Create Reports",
         tabPanel(
             "Fisheries Catch",
             tags$div(
-                class = "content-box",
-                tags$p("Fisheries Catch Reports")
+                class = "first-body-element content-box",
+                p("Fisheries Catch Reports"),
+                p(dummy_text[1])
+            ),
+            tags$div(
+                class = "generator-box",
+                tags$div(
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                tags$div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report_test", "Generate report")
+                )
             )
         ),
         tabPanel(
             "LAMP",
             tags$div(
-                class = "content-box",
-                tags$p("LAMP Reports")
+                class = "first-body-element content-box",
+                p("LAMP Reports"),
+                p(dummy_text[2])
+            ),
+            tags$div(
+                class = "generator-box",
+                tags$div(
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                tags$div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report", "Generate report")
+                )
             )
         ),
         tabPanel(
             "SPAG",
             tags$div(
-                class = "content-box",
-                tags$p("SPAG Reports")
+                class = "first-body-element content-box",
+                p("SPAG Reports"),
+                p(dummy_text[3])
+            ),
+            tags$div(
+                class = "generator-box",
+                tags$div(
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                tags$div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report", "Generate report")
+                )
             )
         )
     ),
     tabPanel("Manual", tags$div(
-        class = "content-box",
-        tags$p("Manual")
+        class = "first-body-element content-box",
+        p("Manual"),
+        p(dummy_text[4])
     )),
     tabPanel("Data Templates", tags$div(
-        class = "content-box",
-        tags$p("Templates")
+        class = "first-body-element content-box",
+        p("Templates"),
+        p(dummy_text[1])
     )),
     tabPanel("Source Code", tags$div(
-        class = "content-box",
-        tags$p("Source Code")
+        class = "first-body-element content-box",
+        p("Source Code"),
+        p(dummy_text[2])
     ))
 )

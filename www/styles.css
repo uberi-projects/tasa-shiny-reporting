@@ -1,8 +1,13 @@
 /* styles.css */
 
-/* Global Settings */
+/* General Settings */
 * {
   box-sizing: border-box;
+}
+body {
+  height: 200vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 /* Background */
@@ -19,10 +24,8 @@
   z-index: -1;
 }
 
-/* Import Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
 /* Typography */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 * {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
@@ -35,32 +38,41 @@ body {
 /* Header Styles */
 .top-border {
   background-color: #00a09a;
-  width: 100%;
+  width: 110vw;
   height: 20px;
+  top: 0;
+  position: fixed;
 }
 .header-title {
   color: #00a09a;
+  position: fixed;
+  top: 3.5vh;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100vw;
 }
 .h1,
 h1 {
   font-size: 1.5rem;
 }
 .header-logo {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20%;
+  position: fixed;
+  top: 7vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
 }
 
 /* Navbar Styles */
 .navbar-default {
-  width: 100%;
-  margin-top: 180px;
-  position: fixed;
-  display: flex;
+  width: 100vw;
+  top: 20vh;
   justify-content: center;
   align-items: center;
   background-color: #00a09a;
@@ -68,6 +80,7 @@ h1 {
   flex-wrap: wrap;
   left: 0;
   right: 0;
+  position: fixed;
 }
 .navbar-header {
   display: none;
@@ -75,32 +88,66 @@ h1 {
 .navbar-default .navbar-nav li a {
   font-size: 1.5rem;
   color: white;
+  background-color: #00a09a;
   padding: 15px 20px;
   text-align: center;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav li a:hover,
 .navbar-default .navbar-nav > .active > a:focus,
-.navbar-default .navbar-nav > .active > a:hover {
+.navbar-default .navbar-nav > .active > a:hover,
+.li .dropdown .open {
   background-color: #2ca0d9;
   color: white;
   text-decoration: none;
 }
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+  color: white;
+  background-color: #2ca0d9;
+}
+.navbar-default .navbar-nav {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+.navbar-nav > li > .dropdown-menu {
+  padding: 0;
+}
 
 /* Content Styles */
+.first-body-element {
+  margin-top: 30vh;
+}
 .content-box {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 70%;
-  margin-top: 30px;
-  padding: 30px;
+  padding: 65px 10px;
   background: rgb(255, 255, 255);
   background: linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0) 5%,
+    rgba(255, 255, 255, 0) 3%,
     rgba(255, 255, 255, 1) 40%,
     rgba(255, 255, 255, 1) 60%,
-    rgba(255, 255, 255, 0) 95%
+    rgba(255, 255, 255, 0) 97%
   );
+}
+.generator-box {
+  display: flex;
+  justify-content: center;
+  padding-top: 35px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  background: transparent;
+}
+.input-box {
+  background-color: #00a09a;
+  color: white;
+  padding: 10px;
+  width: 40%;
+  margin: 0px 30px;
 }
