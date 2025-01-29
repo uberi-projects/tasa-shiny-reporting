@@ -1,5 +1,10 @@
 /* styles.css */
 
+/* Global Settings */
+* {
+  box-sizing: border-box;
+}
+
 /* Background */
 .container-fluid {
   padding: 0px;
@@ -51,21 +56,34 @@ h1 {
 }
 
 /* Navbar Styles */
-.nav-bar {
-  flex-wrap: wrap;
+.navbar-default {
+  width: 100%;
+  margin-top: 180px;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #00a09a;
+  border-color: transparent;
+  flex-wrap: wrap;
+  left: 0;
+  right: 0;
 }
-.nav-bar a {
+.navbar-header {
+  display: none;
+}
+.navbar-default .navbar-nav li a {
   font-size: 1.5rem;
   color: white;
   padding: 15px 20px;
   text-align: center;
 }
-.nav-bar a:hover {
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav li a:hover,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover {
   background-color: #2ca0d9;
+  color: white;
   text-decoration: none;
 }
 
