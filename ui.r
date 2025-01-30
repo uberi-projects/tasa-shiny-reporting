@@ -10,26 +10,26 @@ dummy_text <- paste(readLines("text/dummy.txt"))
 # Define ui ---------------------------
 ui <- navbarPage(
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
-    header = tags$div(
+    header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
         class = "header", checked = NA,
         list(
-            tags$img(class = "background-image", src = "images/ocean.jpg"),
-            tags$div(class = "top-border fixed-header"),
-            tags$div(class = "header-title fixed-header", tags$h1("Turneffe Reef-Monitoring Data Reporting Tool")),
-            tags$div(img(class = "header-logo fixed-header", src = "images/TASA_logo_full_color.png", alt = "Logo"))
+            img(class = "background-image", src = "images/ocean.jpg"),
+            div(class = "top-border fixed-header"),
+            div(class = "header-title fixed-header", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
+            div(img(class = "header-logo fixed-header", src = "images/TASA_logo_full_color.png", alt = "Logo"))
         )
     ),
     tabPanel(
         "Home",
-        tags$div(
+        div(
             class = "first-body-element content-box",
             p("Home Page Content"),
             p(dummy_text[1]),
             p(dummy_text[2])
         ),
-        tags$div(
+        div(
             class = "content-box",
             p(dummy_text[3])
         )
@@ -38,18 +38,18 @@ ui <- navbarPage(
         "Create Reports",
         tabPanel(
             "Fisheries Catch",
-            tags$div(
+            div(
                 class = "first-body-element content-box",
                 p("Fisheries Catch Reports"),
                 p(dummy_text[1])
             ),
-            tags$div(
+            div(
                 class = "generator-box",
-                tags$div(
+                div(
                     class = "input-box",
                     p("Upload Data")
                 ),
-                tags$div(
+                div(
                     class = "input-box",
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report_test", "Generate report")
@@ -58,18 +58,18 @@ ui <- navbarPage(
         ),
         tabPanel(
             "LAMP",
-            tags$div(
+            div(
                 class = "first-body-element content-box",
                 p("LAMP Reports"),
                 p(dummy_text[2])
             ),
-            tags$div(
+            div(
                 class = "generator-box",
-                tags$div(
+                div(
                     class = "input-box",
                     p("Upload Data")
                 ),
-                tags$div(
+                div(
                     class = "input-box",
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report", "Generate report")
@@ -78,18 +78,18 @@ ui <- navbarPage(
         ),
         tabPanel(
             "SPAG",
-            tags$div(
+            div(
                 class = "first-body-element content-box",
                 p("SPAG Reports"),
                 p(dummy_text[3])
             ),
-            tags$div(
+            div(
                 class = "generator-box",
-                tags$div(
+                div(
                     class = "input-box",
                     p("Upload Data")
                 ),
-                tags$div(
+                div(
                     class = "input-box",
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report", "Generate report")
@@ -97,17 +97,17 @@ ui <- navbarPage(
             )
         )
     ),
-    tabPanel("Manual", tags$div(
+    tabPanel("Manual", div(
         class = "first-body-element content-box",
         p("Manual"),
         p(dummy_text[4])
     )),
-    tabPanel("Data Templates", tags$div(
+    tabPanel("Data Templates", div(
         class = "first-body-element content-box",
         p("Templates"),
         p(dummy_text[1])
     )),
-    tabPanel("Source Code", tags$div(
+    tabPanel("Source Code", div(
         class = "first-body-element content-box",
         p("Source Code"),
         p(dummy_text[2])
