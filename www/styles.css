@@ -1,24 +1,11 @@
 /* styles.css */
 
-/* General Settings */
+/* Body Styles */
 body {
-  height: 200vh;
   width: 100vw;
-  overflow: hidden;
-}
-
-/* Background */
-.container-fluid {
-  padding: 0px;
-}
-.background-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
+  background: url(images/ocean.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 /* Typography */
@@ -116,6 +103,9 @@ h3 {
 /* Content Styles */
 .first-body-element {
   margin-top: 30vh;
+}
+.container-fluid {
+  padding: 0px;
 }
 .content-container {
   display: flex;

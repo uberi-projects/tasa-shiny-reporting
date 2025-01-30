@@ -15,7 +15,6 @@ ui <- navbarPage(
         includeCSS("www/styles.css"),
         class = "header", checked = NA,
         list(
-            img(class = "background-image", src = "images/ocean.jpg"),
             div(class = "top-border fixed-header"),
             div(class = "header-title fixed-header", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
             div(img(class = "header-logo fixed-header", src = "images/TASA_logo_full_color.png", alt = "Logo"))
