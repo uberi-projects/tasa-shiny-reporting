@@ -53,16 +53,13 @@ ui <- navbarPage(
             div(
                 class = "content-container",
                 div(
-                    class = "generator-box",
-                    div(
-                        class = "input-box",
-                        p("Upload Data")
-                    ),
-                    div(
-                        class = "input-box",
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report_test", "Generate report")
-                    )
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report_test", "Generate report")
                 )
             )
         ),
@@ -79,16 +76,13 @@ ui <- navbarPage(
             div(
                 class = "content-container",
                 div(
-                    class = "generator-box",
-                    div(
-                        class = "input-box",
-                        p("Upload Data")
-                    ),
-                    div(
-                        class = "input-box",
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report2", "Generate report")
-                    )
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report2", "Generate report")
                 )
             )
         ),
@@ -105,16 +99,13 @@ ui <- navbarPage(
             div(
                 class = "content-container",
                 div(
-                    class = "generator-box",
-                    div(
-                        class = "input-box",
-                        p("Upload Data")
-                    ),
-                    div(
-                        class = "input-box",
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report3", "Generate report")
-                    )
+                    class = "input-box",
+                    p("Upload Data")
+                ),
+                div(
+                    class = "input-box",
+                    textInput("name", "Your Name: ", value = ""),
+                    downloadButton("report3", "Generate report")
                 )
             )
         )

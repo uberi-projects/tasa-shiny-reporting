@@ -135,19 +135,10 @@ h2 {
 .content-box-fullpage {
   width: 50%;
 }
-.generator-box {
-  display: flex;
-  justify-content: center;
-  padding-top: 35px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 70%;
-  background: transparent;
-}
 .input-box {
   background-color: #00a09a;
   color: white;
   padding: 10px;
-  width: 40%;
+  width: 30%;
   margin: 0px 30px;
 }
