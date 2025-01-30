@@ -24,12 +24,19 @@ body {
 /* Typography */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", "Arial", "Helvetica", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 body {
   font-size: 1.5rem;
+  line-height: 1.5;
+  width: 70ch;
+}
+.h1,
+h1 {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
 }
 
 /* Header Styles */
@@ -51,10 +58,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-}
-.h1,
-h1 {
-  font-size: 1.5rem;
 }
 .header-logo {
   top: 7vh;
@@ -100,6 +103,9 @@ h1 {
 /* Content Styles */
 .first-body-element {
   margin-top: 30vh;
+}
+.content-container {
+  display: flexbox;
 }
 .content-box {
   display: block;
