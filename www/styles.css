@@ -105,14 +105,15 @@ h1 {
   margin-top: 30vh;
 }
 .content-container {
-  display: flexbox;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
 }
-.content-box {
+.content-box,
+.content-box-fullpage {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 70%;
   padding: 65px 10px;
+  margin: 0 25px;
   background: rgb(255, 255, 255);
   background: linear-gradient(
     rgba(255, 255, 255, 0) 3%,
@@ -120,6 +121,12 @@ h1 {
     rgba(255, 255, 255, 1) 60%,
     rgba(255, 255, 255, 0) 97%
   );
+}
+.content-box {
+  width: 30%;
+}
+.content-box-fullpage {
+  width: 50%;
 }
 .generator-box {
   display: flex;

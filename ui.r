@@ -24,14 +24,18 @@ ui <- navbarPage(
     tabPanel(
         "Home",
         div(
-            class = "first-body-element content-box",
-            p("Home Page Content"),
-            p(dummy_text[1]),
-            p(dummy_text[2])
-        ),
-        div(
-            class = "content-box",
-            p(dummy_text[3])
+            class = "first-body-element content-container",
+            div(
+                class = "content-box",
+                p()("Welcome"),
+                p(dummy_text[1]),
+                p(dummy_text[2])
+            ),
+            div(
+                class = "content-box",
+                p("Using this App"),
+                p(dummy_text[3])
+            )
         )
     ),
     navbarMenu(
@@ -39,77 +43,113 @@ ui <- navbarPage(
         tabPanel(
             "Fisheries Catch",
             div(
-                class = "first-body-element content-box",
-                p("Fisheries Catch Reports"),
-                p(dummy_text[1])
+                class = "first-body-element content-container",
+                div(
+                    class = "content-box-fullpage",
+                    p("Fisheries Catch Reports"),
+                    p(dummy_text[1])
+                )
             ),
             div(
-                class = "generator-box",
+                class = "content-container",
                 div(
-                    class = "input-box",
-                    p("Upload Data")
-                ),
-                div(
-                    class = "input-box",
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report_test", "Generate report")
+                    class = "generator-box",
+                    div(
+                        class = "input-box",
+                        p("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report_test", "Generate report")
+                    )
                 )
             )
         ),
         tabPanel(
             "LAMP",
             div(
-                class = "first-body-element content-box",
-                p("LAMP Reports"),
-                p(dummy_text[2])
+                class = "first-body-element content-container",
+                div(
+                    class = "content-box-fullpage",
+                    p("LAMP Reports"),
+                    p(dummy_text[2])
+                )
             ),
             div(
-                class = "generator-box",
+                class = "content-container",
                 div(
-                    class = "input-box",
-                    p("Upload Data")
-                ),
-                div(
-                    class = "input-box",
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report", "Generate report")
+                    class = "generator-box",
+                    div(
+                        class = "input-box",
+                        p("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report2", "Generate report")
+                    )
                 )
             )
         ),
         tabPanel(
             "SPAG",
             div(
-                class = "first-body-element content-box",
-                p("SPAG Reports"),
-                p(dummy_text[3])
+                class = "first-body-element content-container",
+                div(
+                    class = "content-box-fullpage",
+                    p("SPAG Reports"),
+                    p(dummy_text[3])
+                )
             ),
             div(
-                class = "generator-box",
+                class = "content-container",
                 div(
-                    class = "input-box",
-                    p("Upload Data")
-                ),
-                div(
-                    class = "input-box",
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report", "Generate report")
+                    class = "generator-box",
+                    div(
+                        class = "input-box",
+                        p("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report3", "Generate report")
+                    )
                 )
             )
         )
     ),
-    tabPanel("Manual", div(
-        class = "first-body-element content-box",
-        p("Manual"),
-        p(dummy_text[4])
-    )),
-    tabPanel("Data Templates", div(
-        class = "first-body-element content-box",
-        p("Templates"),
-        p(dummy_text[1])
-    )),
-    tabPanel("Source Code", div(
-        class = "first-body-element content-box",
-        p("Source Code"),
-        p(dummy_text[2])
-    ))
+    tabPanel(
+        "Manual",
+        div(
+            class = "first-body-element content-container",
+            div(
+                class = "content-box-fullpage",
+                p("Manual"),
+                p(dummy_text[4])
+            )
+        )
+    ),
+    tabPanel(
+        "Data Templates",
+        div(
+            class = "first-body-element content-container",
+            div(
+                class = "content-box-fullpage",
+                p("Data Templates"),
+                p(dummy_text[3])
+            )
+        )
+    ),
+    tabPanel(
+        "Source Code",
+        div(
+            class = "first-body-element content-container",
+            div(
+                class = "content-box-fullpage",
+                p("Source Code"),
+                p(dummy_text[3])
+            )
+        )
+    )
 )
