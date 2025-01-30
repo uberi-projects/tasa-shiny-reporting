@@ -148,3 +148,24 @@ h3 {
   width: 30%;
   margin: 15px 30px;
 }
+
+/* Media Queries */
+@media only screen and (max-width: 765px) {
+  .first-body-element {
+    margin-top: 45vh;
+  }
+  .header-logo {
+    top: 8.5vh;
+    width: 200px;
+  }
+  .content-box {
+    width: 80%;
+  }
+  .content-box-fullpage {
+    width: 80%;
+  }
+  .content-container {
+    flex-direction: column;
+    align-content: center;
+  }
+}

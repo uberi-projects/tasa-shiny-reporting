@@ -134,16 +134,5 @@ ui <- navbarPage(
                 p(dummy_text[3])
             )
         )
-    ),
-    tabPanel(
-        "Source Code",
-        div(
-            class = "first-body-element content-container",
-            div(
-                class = "content-box-fullpage",
-                h2("Source Code"),
-                p(dummy_text[3])
-            )
-        )
     )
 )
