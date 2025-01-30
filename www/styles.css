@@ -38,6 +38,13 @@ h1 {
   font-size: 1.5rem;
   letter-spacing: 1px;
 }
+.h2,
+h2 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
 
 /* Header Styles */
 .fixed-header {

@@ -27,13 +27,13 @@ ui <- navbarPage(
             class = "first-body-element content-container",
             div(
                 class = "content-box",
-                p()("Welcome"),
+                h2("Welcome"),
                 p(dummy_text[1]),
                 p(dummy_text[2])
             ),
             div(
                 class = "content-box",
-                p("Using this App"),
+                h2("Using this App"),
                 p(dummy_text[3])
             )
         )
@@ -46,7 +46,7 @@ ui <- navbarPage(
                 class = "first-body-element content-container",
                 div(
                     class = "content-box-fullpage",
-                    p("Fisheries Catch Reports"),
+                    h2("Fisheries Catch Reports"),
                     p(dummy_text[1])
                 )
             ),
@@ -72,7 +72,7 @@ ui <- navbarPage(
                 class = "first-body-element content-container",
                 div(
                     class = "content-box-fullpage",
-                    p("LAMP Reports"),
+                    h2("LAMP Reports"),
                     p(dummy_text[2])
                 )
             ),
@@ -98,7 +98,7 @@ ui <- navbarPage(
                 class = "first-body-element content-container",
                 div(
                     class = "content-box-fullpage",
-                    p("SPAG Reports"),
+                    h2("SPAG Reports"),
                     p(dummy_text[3])
                 )
             ),
@@ -125,7 +125,7 @@ ui <- navbarPage(
             class = "first-body-element content-container",
             div(
                 class = "content-box-fullpage",
-                p("Manual"),
+                h2("Manual"),
                 p(dummy_text[4])
             )
         )
@@ -136,7 +136,7 @@ ui <- navbarPage(
             class = "first-body-element content-container",
             div(
                 class = "content-box-fullpage",
-                p("Data Templates"),
+                h2("Data Templates"),
                 p(dummy_text[3])
             )
         )
@@ -147,7 +147,7 @@ ui <- navbarPage(
             class = "first-body-element content-container",
             div(
                 class = "content-box-fullpage",
-                p("Source Code"),
+                h2("Source Code"),
                 p(dummy_text[3])
             )
         )
