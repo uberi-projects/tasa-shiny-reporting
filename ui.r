@@ -54,10 +54,11 @@ ui <- navbarPage(
                 class = "content-container",
                 div(
                     class = "input-box",
-                    p("Upload Data")
+                    h3("Upload Data")
                 ),
                 div(
                     class = "input-box",
+                    h3("Customize Report"),
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report_test", "Generate report")
                 )
@@ -77,10 +78,11 @@ ui <- navbarPage(
                 class = "content-container",
                 div(
                     class = "input-box",
-                    p("Upload Data")
+                    h3("Upload Data")
                 ),
                 div(
                     class = "input-box",
+                    h3("Customize Report"),
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report2", "Generate report")
                 )
@@ -100,10 +102,11 @@ ui <- navbarPage(
                 class = "content-container",
                 div(
                     class = "input-box",
-                    p("Upload Data")
+                    h3("Upload Data")
                 ),
                 div(
                     class = "input-box",
+                    h3("Customize Report"),
                     textInput("name", "Your Name: ", value = ""),
                     downloadButton("report3", "Generate report")
                 )
