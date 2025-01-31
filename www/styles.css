@@ -1,0 +1,165 @@
+/* styles.css */
+
+/* Define variables */
+:root {
+  --color-primary: #00a09a;
+  --color-secondary: #2ca0d9;
+}
+
+/* Body */
+body {
+  background-attachment: fixed;
+  background-image: url(images/ocean.jpg);
+  background-size: cover;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Typography */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+* {
+  font-family: "Poppins", "Arial", "Helvetica", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+}
+body {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  width: 70ch;
+}
+h1 {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  text-align: center;
+}
+h3 {
+  font-size: 2rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Header styles */
+.header-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+}
+.border-top {
+  background-color: var(--color-primary);
+  height: 20px;
+  width: 100;
+}
+.header-title {
+  color: var(--color-primary);
+}
+.header-logo {
+  width: 300px;
+}
+
+/* Navbar styles */
+.navbar-default {
+  background-color: var(--color-primary);
+  border: 0;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 180px;
+  width: 100vw;
+}
+.navbar-header {
+  display: none;
+}
+.navbar-default .navbar-nav li a {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 1.5rem;
+  padding: 15px 20px;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav li a:hover {
+  background-color: var(--color-secondary);
+  color: white;
+  text-decoration: none;
+}
+.navbar-nav > li > .dropdown-menu {
+  padding: 0;
+}
+
+/* Content styles */
+.content-container {
+  position: absolute;
+  top: 250px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+.content-box,
+.content-box-fullpage {
+  height: fit-content;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0) 3%,
+    rgba(255, 255, 255, 1) 40%,
+    rgba(255, 255, 255, 1) 60%,
+    rgba(255, 255, 255, 0) 97%
+  );
+  display: block;
+  margin: 0 25px;
+  padding: 65px 10px;
+  position: relative;
+}
+.content-box {
+  width: 30%;
+}
+.content-box-fullpage {
+  width: 50%;
+}
+.input-box {
+  background-color: var(--color-primary);
+  color: white;
+  margin: 15px 30px;
+  padding: 10px;
+  width: 30%;
+  height: fit-content;
+}
+
+/* Data upload button */
+.progress-bar {
+  background-color: var(--color-secondary);
+}
+
+/* Media queries */
+@media only screen and (max-width: 765px) {
+  .content-box {
+    width: 80%;
+  }
+  .content-box-fullpage {
+    width: 80%;
+  }
+  .content-container {
+    top: 400px;
+    align-content: center;
+    flex-direction: column;
+  }
+  .input-box {
+    width: 80%;
+  }
+}
