@@ -58,6 +58,10 @@ Python code should be formatted according to [PEP 8 style guide standards](https
 
 Git branches should be titled all lowercase, with words separated by dashes. Where possible, standard sub-directory and file names should be used, for example .server and .ui R files for creating a shiny app, instead of project-specific names. Title commits, issues, and pull requests in present tense. Refer to [GitHub's best practices](https://docs.github.com/en/contributing/writing-for-github-docs/best-practices-for-github-docs) for more details.
 
+### CSS
+
+CSS styling should be contained within .css stylesheets. Elements should be named using kebab-case. Rules within a ruleset should be organized alphabetically, and rulesets should be logically ordered within a stylesheet with headers. 
+
 ## 🌟 Management Structure
 
 This project is being funded by Turneffe Atoll Sustainability Association (TASA). TASA staff are collectively considered the client, while the University of Belize Environmental Research Institute (UB-ERI) represents the contractor. The project's scope, terms of agreement, and payment structure are explicitly outlined in the contract between the client and the contractor. By contributing to this project, you acknowledge your understanding of the conditions under which you are contributing.
