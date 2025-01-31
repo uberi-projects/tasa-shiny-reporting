@@ -15,15 +15,18 @@ ui <- navbarPage(
         includeCSS("www/styles.css"),
         class = "header", checked = NA,
         list(
-            div(class = "top-border fixed-header"),
-            div(class = "header-title fixed-header", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
-            div(img(class = "header-logo fixed-header", src = "images/TASA_logo_full_color.png", alt = "Logo"))
+            div(
+                class = "header-container",
+                div(class = "border-top"),
+                div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
+                div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo"))
+            )
         )
     ),
     tabPanel(
         "Home",
         div(
-            class = "first-body-element content-container",
+            class = "content-container",
             div(
                 class = "content-box",
                 h2("Welcome"),
@@ -42,72 +45,72 @@ ui <- navbarPage(
         tabPanel(
             "Fisheries Catch",
             div(
-                class = "first-body-element content-container",
+                class = "content-container",
                 div(
                     class = "content-box-fullpage",
                     h2("Fisheries Catch Reports"),
                     p(dummy_text[1])
-                )
-            ),
-            div(
-                class = "content-container",
-                div(
-                    class = "input-box",
-                    h3("Upload Data")
                 ),
                 div(
-                    class = "input-box",
-                    h3("Customize Report"),
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report_test", "Generate report")
+                    class = "content-container",
+                    div(
+                        class = "input-box",
+                        h3("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        h3("Customize Report"),
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report_test", "Generate report")
+                    )
                 )
             )
         ),
         tabPanel(
             "LAMP",
             div(
-                class = "first-body-element content-container",
+                class = "content-container",
                 div(
                     class = "content-box-fullpage",
                     h2("LAMP Reports"),
                     p(dummy_text[2])
-                )
-            ),
-            div(
-                class = "content-container",
-                div(
-                    class = "input-box",
-                    h3("Upload Data")
                 ),
                 div(
-                    class = "input-box",
-                    h3("Customize Report"),
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report2", "Generate report")
+                    class = "content-container",
+                    div(
+                        class = "input-box",
+                        h3("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        h3("Customize Report"),
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report2", "Generate report")
+                    )
                 )
             )
         ),
         tabPanel(
             "SPAG",
             div(
-                class = "first-body-element content-container",
+                class = "content-container",
                 div(
                     class = "content-box-fullpage",
                     h2("SPAG Reports"),
                     p(dummy_text[3])
-                )
-            ),
-            div(
-                class = "content-container",
-                div(
-                    class = "input-box",
-                    h3("Upload Data")
                 ),
                 div(
-                    class = "input-box",
-                    h3("Customize Report"),
-                    textInput("name", "Your Name: ", value = ""),
-                    downloadButton("report3", "Generate report")
+                    class = "content-container",
+                    div(
+                        class = "input-box",
+                        h3("Upload Data")
+                    ),
+                    div(
+                        class = "input-box",
+                        h3("Customize Report"),
+                        textInput("name", "Your Name: ", value = ""),
+                        downloadButton("report3", "Generate report")
+                    )
                 )
             )
         )
@@ -115,7 +118,7 @@ ui <- navbarPage(
     tabPanel(
         "Manual",
         div(
-            class = "first-body-element content-container",
+            class = "content-container",
             div(
                 class = "content-box-fullpage",
                 h2("Manual"),
@@ -126,7 +129,7 @@ ui <- navbarPage(
     tabPanel(
         "Data Templates",
         div(
-            class = "first-body-element content-container",
+            class = "content-container",
             div(
                 class = "content-box-fullpage",
                 h2("Data Templates"),
