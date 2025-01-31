@@ -141,6 +141,11 @@ h3 {
   height: fit-content;
 }
 
+/* Data upload button */
+.progress-bar {
+  background-color: var(--color-secondary);
+}
+
 /* Media queries */
 @media only screen and (max-width: 765px) {
   .content-box {

@@ -55,7 +55,17 @@ ui <- navbarPage(
                     class = "content-container",
                     div(
                         class = "input-box",
-                        h3("Upload Data")
+                        h3("Upload Data"),
+                        fileInput(
+                            "catch_data",
+                            "Choose CSV File",
+                            multiple = FALSE,
+                            accept = c(
+                                "text/csv",
+                                "text/comma-separated-values,text/plain",
+                                ".csv"
+                            )
+                        )
                     ),
                     div(
                         class = "input-box",
@@ -79,7 +89,17 @@ ui <- navbarPage(
                     class = "content-container",
                     div(
                         class = "input-box",
-                        h3("Upload Data")
+                        h3("Upload Data"),
+                        fileInput(
+                            "lamp_data",
+                            "Choose CSV File",
+                            multiple = FALSE,
+                            accept = c(
+                                "text/csv",
+                                "text/comma-separated-values,text/plain",
+                                ".csv"
+                            )
+                        )
                     ),
                     div(
                         class = "input-box",
@@ -103,7 +123,17 @@ ui <- navbarPage(
                     class = "content-container",
                     div(
                         class = "input-box",
-                        h3("Upload Data")
+                        h3("Upload Data"),
+                        fileInput(
+                            "spag_data",
+                            "Choose CSV File",
+                            multiple = FALSE,
+                            accept = c(
+                                "text/csv",
+                                "text/comma-separated-values,text/plain",
+                                ".csv"
+                            )
+                        )
                     ),
                     div(
                         class = "input-box",

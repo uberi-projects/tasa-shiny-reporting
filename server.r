@@ -2,6 +2,12 @@
 
 # Define server ---------------------------
 server <- function(input, output, session) {
+    # Upload datafile from system
+    df <- reactive({
+        req(input$catch_data)
+        read.csv(input$catch_data$datapath)
+    })
+
     # Create demo report
     output$report_test <- downloadHandler(
         filename = "report.docx",
@@ -14,7 +20,7 @@ server <- function(input, output, session) {
 
             out <- render(
                 "report.Rmd",
-                params = list(user_name = input$name),
+                params = list(user_name = input$name, datafile = df()),
                 envir = new.env(parent = globalenv())
             )
 

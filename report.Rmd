@@ -8,6 +8,7 @@ output:
       style: table_template
 params:
   user_name: "Unknown"
+  datafile: pressure
 ---
 
 ```{r setup, include=FALSE}
@@ -48,7 +49,7 @@ Text
 _Table name_
 ```{r table, echo = FALSE}
 # show table
-head(pressure)
+head(params$datafile)
 ```
 
 
