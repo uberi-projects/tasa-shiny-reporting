@@ -9,7 +9,7 @@ dummy_text <- paste(readLines("text/dummy.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
-    title = "New Demo Title",
+    title = "New TASA Demo Title",
     header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
@@ -18,7 +18,7 @@ ui <- navbarPage(
             div(
                 class = "header-container",
                 div(class = "border-top"),
-                div(class = "header-title", h1("New Demo Title")),
+                div(class = "header-title", h1("New TASA Demo Title")),
                 div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo"))
             )
         )
