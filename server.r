@@ -20,7 +20,7 @@ server <- function(input, output, session) {
     output$report_catch_1per <- downloadHandler(
         filename = "report_catch_1per.docx",
         content = function(file) {
-            src <- normalizePath(c("report_catch_1per.Rmd", "report_template.docx", "www/images/TASA_logo_full_color.png"))
+            src <- normalizePath(c("reports/report_catch_1per.Rmd", "reports/report_template.docx", "www/images/TASA_logo_full_color.png"))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c("report_catch_1per.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
@@ -35,7 +35,7 @@ server <- function(input, output, session) {
     output$report_lamp_1per <- downloadHandler(
         filename = "report_lamp_1per.docx",
         content = function(file) {
-            src <- normalizePath(c("report_lamp_1per.Rmd", "report_template.docx", "www/images/TASA_logo_full_color.png"))
+            src <- normalizePath(c("reports/report_lamp_1per.Rmd", "reports/report_template.docx", "www/images/TASA_logo_full_color.png"))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c("report_lamp_1per.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
@@ -50,7 +50,7 @@ server <- function(input, output, session) {
     output$report_spag_1per <- downloadHandler(
         filename = "report_spag_1per.docx",
         content = function(file) {
-            src <- normalizePath(c("report_spag_1per.Rmd", "report_template.docx", "www/images/TASA_logo_full_color.png"))
+            src <- normalizePath(c("reports/report_spag_1per.Rmd", "reports/report_template.docx", "www/images/TASA_logo_full_color.png"))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c("report_spag_1per.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
