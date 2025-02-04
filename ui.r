@@ -57,7 +57,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Upload Data"),
                         fileInput(
-                            "catch_data",
+                            "upload_catch_1per",
                             "Choose CSV File",
                             multiple = FALSE,
                             accept = c(
@@ -71,7 +71,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Customize Report"),
                         textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report_test", "Generate report")
+                        downloadButton("report_catch_1per", "Generate report")
                     )
                 )
             )
@@ -91,7 +91,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Upload Data"),
                         fileInput(
-                            "lamp_data",
+                            "upload_lamp_1per",
                             "Choose CSV File",
                             multiple = FALSE,
                             accept = c(
@@ -105,7 +105,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Customize Report"),
                         textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report2", "Generate report")
+                        downloadButton("report_lamp_1per", "Generate report")
                     )
                 )
             )
@@ -125,7 +125,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Upload Data"),
                         fileInput(
-                            "spag_data",
+                            "upload_spag_1per",
                             "Choose CSV File",
                             multiple = FALSE,
                             accept = c(
@@ -139,7 +139,7 @@ ui <- navbarPage(
                         class = "input-box",
                         h3("Customize Report"),
                         textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report3", "Generate report")
+                        downloadButton("report_spag_1per", "Generate report")
                     )
                 )
             )
