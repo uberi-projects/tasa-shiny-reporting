@@ -6,6 +6,7 @@ library(rmarkdown)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
+home_text <- paste(readLines("text/home.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -30,13 +31,18 @@ ui <- navbarPage(
             div(
                 class = "content-box",
                 h2("Welcome"),
-                p(dummy_text[1]),
-                p(dummy_text[2])
+                p(home_text[1]),
+                br(),
+                p(home_text[2])
             ),
             div(
                 class = "content-box",
                 h2("Using this App"),
-                p(dummy_text[3])
+                p(home_text[3]),
+                br(),
+                p(home_text[4]),
+                br(),
+                p(home_text[5])
             )
         )
     ),
