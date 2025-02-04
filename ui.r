@@ -9,7 +9,7 @@ dummy_text <- paste(readLines("text/dummy.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
-    title = "Turneffe Reef-Monitoring Data Reporting Tool",
+    title = "New Demo Title",
     header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
