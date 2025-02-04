@@ -55,7 +55,7 @@ head(params$datafile)
 
 #### Header 4
 
-![](TASA_logo.png){width=250px height=100px}
+![](TASA_logo_full_color.png){width=250px}
 
 
 ##### Header 5

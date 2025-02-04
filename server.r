@@ -12,11 +12,11 @@ server <- function(input, output, session) {
     output$report_test <- downloadHandler(
         filename = "report.docx",
         content = function(file) {
-            src <- normalizePath(c("report.Rmd", "report_template.docx", "www/images/TASA_logo.png"))
+            src <- normalizePath(c("report.Rmd", "report_template.docx", "www/images/TASA_logo_full_color.png"))
 
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c("report.Rmd", "report_template.docx", "TASA_logo.png"), overwrite = TRUE)
+            file.copy(src, c("report.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
 
             out <- render(
                 "report.Rmd",
