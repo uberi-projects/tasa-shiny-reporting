@@ -4,6 +4,7 @@
 :root {
   --color-primary: #00a09a;
   --color-secondary: #2ca0d9;
+  --color-alert: #ffa400;
 }
 
 /* Body */
@@ -62,6 +63,12 @@ h3 {
   font-weight: bold;
   padding: 3px 8px;
   border-radius: 3px;
+}
+.input-list {
+  font-size: 2rem;
+}
+.input-list-content {
+  padding: 10px 60px 0;
 }
 
 /* Header styles */
@@ -130,7 +137,6 @@ h3 {
   justify-content: center;
   justify-items: center;
   width: 100vw;
-  overflow-y: auto;
   padding: 0 100px;
 }
 .grid-home,
@@ -167,7 +173,19 @@ h3 {
   padding-left: 10%;
 }
 
-/* Data upload button */
+/* Input buttons */
 .progress-bar {
   background-color: var(--color-secondary);
+}
+.pretty .state label:before {
+  border-color: white;
+  background-color: white;
+}
+.pretty input:checked ~ .state.p-primary label:after,
+.pretty.p-toggle .state.p-primary label:after {
+  background-color: var(--color-alert) !important;
+}
+.shiny-input-checkboxgroup label ~ .shiny-options-group,
+.shiny-input-radiogroup label ~ .shiny-options-group {
+  font-size: 1.5rem;
 }

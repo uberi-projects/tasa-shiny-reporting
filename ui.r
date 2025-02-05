@@ -2,6 +2,7 @@
 
 # Load packages ---------------------------
 library(shiny)
+library(shinyWidgets)
 library(rmarkdown)
 
 # Source Objects ---------------------------
@@ -105,14 +106,33 @@ ui <- navbarPage(
                     div(
                         class = "input-box",
                         h3("Upload Data"),
-                        fileInput(
-                            "upload_lamp_1per",
-                            "Choose CSV File",
-                            multiple = FALSE,
-                            accept = c(
-                                "text/csv",
-                                "text/comma-separated-values,text/plain",
-                                ".csv"
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Choose Datatype",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Choose CSV File",
+                                div(
+                                    class = "input-list-content",
+                                    fileInput(
+                                        "upload_lamp_1per",
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        accept = c(
+                                            "text/csv",
+                                            "text/comma-separated-values,text/plain",
+                                            ".csv"
+                                        )
+                                    )
+                                )
                             )
                         )
                     ),
@@ -139,14 +159,33 @@ ui <- navbarPage(
                     div(
                         class = "input-box",
                         h3("Upload Data"),
-                        fileInput(
-                            "upload_spag_1per",
-                            "Choose CSV File",
-                            multiple = FALSE,
-                            accept = c(
-                                "text/csv",
-                                "text/comma-separated-values,text/plain",
-                                ".csv"
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Choose Datatype",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser Data"), selected = "Visual Census", inline = TRUE)
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Choose CSV File",
+                                div(
+                                    class = "input-list-content",
+                                    fileInput(
+                                        "upload_spag_1per",
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        accept = c(
+                                            "text/csv",
+                                            "text/comma-separated-values,text/plain",
+                                            ".csv"
+                                        )
+                                    )
+                                )
                             )
                         )
                     ),
