@@ -10,6 +10,7 @@ library(rmarkdown)
 dummy_text <- paste(readLines("text/dummy.txt"))
 home_text <- paste(readLines("text/home.txt"))
 datatype_text <- paste(readLines("text/datatype.txt"))
+link_text <- paste(readLines("text/links.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -24,7 +25,7 @@ ui <- navbarPage(
                 class = "header-container",
                 div(class = "border-top"),
                 div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
-                div(img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo"))
+                div(a(href = link_text[1], target = "_blank", img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo")))
             )
         )
     ),
