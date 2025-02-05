@@ -5,6 +5,7 @@
   --color-primary: #00a09a;
   --color-secondary: #2ca0d9;
   --color-alert: #ffa400;
+  --color-success: #00ae46;
 }
 
 /* Body */
@@ -192,4 +193,9 @@ label {
 .shiny-input-checkboxgroup label ~ .shiny-options-group,
 .shiny-input-radiogroup label ~ .shiny-options-group {
   font-size: 1.5rem;
+}
+
+/* Alerts */
+.sweet-alert button {
+  background-color: var(--color-success) !important;
 }

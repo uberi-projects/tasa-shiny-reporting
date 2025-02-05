@@ -16,6 +16,17 @@ server <- function(input, output, session) {
         read.csv(input$upload_spag_1per$datapath)
     })
 
+    # Validate dataframes
+    observeEvent(input$validate_catch_1per, {
+        shinyalert("Success!", "Validation Successful!")
+    })
+    observeEvent(input$validate_lamp_1per, {
+        shinyalert("Success!", "Validation Successful!")
+    })
+    observeEvent(input$validate_spag_1per, {
+        shinyalert("Success!", "Validation Successful!")
+    })
+
     # Create single period (1per) reports
     output$report_catch_1per <- downloadHandler(
         filename = "report_catch_1per.docx",

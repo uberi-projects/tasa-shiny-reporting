@@ -3,6 +3,7 @@
 # Load packages ---------------------------
 library(shiny)
 library(shinyWidgets)
+library(shinyalert)
 library(rmarkdown)
 
 # Source Objects ---------------------------
@@ -16,6 +17,7 @@ ui <- navbarPage(
     header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
+        useShinyalert(),
         class = "header", checked = NA,
         list(
             div(
