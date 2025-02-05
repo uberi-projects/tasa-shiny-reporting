@@ -5,6 +5,7 @@
   --color-primary: #00a09a;
   --color-secondary: #2ca0d9;
   --color-alert: #ffa400;
+  --color-success: #00ae46;
 }
 
 /* Body */
@@ -42,6 +43,10 @@ h3 {
   font-size: 2rem;
   margin-top: 0.5rem;
   text-align: center;
+}
+label {
+  font-weight: normal;
+  font-size: 1.5rem;
 }
 
 /* Lists */
@@ -137,7 +142,7 @@ h3 {
   justify-content: center;
   justify-items: center;
   width: 100vw;
-  padding: 0 120px;
+  padding: 0 15vw;
 }
 .grid-home,
 .grid-generator {
@@ -188,4 +193,9 @@ h3 {
 .shiny-input-checkboxgroup label ~ .shiny-options-group,
 .shiny-input-radiogroup label ~ .shiny-options-group {
   font-size: 1.5rem;
+}
+
+/* Alerts */
+.sweet-alert button {
+  background-color: var(--color-success) !important;
 }
