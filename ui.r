@@ -8,6 +8,7 @@ library(rmarkdown)
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
 home_text <- paste(readLines("text/home.txt"))
+datatype_text <- paste(readLines("text/datatype.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -65,7 +66,7 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Fisheries Catch Reports"),
-                    p(dummy_text[1])
+                    p(datatype_text[1])
                 ),
                 div(
                     class = "content-container-grid grid-generator",
@@ -99,7 +100,7 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("LAMP Reports"),
-                    p(dummy_text[2])
+                    p(datatype_text[2])
                 ),
                 div(
                     class = "content-container-grid grid-generator",
@@ -152,7 +153,7 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("SPAG Reports"),
-                    p(dummy_text[3])
+                    p(datatype_text[3])
                 ),
                 div(
                     class = "content-container-grid grid-generator",

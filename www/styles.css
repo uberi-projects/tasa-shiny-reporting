@@ -137,7 +137,7 @@ h3 {
   justify-content: center;
   justify-items: center;
   width: 100vw;
-  padding: 0 100px;
+  padding: 0 120px;
 }
 .grid-home,
 .grid-generator {
@@ -160,13 +160,13 @@ h3 {
   margin: 0 25px;
   padding: 65px 10px;
   position: relative;
-  width: 90%;
+  width: 95%;
 }
 .input-box {
   background-color: var(--color-primary);
   color: white;
   padding: 10px;
-  width: 80%;
+  width: 90%;
 }
 .pipeline {
   max-width: 90%;
