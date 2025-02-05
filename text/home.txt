@@ -1,0 +1,9 @@
+Thank you for accessing the Turneffe Reef-Monitoring Data Reporting Tool. This tool is intended for use by Turneffe Atoll Sustainability Association (TASA) authorized staff to create standard reports from reef monitoring data. Use of this tool will improve the efficiency of the ‘data to reporting’ pipeline for TASA, allowing reports to be released promptly after data collection. 
+Creation of this app was made possible by funding from __________ through the project ______. Development for this app spanned January-May 2025. The app software owner is TASA. 
+If you notice any errors or issues with the app, please submit a bug report using the Submit Bug Report button.
+Identify the data you would like to report on. The data should include  1 or more datafiles for a supported reef monitoring datatype.
+Ensure each datafile is appropriately formatted according to the standardized template for that datatype. Templates may be viewed in the Data Templates page for reference. 
+Upload the datafiles on the corresponding Create Reports page for that datatype. A blue progress bar should indicate if the upload is successful. 
+Press the Validate Data button to perform a data validation operation on the upload. 
+Generate the report by entering any required inputs in the righthand content box, and pressing Generate Report. 
+For additional information on using and maintaining this app, please visit the Manual page. 

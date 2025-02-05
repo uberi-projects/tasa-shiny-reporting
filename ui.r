@@ -6,6 +6,7 @@ library(rmarkdown)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
+home_text <- paste(readLines("text/home.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -26,17 +27,31 @@ ui <- navbarPage(
     tabPanel(
         "Home",
         div(
-            class = "content-container",
+            class = "content-container-grid grid-home",
             div(
                 class = "content-box",
                 h2("Welcome"),
-                p(dummy_text[1]),
-                p(dummy_text[2])
+                p(home_text[1]),
+                br(),
+                div(img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
+                br(),
+                p(home_text[2]),
+                br(),
+                p(strong(home_text[3]))
             ),
             div(
                 class = "content-box",
                 h2("Using this App"),
-                p(dummy_text[3])
+                tags$ol(
+                    class = "content-list",
+                    tags$li(home_text[4]),
+                    tags$li(home_text[5]),
+                    tags$li(home_text[6]),
+                    tags$li(home_text[7]),
+                    tags$li(home_text[8])
+                ),
+                br(),
+                p(strong(home_text[9]))
             )
         )
     ),
@@ -45,14 +60,14 @@ ui <- navbarPage(
         tabPanel(
             "Fisheries Catch",
             div(
-                class = "content-container",
+                class = "content-container-grid grid-report",
                 div(
-                    class = "content-box-fullpage",
+                    class = "content-box",
                     h2("Fisheries Catch Reports"),
                     p(dummy_text[1])
                 ),
                 div(
-                    class = "content-container",
+                    class = "content-container-grid grid-generator",
                     div(
                         class = "input-box",
                         h3("Upload Data"),
@@ -79,14 +94,14 @@ ui <- navbarPage(
         tabPanel(
             "LAMP",
             div(
-                class = "content-container",
+                class = "content-container-grid grid-report",
                 div(
-                    class = "content-box-fullpage",
+                    class = "content-box",
                     h2("LAMP Reports"),
                     p(dummy_text[2])
                 ),
                 div(
-                    class = "content-container",
+                    class = "content-container-grid grid-generator",
                     div(
                         class = "input-box",
                         h3("Upload Data"),
@@ -113,14 +128,14 @@ ui <- navbarPage(
         tabPanel(
             "SPAG",
             div(
-                class = "content-container",
+                class = "content-container-grid grid-report",
                 div(
-                    class = "content-box-fullpage",
+                    class = "content-box",
                     h2("SPAG Reports"),
                     p(dummy_text[3])
                 ),
                 div(
-                    class = "content-container",
+                    class = "content-container-grid grid-generator",
                     div(
                         class = "input-box",
                         h3("Upload Data"),
@@ -148,9 +163,9 @@ ui <- navbarPage(
     tabPanel(
         "Manual",
         div(
-            class = "content-container",
+            class = "content-container-grid",
             div(
-                class = "content-box-fullpage",
+                class = "content-box",
                 h2("Manual"),
                 p(dummy_text[4])
             )
@@ -159,9 +174,9 @@ ui <- navbarPage(
     tabPanel(
         "Data Templates",
         div(
-            class = "content-container",
+            class = "content-container-grid",
             div(
-                class = "content-box-fullpage",
+                class = "content-box",
                 h2("Data Templates"),
                 p(dummy_text[3])
             )

@@ -43,6 +43,27 @@ h3 {
   text-align: center;
 }
 
+/* Lists */
+.content-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.content-list li {
+  counter-increment: step-counter;
+  margin-bottom: 10px;
+}
+.content-list li::before {
+  content: counter(step-counter);
+  margin-right: 5px;
+  font-size: 80%;
+  background-color: var(--color-secondary);
+  color: white;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
 /* Header styles */
 .header-container {
   align-items: center;
@@ -99,22 +120,30 @@ h3 {
   padding: 0;
 }
 
-/* Content styles */
-.content-container {
+/* Grids */
+.content-container-grid {
   position: absolute;
   top: 250px;
-  bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
+  display: grid;
   justify-content: center;
+  justify-items: center;
   width: 100vw;
-  height: calc(100vh - 200px);
   overflow-y: auto;
+  padding: 0 100px;
 }
-.content-box,
-.content-box-fullpage {
-  height: fit-content;
+.grid-home,
+.grid-generator {
+  grid-template-columns: 1fr 1fr;
+}
+.grid-report {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* Content styles */
+.content-box {
   background: linear-gradient(
     rgba(255, 255, 255, 0) 3%,
     rgba(255, 255, 255, 1) 40%,
@@ -125,41 +154,20 @@ h3 {
   margin: 0 25px;
   padding: 65px 10px;
   position: relative;
-}
-.content-box {
-  width: 30%;
-}
-.content-box-fullpage {
-  width: 50%;
+  width: 90%;
 }
 .input-box {
   background-color: var(--color-primary);
   color: white;
-  margin: 15px 30px;
   padding: 10px;
-  width: 30%;
-  height: fit-content;
+  width: 80%;
+}
+.pipeline {
+  max-width: 90%;
+  padding-left: 10%;
 }
 
 /* Data upload button */
 .progress-bar {
   background-color: var(--color-secondary);
-}
-
-/* Media queries */
-@media only screen and (max-width: 765px) {
-  .content-box {
-    width: 80%;
-  }
-  .content-box-fullpage {
-    width: 80%;
-  }
-  .content-container {
-    top: 400px;
-    align-content: center;
-    flex-direction: column;
-  }
-  .input-box {
-    width: 80%;
-  }
 }
