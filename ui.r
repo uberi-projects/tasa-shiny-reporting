@@ -38,11 +38,17 @@ ui <- navbarPage(
             div(
                 class = "content-box",
                 h2("Using this App"),
-                p(home_text[3]),
+                p(strong(home_text[3])),
+                tags$ol(
+                    class = "content-list",
+                    tags$li(home_text[4]),
+                    tags$li(home_text[5]),
+                    tags$li(home_text[6]),
+                    tags$li(home_text[7]),
+                    tags$li(home_text[8])
+                ),
                 br(),
-                p(home_text[4]),
-                br(),
-                p(home_text[5])
+                p(strong(home_text[9]))
             )
         )
     ),

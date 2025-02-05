@@ -43,6 +43,29 @@ h3 {
   text-align: center;
 }
 
+/* Lists */
+.content-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.content-list li {
+  counter-increment: step-counter;
+  margin-bottom: 10px;
+}
+
+.content-list li::before {
+  content: counter(step-counter);
+  margin-right: 5px;
+  font-size: 80%;
+  background-color: rgb(0, 200, 200);
+  color: white;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
 /* Header styles */
 .header-container {
   align-items: center;
