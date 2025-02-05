@@ -134,14 +134,42 @@ ui <- navbarPage(
                                         )
                                     )
                                 )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Validate Data",
+                                div(
+                                    class = "input-list-content",
+                                    actionButton("validate_lamp_1per", "Perform Validation")
+                                )
                             )
                         )
                     ),
                     div(
                         class = "input-box",
                         h3("Customize Report"),
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report_lamp_1per", "Generate report")
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Add Inputs",
+                                div(
+                                    class = "input-list-content",
+                                    textInput("name", "Your Name: ", value = ""),
+                                    textInput("name", "Project Lead: ", value = "")
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Generate Report",
+                                div(
+                                    class = "input-list-content",
+                                    downloadButton("report_lamp_1per", "Generate")
+                                )
+                            )
+                        )
                     )
                 )
             )
