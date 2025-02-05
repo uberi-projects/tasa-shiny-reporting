@@ -73,22 +73,60 @@ ui <- navbarPage(
                     div(
                         class = "input-box",
                         h3("Upload Data"),
-                        fileInput(
-                            "upload_catch_1per",
-                            "Choose CSV File",
-                            multiple = FALSE,
-                            accept = c(
-                                "text/csv",
-                                "text/comma-separated-values,text/plain",
-                                ".csv"
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Choose CSV File",
+                                div(
+                                    class = "input-list-content",
+                                    fileInput(
+                                        "upload_catch_1per",
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        accept = c(
+                                            "text/csv",
+                                            "text/comma-separated-values,text/plain",
+                                            ".csv"
+                                        )
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Validate Data",
+                                div(
+                                    class = "input-list-content",
+                                    actionButton("validate_catch_1per", "Perform Validation")
+                                )
                             )
                         )
                     ),
                     div(
                         class = "input-box",
                         h3("Customize Report"),
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report_catch_1per", "Generate report")
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Add Inputs",
+                                div(
+                                    class = "input-list-content",
+                                    textInput("name", "Your Name: ", value = ""),
+                                    textInput("lead", "Project Lead: ", value = "")
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Generate Report",
+                                div(
+                                    class = "input-list-content",
+                                    downloadButton("report_catch_1per", "Generate")
+                                )
+                            )
+                        )
                     )
                 )
             )
@@ -157,7 +195,7 @@ ui <- navbarPage(
                                 div(
                                     class = "input-list-content",
                                     textInput("name", "Your Name: ", value = ""),
-                                    textInput("name", "Project Lead: ", value = "")
+                                    textInput("lead", "Project Lead: ", value = "")
                                 )
                             ),
                             hr(),
@@ -215,14 +253,42 @@ ui <- navbarPage(
                                         )
                                     )
                                 )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Validate Data",
+                                div(
+                                    class = "input-list-content",
+                                    actionButton("validate_spag_1per", "Perform Validation")
+                                )
                             )
                         )
                     ),
                     div(
                         class = "input-box",
                         h3("Customize Report"),
-                        textInput("name", "Your Name: ", value = ""),
-                        downloadButton("report_spag_1per", "Generate report")
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Add Inputs",
+                                div(
+                                    class = "input-list-content",
+                                    textInput("name", "Your Name: ", value = ""),
+                                    textInput("lead", "Project Lead: ", value = "")
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Generate Report",
+                                div(
+                                    class = "input-list-content",
+                                    downloadButton("report_spag_1per", "Generate")
+                                )
+                            )
+                        )
                     )
                 )
             )
