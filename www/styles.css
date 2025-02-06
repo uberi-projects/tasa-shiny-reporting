@@ -129,6 +129,7 @@ label {
   text-decoration: none;
 }
 .navbar-nav > li > .dropdown-menu {
+  border-color: var(--color-primary);
   padding: 0;
 }
 
