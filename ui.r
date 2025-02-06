@@ -18,7 +18,6 @@ ui <- navbarPage(
     header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
-        useShinyalert(),
         class = "header", checked = NA,
         list(
             div(
@@ -128,8 +127,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
@@ -221,8 +219,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
@@ -311,8 +308,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
