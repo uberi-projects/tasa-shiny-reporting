@@ -89,7 +89,7 @@ label {
 .border-top {
   background-color: var(--color-primary);
   height: 20px;
-  width: 100;
+  width: 100%;
 }
 .header-title {
   color: var(--color-primary);
