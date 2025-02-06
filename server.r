@@ -7,6 +7,10 @@ server <- function(input, output, session) {
         req(input$upload_catch_1per)
         read.csv(input$upload_catch_1per$datapath)
     })
+    df_upload_catchproj_1per <- reactive({
+        req(input$upload_catchproj_1per)
+        read.csv(input$upload_catchproj_1per$datapath)
+    })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
         read.csv(input$upload_lamp_1per$datapath)
@@ -18,6 +22,9 @@ server <- function(input, output, session) {
 
     # Validate dataframes
     observeEvent(input$validate_catch_1per, {
+        shinyalert("Success!", "Validation Successful!")
+    })
+    observeEvent(input$validate_catchproj_1per, {
         shinyalert("Success!", "Validation Successful!")
     })
     observeEvent(input$validate_lamp_1per, {
@@ -38,6 +45,21 @@ server <- function(input, output, session) {
             out <- render(
                 "report_catch_1per.Rmd",
                 params = list(user_name = input$name, datafile = df_upload_catch_1per()),
+                envir = new.env(parent = globalenv())
+            )
+            file.rename(out, file)
+        }
+    )
+    output$report_catchproj_1per <- downloadHandler(
+        filename = "report_catchproj_1per.docx",
+        content = function(file) {
+            src <- normalizePath(c("reports/report_catchproj_1per.Rmd", "reports/report_template.docx", "www/images/TASA_logo_full_color.png"))
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c("report_catchproj_1per.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            out <- render(
+                "report_catchproj_1per.Rmd",
+                params = list(user_name = input$name, datafile = df_upload_catchproj_1per()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
