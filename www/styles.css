@@ -14,7 +14,8 @@ body {
   background-image: url(images/ocean.jpg);
   background-size: cover;
   width: 100vw;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Typography */
@@ -133,15 +134,22 @@ label {
 }
 
 /* Grids */
+.content-container-parent{
+  position: absolute;
+  top: 228px;
+  bottom: 0;
+  width: 100%;
+  margin-left: -15px;
+  overflow-y: scroll;
+}
 .content-container-grid {
   position: absolute;
-  top: 250px;
   left: 0;
   right: 0;
   display: grid;
   justify-content: center;
   justify-items: center;
-  width: 100vw;
+  width: 100%;
   padding: 0 15vw;
 }
 .grid-home,
@@ -154,6 +162,14 @@ label {
 }
 
 /* Content styles */
+.content-box-parent {
+  overflow-y: scroll;
+  position: absolute;
+  bottom: 0;
+  top: 228px;
+  margin-left: -15px;
+  box-sizing: border-box;
+}
 .content-box {
   background: linear-gradient(
     rgba(255, 255, 255, 0) 3%,
