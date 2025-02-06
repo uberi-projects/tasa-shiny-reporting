@@ -14,7 +14,7 @@ body {
   background-image: url(images/ocean.jpg);
   background-size: cover;
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Typography */

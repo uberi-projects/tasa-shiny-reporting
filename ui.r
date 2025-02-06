@@ -80,6 +80,18 @@ ui <- navbarPage(
                             class = "content-list",
                             tags$li(
                                 class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_catch",
+                                        label = NULL,
+                                        choices = c("One Season", "One Year", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Choose CSV File",
                                 div(
                                     class = "input-list-content",
@@ -161,6 +173,18 @@ ui <- navbarPage(
                             hr(),
                             tags$li(
                                 class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_lamp",
+                                        label = NULL,
+                                        choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Choose CSV File",
                                 div(
                                     class = "input-list-content",
@@ -237,6 +261,15 @@ ui <- navbarPage(
                                 div(
                                     class = "input-list-content",
                                     prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser Data"), selected = "Visual Census", inline = TRUE)
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
                                 )
                             ),
                             hr(),
