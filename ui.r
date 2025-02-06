@@ -18,7 +18,6 @@ ui <- navbarPage(
     header = div(
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
-        useShinyalert(),
         class = "header", checked = NA,
         list(
             div(
@@ -80,6 +79,18 @@ ui <- navbarPage(
                             class = "content-list",
                             tags$li(
                                 class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_catch",
+                                        label = NULL,
+                                        choices = c("One Season", "One Year", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Choose CSV File",
                                 div(
                                     class = "input-list-content",
@@ -116,8 +127,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
@@ -161,6 +171,18 @@ ui <- navbarPage(
                             hr(),
                             tags$li(
                                 class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_lamp",
+                                        label = NULL,
+                                        choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Choose CSV File",
                                 div(
                                     class = "input-list-content",
@@ -197,8 +219,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
@@ -242,6 +263,15 @@ ui <- navbarPage(
                             hr(),
                             tags$li(
                                 class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Choose CSV File",
                                 div(
                                     class = "input-list-content",
@@ -278,8 +308,7 @@ ui <- navbarPage(
                                 "Add Inputs",
                                 div(
                                     class = "input-list-content",
-                                    textInput("name", "Your Name: ", value = ""),
-                                    textInput("lead", "Project Lead: ", value = "")
+                                    textInput("name", "Your Name: ", value = "")
                                 )
                             ),
                             hr(),
