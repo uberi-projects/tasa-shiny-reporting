@@ -72,6 +72,7 @@ label {
 }
 .input-list {
   font-size: 2rem;
+  min-height: 104px;
 }
 .input-list-content {
   padding: 10px 60px 0;
@@ -155,6 +156,7 @@ label {
 .grid-home,
 .grid-generator {
   grid-template-columns: 1fr 1fr;
+  position: relative;
 }
 .grid-report {
   grid-template-columns: 1fr;
@@ -188,6 +190,7 @@ label {
   color: white;
   padding: 10px;
   width: 90%;
+  height: fit-content;
 }
 .pipeline {
   max-width: 90%;
