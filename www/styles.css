@@ -71,6 +71,7 @@ label {
 }
 .input-list {
   font-size: 2rem;
+  min-height: 104px;
 }
 .input-list-content {
   padding: 10px 60px 0;
@@ -134,6 +135,15 @@ label {
 }
 
 /* Grids */
+.content-container-parent {
+  position: absolute;
+  top: 228px;
+  bottom: 0;
+  width: 100%;
+  margin-left: -15px;
+  overflow-y: scroll;
+  padding: 0 15vw;
+}
 .content-container-grid {
   display: grid;
   justify-content: center;
@@ -142,19 +152,31 @@ label {
   padding: 0 15vw;
   position: absolute;
   right: 0;
-  top: 250px;
   width: 100vw;
 }
 .grid-home,
 .grid-generator {
+  gap: 20px;
   grid-template-columns: 1fr 1fr;
+  display: grid;
+  justify-content: center;
+  overflow-x: hidden;
+  width: 100%;
 }
 .grid-report {
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
+  /*grid-template-rows: 1fr 1fr;*/
 }
 
 /* Content styles */
+.content-box-parent {
+  overflow-y: scroll;
+  position: absolute;
+  bottom: 0;
+  top: 228px;
+  margin-left: -15px;
+  box-sizing: border-box;
+}
 .content-box {
   background: linear-gradient(
     rgba(255, 255, 255, 0) 3%,
@@ -166,13 +188,15 @@ label {
   margin: 0 25px;
   padding: 65px 10px;
   position: relative;
-  width: 95%;
+  width: 100%;
 }
 .input-box {
+  position: relative;
   background-color: var(--color-primary);
   color: white;
   padding: 10px;
-  width: 90%;
+  height: fit-content;
+  overflow-x: hidden;
 }
 .pipeline {
   max-width: 90%;
