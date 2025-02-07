@@ -13,9 +13,8 @@ body {
   background-attachment: fixed;
   background-image: url(images/ocean.jpg);
   background-size: cover;
+  overflow-x: hidden;
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;
 }
 
 /* Typography */
@@ -46,29 +45,29 @@ h3 {
   text-align: center;
 }
 label {
-  font-weight: normal;
   font-size: 1.5rem;
+  font-weight: normal;
 }
 
 /* Lists */
 .content-list {
+  list-style-type: none;
   margin: 0;
   padding: 0;
-  list-style-type: none;
 }
 .content-list li {
   counter-increment: step-counter;
   margin-bottom: 10px;
 }
 .content-list li::before {
-  content: counter(step-counter);
-  margin-right: 5px;
-  font-size: 80%;
   background-color: var(--color-secondary);
-  color: white;
-  font-weight: bold;
-  padding: 3px 8px;
   border-radius: 3px;
+  color: white;
+  content: counter(step-counter);
+  font-size: 80%;
+  font-weight: bold;
+  margin-right: 5px;
+  padding: 3px 8px;
 }
 .input-list {
   font-size: 2rem;
@@ -131,11 +130,12 @@ label {
   text-decoration: none;
 }
 .navbar-nav > li > .dropdown-menu {
+  border-color: var(--color-primary);
   padding: 0;
 }
 
 /* Grids */
-.content-container-parent{
+.content-container-parent {
   position: absolute;
   top: 228px;
   bottom: 0;
@@ -145,24 +145,24 @@ label {
   padding: 0 15vw;
 }
 .content-container-grid {
-  position: relative;
-  left: 0;
-  right: 0;
   display: grid;
   justify-content: center;
   justify-items: center;
-  width: 100%;
-  
+  left: 0;
+  padding: 0 15vw;
+  position: absolute;
+  right: 0;
+  top: 250px;
+  width: 100vw;
 }
 .grid-home,
 .grid-generator {
   gap: 20px;
-    grid-template-columns: 1fr 1fr;
-    display: grid;
-    justify-content: center;
-    overflow-x: hidden;
-    width: 100%;
-
+  grid-template-columns: 1fr 1fr;
+  display: grid;
+  justify-content: center;
+  overflow-x: hidden;
+  width: 100%;
 }
 .grid-report {
   grid-template-columns: 1fr;
@@ -209,8 +209,8 @@ label {
   background-color: var(--color-secondary);
 }
 .pretty .state label:before {
-  border-color: white;
   background-color: white;
+  border-color: white;
 }
 .pretty input:checked ~ .state.p-primary label:after,
 .pretty.p-toggle .state.p-primary label:after {

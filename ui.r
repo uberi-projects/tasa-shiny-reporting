@@ -151,6 +151,89 @@ ui <- navbarPage(
             )
         ),
         tabPanel(
+            "Fisher Catch",
+            div(
+                class = "content-container-grid grid-report",
+                div(
+                    class = "content-box",
+                    h2("Fisher Catch Project Reports"),
+                    p(dummy_text[1])
+                ),
+                div(
+                    class = "content-container-grid grid-generator",
+                    div(
+                        class = "input-box",
+                        h3("Upload Data"),
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Choose Time Period",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("period_catchproj",
+                                        label = NULL,
+                                        choices = c("One Season", "One Year", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Choose CSV File",
+                                div(
+                                    class = "input-list-content",
+                                    fileInput(
+                                        "upload_catchproj_1per",
+                                        label = NULL,
+                                        multiple = FALSE,
+                                        accept = c(
+                                            "text/csv",
+                                            "text/comma-separated-values,text/plain",
+                                            ".csv"
+                                        )
+                                    )
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Validate Data",
+                                div(
+                                    class = "input-list-content",
+                                    actionButton("validate_catchproj_1per", "Perform Validation")
+                                )
+                            )
+                        )
+                    ),
+                    div(
+                        class = "input-box",
+                        h3("Customize Report"),
+                        tags$ol(
+                            class = "content-list",
+                            tags$li(
+                                class = "input-list",
+                                "Add Inputs",
+                                div(
+                                    class = "input-list-content",
+                                    textInput("name", "Your Name: ", value = "")
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
+                                "Generate Report",
+                                div(
+                                    class = "input-list-content",
+                                    downloadButton("report_catchproj_1per", "Generate")
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ),
+        tabPanel(
             "LAMP",
             div(
                 class = "content-container-parent",
