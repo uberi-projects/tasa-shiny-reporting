@@ -156,8 +156,12 @@ label {
 }
 .grid-home,
 .grid-generator {
-  grid-template-columns: 1fr 1fr;
-  position: relative;
+  gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+    justify-content: center;
+    overflow-x: hidden;
+    width: 100%;
 
 }
 .grid-report {
@@ -185,14 +189,15 @@ label {
   margin: 0 25px;
   padding: 65px 10px;
   position: relative;
-  width: 95%;
+  width: 100%;
 }
 .input-box {
+  position: relative;
   background-color: var(--color-primary);
   color: white;
   padding: 10px;
-  width: 90%;
   height: fit-content;
+  overflow-x: hidden;
 }
 .pipeline {
   max-width: 90%;
