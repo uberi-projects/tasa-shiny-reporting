@@ -142,25 +142,27 @@ label {
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
+  padding: 0 15vw;
 }
 .content-container-grid {
-  position: absolute;
+  position: relative;
   left: 0;
   right: 0;
   display: grid;
   justify-content: center;
   justify-items: center;
   width: 100%;
-  padding: 0 15vw;
+  
 }
 .grid-home,
 .grid-generator {
   grid-template-columns: 1fr 1fr;
   position: relative;
+
 }
 .grid-report {
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
+  /*grid-template-rows: 1fr 1fr;*/
 }
 
 /* Content styles */

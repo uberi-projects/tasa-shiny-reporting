@@ -257,7 +257,7 @@ ui <- navbarPage(
                         p(datatype_text[3])
                     ),
                     div(
-                        class = "content-container-grid grid-generator",
+                        class = "content-container grid-generator",
                         div(
                             class = "input-box",
                             h3("Upload Data"),
