@@ -163,6 +163,9 @@ label {
   overflow-x: hidden;
   width: 100%;
 }
+.grid-generator {
+  margin: 20px 0;
+}
 .grid-report {
   grid-template-columns: 1fr;
   /*grid-template-rows: 1fr 1fr;*/
