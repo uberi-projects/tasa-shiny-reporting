@@ -142,7 +142,7 @@ label {
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
-  padding: 0 15vw;
+  padding: 20px 15vw;
 }
 .content-container-grid {
   display: grid;
