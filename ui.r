@@ -97,6 +97,15 @@ ui <- navbarPage(
                             hr(),
                             tags$li(
                                 class = "input-list",
+                                "Choose Filetype",
+                                div(
+                                    class = "input-list-content",
+                                    prettyRadioButtons("upload_filtype", label = NULL, choices = c("CSV", "XLSX"), selected = "CSV", inline = TRUE)
+                                )
+                            ),
+                            hr(),
+                            tags$li(
+                                class = "input-list",
                                 "Validate Data",
                                 div(
                                     class = "input-list-content",
