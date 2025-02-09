@@ -1,16 +1,19 @@
 ## server.R
-
+library(readxl)
 # Define server ---------------------------
 server <- function(input, output, session) {
     # Define dataframes from uploads
     df_upload_catch_1per <- reactive({
         req(input$upload_catch_1per)
         if (input$upload_filtype == "CSV") {
-            read.csv(input$upload_catch_1per$datapath)
+            df <- read.csv(input$upload_catch_1per$datapath)
         } else if (input$upload_filtype == "XLSX") {
-            read_excel(input$upload_catch_1per$datapath, sheet = 1)
+            df <- read_excel(input$upload_catch_1per$datapath, sheet = 1)
         }
+        print(str(df))
+        return(df)
     })
+
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
         read.csv(input$upload_lamp_1per$datapath)
