@@ -142,7 +142,7 @@ label {
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
-  padding: 0 15vw;
+  padding: 20px 15vw;
 }
 .content-container-grid {
   display: grid;
@@ -162,6 +162,9 @@ label {
   justify-content: center;
   overflow-x: hidden;
   width: 100%;
+}
+.grid-generator {
+  margin: 20px 0;
 }
 .grid-report {
   grid-template-columns: 1fr;
