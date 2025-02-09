@@ -10,7 +10,6 @@ server <- function(input, output, session) {
         } else if (input$upload_filtype == "XLSX") {
             df <- read_excel(input$upload_catch_1per$datapath, sheet = 1)
         }
-        print(str(df))
         return(df)
     })
 
