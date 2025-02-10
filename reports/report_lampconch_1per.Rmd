@@ -1,6 +1,6 @@
 ---
-title: "Long-term Atoll Monitoring Program (LAMP) Conch Report: [Period]"
-subtitle: "Turneffe Atoll Sustainability Association"
+title: "Turneffe Atoll Queen Conch LAMP Dataset Report: YEAR"
+subtitle: "Turneffe Atoll Sustainability Association (TASA)"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -25,81 +25,113 @@ library(rmarkdown)
 
 ***
 
+Coral reefs are biodiversity hotspots that provide essential habitats for diverse species, support coastal communities, and offer economic opportunities through the fishing of marine invertebrates and fishes.  Monitoring these ecosystems allows for the assessment of their health, function, and changes over time, informing management decisions. This report presents findings from monitoring surveys of Queen Conch (Strombus gigas) at Turneffe Atoll Marine Reserve (TAMR) from ____. Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. This report aims to summarize and visualize the Queen Conch dataset from ____ to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+
+
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, encompassing over 500 km² of mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). It features an inner lagoon as well as an outer reef that encircles the atoll. The Turneffe Atoll Marine Reserve (TAMR) includes multiple management zones, such as general marine protect area, conservation, preservation, spawning aggregation sites, and special management areas. TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and subsistence fishing, guided diving, and research tourism.\
+
 
 ### Long-term Atoll Monitoring Program
 
-Background on reef monitoring dataset type \
+The Long-term Atoll Monitoring Program (LAMP) at TAMR, adopted from the original LAMP protocol for Glover’s Reef (Acosta 2004), is designed to monitor key fished taxa at the atoll over space and time, including finfish, queen conch (Strombus gigas), Caribbean spiny lobster (Panulirus argus), black sea urchins (Diadema antillarum), and Caribbean king crab (Mithrax spinosissumus). The program uses habitat sampling to estimate population sizes and physical characteristics of these taxa, enabling spatial and temporal comparison. \
 
-Map of study area \
+LAMP's primary objectives are to assess the viability of these populations by identifying trends in abundance, reproduction, physical characteristics, and habitat quality where applicable. Data collected through LAMP facilitates evaluation of management zone effectiveness. The program data also supports recommendations on enforcement, monitoring, education, outreach, fishing quotas, season lengths, size limits, and other government regulations to ensure the long-term sustainability and profitability of the fishery, all while preserving the natural beauty and ecological value of the atoll.\
+
+The queen conch dataset is a standout among the overall LAMP data, as the historical data stretches further into the past, and the information collected is more extensive. Queen conch is a commercially important species at TAMR, and the Turneffe Atoll Management Plan therefore necessitates regular monitoring of the populations at the atoll. In 2013, Zale et al. developed a methodology based on Acosta’s LAMP protocol (2004) to monitor queen conch at TAMR, which was later reused in 2016 and 2017 to assess changes in the stock over time and improve the monitoring methodology (Zale et al. 2016, Zale et al. 2018). In 2023 onwards, these datasets would be folded into the general LAMP program data which includes crab, lobster, urchins, and finfish, to supplement the program. Data from monitoring surveys of queen conch at TAMR include conch abundance, depth of individuals, and shell measurements (lip thickness and shell length).\
+
+
+### Queen Conch
+
+Queen conch (Strombus gigas) are large-sized Caribbean gastropods which each have a distinctive whorl-shaped shell with a set of thick spines at the apex. Young queen conch have a pink pearly interior, and the shell has a recognizable dark periostracum layer. Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be seen by removing the conch from its shell. Reproduction occurs during warmer months (Appeldoorn and Baker 2013). Samba conch are defined by ______.\
+
+In Belize, the queen conch fishery is the second most important commercial fishery in the country. Conch area harvested by free diving depths of 5-60ft in seagrass beds and coral reefs. Conch are protected nationally by the Belize Fisheries Department (BFD). Conch may only be fished if they have greater than 7 inches shell length, and they may only be fished during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is filled, whichever is reached first. Conch are not allowed to be harvested commercially using SCUBA. In addition, commercial fishing in Belize requires a license (Belize Fisheries Department accessed 2025). \
+
 
 ## Methods
 
-Survey methods\ 
+Survey sites were chosen as representative nearshore habitat types (as defined by Mumby and Harborne, 1999) known to be inhabited by Queen Conch based on prior assessments (Zale et al., 2016). Sites each have a unique ID and decimal coordinates associated with them to facilitate resampling in future years. When a site is re-sampled, habitat class is reevaluated for that sampling period. Each site is associated with a section of TAMR, either North, Northeast, Southeast, or Southwest (Figure 1).\
 
- 
-**Table 1.** Table of surveys/dives.
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and sample sections\
 
-_Dive Surveys_
+The survey period for this report’s dataset extended from ____ to _____ at TAMR. Sampling for queen conch LAMP is ideally done during summer before harvest. __#___ sites were sampled in total. At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. The belt transect included 2m of space on either side of the line.\
+
+During sampling , two data collectors swam together down either side of each transect approximately 1.5m above the substrate. In sites shallower than 1.5m in depth, data collectors instead snorkelled, and in sites less than 0.25m in depth, data collectors waded. The data collectors counted all living queen conch within 2m of the line on their side of the belt. Queen conch close to 2m from the line were also counted, and their distance from the line recorded. Shell lengths and lip thickness of queen conch were measured during sampling using calipers, as well as depth of capture to the nearest foot using a dive computer. Lip thickness was measured only in lipped individuals, and was measured as 4cm inward from the edge of the middle third of the lip, where the lip is relatively straight instead of wavy. After being measured, all queen conch were returned upright to their original position of capture.\
+
+This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+## Results
+
+In total, out of ____ sampled sites, ____ queen conch were counted. ____ sites were sampled in the North, _____ in the Northeast, ____ in the Southeast, and ___ in the Southwest (Table 1).\
+
+**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve in ______. N is north, NE is northeast, SE is southeast, and SW is southwest.\
+
 ```{r table1, echo = FALSE}
 # show table
 head(params$datafile)
 ```
 
 
-## Results
+The distribution of Queen Conch counts has ____ skew and ____ kurtosis. This leads to the means of Queen Conch counts both overall and by section to be _____ than the median. This suggests that Queen Conch are typically ______ at Turneffe; however, _______, they may be found in ____ numbers, potentially _____ the median (Table 2; Figure 2). The maximum queen count conch was found in _____, and the highest median queen conch count in ______ compared to the overall median queen conch count of _____. \
 
-Explanation of results \ 
+**Table 2.**  Table of summary statistics for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve in ______. N is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
 
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 1. Results figure. \ 
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 2. Results figure. \
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 3. Results figure. \
-
-
-**Table 2.** Results table.
-
-_Results Table_
 ```{r table2, echo = FALSE}
 # show table
 head(params$datafile)
 ```
 
 
-## Discussion
+*Figure 2.* Distribution of queen conch counts for ___ sampling effort at Turneffe Atoll Marine Reserve. Histogram and boxplot of conch counts per transect (bin size = 1) with mean shown by dotted line (A), boxplots of conch counts per transect divided by section with means indicated with triangles (B), histogram and boxplot of conch counts per site (bin size = 5) with mean shown by dotted line (C), and boxplots of conch counts per site divided by section with means indicated with triangles. For all boxplots, the box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.\
 
-Interpretation of results \ 
+The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. The highest proportion of lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. The highest proportion of legal and lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. Samba conch had the highest proportion at ____ with ____%, compared to the overall proportion of ____% (Table 3; Figure 3). \
 
-Conclusions and recommendations \ 
+**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall in ______. N is north, NE is northeast, SE is southeast, and SW is southwest. \
+
+```{r table3, echo = FALSE}
+# show table
+head(params$datafile)
+```
+
+
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for ___ sampling effort by section and overall at Turneffe Atoll Marine Reserve. N is north, NE is northeast, SE is southeast, and SW is southwest. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
+
+
+## Conclusion
+
+By summarizing and visualizing the queen conch LAMP survey data from _____, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability and profitability of the TAMR fishery while safeguarding the ecological value of the atoll.\
 
 
 ## Acknowledgments
 
-List of data collectors \
-
-Other acknowledgements \
+Thank you to the data collectors on this project, _________. Without you, this dataset would not exist as it is. \
 
 
 ## Literature Cited
 
-List of citations \ 
+Acosta, C. A. (2004). Glover’s Reef long-term atoll monitoring program (LAMP). Glover’s Reef Marine Research Station, Wildlife Conservation Society, Belize.
 
+Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
 
-## Appendix
+Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
 
-Additional details/tables/figures \
+Egan, B. D. (1985). Aspects of the reproductive biology of Strombus gigas. [Masters Thesis]. University of British Columbia, Vancouver.
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Foley, J. R., & Takahashi, M. (2017). Shell Lip Thickness Is the Most Reliable Proxy to Sexual Maturity in Queen Conch (Lobatus gigas) of Port Honduras Marine Reserve, Belize; Informing Management to Reduce the Risk of Growth Overfishing. Frontiers in Marine Science, 4, 179. https://doi.org/10.3389/fmars.2017.00179
+
+Mumby, P. J., & Harborne, A. R. (1999). Classification scheme for marine habitats of Belize, 5th draft. UNDP/GEF Belize Coastal Zone Management Project.
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Stoner, A. W., Mueller, K. W., Brown-Peterson, N. J., Davis, M. H., & Booker, C. J. (2012). Maturation and age in queen conch (Strombus gigas): Urgent need for changes in harvest criteria. Fisheries Research, 131–133, 76–84. https://doi.org/10.1016/j.fishres.2012.07.017
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+Zale, A. V., Bramblett, R. G., & Anderson, A. R. (2016). Baseline population abundance estimate and development of a monitoring plan for Queen Conch at Turneffe Atoll Marine Reserve. Submitted to Turneffe Atoll Marine Reserve.
+
