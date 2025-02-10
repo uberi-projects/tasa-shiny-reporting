@@ -1,5 +1,5 @@
 ---
-title: "Spawning Aggregations (SPAG) Report: [Period]"
+title: "Spawning Aggregations (SPAG) Laser Report: [Period]"
 subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:

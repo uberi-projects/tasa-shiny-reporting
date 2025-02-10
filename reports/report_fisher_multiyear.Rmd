@@ -1,5 +1,5 @@
 ---
-title: "[Type] Report: [Period]"
+title: "Fisher Catch Project Report: [Years]"
 subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
@@ -31,7 +31,7 @@ library(rmarkdown)
 
 Background on Turneffe Atoll Marine Reserve \
 
-### Reef Monitoring Program
+### Fisher Catch Project
 
 Background on reef monitoring dataset type \
 
