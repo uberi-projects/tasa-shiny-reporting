@@ -186,7 +186,7 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         fileInput(
-                                            "upload_fisher_1per",
+                                            "upload_fisher",
                                             label = NULL,
                                             multiple = FALSE,
                                             accept = c(
@@ -203,7 +203,7 @@ ui <- navbarPage(
                                     "Validate Data",
                                     div(
                                         class = "input-list-content",
-                                        actionButton("validate_fisher_1per", "Perform Validation")
+                                        actionButton("validate_fisher", "Perform Validation")
                                     )
                                 )
                             )
@@ -227,7 +227,7 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_fisher_1per", "Generate")
+                                        downloadButton("report_fisher", "Generate")
                                     )
                                 )
                             )
@@ -259,7 +259,7 @@ ui <- navbarPage(
                                     "Choose Datatype",
                                     div(
                                         class = "input-list-content",
-                                        prettyRadioButtons("datatype_lampgen", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                        prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
                                     )
                                 ),
                                 hr(),
@@ -268,7 +268,7 @@ ui <- navbarPage(
                                     "Choose Time Period",
                                     div(
                                         class = "input-list-content",
-                                        prettyRadioButtons("period_lampgen",
+                                        prettyRadioButtons("period_lamp",
                                             label = NULL,
                                             choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
                                         )
@@ -281,7 +281,7 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         fileInput(
-                                            "upload_lampgen_1per",
+                                            "upload_lamp",
                                             label = NULL,
                                             multiple = FALSE,
                                             accept = c(
@@ -298,7 +298,7 @@ ui <- navbarPage(
                                     "Validate Data",
                                     div(
                                         class = "input-list-content",
-                                        actionButton("validate_lampgen_1per", "Perform Validation")
+                                        actionButton("validate_lamp", "Perform Validation")
                                     )
                                 )
                             )
@@ -322,7 +322,7 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_lampgen_1per", "Generate")
+                                        downloadButton("report_lamp", "Generate")
                                     )
                                 )
                             )
@@ -354,7 +354,7 @@ ui <- navbarPage(
                                     "Choose Datatype",
                                     div(
                                         class = "input-list-content",
-                                        prettyRadioButtons("datatype_spagvis", label = NULL, choices = c("Visual Census", "Laser Data"), selected = "Visual Census", inline = TRUE)
+                                        prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
                                     )
                                 ),
                                 hr(),
@@ -363,7 +363,7 @@ ui <- navbarPage(
                                     "Choose Time Period",
                                     div(
                                         class = "input-list-content",
-                                        prettyRadioButtons("period_spagvis", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
+                                        prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
                                     )
                                 ),
                                 hr(),
@@ -373,7 +373,7 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         fileInput(
-                                            "upload_spagvis_1per",
+                                            "upload_spag",
                                             label = NULL,
                                             multiple = FALSE,
                                             accept = c(
@@ -390,7 +390,7 @@ ui <- navbarPage(
                                     "Validate Data",
                                     div(
                                         class = "input-list-content",
-                                        actionButton("validate_spagvis_1per", "Perform Validation")
+                                        actionButton("validate_spag", "Perform Validation")
                                     )
                                 )
                             )
@@ -414,7 +414,7 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_spagvis_1per", "Generate")
+                                        downloadButton("report_spag", "Generate")
                                     )
                                 )
                             )
