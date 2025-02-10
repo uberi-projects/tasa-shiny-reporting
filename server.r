@@ -3,9 +3,9 @@
 # Define server ---------------------------
 server <- function(input, output, session) {
     # Define dataframes from uploads
-    df_upload_fisheries_1per <- reactive({
-        req(input$upload_fisheries_1per)
-        read.csv(input$upload_fisheries_1per$datapath)
+    df_upload_fisheries <- reactive({
+        req(input$upload_fisheries)
+        read.csv(input$upload_fisheries$datapath)
     })
     df_upload_fisher_1per <- reactive({
         req(input$upload_fisher_1per)
@@ -21,7 +21,7 @@ server <- function(input, output, session) {
     })
 
     # Validate dataframes
-    observeEvent(input$validate_fisheries_1per, {
+    observeEvent(input$validate_fisheries, {
         shinyalert("Success!", "Validation Successful!")
     })
     observeEvent(input$validate_fisher_1per, {
@@ -34,17 +34,28 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!")
     })
 
-    # Create single period (1per) reports
-    output$report_fisheries_1per <- downloadHandler(
-        filename = "report_fisheries_1per.docx",
+    # Create reports
+    output$report_fisheries <- downloadHandler(
+        filename = function() {
+            paste0("report_fisheries_", input$period_fisheries, ".docx")
+        },
         content = function(file) {
-            src <- normalizePath(c("reports/report_fisheries_1per.Rmd", "reports/report_template.docx", "www/images/TASA_logo_full_color.png"))
+            report_file <- switch(input$period_fisheries,
+                "One Season" = "report_fisheries_1per.Rmd",
+                "Multiple Seasons" = "report_fisheries_multiper.Rmd",
+                "Multiple Years" = "report_fisheries_multiyear.Rmd"
+            )
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TASA_logo_full_color.png"
+            ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c("report_fisheries_1per.Rmd", "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
-                "report_fisheries_1per.Rmd",
-                params = list(user_name = input$name, datafile = df_upload_fisheries_1per()),
+                report_file,
+                params = list(user_name = input$name, datafile = df_upload_fisheries()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)

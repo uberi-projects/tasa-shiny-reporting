@@ -100,7 +100,7 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         fileInput(
-                                            "upload_fisheries_1per",
+                                            "upload_fisheries",
                                             label = NULL,
                                             multiple = FALSE,
                                             accept = c(
@@ -117,7 +117,7 @@ ui <- navbarPage(
                                     "Validate Data",
                                     div(
                                         class = "input-list-content",
-                                        actionButton("validate_fisheries_1per", "Perform Validation")
+                                        actionButton("validate_fisheries", "Perform Validation")
                                     )
                                 )
                             )
@@ -141,7 +141,7 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_fisheries_1per", "Generate")
+                                        downloadButton("report_fisheries", "Generate")
                                     )
                                 )
                             )
