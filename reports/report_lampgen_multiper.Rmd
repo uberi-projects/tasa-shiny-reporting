@@ -1,5 +1,5 @@
 ---
-title: "Long-term Atoll Monitoring Program (LAMP) Report: [Period]"
+title: "Long-term Atoll Monitoring Program (LAMP) Report: [Periods]"
 subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:

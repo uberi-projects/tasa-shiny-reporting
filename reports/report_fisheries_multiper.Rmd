@@ -1,5 +1,5 @@
 ---
-title: "Fisheries Catch Report: [Period]"
+title: "Fisheries Catch Report: [Periods]"
 subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:

@@ -1,5 +1,5 @@
 ---
-title: "Spawning Aggregations (SPAG) Laser Report: [Period]"
+title: "Fisheries Catch Report: [Years]"
 subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
@@ -31,7 +31,7 @@ library(rmarkdown)
 
 Background on Turneffe Atoll Marine Reserve \
 
-### Spawning Aggregations Reef Monitoring Program
+### Fisheries Catch Reef Monitoring Progam
 
 Background on reef monitoring dataset type \
 
