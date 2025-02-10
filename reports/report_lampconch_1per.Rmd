@@ -1,5 +1,5 @@
 ---
-title: "Turneffe Atoll Queen Conch LAMP Dataset Report: YEAR"
+title: "Turneffe Atoll Queen Conch LAMP Dataset Report: PERIOD"
 subtitle: "Turneffe Atoll Sustainability Association (TASA)"
 output:
   officedown::rdocx_document:
@@ -17,6 +17,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(knitr)
 library(officedown)
 library(rmarkdown)
+
+study_start <- min(params$datafile$Date, na.rm = TRUE)
+study_end <- max(params$datafile$Date, na.rm = TRUE)
 ```
 
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
@@ -25,7 +28,8 @@ library(rmarkdown)
 
 ***
 
-Coral reefs are biodiversity hotspots that provide essential habitats for diverse species, support coastal communities, and offer economic opportunities through the fishing of marine invertebrates and fishes.  Monitoring these ecosystems allows for the assessment of their health, function, and changes over time, informing management decisions. This report presents findings from monitoring surveys of Queen Conch (Strombus gigas) at Turneffe Atoll Marine Reserve (TAMR) from ____. Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. This report aims to summarize and visualize the Queen Conch dataset from ____ to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+
+Coral reefs are biodiversity hotspots that provide essential habitats for diverse species, support coastal communities, and offer economic opportunities through the fishing of marine invertebrates and fishes.  Monitoring these ecosystems allows for the assessment of their health, function, and changes over time, informing management decisions. This report presents findings from monitoring surveys of Queen Conch (Strombus gigas) at Turneffe Atoll Marine Reserve (TAMR) from `r study_start` to `r study_end`. Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. This report aims to summarize and visualize the Queen Conch dataset from `r study_start` to `r study_end` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
 
 
 ## Background
@@ -57,7 +61,7 @@ Survey sites were chosen as representative nearshore habitat types (as defined b
 
 *Figure 1.* Map of Turneffe Atoll Marine Reserve zones and sample sections\
 
-The survey period for this report’s dataset extended from ____ to _____ at TAMR. Sampling for queen conch LAMP is ideally done during summer before harvest. __#___ sites were sampled in total. At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. The belt transect included 2m of space on either side of the line.\
+The survey period for this report’s dataset extended from `r study_start` to `r study_end` at TAMR. Sampling for queen conch LAMP is ideally done during summer before harvest. __#___ sites were sampled in total. At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. The belt transect included 2m of space on either side of the line.\
 
 During sampling , two data collectors swam together down either side of each transect approximately 1.5m above the substrate. In sites shallower than 1.5m in depth, data collectors instead snorkelled, and in sites less than 0.25m in depth, data collectors waded. The data collectors counted all living queen conch within 2m of the line on their side of the belt. Queen conch close to 2m from the line were also counted, and their distance from the line recorded. Shell lengths and lip thickness of queen conch were measured during sampling using calipers, as well as depth of capture to the nearest foot using a dive computer. Lip thickness was measured only in lipped individuals, and was measured as 4cm inward from the edge of the middle third of the lip, where the lip is relatively straight instead of wavy. After being measured, all queen conch were returned upright to their original position of capture.\
 
