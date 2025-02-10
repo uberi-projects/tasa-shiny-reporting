@@ -96,7 +96,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose CSV File",
+                                    "Choose Excel File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
@@ -277,7 +277,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose CSV File",
+                                    "Choose Excel File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
@@ -285,9 +285,8 @@ ui <- navbarPage(
                                             label = NULL,
                                             multiple = FALSE,
                                             accept = c(
-                                                "text/csv",
-                                                "text/comma-separated-values,text/plain",
-                                                ".csv"
+                                                ".xls",
+                                                ".xlsx"
                                             )
                                         )
                                     )

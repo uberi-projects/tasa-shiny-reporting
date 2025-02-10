@@ -1,5 +1,8 @@
 ## server.R
 
+# Load packages ---------------------------
+library(readxl)
+
 # Define server ---------------------------
 server <- function(input, output, session) {
     # Define dataframes from uploads
@@ -13,7 +16,7 @@ server <- function(input, output, session) {
     })
     df_upload_lamp <- reactive({
         req(input$upload_lamp)
-        read.csv(input$upload_lamp$datapath)
+        read_excel(input$upload_lamp$datapath, sheet = "Survey Data")
     })
     df_upload_spag <- reactive({
         req(input$upload_spag)
