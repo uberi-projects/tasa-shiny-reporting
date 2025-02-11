@@ -14,13 +14,30 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
 
+# Define study period ---------------------------
 study_start <- min(params$datafile$Survey_Data$Date, na.rm = TRUE)
 study_end <- max(params$datafile$Survey_Data$Date, na.rm = TRUE)
-number_sites <- nrow(params$datafile$Sites$Date, na.rm = TRUE)
+
+# Update Site ID ---------------------------
+update_site_id <- function(df) {
+  df |> mutate(`Site ID` = ifelse(is.na(`Site ID`), `Old Site ID`, `Site ID`))
+}
+df_surveys <- update_site_id(params$datafile$Survey_Data)
+df_sites <- update_site_id(params$datafile$Sites)
+
+# Merge sites and surveys data ---------------------------
+df_merged <- df_surveys |>
+  left_join(df_sites, by = "Site ID") |>
+  filter(Section != "NW")
+
+# Count number of sites surveyed ---------------------------
+number_sites <- length(unique(df_merged$`Site ID`))
 ```
 
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
@@ -60,7 +77,7 @@ In Belize, the queen conch fishery is the second most important commercial fishe
 
 Survey sites were chosen as representative nearshore habitat types (as defined by Mumby and Harborne, 1999) known to be inhabited by Queen Conch based on prior assessments (Zale et al., 2016). Sites each have a unique ID and decimal coordinates associated with them to facilitate resampling in future years. When a site is re-sampled, habitat class is reevaluated for that sampling period. Each site is associated with a section of TAMR, either North, Northeast, Southeast, or Southwest (Figure 1).\
 
-*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and sample sections\
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to Belize Fisheries Department (Belize Geomatics 2022). Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).\
 
 The survey period for this report’s dataset extended from `r study_start` to `r study_end` at TAMR. Sampling for queen conch LAMP is ideally done during summer before harvest. `r number_sites` sites were sampled in total. At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. The belt transect included 2m of space on either side of the line.\
 
@@ -71,19 +88,45 @@ This report, including text, figures, and tables, was generated using the Turnef
 
 ## Results
 
-In total, out of `r number_sites` sampled sites, ____ queen conch were counted. ____ sites were sampled in the North, _____ in the Northeast, ____ in the Southeast, and ___ in the Southwest (Table 1).\
+```{r table1_prep, echo = FALSE, include = FALSE}
+df_table1 <- df_merged %>%
+  group_by(Section) %>%
+  summarise(
+    `Number Sites` = length(unique(`Site ID`)),
+    `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  bind_rows(
+    summarise(
+      df_merged,
+      Section = "Total",
+      `Number Sites` = length(unique(`Site ID`)),
+      `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE)
+    )
+  )
 
-**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve in ______. N is north, NE is northeast, SE is southeast, and SW is southwest.\
+total_conch <- filter(df_table1, Section == "Total")$`Queen Conch Count`
+total_sites <- filter(df_table1, Section == "Total")$`Number Sites`
+NO_sites <- filter(df_table1, Section == "NO")$`Number Sites`
+NE_sites <- filter(df_table1, Section == "NE")$`Number Sites`
+SW_sites <- filter(df_table1, Section == "SW")$`Number Sites`
+SE_sites <- filter(df_table1, Section == "SE")$`Number Sites`
+```
+
+
+In total, out of `r total_sites` sampled sites, `r total_conch` queen conch were counted. `r NO_sites` sites were sampled in the North, `r NE_sites` in the Northeast, `r SE_sites` in the Southeast, and `r SW_sites` in the Southwest (Table 1).\
+
+
+**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_start` to `r study_end`. NO is north, NE is northeast, SE is southeast, and SW is southwest.\
 
 ```{r table1, echo = FALSE}
-# show table
-head(params$datafile$Survey_Data)
+df_table1
 ```
 
 
 The distribution of Queen Conch counts has ____ skew and ____ kurtosis. This leads to the means of Queen Conch counts both overall and by section to be _____ than the median. This suggests that Queen Conch are typically ______ at Turneffe; however, _______, they may be found in ____ numbers, potentially _____ the median (Table 2; Figure 2). The maximum queen count conch was found in _____, and the highest median queen conch count in ______ compared to the overall median queen conch count of _____. \
 
-**Table 2.**  Table of summary statistics for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve in ______. N is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
+**Table 2.**  Table of summary statistics for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve in ______. NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
 
 ```{r table2, echo = FALSE}
 # show table
@@ -95,7 +138,7 @@ head(params$datafile$Survey_Data)
 
 The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. The highest proportion of lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. The highest proportion of legal and lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. Samba conch had the highest proportion at ____ with ____%, compared to the overall proportion of ____% (Table 3; Figure 3). \
 
-**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall in ______. N is north, NE is northeast, SE is southeast, and SW is southwest. \
+**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall in ______. NO is north, NE is northeast, SE is southeast, and SW is southwest. \
 
 ```{r table3, echo = FALSE}
 # show table
@@ -103,7 +146,7 @@ head(params$datafile$Survey_Data)
 ```
 
 
-*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for ___ sampling effort by section and overall at Turneffe Atoll Marine Reserve. N is north, NE is northeast, SE is southeast, and SW is southwest. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for ___ sampling effort by section and overall at Turneffe Atoll Marine Reserve. NO is north, NE is northeast, SE is southeast, and SW is southwest. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 
 ## Conclusion
@@ -124,11 +167,17 @@ Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, S
 
 Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
 
+Belize Geomatics. (2022). Turneffe Atoll Areas, Belize Replenishment Zones Project [Dataset].
+
 Egan, B. D. (1985). Aspects of the reproductive biology of Strombus gigas. [Masters Thesis]. University of British Columbia, Vancouver.
 
 Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
 
 Foley, J. R., & Takahashi, M. (2017). Shell Lip Thickness Is the Most Reliable Proxy to Sexual Maturity in Queen Conch (Lobatus gigas) of Port Honduras Marine Reserve, Belize; Informing Management to Reduce the Risk of Growth Overfishing. Frontiers in Marine Science, 4, 179. https://doi.org/10.3389/fmars.2017.00179
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
 
 Mumby, P. J., & Harborne, A. R. (1999). Classification scheme for marine habitats of Belize, 5th draft. UNDP/GEF Belize Coastal Zone Management Project.
 
