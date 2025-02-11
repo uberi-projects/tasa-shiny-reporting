@@ -1,6 +1,4 @@
 ---
-title: "Turneffe Atoll Queen Conch LAMP Dataset Report: PERIOD"
-subtitle: "Turneffe Atoll Sustainability Association (TASA)"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -25,6 +23,7 @@ library(moments) # for kurtosis/skew calculations
 # Define study period ---------------------------
 study_start <- min(params$datafile$Survey_Data$Date, na.rm = TRUE)
 study_end <- max(params$datafile$Survey_Data$Date, na.rm = TRUE)
+study_year <- format(study_start, "%Y")
 
 # Update Site ID ---------------------------
 update_site_id <- function(df) {
@@ -41,7 +40,16 @@ df_merged <- df_surveys |>
 
 # Count number of sites surveyed ---------------------------
 number_sites <- length(unique(df_merged$`Site ID`))
+
+# Define samba conch ---------------------------
+samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
 ```
+
+# Turneffe Atoll Queen Conch LAMP Dataset Report: `r study_year`
+
+
+Turneffe Atoll Sustainability Association (TASA)
+
 
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
 **Source Data:** `r params$datafile_name` \
@@ -50,11 +58,11 @@ number_sites <- length(unique(df_merged$`Site ID`))
 ***
 
 
-Coral reefs are biodiversity hotspots that provide essential habitats for diverse species, support coastal communities, and offer economic opportunities through the fishing of marine invertebrates and fishes.  
+Coral reefs are biodiversity hotspots that provide essential habitats for diverse species, support coastal communities, and offer economic opportunities through the fishing of marine invertebrates and fishes. 
 Monitoring these ecosystems allows for the assessment of their health, function, and changes over time, informing management decisions. 
-This report presents findings from monitoring surveys of Queen Conch (Strombus gigas) at Turneffe Atoll Marine Reserve (TAMR) from `r study_start` to `r study_end`. 
+This report presents findings from monitoring surveys of Queen Conch (Strombus gigas) at Turneffe Atoll Marine Reserve (TAMR) from `r study_year`. 
 Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. 
-This report aims to summarize and visualize the Queen Conch dataset from `r study_start` to `r study_end` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+This report aims to summarize and visualize the Queen Conch dataset from `r study_year` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
 
 
 ## Background
@@ -89,7 +97,7 @@ Data from monitoring surveys of queen conch at TAMR include conch abundance, dep
 Queen conch (Strombus gigas) are large-sized Caribbean gastropods which each have a distinctive whorl-shaped shell with a set of thick spines at the apex. 
 Young queen conch have a pink pearly interior, and the shell has a recognizable dark periostracum layer. 
 Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be seen by removing the conch from its shell. 
-Reproduction occurs during warmer months (Appeldoorn and Baker 2013). Samba conch are defined by ______.\
+Reproduction occurs during warmer months (Appeldoorn and Baker 2013). `r samba_definition`.\
 
 In Belize, the queen conch fishery is the second most important commercial fishery in the country. 
 Conch area harvested by free diving depths of 5-60ft in seagrass beds and coral reefs. 
@@ -163,7 +171,7 @@ In total, out of `r total_sites` sampled sites, `r total_conch` queen conch were
 `r NE_sites` sites were sampled in the Northeast, `r NO_sites` in the North, `r SE_sites` in the Southeast, and `r SW_sites` in the Southwest (Table 1).\
 
 
-**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_start` to `r study_end`. 
+**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_year`. 
 NO is north, NE is northeast, SE is southeast, and SW is southwest.\
 
 ```{r table1, echo = FALSE}
@@ -255,7 +263,7 @@ The maximum queen conch count of `r maximum_conch` was found at site `r maximum_
 The highest median queen conch count of `r highest_median_conch` per site was found in the `r highest_median_conch_section_str` section`r highest_median_conch_section_plural`, compared to the overall median queen conch count of `r overall_median_conch` (Table 2). \
 
 
-**Table 2.**  Table of summary statistics for conch counts per site in sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve for data from `r study_start` to `r study_end`. 
+**Table 2.**  Table of summary statistics for conch counts per site in sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve for data from `r study_year`. 
 NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
 
 
@@ -265,7 +273,7 @@ df_table2
 
 <br>
 
-*Figure 2.* Distribution of queen conch counts for data from `r study_start` to `r study_end`. sampling effort at Turneffe Atoll Marine Reserve. Histogram and boxplot of conch counts per transect (bin size = 1) with mean shown by dotted line (A), boxplots of conch counts per transect divided by section with means indicated with triangles (B), histogram and boxplot of conch counts per site (bin size = 5) with mean shown by dotted line (C), and boxplots of conch counts per site divided by section with means indicated with triangles. For all boxplots, the box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.\
+*Figure 2.* Distribution of queen conch counts for data from `r study_year`. sampling effort at Turneffe Atoll Marine Reserve. Histogram and boxplot of conch counts per transect (bin size = 1) with mean shown by dotted line (A), boxplots of conch counts per transect divided by section with means indicated with triangles (B), histogram and boxplot of conch counts per site (bin size = 5) with mean shown by dotted line (C), and boxplots of conch counts per site divided by section with means indicated with triangles. For all boxplots, the box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.\
 
 
 The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. 
@@ -274,7 +282,7 @@ The highest proportion of legal and lipped queen conch was found in the ____ wit
 Samba conch had the highest proportion at ____ with ____%, compared to the overall proportion of ____% (Table 3; Figure 3). \
 
 
-**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_start` to `r study_end`.
+**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
  NO is north, NE is northeast, SE is southeast, and SW is southwest. \
 
 
@@ -284,13 +292,13 @@ head(params$datafile$Survey_Data)
 ```
 
 
-*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm)  for data from `r study_start` to `r study_end` by section and overall at Turneffe Atoll Marine Reserve. 
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm)  for data from `r study_year` by section and overall at Turneffe Atoll Marine Reserve. 
 NO is north, NE is northeast, SE is southeast, and SW is southwest. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 
 ## Conclusion
 
-By summarizing and visualizing the queen conch LAMP survey data from from `r study_start` to `r study_end`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+By summarizing and visualizing the queen conch LAMP survey data from `r study_year`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
 This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability and profitability of the TAMR fishery while safeguarding the ecological value of the atoll.\
 
 
