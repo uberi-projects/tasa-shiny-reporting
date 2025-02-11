@@ -132,11 +132,49 @@ df_table1
 
 The distribution of Queen Conch counts has ____ skew and ____ kurtosis. This leads to the means of Queen Conch counts both overall and by section to be _____ than the median. This suggests that Queen Conch are typically ______ at Turneffe; however, _______, they may be found in ____ numbers, potentially _____ the median (Table 2; Figure 2). The maximum queen count conch was found in _____, and the highest median queen conch count in ______ compared to the overall median queen conch count of _____. \
 
-**Table 2.**  Table of summary statistics for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve in ______. NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
+
+**Table 2.**  Table of summary statistics for conch counts per site in sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve for data from `r study_start` to `r study_end`. NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
+
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+df_sites_summary <- df_merged %>%
+  group_by(Section, `Site ID`) %>%
+  summarise(`Site Conch Count` = sum(`Conch Count`), .groups = "drop")
+
+df_table2 <- df_transects_summary %>%
+  group_by(Section) %>%
+  summarise(
+    Mean = round(mean(`Transect Conch Count`), 1),
+    Min = round(min(`Transect Conch Count`), 1),
+    Q1 = round(quantile(`Transect Conch Count`, 0.25), 1),
+    Median = round(median(`Transect Conch Count`), 1),
+    Q3 = round(quantile(`Transect Conch Count`, 0.75), 1),
+    Max = round(max(`Transect Conch Count`), 1),
+    Var = round(var(`Transect Conch Count`), 1),
+    SD = round(sd(`Transect Conch Count`), 1),
+    .groups = "drop"
+  ) %>%
+  bind_rows(
+    summarise(
+      df_transects_summary,
+      Section = "Total",
+      Mean = round(mean(`Transect Conch Count`), 1),
+      Min = round(min(`Transect Conch Count`), 1),
+      Q1 = round(quantile(`Transect Conch Count`, 0.25), 1),
+      Median = round(median(`Transect Conch Count`), 1),
+      Q3 = round(quantile(`Transect Conch Count`, 0.75), 1),
+      Max = round(max(`Transect Conch Count`), 1),
+      Var = round(var(`Transect Conch Count`), 1),
+      SD = round(sd(`Transect Conch Count`), 1)
+    ) %>%
+      distinct(Section, Mean, Min, Q1, Median, Q3, Max, Var, SD) # Ensure only one Total row
+  )
+```
+
 
 ```{r table2, echo = FALSE}
 # show table
-head(params$datafile$Survey_Data)
+df_table2
 ```
 
 
