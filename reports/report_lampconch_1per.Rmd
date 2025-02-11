@@ -77,6 +77,10 @@ In Belize, the queen conch fishery is the second most important commercial fishe
 
 Survey sites were chosen as representative nearshore habitat types (as defined by Mumby and Harborne, 1999) known to be inhabited by Queen Conch based on prior assessments (Zale et al., 2016). Sites each have a unique ID and decimal coordinates associated with them to facilitate resampling in future years. When a site is re-sampled, habitat class is reevaluated for that sampling period. Each site is associated with a section of TAMR, either North, Northeast, Southeast, or Southwest (Figure 1).\
 
+
+![](TAMR_map.jpg){width=450px}
+
+
 *Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to Belize Fisheries Department (Belize Geomatics 2022). Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).\
 
 The survey period for this report’s dataset extended from `r study_start` to `r study_end` at TAMR. Sampling for queen conch LAMP is ideally done during summer before harvest. `r number_sites` sites were sampled in total. At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. The belt transect included 2m of space on either side of the line.\

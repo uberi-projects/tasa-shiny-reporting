@@ -139,11 +139,12 @@ server <- function(input, output, session) {
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
-                "www/images/TASA_logo_full_color.png"
+                "www/images/TASA_logo_full_color.png",
+                "www/images/TAMR_map.jpg"
             ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "TAMR_map.jpg"), overwrite = TRUE)
             out <- render(
                 report_file,
                 params = list(user_name = input$name, datafile = df_upload_lamp()),
