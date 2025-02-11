@@ -434,6 +434,17 @@ ui <- navbarPage(
                     class = "content-box",
                     h2("Manual"),
                     p(dummy_text[4])
+                ),
+                div(
+                    class = "content-container",
+                    div(
+                        class = "action-button",
+                        a(
+                            href = link_text[2],
+                            target = "_blank",
+                            h1("Go to Manual")
+                        )
+                    )
                 )
             )
         )
