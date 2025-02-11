@@ -6,6 +6,7 @@ library(readxl)
 # Define server ---------------------------
 server <- function(input, output, session) {
     # Define dataframes from uploads
+    nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
     df_upload_fisheries <- reactive({
         req(input$upload_fisheries)
         read.csv(input$upload_fisheries$datapath)
@@ -18,17 +19,17 @@ server <- function(input, output, session) {
         req(input$upload_lamp)
         if (input$datatype_lamp == "Conch" & input$period_lamp == "One Period") {
             list(
-                Survey_Data = read_excel(input$upload_lamp$datapath, sheet = "Survey Data"),
-                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites")
+                Survey_Data = read_excel(input$upload_lamp$datapath, sheet = "Survey Data", na = nas),
+                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas)
             )
         } else if (input$datatype_lamp == "General LAMP" & input$period_lamp == "One Period") {
             list(
-                Species = read_excel(input$upload_lamp$datapath, sheet = "Species"),
-                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites"),
-                Finfish = read_excel(input$upload_lamp$datapath, sheet = "Finfish"),
-                Conch = read_excel(input$upload_lamp$datapath, sheet = "Conch"),
-                Lobster = read_excel(input$upload_lamp$datapath, sheet = "Lobster"),
-                Diadema_Crab = read_excel(input$upload_lamp$datapath, sheet = "Diadema and Crab")
+                Species = read_excel(input$upload_lamp$datapath, sheet = "Species", na = nas),
+                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas),
+                Finfish = read_excel(input$upload_lamp$datapath, sheet = "Finfish", na = nas),
+                Conch = read_excel(input$upload_lamp$datapath, sheet = "Conch", na = nas),
+                Lobster = read_excel(input$upload_lamp$datapath, sheet = "Lobster", na = nas),
+                Diadema_Crab = read_excel(input$upload_lamp$datapath, sheet = "Diadema and Crab", na = nas)
             )
         } else {
             pressure # putting this as placeholder until multi-period is supported
@@ -147,12 +148,13 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "TAMR_map.jpg"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_lamp()),
+                params = list(user_name = input$name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
         }
     )
+
 
     output$report_spag <- downloadHandler(
         filename = function() {
