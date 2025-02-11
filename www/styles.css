@@ -168,7 +168,6 @@ label {
 }
 .grid-report {
   grid-template-columns: 1fr;
-  /*grid-template-rows: 1fr 1fr;*/
 }
 
 /* Content styles */
@@ -204,6 +203,23 @@ label {
 .pipeline {
   max-width: 90%;
   padding-left: 10%;
+}
+.external-link-button {
+  width: fit-content;
+  background-color: var(--color-primary);
+}
+.external-link-button:hover {
+  background-color: var(--color-secondary);
+}
+.external-link-button a {
+  text-decoration: none;
+}
+.external-link-button h1 {
+  width: fit-content;
+  color: white;
+  font-size: 2em;
+  padding: 15px 15px;
+  margin: 0;
 }
 
 /* Input buttons */
