@@ -438,11 +438,11 @@ ui <- navbarPage(
                 div(
                     class = "content-container",
                     div(
-                        class = "action-button",
+                        class = "external-link-button",
                         a(
                             href = link_text[2],
                             target = "_blank",
-                            h1("Go to Manual")
+                            h1("Visit Manual")
                         )
                     )
                 )

@@ -204,17 +204,17 @@ label {
   max-width: 90%;
   padding-left: 10%;
 }
-.action-button {
+.external-link-button {
   width: fit-content;
   background-color: var(--color-primary);
 }
-.action-button:hover {
+.external-link-button:hover {
   background-color: var(--color-secondary);
 }
-.action-button a {
+.external-link-button a {
   text-decoration: none;
 }
-.action-button h1 {
+.external-link-button h1 {
   width: fit-content;
   color: white;
   font-size: 2em;
