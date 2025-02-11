@@ -16,8 +16,25 @@ server <- function(input, output, session) {
     })
     df_upload_lamp <- reactive({
         req(input$upload_lamp)
-        read_excel(input$upload_lamp$datapath, sheet = "Survey Data")
+        if (input$datatype_lamp == "Conch" & input$period_lamp == "One Period") {
+            list(
+                Survey_Data = read_excel(input$upload_lamp$datapath, sheet = "Survey Data"),
+                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites")
+            )
+        } else if (input$datatype_lamp == "General LAMP" & input$period_lamp == "One Period") {
+            list(
+                Species = read_excel(input$upload_lamp$datapath, sheet = "Species"),
+                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites"),
+                Finfish = read_excel(input$upload_lamp$datapath, sheet = "Finfish"),
+                Conch = read_excel(input$upload_lamp$datapath, sheet = "Conch"),
+                Lobster = read_excel(input$upload_lamp$datapath, sheet = "Lobster"),
+                Diadema_Crab = read_excel(input$upload_lamp$datapath, sheet = "Diadema and Crab")
+            )
+        } else {
+            pressure # putting this as placeholder until multi-period is supported
+        }
     })
+
     df_upload_spag <- reactive({
         req(input$upload_spag)
         read.csv(input$upload_spag$datapath)
