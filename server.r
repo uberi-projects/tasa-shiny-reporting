@@ -3,9 +3,6 @@
 # Load packages ---------------------------
 library(readxl)
 
-# Source code ---------------------------
-source("validation/validate_lampconch_1per.r")
-
 # Define server ---------------------------
 server <- function(input, output, session) {
     # Define dataframes from uploads
@@ -52,16 +49,20 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!")
     })
     observeEvent(input$validate_lamp, {
-        if (!validate_transect_check(df_upload_lamp()$Survey_Data$Transect)) {
-            shinyalert("Warning!", validate_transect(df_upload_lamp()$Survey_Data$Transect),
+        source("validation/validate_lampconch_1per.r")
+        validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data)
+        validation_message <- func_validate_lampconch_1per(df_upload_lamp()$Survey_Data)
+        if (!validation_passed) {
+            shinyalert("Attention!", validation_message,
                 confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning"
             )
         } else {
-            shinyalert("Success!", validate_transect(df_upload_lamp()$Survey_Data$Transect),
+            shinyalert("Success!", "Validation Successful!",
                 confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success"
             )
         }
     })
+
     observeEvent(input$validate_spag, {
         shinyalert("Success!", "Validation Successful!")
     })
