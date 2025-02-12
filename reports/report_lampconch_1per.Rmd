@@ -393,6 +393,72 @@ For all boxplots, the box encompasses 50% of the data, and the whiskers span the
 The bar inside the box represents the median.\
 
 
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3_percent <- df_merged %>%
+  group_by(Section) %>%
+  summarize(
+    Type = "(%)",
+    `Legal (≥ 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal (< 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Possibly Mature (≥ 4 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Probably Mature (≥ 15 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Possibly Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Probably Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(100 * sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE) / sum(`Conch Count`), 0)
+  ) %>%
+  pivot_longer(
+    cols = -c(Section, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_counts <- df_merged %>%
+  group_by(Section) %>%
+  summarize(
+    Type = "(#)",
+    `Legal (≥ 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal (< 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE), 1),
+    `Possibly Mature (≥ 4 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE), 1),
+    `Probably Mature (≥ 15 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE), 1),
+    `Legal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Possibly Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Probably Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE), 1)
+  ) %>%
+  pivot_longer(
+    cols = -c(Section, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_bound <- bind_rows(df_table3_percent, df_table3_counts)
+df_table3 <- df_table3_bound %>%
+  pivot_wider(names_from = Type, values_from = Value) %>%
+  mutate(Combined = paste0(`(%)`, "%, (", `(#)`, ")")) %>%
+  select(Section, Attribute, Combined) %>%
+  pivot_wider(names_from = Section, values_from = Combined)
+
+
+
+# Prepare dynamic variables for Table 3 ---------------------------
+```
+
+
+
 The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. 
 The highest proportion of lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. 
 The highest proportion of legal and lipped queen conch was found in the ____ with ___%, compared to the overall proportion of ____%. 
@@ -400,12 +466,12 @@ Samba conch had the highest proportion at ____ with ____%, compared to the overa
 
 
 **Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
- NO is north, NE is northeast, SE is southeast, and SW is southwest. \
+ NO is north, NE is northeast, SE is southeast, and SW is southwest. 
+ Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
 
 
 ```{r table3, echo = FALSE}
-# show table
-head(params$datafile$Survey_Data)
+df_table3
 ```
 
 
