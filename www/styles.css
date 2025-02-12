@@ -207,6 +207,7 @@ label {
 }
 .data-template-table td{
   border-top: none !important;
+  padding: 0 10px;
 }
 .data-template-table thead > tr{
   background: linear-gradient(
@@ -224,6 +225,17 @@ label {
 }
 .data-template-table tr{
   font-size: 20px;
+}
+.data-template-table a{
+  background-color: rgba(0, 160, 154, 0.5);
+  padding: 0 5px;
+  color: black;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.data-template-table a:hover{
+  background-color: #2ca0d9;
 }
 
 /* Input buttons */
