@@ -597,6 +597,56 @@ north (B),southeast (C), southwest (D), and overall (E) at Turneffe Atoll Marine
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 
+
+
+```{r table4_prep, echo = FALSE, include = FALSE}
+# Create df for Table 4 ---------------------------
+df_table4_lengths <- df_merged %>%
+  group_by(Section) %>%
+  summarize(
+    `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
+    `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
+  ) %>%
+  select(Section, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+
+df_table4_total_lengths <- df_merged %>%
+  mutate(
+    Section = "Overall",
+    `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
+    `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
+  ) %>%
+  select(Section, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+
+df_table4 <- bind_rows(df_table4_lengths, df_table4_total_lengths) %>%
+  distinct()
+
+# Prepare dynamic variables for Table 4 ---------------------------
+maximum_length <- max(df_table4_lengths$`Mean Shell Length`, na.rm = TRUE)
+maximum_length_section <- max(df_table4_lengths$`Mean Shell Length`[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
+maximum_length_overall <- max(filter(df_table4_total_lengths, Section == "Overall")$`Mean Shell Length`, na.rm = TRUE)
+```
+
+The highest mean queen conch shell length was found in the `r maximum_length_overall` section, being `r maximum_length`cm. 
+This is compared to the overall mean length of `r maximum_length_overall` (Table 4).
+
+
+
+**Table 4.**  Table of queen conch shell lengths (cm) for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
+ NO is north, NE is northeast, SE is southeast, and SW is southwest. \
+
+
+```{r table4, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+df_table4
+```
+
+
+<br>
+
+
 ## Conclusion
 
 By summarizing and visualizing the queen conch LAMP survey data from `r study_year`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
@@ -610,14 +660,23 @@ This report supports the aims of the Long-term Atoll Monitoring Program by offer
 ```{r collectors_prep, echo = FALSE, include = FALSE}
 # Create dynamic variable for acknowledgements ---------------------------
 collectors <- df_merged$`Recorder(s)` %>%
+  as.character() %>%
+  na.omit() %>%
   strsplit(", ") %>%
-  unlist() %>%
-  unique()
-collectors_string <- ifelse(length(collectors) > 1, paste0(", ", knitr::combine_words(setdiff(collectors, "Missing"))), "")
+  unlist()
+if (length(collectors) == 0) {
+  collectors_string <- ""
+} else {
+  collectors <- unique(collectors)
+  collectors_string <- ifelse(length(collectors) > 1,
+    paste0(": ", knitr::combine_words(setdiff(collectors, "Missing"))),
+    ""
+  )
+}
 ```
 
 
-Thank you to the data collectors on this project`r collectors_string`. Without you, this dataset would not exist as it is. \
+Thank you to the data collectors who contributed to this project`r collectors_string`. Without you, this dataset would not exist as it is. \
 
 
 ## Literature Cited
