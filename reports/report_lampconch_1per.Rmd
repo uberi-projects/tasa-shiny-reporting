@@ -302,6 +302,7 @@ mean_per_site <- summary_site %>%
   group_by(Section) %>%
   summarize(Mean_Conch_Per_Site = mean(Conch_Count_Site))
 
+# Create panels for FIgure 2 ---------------------------
 A <- ggplot(summary_transect, aes(x = Conch_Count_Transect)) +
   geom_histogram(
     binwidth = 1, color = "black",
@@ -321,7 +322,6 @@ A <- ggplot(summary_transect, aes(x = Conch_Count_Transect)) +
     labels = c(0, 20, 40, 60, 80, 100)
   ) +
   coord_cartesian(xlim = c(1, 110))
-
 B <- ggplot(summary_site, aes(x = Conch_Count_Site)) +
   geom_histogram(
     binwidth = 5, color = "black",
@@ -341,7 +341,6 @@ B <- ggplot(summary_site, aes(x = Conch_Count_Site)) +
     labels = c(0, 50, 100, 150, 200, 250)
   ) +
   coord_cartesian(xlim = c(1, 275))
-
 C <- ggplot(
   summary_transect,
   aes(x = Section, y = Conch_Count_Transect, fill = Section)
@@ -356,8 +355,6 @@ C <- ggplot(
   ylab("Conch per Transect") +
   guides(fill = "none") +
   labs(title = "C")
-
-
 D <- ggplot(
   summary_site,
   aes(x = Section, y = Conch_Count_Site, fill = Section)
@@ -373,7 +370,7 @@ D <- ggplot(
   guides(fill = "none") +
   labs(title = "D")
 
-widths <- c(1.5, 1, 1.5, 1)
+# Assemble Figure 2 ---------------------------
 figure2_bottom <- ggarrange(C, D, ncol = 2, nrow = 1)
 figure2 <- ggarrange(A, B, figure2_bottom, ncol = 1, nrow = 3)
 ```
@@ -533,8 +530,71 @@ df_table3
 <br>
 
 
-*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm)  for data from `r study_year` by section and overall at Turneffe Atoll Marine Reserve. 
-NO is north, NE is northeast, SE is southeast, and SW is southwest. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create df for Figure 3 ---------------------------
+df_fig3 <- df_merged %>%
+  mutate(
+    `Shell Length (cm)` = `Shell Length (in)` * 2.54,
+    Lipped = factor(
+      case_when(
+        is.na(`Lip Thickness (mm)`) ~ "Not Lipped",
+        `Lip Thickness (mm)` > 0 ~ "Lipped",
+        TRUE ~ "Not Lipped"
+      ),
+      levels = c("Not Lipped", "Lipped")
+    )
+  )
+
+# Create panels for Figure 3 ---------------------------
+A <- ggplot(filter(df_fig3, Section == "NE"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "A", subtitle = "Northeast") +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+B <- ggplot(filter(df_fig3, Section == "NO"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "B", subtitle = "North") +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+C <- ggplot(filter(df_fig3, Section == "SE"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "C", subtitle = "Southeast") +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+D <- ggplot(filter(df_fig3, Section == "SW"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "D", subtitle = "Southwest") +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+E <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "E", subtitle = "Overall") +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+
+# Assemble Figure 3 ---------------------------
+figure3 <- ggarrange(A, B, C, D, E, nrow = 3, ncol = 2)
+```
+
+
+```{r figure3, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm)  for data from `r study_year` in the northeast (A),
+north (B),southeast (C), southwest (D), and overall (E) at Turneffe Atoll Marine Reserve. 
+The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 
 ## Conclusion
@@ -545,7 +605,19 @@ This report supports the aims of the Long-term Atoll Monitoring Program by offer
 
 ## Acknowledgments
 
-Thank you to the data collectors on this project, _________. Without you, this dataset would not exist as it is. \
+
+
+```{r collectors_prep, echo = FALSE, include = FALSE}
+# Create dynamic variable for acknowledgements ---------------------------
+collectors <- df_merged$`Recorder(s)` %>%
+  strsplit(", ") %>%
+  unlist() %>%
+  unique()
+collectors_string <- ifelse(length(collectors) > 1, paste0(", ", knitr::combine_words(setdiff(collectors, "Missing"))), "")
+```
+
+
+Thank you to the data collectors on this project`r collectors_string`. Without you, this dataset would not exist as it is. \
 
 
 ## Literature Cited
