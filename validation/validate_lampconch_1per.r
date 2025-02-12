@@ -50,15 +50,41 @@ validate_date <- function(x) {
         ))
     }
 }
+validate_site_check <- function(x, y) {
+    valid <- is.na(x) | x %in% y
+    return(all(valid))
+}
+validate_site <- function(x, y) {
+    invalid_sites <- unique(x[!(is.na(x) | x %in% y)])
+    if (length(invalid_sites) == 0) {
+        return("Site ID column is validated!")
+    } else {
+        display_values <- if (length(invalid_sites) > 10) {
+            paste(c(invalid_sites[1:10], "..."), collapse = ", ")
+        } else {
+            paste(invalid_sites, collapse = ", ")
+        }
+        return(paste0(
+            "Some Site IDs in the Survey Data sheet do not match the surveyed Sites sheet: ",
+            display_values,
+            paste0(" (unexpected values occurred ", length(x[!(is.na(x) | x %in% y)]), " times)."),
+            "
+
+            "
+        ))
+    }
+}
 
 # Define primary functions ---------------------------
-func_validate_lampconch_1per_check <- function(x) {
-    transect_valid <- validate_transect_check(x$Transect)
+func_validate_lampconch_1per_check <- function(x, y) {
     date_valid <- validate_date_check(x$Date)
-    return(all(c(transect_valid, date_valid)))
+    site_valid <- validate_site_check(x$`Site ID`, y$`Site ID`)
+    transect_valid <- validate_transect_check(x$Transect)
+    return(all(c(date_valid, site_valid, transect_valid)))
 }
-func_validate_lampconch_1per <- function(x) {
-    transect_valid <- validate_transect(x$Transect)
+func_validate_lampconch_1per <- function(x, y) {
     date_valid <- validate_date(x$Date)
-    return(paste(transect_valid, date_valid))
+    site_valid <- validate_site(x$`Site ID`, y$`Site ID`)
+    transect_valid <- validate_transect(x$Transect)
+    return(paste(date_valid, site_valid, transect_valid))
 }

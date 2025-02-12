@@ -50,8 +50,8 @@ server <- function(input, output, session) {
     })
     observeEvent(input$validate_lamp, {
         source("validation/validate_lampconch_1per.r")
-        validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data)
-        validation_message <- func_validate_lampconch_1per(df_upload_lamp()$Survey_Data)
+        validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
+        validation_message <- func_validate_lampconch_1per(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
         if (!validation_passed) {
             shinyalert("Attention!", validation_message,
                 confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning"
