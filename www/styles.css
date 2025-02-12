@@ -205,6 +205,26 @@ label {
   max-width: 90%;
   padding-left: 10%;
 }
+.data-template-table td{
+  border-top: none !important;
+}
+.data-template-table thead > tr{
+  background: linear-gradient(
+    to right,
+    rgba(0, 160, 154, 0) 3%,
+    rgba(0, 160, 154, 0.5) 20%,
+    rgba(0, 160, 154, 0.5) 80%,
+    rgba(0, 160, 154, 0) 97%
+  );
+}
+.data-template-table th{
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom: none !important;
+}
+.data-template-table tr{
+  font-size: 20px;
+}
 
 /* Input buttons */
 .progress-bar {

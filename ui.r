@@ -448,6 +448,10 @@ ui <- navbarPage(
                     class = "content-box",
                     h2("Data Templates"),
                     p(dummy_text[3])
+                ),
+                div(
+                    class = "data-template-table",
+                    uiOutput("template_list_table")
                 )
             )
         )

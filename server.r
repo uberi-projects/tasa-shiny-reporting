@@ -1,4 +1,5 @@
 ## server.R
+link_text <- paste(readLines("text/links.txt"))
 
 # Define server ---------------------------
 server <- function(input, output, session) {
@@ -166,4 +167,29 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
+
+    output$template_list_table <- renderUI({
+        tags$table(
+            class = "templates-table",
+            tags$thead(
+                tags$tr(
+                    tags$th("Datatype"),
+                    tags$th("Subtype"),
+                    tags$th("Link to Template")
+                )
+            ),
+            tags$tbody(
+                # Iterates through lists to create table info
+                lapply(1:6, function(i) {
+                    tags$tr(
+                        tags$td(c("Fisheries Catch", "Fisher Catch", "LAMP", "LAMP", "SPAG", "SPAG")[i]),
+                        tags$td(c("-", "-", "Conch", "General", "Visual Census", "Laser Data")[i]),
+                        tags$td(
+                            tags$a(href = link_text[i + 1], "View Template", target = "_blank")
+                        )
+                    )
+                })
+            )
+        )
+    })
 }
