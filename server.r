@@ -1,5 +1,4 @@
 ## server.R
-link_text <- paste(readLines("text/links.txt"))
 
 # Define server ---------------------------
 server <- function(input, output, session) {
@@ -169,6 +168,7 @@ server <- function(input, output, session) {
     )
 
     output$template_list_table <- renderUI({
+        link_text <- paste(readLines("text/links.txt"))
         tags$table(
             class = "templates-table",
             tags$thead(
