@@ -41,8 +41,6 @@ ui <- navbarPage(
                     br(),
                     div(img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
                     br(),
-                    p(home_text[2]),
-                    br(),
                     p(strong(home_text[3]))
                 ),
                 div(
