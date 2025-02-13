@@ -20,7 +20,8 @@ server <- function(input, output, session) {
         if (input$datatype_lamp == "Conch" & input$period_lamp == "One Period") {
             list(
                 Survey_Data = read_excel(input$upload_lamp$datapath, sheet = "Survey Data", na = nas),
-                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas)
+                Sites = read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas),
+                Habitat_Types = read_excel(input$upload_lamp$datapath, sheet = "Habitat Types", na = nas)
             )
         } else if (input$datatype_lamp == "General LAMP" & input$period_lamp == "One Period") {
             list(
@@ -49,7 +50,41 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!")
     })
     observeEvent(input$validate_lamp, {
-        shinyalert("Success!", "Validation Successful!")
+        source("validation/validate_lampconch_1per.r")
+        completeness_passed <- func_validate_lampconch_1per_completeness_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+        validation_message_completeness <- func_validate_lampconch_1per_completeness(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+        if (!completeness_passed) {
+            shinyalert("Attention!",
+                text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
+                confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+            )
+        } else {
+            validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+            validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
+            validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+            validation_message <- c(
+                if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
+                    paste0(
+                        "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
+                        "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
+                    )
+                } else if (length(validation_message_surveydata) > 0) {
+                    paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
+                } else if (length(validation_message_sites) > 0) {
+                    paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                }
+            )
+            if (validation_passed | length(validation_message) == 0) {
+                shinyalert("Success!", "Validation Successful!",
+                    confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+                )
+            } else {
+                shinyalert("Attention!",
+                    text = validation_message,
+                    confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                )
+            }
+        }
     })
     observeEvent(input$validate_spag, {
         shinyalert("Success!", "Validation Successful!")
