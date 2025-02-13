@@ -96,7 +96,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose Excel File",
+                                    "Choose File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
@@ -182,7 +182,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose CSV File",
+                                    "Choose File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
@@ -277,7 +277,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose Excel File",
+                                    "Choose File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
@@ -368,7 +368,7 @@ ui <- navbarPage(
                                 hr(),
                                 tags$li(
                                     class = "input-list",
-                                    "Choose CSV File",
+                                    "Choose File",
                                     div(
                                         class = "input-list-content",
                                         fileInput(
