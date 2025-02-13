@@ -306,23 +306,6 @@ validate_habitat <- function(y_habitats, z_habitats) {
         return(error_message)
     }
 }
-validate_time_check <- function(y) {
-    valid <- grepl("^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$", y) | is.na(y)
-    all(valid, na.rm = TRUE)
-}
-validate_time <- function(y) {
-    valid <- grepl("^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$", y) | is.na(y)
-    if (all(valid, na.rm = TRUE)) {
-    } else {
-        invalid <- y[!valid & !is.na(y)]
-        return(paste0(
-            "- These Time In/Out values do not match the expected format (h:mm AM/PM): ",
-            paste(invalid, collapse = ", "),
-            sprintf(" (unexpected values occurred %d times).", length(invalid)),
-            "<br><br>"
-        ))
-    }
-}
 validate_method_check <- function(y) {
     valid_methods <- c("Dive", "Snorkel", "Wade")
     valid <- y %in% valid_methods | is.na(y)
@@ -363,7 +346,7 @@ validate_recorders <- function(y) {
 # Define primary functions ---------------------------
 func_validate_lampconch_1per_completeness_check <- function(x, y, z) {
     required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
-    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Time In", "Time Out", "Method", "Recorder(s)")
+    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
     required_columns_habitattypes <- c("Habitat Type")
     complete_x <- completeness_check(x, required_columns_surveydata)
     complete_y <- completeness_check(y, required_columns_sites)
@@ -384,18 +367,16 @@ func_validate_lampconch_1per_check <- function(x, y, z) {
     sitesectionmatch_valid <- validate_sitesectionmatch_check(y$`Site ID`, y$Section)
     coords_valid <- validate_coords_check(y$Latitude, y$Longitude)
     habitat_valid <- validate_habitat_check(y$Habitat, z$`Habitat Type`)
-    timein_valid <- validate_time_check(y$`Time In`)
-    timeout_valid <- validate_time_check(y$`Time Out`)
     method_valid <- validate_method_check(y$Method)
     recorders_valid <- validate_recorders_check(y$`Recorder(s)`)
     return(all(c(
         date_valid, site_valid, transect_valid, conchcount_valid, conchdepth_valid, shelllength_valid, lipthickness_valid, # Survey Data sheet
-        date_y_valid, site_y_valid, section_valid, sitesectionmatch_valid, coords_valid, habitat_valid, timein_valid, timeout_valid, method_valid, recorders_valid # Sites sheet
+        date_y_valid, site_y_valid, section_valid, sitesectionmatch_valid, coords_valid, habitat_valid, method_valid, recorders_valid # Sites sheet
     )))
 }
 func_validate_lampconch_1per_completeness <- function(x, y, z) {
     required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
-    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Time In", "Time Out", "Method", "Recorder(s)")
+    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
     required_columns_habitattypes <- c("Habitat Type")
     complete_x <- completeness(x, required_columns_surveydata, "Survey Data")
     complete_y <- completeness(y, required_columns_sites, "Sites")
@@ -419,9 +400,7 @@ func_validate_lampconch_1per_sites <- function(x, y, z) {
     sitesectionmatch_valid <- validate_sitesectionmatch(y$`Site ID`, y$Section)
     coords_valid <- validate_coords(y$Latitude, y$Longitude)
     habitat_valid <- validate_habitat(y$Habitat, z$`Habitat Type`)
-    timein_valid <- validate_time(y$`Time In`)
-    timeout_valid <- validate_time(y$`Time Out`)
     method_valid <- validate_method(y$Method)
     recorders_valid <- validate_recorders(y$`Recorder(s)`)
-    return(paste(date_y_valid, site_y_valid, section_valid, sitesectionmatch_valid, coords_valid, habitat_valid, timein_valid, timeout_valid, method_valid, recorders_valid))
+    return(paste(date_y_valid, site_y_valid, section_valid, sitesectionmatch_valid, coords_valid, habitat_valid, method_valid, recorders_valid))
 }
