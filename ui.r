@@ -439,7 +439,7 @@ ui <- navbarPage(
                     div(
                         class = "external-link-button",
                         a(
-                            href = link_text[2],
+                            href = link_text[8],
                             target = "_blank",
                             h1("Visit Manual")
                         )
@@ -458,6 +458,10 @@ ui <- navbarPage(
                     class = "content-box",
                     h2("Data Templates"),
                     p(dummy_text[3])
+                ),
+                div(
+                    class = "data-template-table",
+                    uiOutput("template_list_table")
                 )
             )
         )
