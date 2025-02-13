@@ -51,14 +51,15 @@ server <- function(input, output, session) {
     observeEvent(input$validate_lamp, {
         source("validation/validate_lampconch_1per.r")
         validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
-        validation_message <- func_validate_lampconch_1per(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
+        validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
         if (!validation_passed) {
-            shinyalert("Attention!", validation_message,
-                confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning"
+            shinyalert("Attention!",
+                text = paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata),
+                confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
             )
         } else {
             shinyalert("Success!", "Validation Successful!",
-                confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success"
+                confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
             )
         }
     })
