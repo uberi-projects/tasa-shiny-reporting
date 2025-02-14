@@ -123,7 +123,7 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -209,7 +209,7 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -303,7 +303,7 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -395,7 +395,7 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",

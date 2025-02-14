@@ -203,6 +203,9 @@ label {
   height: fit-content;
   overflow-x: hidden;
 }
+.shorter-input-box {
+  height: 100%;
+}
 .pipeline {
   max-width: 90%;
   padding-left: 10%;
