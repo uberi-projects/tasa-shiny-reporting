@@ -33,7 +33,7 @@ ui <- navbarPage(
         div(
             class = "content-container-parent",
             div(
-                class = "content-container-grid grid-home",
+                class = "content-container-grid",
                 div(
                     class = "content-box",
                     h2("Welcome"),
@@ -43,6 +43,7 @@ ui <- navbarPage(
                     br(),
                     p(strong(home_text[3]))
                 ),
+                hr(),
                 div(
                     class = "content-box",
                     h2("Using this App"),
