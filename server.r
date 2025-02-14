@@ -220,6 +220,16 @@ server <- function(input, output, session) {
         }
     )
 
+    observeEvent(input$upload_fisheries, {
+        if (!is.null(input$upload_fisheries)) {
+            shinyjs::enable("name")
+            shinyjs::enable("report_fisheries")
+        } else {
+            shinyjs::disable("name")
+            shinyjs::disable("report_fisheries")
+        }
+    })
+
     output$template_list_table <- renderUI({
         link_text <- paste(readLines("text/links.txt"))
         tags$table(

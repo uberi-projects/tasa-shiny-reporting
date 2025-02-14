@@ -2,6 +2,7 @@
 
 # Load packages ---------------------------
 library(shiny)
+library(shinyjs)
 library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
@@ -28,6 +29,7 @@ ui <- navbarPage(
             )
         )
     ),
+    useShinyjs(),
     tabPanel(
         "Home",
         div(
@@ -64,6 +66,13 @@ ui <- navbarPage(
         "Create Reports",
         tabPanel(
             "Fisheries Catch",
+            tags$script(
+                HTML(
+                    "$(document).ready(function(){
+                $('#name').prop('disabled', true);
+            });"
+                )
+            ),
             div(
                 class = "content-container-parent",
                 div(
@@ -130,7 +139,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "")
+                                        textInput("name", "Your Name: ", value = "", )
                                     )
                                 ),
                                 hr(),
@@ -225,7 +234,8 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_fisher", "Generate")
+                                        downloadButton("report_fisher", "Generate"),
+                                        tags$script(HTML("shinyjs.disable('report_fisheries');"))
                                     )
                                 )
                             )
