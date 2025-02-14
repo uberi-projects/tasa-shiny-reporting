@@ -37,11 +37,10 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Welcome"),
-                    p(home_text[1]),
+                    p(home_text[1]), p(strong(home_text[3])),
                     br(),
-                    div(img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
-                    br(),
-                    p(strong(home_text[3]))
+                    div(class = "pipeline-div", img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
+                    br()
                 ),
                 hr(),
                 div(

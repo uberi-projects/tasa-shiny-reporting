@@ -149,12 +149,11 @@ label {
   justify-content: center;
   justify-items: center;
   left: 0;
-  padding: 0 15vw;
+  padding: 0 20vw;
   position: absolute;
   right: 0;
   width: 100vw;
 }
-.grid-home,
 .grid-generator {
   gap: 20px;
   grid-template-columns: 1fr 1fr;
@@ -162,8 +161,6 @@ label {
   justify-content: center;
   overflow-x: hidden;
   width: 100%;
-}
-.grid-generator {
   margin: 20px 0;
 }
 .grid-report {
@@ -181,14 +178,14 @@ label {
 }
 .content-box {
   background: linear-gradient(
-    rgba(255, 255, 255, 0) 3%,
+    rgba(255, 255, 255, 0) 2%,
     rgba(255, 255, 255, 1) 40%,
     rgba(255, 255, 255, 1) 60%,
-    rgba(255, 255, 255, 0) 97%
+    rgba(255, 255, 255, 0) 98%
   );
   display: block;
-  margin: 0 25px;
-  padding: 65px 10px;
+  margin: 15px 25px;
+  padding: 20px 10px;
   position: relative;
   width: 100%;
 }
@@ -201,8 +198,11 @@ label {
   overflow-x: hidden;
 }
 .pipeline {
-  max-width: 90%;
-  padding-left: 10%;
+  max-width: 400px;
+}
+.pipeline-div {
+  display: flex;
+  justify-content: center;
 }
 .data-template-table td {
   border-top: none !important;
