@@ -274,6 +274,6 @@ label {
   background: none;
   border: none;
   padding: 0;
-  color: blue;
+  color: var(--color-secondary);
   cursor: pointer;
 }
