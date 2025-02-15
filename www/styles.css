@@ -200,6 +200,15 @@ label {
   height: fit-content;
   overflow-x: hidden;
 }
+.input-box-cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
 .pipeline {
   max-width: 90%;
   padding-left: 10%;

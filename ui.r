@@ -131,6 +131,10 @@ ui <- navbarPage(
                         ),
                         div(
                             class = "input-box",
+                            div(
+                                class = "input-box-cover",
+                                id = "input-box-cover"
+                            ),
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",

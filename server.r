@@ -224,9 +224,11 @@ server <- function(input, output, session) {
         if (!is.null(input$upload_fisheries)) {
             shinyjs::enable("name")
             shinyjs::enable("report_fisheries")
+            shinyjs::hide("input-box-cover")
         } else {
             shinyjs::disable("name")
             shinyjs::disable("report_fisheries")
+            shinyjs::show("input-box-cover")
         }
     })
 
