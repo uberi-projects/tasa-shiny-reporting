@@ -14,6 +14,7 @@ link_text <- paste(readLines("text/links.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
+    id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
     header = div(
         includeCSS("www/modern-normalize.css"),
@@ -55,7 +56,11 @@ ui <- navbarPage(
                         tags$li(home_text[8])
                     ),
                     br(),
-                    p(strong(home_text[9]))
+                    p(strong(
+                        "For additional information on using and maintaining this app, please visit the ",
+                        actionButton("go_to_manual_tab", "Manual"),
+                        " page. "
+                    ))
                 )
             )
         )

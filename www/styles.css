@@ -276,3 +276,10 @@ label {
 .shiny-input-radiogroup label ~ .shiny-options-group {
   font-size: 1.5rem;
 }
+#go_to_manual_tab{
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
