@@ -203,6 +203,15 @@ label {
 .shorter-input-box {
   height: 100%;
 }
+.input-box-cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
 .pipeline {
   max-width: 400px;
 }

@@ -220,6 +220,18 @@ server <- function(input, output, session) {
         }
     )
 
+    observeEvent(input$upload_fisheries, {
+        if (!is.null(input$upload_fisheries)) {
+            shinyjs::enable("name")
+            shinyjs::enable("report_fisheries")
+            shinyjs::hide("input-box-cover")
+        } else {
+            shinyjs::disable("name")
+            shinyjs::disable("report_fisheries")
+            shinyjs::show("input-box-cover")
+        }
+    })
+
 
     # Observe action button "Manual" on home page
     observeEvent(input$go_to_manual_tab, {
