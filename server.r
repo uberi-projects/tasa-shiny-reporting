@@ -232,6 +232,12 @@ server <- function(input, output, session) {
         }
     })
 
+
+    # Observe action button "Manual" on home page
+    observeEvent(input$go_to_manual_tab, {
+        updateTabsetPanel(session = session, "navbar_page", selected = "Manual")
+    })
+
     output$template_list_table <- renderUI({
         link_text <- paste(readLines("text/links.txt"))
         tags$table(

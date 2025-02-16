@@ -15,6 +15,7 @@ link_text <- paste(readLines("text/links.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
+    id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
     header = div(
         includeCSS("www/modern-normalize.css"),
@@ -35,16 +36,16 @@ ui <- navbarPage(
         div(
             class = "content-container-parent",
             div(
-                class = "content-container-grid grid-home",
+                class = "content-container-grid",
                 div(
                     class = "content-box",
                     h2("Welcome"),
-                    p(home_text[1]),
+                    p(home_text[1]), p(strong(home_text[3])),
                     br(),
-                    div(img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
-                    br(),
-                    p(strong(home_text[3]))
+                    div(class = "pipeline-div", img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
+                    br()
                 ),
+                hr(),
                 div(
                     class = "content-box",
                     h2("Using this App"),
@@ -57,7 +58,11 @@ ui <- navbarPage(
                         tags$li(home_text[8])
                     ),
                     br(),
-                    p(strong(home_text[9]))
+                    p(strong(
+                        "For additional information on using and maintaining this app, please visit the ",
+                        actionButton("go_to_manual_tab", "Manual"),
+                        " page. "
+                    ))
                 )
             )
         )
@@ -90,7 +95,7 @@ ui <- navbarPage(
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Choose Time Period",
                                     div(
                                         class = "input-list-content",
@@ -130,7 +135,7 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             div(
                                 class = "input-box-cover",
                                 id = "input-box-cover"
@@ -139,7 +144,7 @@ ui <- navbarPage(
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
@@ -148,7 +153,7 @@ ui <- navbarPage(
                                 ),
                                 hr(),
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list ",
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
@@ -180,7 +185,7 @@ ui <- navbarPage(
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Choose Time Period",
                                     div(
                                         class = "input-list-content",
@@ -220,12 +225,12 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
@@ -267,7 +272,7 @@ ui <- navbarPage(
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Choose Datatype",
                                     div(
                                         class = "input-list-content",
@@ -315,12 +320,12 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
@@ -361,7 +366,7 @@ ui <- navbarPage(
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Choose Datatype",
                                     div(
                                         class = "input-list-content",
@@ -407,12 +412,12 @@ ui <- navbarPage(
                             )
                         ),
                         div(
-                            class = "input-box",
+                            class = "input-box shorter-input-box",
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
                                 tags$li(
-                                    class = "input-list",
+                                    class = "input-list input-list-topbox",
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
