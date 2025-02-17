@@ -1,45 +1,9 @@
 ## validate_lampconch_1per.r
 
-# Load packages ---------------------------
-library(tidyverse)
-
-# Define functions to check for required columns ---------------------------
-completeness_check <- function(df, required_columns) {
-    missing_cols <- setdiff(required_columns, colnames(df))
-    if (length(missing_cols) > 0) {
-        FALSE
-    } else {
-        TRUE
-    }
-}
-completeness <- function(df, required_columns, df_name) {
-    missing_cols <- setdiff(required_columns, colnames(df))
-    if (length(missing_cols) > 0) {
-        paste("Missing required columns from", df_name, ":", paste(missing_cols, collapse = ", "), "<br><br>")
-    }
-}
+# Source general helper functions ---------------------------
+source("validation/general_validation_helpers.r")
 
 # Define helper functions for Survey Data sheet ---------------------------
-validate_date_check <- function(x) {
-    invalid_serials <- grepl("^[0-9]+$", x)
-    return(!any(invalid_serials))
-}
-validate_date <- function(x) {
-    invalid_serials <- x[grepl("^[0-9]+$", x)]
-    if (length(invalid_serials) == 0) {
-    } else {
-        display_values <- if (length(invalid_serials) > 10) {
-            paste(c(invalid_serials[1:10], "..."), collapse = ", ")
-        } else {
-            paste(invalid_serials, collapse = ", ")
-        }
-        return(paste0(
-            "- Please ensure the Date column in Excel is formatted as YYYY-MM-DD. Some dates are being incorrectly imported as serial numbers due to inconsistent formatting: ",
-            display_values,
-            "<br><br>"
-        ))
-    }
-}
 validate_site_check <- function(x, y) {
     valid <- is.na(x) | x %in% y
     return(all(valid))
@@ -168,26 +132,6 @@ validate_lipthickness <- function(x) {
     }
 }
 # Define helper functions for Sites sheet ---------------------------
-validate_date_y_check <- function(y) {
-    invalid_serials <- grepl("^[0-9]+$", y)
-    return(!any(invalid_serials))
-}
-validate_date_y <- function(y) {
-    invalid_serials <- y[grepl("^[0-9]+$", y)]
-    if (length(invalid_serials) == 0) {
-    } else {
-        display_values <- if (length(invalid_serials) > 10) {
-            paste(c(invalid_serials[1:10], "..."), collapse = ", ")
-        } else {
-            paste(invalid_serials, collapse = ", ")
-        }
-        return(paste0(
-            "- Please ensure the Date column in Excel is formatted as YYYY-MM-DD. Some dates are being incorrectly imported as serial numbers due to inconsistent formatting: ",
-            display_values,
-            "<br><br>"
-        ))
-    }
-}
 validate_site_y_check <- function(y) {
     valid <- (is.na(y) | grepl("^(NO|NE|SE|SW)", y) | y == "MISSING")
     return(all(valid))
@@ -344,6 +288,9 @@ validate_recorders <- function(y) {
 }
 
 # Define primary functions ---------------------------
+func_validate_lampconch_1per_sheets_check <- function(x) {
+    sheets_check(x, c("Survey_Data", "Habitat_Types", "Sites"))
+}
 func_validate_lampconch_1per_completeness_check <- function(x, y, z) {
     required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
     required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
@@ -361,7 +308,7 @@ func_validate_lampconch_1per_check <- function(x, y, z) {
     conchdepth_valid <- validate_conchdepth_check(x$`Conch Depth (ft)`)
     shelllength_valid <- validate_shelllength_check(x$`Shell Length (in)`)
     lipthickness_valid <- validate_lipthickness_check(x$`Lip Thickness (mm)`)
-    date_y_valid <- validate_date_y_check(y$Date)
+    date_y_valid <- validate_date_check(y$Date)
     site_y_valid <- validate_site_y_check(y$`Site ID`)
     section_valid <- validate_section_check(y$Section)
     sitesectionmatch_valid <- validate_sitesectionmatch_check(y$`Site ID`, y$Section)
@@ -373,6 +320,9 @@ func_validate_lampconch_1per_check <- function(x, y, z) {
         date_valid, site_valid, transect_valid, conchcount_valid, conchdepth_valid, shelllength_valid, lipthickness_valid, # Survey Data sheet
         date_y_valid, site_y_valid, section_valid, sitesectionmatch_valid, coords_valid, habitat_valid, method_valid, recorders_valid # Sites sheet
     )))
+}
+func_validate_lampconch_1per_sheets <- function(x) {
+    sheets(x, c("Survey_Data", "Habitat_Types", "Sites"), "Conch LAMP")
 }
 func_validate_lampconch_1per_completeness <- function(x, y, z) {
     required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
@@ -394,7 +344,7 @@ func_validate_lampconch_1per_surveydata <- function(x, y) {
     return(paste(date_valid, site_valid, transect_valid, conchcount_valid, conchdepth_valid, shelllength_valid, lipthickness_valid))
 }
 func_validate_lampconch_1per_sites <- function(x, y, z) {
-    date_y_valid <- validate_date_y(y$Date)
+    date_y_valid <- validate_date(y$Date)
     site_y_valid <- validate_site_y(y$`Site ID`)
     section_valid <- validate_section(y$Section)
     sitesectionmatch_valid <- validate_sitesectionmatch(y$`Site ID`, y$Section)
