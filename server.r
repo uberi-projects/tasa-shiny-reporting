@@ -259,6 +259,7 @@ server <- function(input, output, session) {
         updateTabsetPanel(session = session, "navbar_page", selected = "Manual")
     })
 
+    # Render list of data templates
     output$template_list_table <- renderUI({
         link_text <- paste(readLines("text/links.txt"))
         tags$table(
