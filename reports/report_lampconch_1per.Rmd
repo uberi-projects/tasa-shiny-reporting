@@ -111,7 +111,9 @@ Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral r
 The fishery is regulated by the Belize Fisheries Department (BFD). 
 National regulations mandate that conch may only be harvested if they exceed a shell length of7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first. 
 The use of SCUBA for commercial conch harvesting is strictly prohibited. 
-Additionally, commercial fishing activities in Belize require a fishing license (Belize Fisheries Department accessed 2025).\
+Additionally, commercial fishing activities in Belize require a fishing license (Belize Fisheries Department accessed 2025).
+
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025).\
 
 
 ## Methods
@@ -713,6 +715,8 @@ Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental 
 Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
 
 Mumby, P. J., & Harborne, A. R. (1999). Classification scheme for marine habitats of Belize, 5th draft. UNDP/GEF Belize Coastal Zone Management Project.
+
+NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
 
 Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
 
