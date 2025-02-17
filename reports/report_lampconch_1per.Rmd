@@ -65,9 +65,9 @@ Turneffe Atoll Sustainability Association (TASA)
 
 Coral reefs are biodiversity hotspots that provide critical habitats for diverse species, support coastal communities, and offer economic opportunities through the harvest of marine invertebrates and fish. 
 Monitoring these ecosystems is essential to assess health, function, and changes over time, informing management decisions. 
-This report presents findings from monitoring surveys of Queen Conch (_Aliger gigas_) at Turneffe Atoll Marine Reserve (TAMR) from `r study_year`. 
+This report presents findings from monitoring surveys of queen conch (_Aliger gigas_) at Turneffe Atoll Marine Reserve (TAMR) from `r study_year`. 
 Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. 
-This report aims to summarize and visualize the Queen Conch dataset from `r study_year` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+This report aims to summarize and visualize the queen conch dataset from `r study_year` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
 
 
 ## Background
@@ -127,7 +127,7 @@ Additionally, each site is categorized within a specific section of TAMR, either
 ![](TAMR_map.jpg){width=450px}
 
 
-*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to Belize Fisheries Department (Belize Geomatics 2022). Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).\
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).\
 
 
 The survey period for this report’s dataset extended from `r study_start` to `r study_end` at TAMR. 
@@ -665,7 +665,7 @@ df_table4
 ## Conclusion
 
 By summarizing and visualizing the queen conch LAMP survey data from `r study_year`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
-This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability and profitability of the TAMR fishery while safeguarding the ecological value of the atoll.\
+This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the ecological value of the atoll.\
 
 
 ## Acknowledgments
