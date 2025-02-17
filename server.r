@@ -70,17 +70,17 @@ server <- function(input, output, session) {
         sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp())
         validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp())
         if (!sheets_passed) {
-            shinyalert("Attention!",
+            shinyalert("Alert!",
                 text = paste(validation_message_sheets, "Please ensure all required sheets are present prior to validation."),
-                confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
         } else {
             completeness_passed <- func_validate_lampconch_1per_completeness_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
             validation_message_completeness <- func_validate_lampconch_1per_completeness(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
             if (!completeness_passed) {
-                shinyalert("Attention!",
+                shinyalert("Alert!",
                     text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
-                    confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                    confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
                 validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
@@ -147,7 +147,6 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-
     output$report_fisher <- downloadHandler(
         filename = function() {
             report_file <- switch(input$period_fisher,
@@ -179,7 +178,6 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-
     output$report_lamp <- downloadHandler(
         filename = function() {
             report_file <- switch(paste(input$datatype_lamp, input$period_lamp, sep = "_"),
@@ -209,8 +207,6 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-
-
     output$report_spag <- downloadHandler(
         filename = function() {
             report_file <- switch(paste(input$datatype_spag, input$period_spag, sep = "_"),
@@ -245,6 +241,7 @@ server <- function(input, output, session) {
         }
     )
 
+    # Enable/disable input boxes
     observeEvent(input$upload_fisheries, {
         if (!is.null(input$upload_fisheries)) {
             shinyjs::enable("name")
@@ -256,7 +253,6 @@ server <- function(input, output, session) {
             shinyjs::show("input-box-cover")
         }
     })
-
 
     # Observe action button "Manual" on home page
     observeEvent(input$go_to_manual_tab, {
