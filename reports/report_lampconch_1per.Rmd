@@ -24,6 +24,7 @@ library(boot) # bootstrap calculations
 
 # Source code  ---------------------------
 source("theme.r")
+source("map.r")
 
 # Define study period ---------------------------
 study_start <- min(params$datafile$Survey_Data$Date, na.rm = TRUE)
@@ -123,22 +124,15 @@ Each site is assigned a unique ID and decimal coordinates to facilitate resampli
 When a site is re-sampled, habitat classification is reevaluated for the corresponding sampling period. 
 Additionally, each site is categorized within a specific section of TAMR, either North, Northeast, Southeast, or Southwest (Figure 1).
 
-
-![](TAMR_map.jpg){width=450px}
-
-
-*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).\
-
-
 The survey period for this report’s dataset extended from `r study_start` to `r study_end` at TAMR. 
 Sampling for queen conch LAMP is ideally done during summer before harvest. `r number_sites` sites were sampled in total. 
-At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkelling, or wading depending on the depth. 
+At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkeling, or wading depending on the depth. 
 Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. 
 Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. 
 The belt transect included 2m of space on either side of the line.
 
 During sampling, two data collectors swam together down either side of each transect approximately 1.5m above the substrate. 
-In sites shallower than 1.5m in depth, data collectors instead snorkelled, and in sites less than 0.25m in depth, data collectors waded. 
+In sites shallower than 1.5m in depth, data collectors instead snorkeled, and in sites less than 0.25m in depth, data collectors waded. 
 The data collectors counted all living queen conch within 2m of the line on their side of the belt. 
 Queen conch close to 2m from the line were also counted, and their distance from the line recorded. 
 Shell lengths and lip thickness of queen conch were measured during sampling using calipers, as well as depth of capture to the nearest foot using a dive computer. 
@@ -146,6 +140,20 @@ Lip thickness was measured only in lipped individuals, and was measured as 4cm i
 After being measured, all queen conch were returned upright to their original position of capture.
 
 This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create map for Figure 1 ---------------------------
+df_map <- df_merged |>
+  select(`Site ID`, Latitude, Longitude) |>
+  distinct()
+generate_map(df_map, "Latitude", "Longitude", "Site ID")
+```
+
+
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
+Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).
+Sample sites surveyed in `r study_year` are labelled on the map.\
 
 
 ## Results
@@ -282,17 +290,6 @@ The maximum queen conch count of `r maximum_conch` was found at site `r maximum_
 The highest median queen conch count of `r highest_median_conch` per site was found in the `r highest_median_conch_section_str` section`r highest_median_conch_section_plural`, compared to the overall median queen conch count of `r overall_median_conch` (Table 2). \
 
 
-**Table 2.**  Table of summary statistics for conch counts per site in sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve for data from `r study_year`. 
-NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
-
-
-```{r table2, echo = FALSE}
-df_table2
-```
-
-<br>
-
-
 ```{r figure2_prep, echo = FALSE, include = FALSE}
 # Create summary dfs for Figure 2 ---------------------------
 summary_transect <- df_merged %>%
@@ -403,6 +400,18 @@ boxplots of conch counts per transect divided by section with means indicated wi
 and boxplots of conch counts per site divided by section with means indicated with triangles (D). 
 For all boxplots, the box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. 
 The bar inside the box represents the median.\
+
+
+
+**Table 2.**  Table of summary statistics for conch counts per site in sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve for data from `r study_year`. 
+NO is north, NE is northeast, SE is southeast, and SW is southwest. Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
+
+
+```{r table2, echo = FALSE}
+df_table2
+```
+
+<br>
 
 
 ```{r table3_prep, echo = FALSE, include = FALSE}
@@ -532,19 +541,6 @@ The highest proportion of lipped queen conch was found in the `r maximum_lipped_
 The highest proportion of legal and lipped queen conch was found in the `r maximum_legal_lipped_section` with `r maximum_legal_lipped`%, compared to the overall proportion of `r legal_lipped_overall`% (Table 3; Figure 3). \
 
 
-**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
- NO is north, NE is northeast, SE is southeast, and SW is southwest. 
- Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
-
-
-```{r table3, echo = FALSE}
-df_table3
-```
-
-
-<br>
-
-
 ```{r figure3_prep, echo = FALSE, include = FALSE}
 # Create df for Figure 3 ---------------------------
 df_fig3 <- df_merged %>%
@@ -611,7 +607,20 @@ figure3
 north (B),southeast (C), southwest (D), and overall (E) at Turneffe Atoll Marine Reserve. 
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
+<br>
 
+
+**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
+ NO is north, NE is northeast, SE is southeast, and SW is southwest. 
+ Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
+
+
+```{r table3, echo = FALSE}
+df_table3
+```
+
+
+<br>
 
 
 ```{r table4_prep, echo = FALSE, include = FALSE}

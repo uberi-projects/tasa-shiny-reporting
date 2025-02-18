@@ -1,6 +1,6 @@
 ## server.R
 
-# Load packages ---------------------------
+# Attach packages ---------------------------
 library(readxl)
 
 # Define server ---------------------------
@@ -195,10 +195,18 @@ server <- function(input, output, session) {
                 "General LAMP_One Period" = "report_lampgen_1per.Rmd",
                 "General LAMP_Multiple Periods" = "report_lampgen_multiper.Rmd"
             )
-            src <- normalizePath(c(paste0("reports/", report_file), "reports/report_template.docx", "www/images/TAMR_map.jpg", "theme.r"))
+            shapefiles <- list.files("shapefiles", full.names = TRUE)
+            normalized_shapefiles <- normalizePath(shapefiles)
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TAMR_map.jpg",
+                "theme.r", "map.r",
+                normalized_shapefiles
+            ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
                 params = list(user_name = input$name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),

@@ -1,6 +1,6 @@
 ## ui.R
 
-# Load packages ---------------------------
+# Attach packages ---------------------------
 library(shiny)
 library(shinyjs)
 library(shinyWidgets)
