@@ -1,6 +1,6 @@
 ## general_validation_helpers.r
 
-# Load packages ---------------------------
+# Attach packages ---------------------------
 library(tidyverse)
 
 # Define functions to check for required sheets ---------------------------
