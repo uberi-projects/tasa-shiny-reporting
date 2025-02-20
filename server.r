@@ -60,10 +60,14 @@ server <- function(input, output, session) {
 
     # Validate dataframes
     observeEvent(input$validate_fisheries, {
-        shinyalert("Success!", "Validation Successful!")
+        shinyalert("Success!", "Validation Successful!",
+            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        )
     })
     observeEvent(input$validate_fisher, {
-        shinyalert("Success!", "Validation Successful!")
+        shinyalert("Success!", "Validation Successful!",
+            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        )
     })
     observeEvent(input$validate_lamp, {
         source("validation/validate_lampconch_1per.r")
@@ -112,7 +116,9 @@ server <- function(input, output, session) {
         }
     })
     observeEvent(input$validate_spag, {
-        shinyalert("Success!", "Validation Successful!")
+        shinyalert("Success!", "Validation Successful!",
+            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        )
     })
 
     # Create reports
