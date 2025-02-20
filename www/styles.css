@@ -211,7 +211,14 @@ label {
   width: 100%;
   background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
 }
-
+.validation-box-cover {
+    position: absolute;
+    width: 100%;
+    height: 31%;
+    background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    right: 0;
+    bottom: 0;
+}
 /* Pipeline image */
 .pipeline {
   max-width: 400px;

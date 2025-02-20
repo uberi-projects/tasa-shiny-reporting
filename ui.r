@@ -128,6 +128,10 @@ ui <- navbarPage(
                                     class = "input-list",
                                     "Validate Data",
                                     div(
+                                        class = "validation-box-cover",
+                                        id = "validation-box-cover"
+                                    ),
+                                    div(
                                         class = "input-list-content",
                                         actionButton("validate_fisheries", "Perform Validation")
                                     )
