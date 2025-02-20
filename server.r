@@ -147,7 +147,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_fisheries()),
+                params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -178,7 +178,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_fisher()),
+                params = list(user_name = input$fisher_name, datafile = df_upload_fisher()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -215,7 +215,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),
+                params = list(user_name = input$lamp_name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -248,7 +248,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_spag()),
+                params = list(user_name = input$spag_name, datafile = df_upload_spag()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -258,17 +258,34 @@ server <- function(input, output, session) {
     # Enable/disable input boxes
     observeEvent(input$upload_fisheries, {
         if (!is.null(input$upload_fisheries)) {
-            shinyjs::enable("name")
-            shinyjs::enable("report_fisheries")
+            shinyjs::enable("fisheries_name")
             shinyjs::enable("validate_fisheries")
-            shinyjs::hide("input-box-cover")
-            shinyjs::hide("validation-box-cover")
-        } else {
-            shinyjs::disable("name")
-            shinyjs::disable("report_fisheries")
-            shinyjs::disable("validate_fisheries")
-            shinyjs::show("input-box-cover")
-            shinyjs::show("validation-box-cover")
+            shinyjs::hide("fisheries_input_box_cover")
+            shinyjs::hide("fisheries_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_fisher, {
+        if (!is.null(input$upload_fisher)) {
+            shinyjs::enable("fisher_name")
+            shinyjs::enable("validate_fisher")
+            shinyjs::hide("fisher_input_box_cover")
+            shinyjs::hide("fisher_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_lamp, {
+        if (!is.null(input$upload_lamp)) {
+            shinyjs::enable("lamp_name")
+            shinyjs::enable("validate_lamp")
+            shinyjs::hide("lamp_input_box_cover")
+            shinyjs::hide("lamp_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_spag, {
+        if (!is.null(input$upload_spag)) {
+            shinyjs::enable("spag_name")
+            shinyjs::enable("validate_spag")
+            shinyjs::hide("spag_input_box_cover")
+            shinyjs::hide("spag_validation_box_cover")
         }
     })
 
