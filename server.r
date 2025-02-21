@@ -63,6 +63,9 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes "no function yet"
+        shinyjs::enable("fisheries_name")
+        shinyjs::hide("fisheries_input_box_cover")
     })
     observeEvent(input$validate_fisher, {
         shinyalert("Success!", "Validation Successful!",
@@ -258,9 +261,7 @@ server <- function(input, output, session) {
     # Enable/disable input boxes
     observeEvent(input$upload_fisheries, {
         if (!is.null(input$upload_fisheries)) {
-            shinyjs::enable("fisheries_name")
             shinyjs::enable("validate_fisheries")
-            shinyjs::hide("fisheries_input_box_cover")
             shinyjs::hide("fisheries_validation_box_cover")
         }
     })
