@@ -63,6 +63,16 @@ ui <- navbarPage(
                         actionButton("go_to_manual_tab", "Manual"),
                         " page. "
                     ))
+                ),
+                hr(),
+                div(
+                    class = "feedback-content-box",
+                    actionButton("feedback_bttn", "Send Feedback"),
+                    br(),
+                    div(
+                        class = "feedback-box",
+                        textInput("feedback_text", "Your Commentsshin: ", value = "", )
+                    )
                 )
             )
         )
