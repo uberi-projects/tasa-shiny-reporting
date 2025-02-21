@@ -71,6 +71,9 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes
+        shinyjs::enable("fisher_name")
+        shinyjs::hide("fisher_input_box_cover")
     })
     observeEvent(input$validate_lamp, {
         source("validation/validate_lampconch_1per.r")
@@ -107,7 +110,9 @@ server <- function(input, output, session) {
                 )
                 if (validation_passed | length(validation_message) == 0) {
                     shinyalert("Success!", "Validation Successful!",
-                        confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+                        confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
+                        shinyjs::enable("lamp_name"),
+                        shinyjs::hide("lamp_input_box_cover")
                     )
                 } else {
                     shinyalert("Attention!",
@@ -122,6 +127,9 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes
+        shinyjs::enable("spag_name")
+        shinyjs::hide("spag_input_box_cover")
     })
 
     # Create reports
@@ -267,25 +275,19 @@ server <- function(input, output, session) {
     })
     observeEvent(input$upload_fisher, {
         if (!is.null(input$upload_fisher)) {
-            shinyjs::enable("fisher_name")
             shinyjs::enable("validate_fisher")
-            shinyjs::hide("fisher_input_box_cover")
             shinyjs::hide("fisher_validation_box_cover")
         }
     })
     observeEvent(input$upload_lamp, {
         if (!is.null(input$upload_lamp)) {
-            shinyjs::enable("lamp_name")
             shinyjs::enable("validate_lamp")
-            shinyjs::hide("lamp_input_box_cover")
             shinyjs::hide("lamp_validation_box_cover")
         }
     })
     observeEvent(input$upload_spag, {
         if (!is.null(input$upload_spag)) {
-            shinyjs::enable("spag_name")
             shinyjs::enable("validate_spag")
-            shinyjs::hide("spag_input_box_cover")
             shinyjs::hide("spag_validation_box_cover")
         }
     })
