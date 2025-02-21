@@ -242,6 +242,7 @@ label {
 }
 .data-template-table tr {
   font-size: 20px;
+  color: #ffffff;
 }
 .data-template-table a {
   background-color: rgba(0, 160, 154, 0.5);
@@ -249,6 +250,7 @@ label {
   color: black;
   border-radius: 5px;
   text-decoration: none;
+  color: #ffffff;
 }
 .data-template-table a:hover {
   background-color: #2ca0d9;
