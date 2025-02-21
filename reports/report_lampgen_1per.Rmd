@@ -55,10 +55,14 @@ studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, stud
 
 # Count number of sites surveyed ---------------------------
 number_sites <- length(unique(params$datafile$Sites$`Site ID`))
+
+# Create merged dataframes ---------------------------
+df_finfish <- params$datafile$Finfish %>%
+  left_join(params$datafile$Sites, by = "Site ID")
 ```
 
 
-# Turneffe Atoll Queen LAMP Dataset Report: 
+# Turneffe Atoll Queen LAMP Dataset Report: `r study_year`
 
 
 Turneffe Atoll Sustainability Association (TASA)
@@ -199,10 +203,66 @@ This report, including text, figures, and tables, was generated using the Turnef
  
 ## Results
 
-In ___, TASA surveyed a total of ___ LAMP monitoring sites within the TAMR: ___ in Conservation Zones, ___ in the General Use Zone, and ___ in the Special Management Zone IIB. 
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+df_table1_finfish <- df_finfish %>%
+  group_by(`Site ID`) %>%
+  summarise(Species = length(unique(Species))) %>%
+  left_join(params$datafile$Sites, by = "Site ID") %>%
+  group_by(Habitat) %>% # change to mngmt zone later
+  summarize(`Av. Finfish Diversity` = mean(Species))
+
+df_table1_conch <- df_conch %>%
+  group_by(`Site ID`) %>%
+  summarise(Count = sum(Species != "0" & Species != "0.0"), .groups = "drop") %>%
+  left_join(params$datafile$Sites, by = "Site ID") %>%
+  group_by(Habitat) %>% # change to mngmt zone later
+  summarize(`Av. Conch Count` = mean(Count))
+
+df_table1_lobster <- df_lobster %>%
+  group_by(`Site ID`) %>%
+  summarise(Count = sum(Species != "0" & Species != "0.0"), .groups = "drop") %>%
+  left_join(params$datafile$Sites, by = "Site ID") %>%
+  group_by(Habitat) %>% # change to mngmt zone later
+  summarize(`Av. Lobster Count` = mean(Count))
+
+df_table1_urchin_crab <- df_urchin_crab %>%
+  group_by(`Site ID`) %>%
+  summarise(
+    Diadema_Ad_Count = sum(`Adult Diadema antillarum` != "0" & `Adult Diadema antillarum` != "0.0"),
+    Diadema_Juv_Count = sum(`Juvenile Diadema antillarum` != "0" & `Juvenile Diadema antillarum` != "0.0"),
+    Mithrax_Count = sum(`Mithrax spinosissumus` != "0" & `Mithrax spinosissumus` != "0.0"),
+    .groups = "drop"
+  ) %>%
+  left_join(params$datafile$Sites, by = "Site ID") %>%
+  group_by(Habitat) %>% # change to mngmt zone later
+  summarize(
+    `Av. Adult Diadema Count` = mean(Diadema_Ad_Count),
+    `Av. Juvenile Diadema Count` = mean(Diadema_Juv_Count),
+    `Av. Mithrax Count` = mean(Mithrax_Count)
+  )
+
+df_table1 <- df_table1_finfish %>%
+  left_join(df_table1_conch, by = "Habitat") %>%
+  left_join(df_table1_lobster, by = "Habitat") %>%
+  left_join(df_table1_urchin_crab, by = "Habitat")
+
+# Prepare dynamic variables for Table 1 ---------------------------
+```
+
+In `r study_year`, TASA surveyed a total of `r number_sites` LAMP monitoring sites within the TAMR: ___ in Conservation Zones, 
+___ in the General Use Zone, and ___ in the Special Management Zone IIB. 
 In total, ____ finfish species, ____ conch individuals, ___ lobster individuals, ____ urchin, ___ crab (Table 1).\
 
-**Table 1.** Sampled LAMP sites in ___ by management zone, along with finfish species diversity, and number of conch, lobsters, urchins, and crabs found.\
+**Table 1.** Sampled LAMP sites in `r study_year` by management zone, along with finfish species diversity, and number of conch, lobsters, urchins, 
+and crabs found.\
+
+
+```{r table1, echo = FALSE}
+df_table1
+```
+
+<br>
 
 
 ### Finfish
