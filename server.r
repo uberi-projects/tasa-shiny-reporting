@@ -117,7 +117,9 @@ server <- function(input, output, session) {
                 } else {
                     shinyalert("Attention!",
                         text = validation_message,
-                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
+                        shinyjs::enable("lamp_name"),
+                        shinyjs::hide("lamp_input_box_cover")
                     )
                 }
             }
