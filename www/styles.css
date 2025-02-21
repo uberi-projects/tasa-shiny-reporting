@@ -243,12 +243,13 @@ label {
   );
 }
 .data-template-table th {
-  font-size: 25px;
+  font-size: 2rem;
   font-weight: bold;
   border-bottom: none !important;
 }
 .data-template-table tr {
-  font-size: 20px;
+  font-size: 2rem;
+  color: #ffffffd7;
 }
 .data-template-table a {
   background-color: rgba(0, 160, 154, 0.5);
@@ -256,6 +257,7 @@ label {
   color: black;
   border-radius: 5px;
   text-decoration: none;
+  color: #ffffffd7;
 }
 .data-template-table a:hover {
   background-color: #2ca0d9;
@@ -273,7 +275,7 @@ label {
 .external-link-button h1 {
   width: fit-content;
   color: white;
-  font-size: 2em;
+  font-size: 2rem;
   padding: 15px 15px;
   margin: 0;
 }
