@@ -23,6 +23,38 @@ library(ggpubr)
 # Source code  ---------------------------
 source("theme.r")
 source("map.r")
+
+# Define study period ---------------------------
+study_start <- as.Date(min(params$datafile$Sites$Date, na.rm = TRUE))
+study_end <- as.Date(max(params$datafile$Sites$Date, na.rm = TRUE))
+study_year <- format(study_start, "%Y")
+
+# Define study taxa ---------------------------
+study_conch <- if ("Conch" %in% names(params$datafile)) {
+  "queen conch (_Aligner gigas_)"
+}
+study_conch2 <- if ("Conch" %in% names(params$datafile)) {
+  "milk conch (_Strombus costatus_)"
+}
+study_lobster <- if ("Lobster" %in% names(params$datafile)) {
+  "Caribbean spiny lobster (_Panulirus argus_)"
+}
+study_lobster2 <- if ("Lobster" %in% names(params$datafile)) {
+  "spotted spiny lobster (_Panulirus guttatus_)"
+}
+study_finfish <- if ("Finfish" %in% names(params$datafile)) {
+  "finfish"
+}
+study_urchin_crab <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  "black sea urchins (_Diadema antillarum_)"
+}
+study_urchin_crab2 <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  "Caribbean king crab (_Mithrax spinosissimus_)"
+}
+studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
+
+# Count number of sites surveyed ---------------------------
+number_sites <- length(unique(params$datafile$Sites$`Site ID`))
 ```
 
 
@@ -41,10 +73,10 @@ Turneffe Atoll Sustainability Association (TASA)
 
 Coral reefs are biodiversity hotspots that provide critical habitats for diverse species, support coastal communities, and offer economic opportunities through the harvest of marine invertebrates and fish. 
 Monitoring these ecosystems is essential to assess health, function, and changes over time, informing management decisions. 
-This report presents findings from monitoring surveys of _______ at Turneffe Atoll Marine Reserve (TAMR) from ___ . 
+This report presents findings from monitoring surveys of `r studies` at Turneffe Atoll Marine Reserve (TAMR) from `r study_year`. 
 Data on population abundances and characteristics were collected by TASA staff and collaborators under the Long-term Atoll Monitoring Program (LAMP), 
 which tracks key taxa at the atoll through standardized surveys. 
-This report aims to summarize and visualize the LAMP dataset from ____ to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+This report aims to summarize and visualize the LAMP dataset from `r study_year` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
 
 
 ## Background
@@ -60,48 +92,99 @@ Its reef provides coastal protection from extreme weather events (Fedler, 2011),
 
 ### Long-term Atoll Monitoring Program
 
-The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), is designed to monitor key fished taxa at the atoll over space and time, including ____. 
+The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), 
+is designed to monitor key fished taxa at the atoll over space and time, including `r studies`. 
 The program uses habitat sampling to estimate population sizes and physical characteristics of these taxa, enabling spatial and temporal comparison.
 
 LAMP’s primary objectives are to assess the viability of these populations by identifying trends in abundance, reproduction, physical characteristics, and habitat quality where applicable. 
 Data collected through LAMP facilitates evaluation of management zone effectiveness. 
-The program data also supports recommendations on enforcement, monitoring, education, outreach, fishing quotas, season lengths, size limits, and other government regulations to ensure the long-term sustainability of the fishery, all while preserving the natural beauty and ecological value of the atoll.\
+The program data also supports recommendations on enforcement, monitoring, education, outreach, fishing quotas, season lengths, 
+size limits, and other government regulations to ensure the long-term sustainability of the fishery, 
+all while preserving the natural beauty and ecological value of the atoll.\
 
+
+```{r background, include=FALSE}
+# Define background text for key taxa  ---------------------------
+text_finfish <- if ("Finfish" %in% names(params$datafile)) {
+  "Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals such as shellfish or cuttlefish.
+In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as Mutton Snapper (_Lutjanus analis_),
+Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being listed as Vulnerable conservation status on the IUCN.
+Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation.
+Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily),
+long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020).
+Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD),
+with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations,
+such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b).
+To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity,
+and biodiversity of key taxa."
+}
+text_conch <- if ("Conch" %in% names(params$datafile)) {
+  "Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex.
+Milk conch (_Strombus costatus_) are similar to queen conch, but with a smaller, flatter shell with varied pattern.
+In Belize, the conch fishery is the second most important commercial fishery in the country.
+Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats.
+The fishery is regulated by the BFD.
+National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first (Belize Fisheries Department accessed 2025-a).
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025)."
+}
+text_lobster <- if ("Lobster" %in% names(params$datafile)) {
+  "Caribbean spiny lobsters (_Panulirus argus_) are brown-grey striped malacostracans, which can grow to around 60cm long, and have spines covering their shells instead of the large pinching claws of other lobsters (Holthuis, 1991).
+Spotted spiny lobster (_Panulirus guttatus_) are smaller than Caribbean spiny lobsters, with more distinct spots and shorter antennae.
+In Belize, the lobster fishery is the most important fishery in the country.
+Lobsters are caught using freediving and a hook stick, trapezoidal-shaped lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020).
+Regulations for Caribbean spiny lobster from the BFD include that no person shall fish moutling lobster or lobster with eggs, that fished lobster have minimum carapace length of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed open season.
+Closed season is March 1st to June 30th for lobster (Belize Fisheries Department accessed 2025-b).
+Tar spots on female lobsters indicate recent mating, and females with eggs (‘berried’ females) indicate reproductive success.
+Monitoring sex ratio and presence of reproductive indicators is key for this species."
+}
+text_urchin_crab <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  "Black sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
+Black sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
+A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean.
+Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015).
+The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize.
+The Caribbean king crab (_Mithrax spinosissimus_) has a similar, though less studied, role in coral reef ecosystems as an algal herbivore.
+Caribbean king crabs, a type of reddish-brown spider crab,  exceed the per capita grazing rate of many herbivorous fish.
+However, the crabs themselves typically appear in low densities on reefs (Butler & Mojica, 2012)."
+}
+text_taxa <- paste(c(text_finfish, text_conch, text_lobster, text_urchin_crab), collapse = "\n\n")
+
+
+# Define background text for survey methods  ---------------------------
+text_survey_period <- paste0(
+  "The survey period for this report’s dataset extended from ", study_start, " to ", study_end, " at TAMR. ",
+  number_sites, " sites were sampled in total."
+)
+text_sampling_area <- if (("Conch" %in% names(params$datafile) | "Lobster" %in% names(params$datafile) | "Diadema_Crab" %in% names(params$datafile)) & "Finfish" %in% names(params$datafile)) {
+  "The total sampling area per site is 800m² (four 50m x 4m belt transects) for invertebrate surveys, and 400m² (four 50m x 2m belt transects) for finfish."
+} else if ("Conch" %in% names(params$datafile) | "Lobster" %in% names(params$datafile) | "Diadema_Crab" %in% names(params$datafile)) {
+  "The total sampling area per site is 800m² (four 50m x 4m belt transects) for invertebrate surveys."
+} else if ("Finfish" %in% names(params$datafile)) {
+  "The total sampling area per site is 400m² (four 50m x 2m belt transects) for finfish."
+}
+
+text_survey_methods <- "During sampling, surveyors used a combination of SCUBA (>15 ft depth) and snorkeling (≤15 ft depth)."
+text_finfish_methods <- if ("Finfish" %in% names(params$datafile)) {
+  "Finfish species were surveyed using a count method categorized by estimated size classes, and separated into groups of commercial fish (Snappers and Groupers), herbivorous fish (Surgeon fish and Parrotfish), other target species (Barracuda, Hogfish, Jacks, and Grunts), and reef fish (Triggerfish, Angelfish, Butterflyfish, Filefish, Damselfish, etc.)."
+}
+text_conch_methods <- if ("Conch" %in% names(params$datafile)) {
+  "For conch specimens, data collected included total length, lip thickness, and the presence or absence of eggs."
+}
+text_lobster_methods <- if ("Lobster" %in% names(params$datafile)) {
+  "Lobster specimens were assessed for carapace length (measured with a tickle stick), sex, and egg presence (+/-)."
+}
+text_urchin_crab_methods <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  "Urchins were counted and classified into juvenile and adult stages, while crab specimens were recorded using a count method."
+}
+text_survey <- paste(c(
+  paste(text_survey_period, text_sampling_area),
+  paste(text_survey_methods, text_finfish_methods, text_conch_methods, text_lobster_methods, text_urchin_crab_methods)
+), collapse = "\n\n")
+```
 
 ### Key Taxa
 
-Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals such as shellfish or cuttlefish. 
-In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as Mutton Snapper (_Lutjanus analis_), Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being listed as Vulnerable conservation status on the IUCN. 
-Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation. 
-Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily), long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020). 
-Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD), with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations, such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b). 
-To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity, and biodiversity of key taxa.
-
-Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex. 
-Milk conch (_Strombus costatus_) are similar to queen conch, but with a smaller, flatter shell with varied pattern. 
-In Belize, the conch fishery is the second most important commercial fishery in the country. 
-Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats. 
-The fishery is regulated by the BFD. 
-National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first (Belize Fisheries Department accessed 2025-a). 
-According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025).
-
-Caribbean spiny lobsters (_Panulirus argus_) are brown-grey striped malacostracans, which can grow to around 60cm long, and have spines covering their shells instead of the large pinching claws of other lobsters (Holthuis, 1991). 
-Spotted spiny lobster (_Panulirus guttatus_) are smaller than Caribbean spiny lobsters, with more distinct spots and shorter antennae. 
-In Belize, the lobster fishery is the most important fishery in the country. 
-Lobsters are caught using freediving and a hook stick, trapezoidal-shaped lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020). 
-Regulations for Caribbean spiny lobster from the BFD include that no person shall fish moutling lobster or lobster with eggs, that fished lobster have minimum carapace length of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed open season. 
-Closed season is March 1st to June 30th for lobster (Belize Fisheries Department accessed 2025-b). 
-Tar spots on female lobsters indicate recent mating, and females with eggs (‘berried’ females) indicate reproductive success. 
-Monitoring sex ratio and presence of reproductive indicators is key for this species.
-
-Black sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body. 
-Black sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle. 
-A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean. 
-Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015). 
-The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize. 
-The Caribbean king crab (Mithrax spinosissumus) has a similar, though less studied, role in coral reef ecosystems as an algal herbivore. 
-Caribbean king crabs, a type of reddish-brown spider crab,  exceed the per capita grazing rate of many herbivorous fish. 
-However, the crabs themselves typically appear in low densities on reefs (Butler & Mojica, 2012).\
+`r text_taxa`\
 
 
 ## Methods
@@ -109,14 +192,7 @@ However, the crabs themselves typically appear in low densities on reefs (Butler
 Survey sites were selected within various management zones (Conservation Zones, General Use Zone, Special Management Zone) (Figure 1). 
 Since the original site selection in 2021, the aim has been to resurvey these sites biannually.
 
-The survey period for this report’s dataset extended from ___ to ____at TAMR. 
-___sites were sampled in total. The total sampling area per site is 800m2 (four 50m x 4m belt transects) for conch and lobster surveys and 400m2 (four 50m x 2m belt transects) for finfish. 
-
-During sampling, surveyors used a combination of SCUBA  (>15 ft depth) and snorkeling (≤15ft depth). 
-Finfish species were surveyed using a count method categorized by estimated size classes, and separated into groups of commercial fish (Snappers and Groupers), herbivorous fish (Surgeon fish and Parrotfish), other target species (Barracuda, Hogfish, Jacks, and Grunts), and reef fish (Triggerfish, Angelfish, Butterflyfish, Filefish, Damselfish, etc.). 
-For conch specimens, data collected included total length, lip thickness, and the presence or absence of eggs. 
-Lobster specimens were assessed for carapace length (measured with a tickle stick), sex, and egg presence (+/-). 
-Urchins were counted and classified into juvenile and adult stages, while crab specimens were recorded using a count method.
+`r text_survey`
 
 This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
 
