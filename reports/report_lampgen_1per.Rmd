@@ -535,9 +535,124 @@ df_table2
 
 ### Finfish
 
-The overall mean fish stock density was ___fish individuals per 100m2, with a median density of ____. 
-The overall mean fish biomass was ___g/100m2 and median _____. Herbivorous fish were encountered ______. 
-Commercial fish were encountered…(Figure 2)
+
+```{r table3_4_prep, echo = FALSE, include = FALSE}
+# Prepare df for Table 3 ---------------------------
+df_table3_transect_density <- df_finfish %>%
+  left_join(params$datafile$Species, by = "Species") %>%
+  mutate(Total = rowSums(across(`0-5 cm`:`>40 cm`, as.numeric), na.rm = TRUE)) %>%
+  filter(!is.na(`Site ID`)) %>%
+  group_by(`Mgmt Zone`, `Site ID`, Transect) %>%
+  summarise(
+    Transects = n_distinct(Transect, na.rm = TRUE),
+    `Area (m2)` = Transects * 100,
+    `Count` = sum(Total),
+    `Density / 100m2 (Transect)` = (`Count` / `Area (m2)`) * 100,
+    .groups = "drop"
+  )
+df_table3 <- df_table3_transect_density %>%
+  group_by(`Mgmt Zone`) %>%
+  summarise(
+    Sites = n_distinct(`Site ID`, na.rm = TRUE),
+    Transects = sum(Transects),
+    `Area (m2)` = sum(`Area (m2)`),
+    `Count` = sum(`Count`),
+    `Density / 100m2` = round(`Count` / `Area (m2)` * 100, 1),
+    `Median Density / 100m2` = round(median(`Density / 100m2 (Transect)`), 1),
+    .groups = "drop"
+  )
+df_table3_overall <- df_table3_transect_density %>%
+  summarise(
+    `Mgmt Zone` = "Overall",
+    Sites = n_distinct(`Site ID`, na.rm = TRUE),
+    Transects = sum(Transects),
+    `Area (m2)` = sum(`Area (m2)`),
+    `Count` = sum(`Count`),
+    `Density / 100m2` = round(`Count` / `Area (m2)` * 100, 1),
+    `Median Density / 100m2` = round(median(`Density / 100m2 (Transect)`), 1)
+  )
+df_table3 <- bind_rows(df_table3, df_table3_overall)
+
+# Prepare df for Table 4 ---------------------------
+df_table4 <- df_finfish %>%
+  left_join(params$datafile$Species, by = "Species") %>%
+  mutate(Total = as.numeric(`0-5 cm`) + as.numeric(`6-10 cm`) + as.numeric(`11-20 cm`) + as.numeric(`21-30 cm`) + as.numeric(`31-40 cm`) + as.numeric(`>40 cm`)) %>%
+  filter(!is.na(`Site ID`)) %>%
+  group_by(`Mgmt Zone`, Grouping) %>%
+  left_join(df_table3, by = "Mgmt Zone") %>%
+  summarise(
+    Count = sum(Total),
+    `Density / 100m2` = round(Count / `Area (m2)` * 100, 1)
+  ) %>%
+  distinct() %>%
+  na.omit() %>%
+  arrange(Grouping)
+
+# Prepare dynamic text for Tables 3/4 ---------------------------
+overall_mean_fish_stock_density <- filter(df_table3, `Mgmt Zone` == "Overall")$`Density / 100m2`
+overall_median_fish_stock_density <- filter(df_table3, `Mgmt Zone` == "Overall")$`Median Density / 100m2`
+zone_highest_fish_stock_density <- df_table3$`Mgmt Zone`[which.max(df_table3$`Density / 100m2`)]
+highest_fish_stock_density <- max(df_table3$`Density / 100m2`, na.rm = TRUE)
+zone_highest_fish_stock_median_density <- df_table3$`Mgmt Zone`[which.max(df_table3$`Median Density / 100m2`)]
+highest_fish_stock_median_density <- max(df_table3$`Median Density / 100m2`, na.rm = TRUE)
+zone_highest_commercial_fish_stock_density <- filter(df_table4, Grouping == "Commercial")$`Mgmt Zone`[which.max(df_table3$`Density / 100m2`)]
+highest_commercial_fish_stock_density <- max(filter(df_table4, Grouping == "Commercial")$`Density / 100m2`, na.rm = TRUE)
+zone_highest_herbivorous_fish_stock_density <- filter(df_table4, Grouping == "Herbivorous")$`Mgmt Zone`[which.max(df_table3$`Density / 100m2`)]
+highest_herbivorous_fish_stock_density <- max(filter(df_table4, Grouping == "Herbivorous")$`Density / 100m2`, na.rm = TRUE)
+zone_highest_target_fish_stock_density <- filter(df_table4, Grouping == "Other Target")$`Mgmt Zone`[which.max(df_table3$`Density / 100m2`)]
+highest_target_fish_stock_density <- max(filter(df_table4, Grouping == "Other Target")$`Density / 100m2`, na.rm = TRUE)
+zone_highest_reef_fish_stock_density <- filter(df_table4, Grouping == "Reef Fish")$`Mgmt Zone`[which.max(df_table3$`Density / 100m2`)]
+highest_reef_fish_stock_density <- max(filter(df_table4, Grouping == "Reef Fish")$`Density / 100m2`, na.rm = TRUE)
+```
+
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create summary df for Figure 2 ---------------------------
+```
+
+The overall mean fish stock density was `r overall_mean_fish_stock_density` fish per 100m2, 
+with a median density of `r overall_median_fish_stock_density` fish per 100m2.
+The highest density of fish was found in the `r zone_highest_fish_stock_density` with 
+`r highest_fish_stock_density` fish per 100m2, 
+and the highest median density was found in the `r zone_highest_fish_stock_median_density` with 
+`r highest_fish_stock_median_density` fish per 100m2 (Table 3). 
+The highest density of commercial fish was found in the `r zone_highest_commercial_fish_stock_density`, 
+with `r highest_commercial_fish_stock_density` fish per 100m2, 
+herbivorous in the `r zone_highest_herbivorous_fish_stock_density`, 
+with `r highest_herbivorous_fish_stock_density`, 
+other target species in the `r zone_highest_target_fish_stock_density`, 
+with `r highest_target_fish_stock_density`, and 
+reef fish in the `r zone_highest_reef_fish_stock_density`, 
+with `r highest_reef_fish_stock_density` (Table 4).\
+
+
+**Table 3.** Finfish density in sampled management zones and overall in `r study_year`, represented by number of sites, number of transects,
+area sampled in meters squared, finfish count, density per 100 meters squared, and median density per 100 meters squared. \
+
+```{r table3, echo = FALSE}
+df_table3
+```
+
+<br>
+
+
+```{r figure2, fig.width=6, fig.height=7.5, fig.align = 'left', echo = FALSE}
+# figure2
+```
+
+<br>
+
+
+**Table 4.** Finfish density in sampled management zones by fish grouping in `r study_year`, 
+represented by finfish count, and density per 100 meters squared. \
+
+```{r table4, echo = FALSE}
+as.data.frame(df_table4)
+```
+
+<br>
+
 
 Fig 2. Bar plot of density by management zone, color coded by group (herb, etc.)
 
