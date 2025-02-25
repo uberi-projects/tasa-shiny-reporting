@@ -35,6 +35,9 @@ server <- function(input, output, session) {
             if ("Species" %in% sheets_available) {
                 data_list$Species <- read_excel(input$upload_lamp$datapath, sheet = "Species", na = nas)
             }
+            if ("Biomass" %in% sheets_available) {
+                data_list$Biomass <- read_excel(input$upload_lamp$datapath, sheet = "Biomass", na = nas)
+            }
             if ("Sites" %in% sheets_available) {
                 data_list$Sites <- read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas)
             }
