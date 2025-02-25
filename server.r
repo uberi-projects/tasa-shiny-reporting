@@ -66,11 +66,17 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes "no function yet"
+        shinyjs::enable("fisheries_name")
+        shinyjs::hide("fisheries_input_box_cover")
     })
     observeEvent(input$validate_fisher, {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes
+        shinyjs::enable("fisher_name")
+        shinyjs::hide("fisher_input_box_cover")
     })
     observeEvent(input$validate_lamp, {
         if (input$datatype_lamp == "Conch") {
@@ -83,28 +89,34 @@ server <- function(input, output, session) {
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
-                completeness_passed <- func_validate_lampconch_1per_completeness_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                validation_message_completeness <- func_validate_lampconch_1per_completeness(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                if (!completeness_passed) {
-                    shinyalert("Alert!",
-                        text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
-                        confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+
+                validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
+                validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                validation_message <- c(
+                    if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
+                        paste0(
+                            "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
+                            "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
+                        )
+                    } else if (length(validation_message_surveydata) > 0) {
+                        paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
+                    } else if (length(validation_message_sites) > 0) {
+                        paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                    }
+                )
+                if (validation_passed | length(validation_message) == 0) {
+                    shinyalert("Success!", "Validation Successful!",
+                        confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
+                        shinyjs::enable("lamp_name"),
+                        shinyjs::hide("lamp_input_box_cover")
                     )
                 } else {
-                    validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                    validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
-                    validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                    validation_message <- c(
-                        if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
-                            paste0(
-                                "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
-                                "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
-                            )
-                        } else if (length(validation_message_surveydata) > 0) {
-                            paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
-                        } else if (length(validation_message_sites) > 0) {
-                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
-                        }
+                    shinyalert("Attention!",
+                        text = validation_message,
+                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
+                        shinyjs::enable("lamp_name"),
+                        shinyjs::hide("lamp_input_box_cover")
                     )
                     if (validation_passed | length(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
@@ -128,6 +140,9 @@ server <- function(input, output, session) {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
+        # If Validation Passes
+        shinyjs::enable("spag_name")
+        shinyjs::hide("spag_input_box_cover")
     })
 
     # Create reports
@@ -156,7 +171,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_fisheries()),
+                params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -187,7 +202,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_fisher()),
+                params = list(user_name = input$fisher_name, datafile = df_upload_fisher()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -224,7 +239,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),
+                params = list(user_name = input$lamp_name, datafile_name = input$upload_lamp$name, datafile = df_upload_lamp()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -257,7 +272,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$name, datafile = df_upload_spag()),
+                params = list(user_name = input$spag_name, datafile = df_upload_spag()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -267,17 +282,26 @@ server <- function(input, output, session) {
     # Enable/disable input boxes
     observeEvent(input$upload_fisheries, {
         if (!is.null(input$upload_fisheries)) {
-            shinyjs::enable("name")
-            shinyjs::enable("report_fisheries")
             shinyjs::enable("validate_fisheries")
-            shinyjs::hide("input-box-cover")
-            shinyjs::hide("validation-box-cover")
-        } else {
-            shinyjs::disable("name")
-            shinyjs::disable("report_fisheries")
-            shinyjs::disable("validate_fisheries")
-            shinyjs::show("input-box-cover")
-            shinyjs::show("validation-box-cover")
+            shinyjs::hide("fisheries_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_fisher, {
+        if (!is.null(input$upload_fisher)) {
+            shinyjs::enable("validate_fisher")
+            shinyjs::hide("fisher_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_lamp, {
+        if (!is.null(input$upload_lamp)) {
+            shinyjs::enable("validate_lamp")
+            shinyjs::hide("lamp_validation_box_cover")
+        }
+    })
+    observeEvent(input$upload_spag, {
+        if (!is.null(input$upload_spag)) {
+            shinyjs::enable("validate_spag")
+            shinyjs::hide("spag_validation_box_cover")
         }
     })
 
