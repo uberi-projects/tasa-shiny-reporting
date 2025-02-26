@@ -220,7 +220,7 @@ Since the original site selection in 2021, the aim has been to resurvey these si
 This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
 
 
-```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+```{r figure1, echo = FALSE, fig.width = 178, fig.height = 178}
 # Create map for Figure 1 ---------------------------
 df_map <- params$datafile$Sites |>
   select(`Site ID`, Latitude, Longitude) |>
@@ -590,6 +590,7 @@ if ("Finfish" %in% names(params$datafile)) {
     arrange(Grouping)
 
   # Prepare dynamic text for Tables 1F/2F ---------------------------
+  fish_number_sites <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Sites`
   overall_mean_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Density / 100m2`
   overall_median_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Median Density / 100m2`
   zone_highest_fish_stock_density <- df_table1f$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
@@ -624,7 +625,8 @@ if ("Finfish" %in% names(params$datafile)) {
 # Create text about fish stock results ---------------------------
 fish_stock_text <- if ("Finfish" %in% names(params$datafile)) {
   paste(
-    "The overall mean fish stock density was", overall_mean_fish_stock_density, "fish per 100m2,",
+    "Out of", fish_number_sites, "sampled sites,",
+    "the overall mean fish stock density was", overall_mean_fish_stock_density, "fish per 100m2,",
     "with a median density of", overall_median_fish_stock_density, "fish per 100m2.",
     "The highest density of fish was found in the", zone_highest_fish_stock_density, "with",
     highest_fish_stock_density, "fish per 100m2,",
@@ -674,7 +676,7 @@ table3fcaption <- if ("Finfish" %in% names(params$datafile)) {
 
 figure3fcaption <- if ("Finfish" %in% names(params$datafile)) {
   paste(
-    "*Fig 3F*. Finfish size frequency distribution in sampled management zones for commercial and herbivorous fish in", study_year_month,
+    "*Fig 3F*. Finfish size frequency distribution in sampled management zones for commercial (Panel A) and herbivorous (Panel B) fish in", study_year_month,
     "at Turneffe Atoll Marine Reserve.", "\n\n"
   )
 }
@@ -881,11 +883,232 @@ if ("Finfish" %in% names(params$datafile)) {
 
 `r if ("Conch" %in% names(params$datafile)){"### Conch"}`
 
-- Table of summary data for sampled management zones of Turneffe Atoll Marine Reserve for data from ___. 
-zone, number sites, number transects, queen conch, milk conch, sampled hectares, queen conch/hectares
-- Queen Conch density per management zone
-- Distribution of queen conch counts (A, B, C, D)
-- Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) by management zone/
+
+```{r table1co_prep, echo = FALSE, include = FALSE}
+if ("Conch" %in% names(params$datafile)) {
+  # Prepare df for Table 1Co ---------------------------
+
+  df_table1co_overall <- df_conch %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Site ID`) %>%
+    summarise(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Area (m2)` = Transects * 200,
+      `Milk Conch Count` = sum(Species == "Sc" | Species == "Strombus costatus" | Species == "Milk Conch"),
+      `Queen Conch Count` = sum(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch")
+    ) %>%
+    ungroup() %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Area (Hec)` = `Area (m2)` / 10000,
+      `Queen Conch` = sum(`Queen Conch Count`),
+      `Milk Conch` = sum(`Milk Conch Count`),
+      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
+      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+    ) %>%
+    select(-Transects, -`Area (m2)`) %>%
+    mutate(`Mgmt Zone` = "Overall")
+
+  df_table1co_zones <- df_conch %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`, `Site ID`) %>%
+    summarise(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Area (m2)` = Transects * 200,
+      `Milk Conch Count` = sum(Species == "Sc" | Species == "Strombus costatus" | Species == "Milk Conch"),
+      `Queen Conch Count` = sum(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch")
+    ) %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Area (Hec)` = `Area (m2)` / 10000,
+      `Queen Conch` = sum(`Queen Conch Count`),
+      `Milk Conch` = sum(`Milk Conch Count`),
+      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
+      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+    ) %>%
+    select(-Transects, -`Area (m2)`)
+  df_table1co <- bind_rows(df_table1co_zones, df_table1co_overall)
+
+  # Prepare dynamic text for Table 1Co ---------------------------
+  conch_number_sites <- filter(df_table1co, `Mgmt Zone` == "Overall")$Sites
+  conch_number_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch`
+  conch_number_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch`
+  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Hec`
+  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Hec`
+  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Hec`)
+  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Hec`)]
+}
+```
+
+
+```{r conchtext, echo = FALSE, include = FALSE}
+# Create text about conch density  ---------------------------
+conch_density_text <- if ("Conch" %in% names(params$datafile)) {
+  paste(
+    "Out of", conch_number_sites, "sampled,", conch_number_overall_queen, "queen conch and",
+    conch_number_overall_milk, "milk conch were found, resulting in an extrapolated density of",
+    conch_density_overall_queen, "queen conch per hectare and",
+    conch_density_overall_milk, "milk conch per hectare.",
+    "The management zone with the highest queen conch density was", zone_conch_max_density, "with",
+    conch_max_density, "queen conch per hectare (Table 1Co; Figure 1Co).", "\n\n"
+  )
+}
+# Create conch table/figure captions
+table1cocaption <- if ("Finfish" %in% names(params$datafile)) {
+  paste(
+    "**Table 1Co.** Conch density in sampled management zones and overall in", study_year_month,
+    " at Turneffe Atoll Marine Reserve, represented by number of sites, area sampled in hectares, milk conch and queen conch count, and milk conch and queen conch density (per hectare).",
+    "\n\n"
+  )
+}
+figure1cocaption <- if ("Conch" %in% names(params$datafile)) {
+  paste(
+    "*Figure 1Co.* Queen conch and milk conch density in sampled management zones in", study_year_month,
+    "where colors represent species for a management zone. Height of bars is proportional to conch density per hectare.", "\n\n"
+  )
+}
+figure2cocaption <- if ("Conch" %in% names(params$datafile)) {
+  paste(
+    "*Figure 2Co.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for data from", study_year_month,
+    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.", "\n\n"
+  )
+}
+```
+
+
+`r if ("Conch" %in% names(params$datafile)){conch_density_text}`
+
+
+`r if ("Conch" %in% names(params$datafile)){table1cocaption}`
+
+
+```{r table1co, echo = FALSE}
+if ("Conch" %in% names(params$datafile)) {
+  as.data.frame(df_table1co)
+}
+```
+
+
+
+
+```{r figure1co_prep, echo = FALSE, include = FALSE}
+if ("Conch" %in% names(params$datafile)) {
+  # Prepare df for Figure 1Co ---------------------------
+  df_figure1co <- df_table1co_zones %>%
+    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
+    pivot_longer(cols = c(`Queen Conch`, `Milk Conch`), names_to = "Species", values_to = "Density (Conch/Hectare)")
+
+  # Define Figure 1Co
+  figure1co <- ggplot(df_figure1co, aes(x = `Mgmt Zone`, y = `Density (Conch/Hectare)`, fill = Species)) +
+    geom_col(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8])
+}
+```
+
+
+```{r figure1co, echo = FALSE, fig.width=6, fig.height=2, fig.align = 'left'}
+if ("Conch" %in% names(params$datafile)) {
+  figure1co
+}
+```
+
+
+`r if ("Conch" %in% names(params$datafile)){figure1cocaption}`
+
+
+```{r figure2co_prep, echo = FALSE, include = FALSE}
+if ("Conch" %in% names(params$datafile)) {
+  # Create df for Figure 2Co ---------------------------
+  df_figure2co <- df_conch %>%
+    filter(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch") %>%
+    mutate(
+      `Shell Length (cm)` = `Shell Length (mm)` / 10,
+      Lipped = factor(
+        case_when(
+          is.na(`Lip Thickness (mm)`) ~ "Not Lipped",
+          `Lip Thickness (mm)` > 0 ~ "Lipped",
+          TRUE ~ "Not Lipped"
+        ),
+        levels = c("Not Lipped", "Lipped")
+      )
+    )
+
+  # Create panels for Figure 2Co ---------------------------
+  A <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Conservation Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "A", subtitle = "Conservation Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  B <- ggplot(filter(df_figure2co, `Mgmt Zone` == "General Use Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "B", subtitle = "General Use Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  C <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Special Management Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "C", subtitle = "Special Management Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  D <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "D", subtitle = "Overall") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+
+  # Assemble Figure 2Co ---------------------------
+  figure2co <- ggarrange(A, B, C, D, nrow = 2, ncol = 2)
+
+  # Create dynamic variables and text about conch shell length  ---------------------------
+  df_figure2co_zone <- df_figure2co %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(`Av Shell Length (cm)` = round(mean(`Shell Length (cm)`), 1))
+  df_figure2co_legality <- df_figure2co %>%
+    summarize(`Percent Lipped` = round(100 * sum(`Lipped` == "Lipped", na.rm = TRUE) / n(), 1))
+  conch_length <- round(mean(df_figure2co$`Shell Length (cm)`), 1)
+  zone_max_conch_length <- df_figure2co$`Mgmt Zone`[which.max(df_figure2co$`Shell Length (cm)`)]
+  max_conch_length <- max(df_figure2co$`Shell Length (cm)`)
+  zone_max_average_conch_length <- df_figure2co_zone$`Mgmt Zone`[which.max(df_figure2co_zone$`Av Shell Length (cm)`)]
+  max_average_conch_length <- max(df_figure2co_zone$`Av Shell Length (cm)`)
+  percent_legal <- df_figure2co_legality$`Percent Lipped`
+  conch_shell_text <- if ("Conch" %in% names(params$datafile)) {
+    paste(
+      "The overall mean queen conch shell length observed within the TAMR was", conch_length, "cm.",
+      "The largest queen conch individual encountered was in", zone_max_conch_length,
+      "with a shell length of", max_conch_length, "cm. The", zone_max_average_conch_length,
+      "had the highest mean shell length for queen conch individuals of", max_average_conch_length,
+      "cm.", percent_legal, "% of queen conch individuals found are of legal size (Figure 2Co).", "\n\n"
+    )
+  }
+}
+```
+
+`r if ("Conch" %in% names(params$datafile)){conch_shell_text}`
+
+
+```{r figure2co, echo = FALSE, fig.width=6, fig.height=5.5, fig.align = 'left'}
+if ("Conch" %in% names(params$datafile)) {
+  figure2co
+}
+```
+
+
+`r if ("Conch" %in% names(params$datafile)){figure2cocaption}`
 
 
 `r if ("Lobster" %in% names(params$datafile)){"### Lobsters"}`
