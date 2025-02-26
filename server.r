@@ -63,17 +63,15 @@ server <- function(input, output, session) {
 
     # Validate dataframes
     observeEvent(input$validate_fisheries, {
-        shinyalert("Success!", "Validation Successful!",
-            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        # If Validation Passes "no function yet"
         enableCustomization("fisheries")
     })
     observeEvent(input$validate_fisher, {
-        shinyalert("Success!", "Validation Successful!",
-            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        # If Validation Passes
         enableCustomization("fisher")
     })
     observeEvent(input$validate_lamp, {
@@ -87,7 +85,6 @@ server <- function(input, output, session) {
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
-
                 validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
                 validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
                 validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
@@ -112,32 +109,22 @@ server <- function(input, output, session) {
                     shinyalert("Attention!",
                         text = validation_message,
                         confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
-                        shinyjs::enable("lamp_name"),
-                        shinyjs::hide("lamp_input_box_cover")
+                        enableCustomization("lamp")
                     )
-                    if (validation_passed | length(validation_message) == 0) {
-                        shinyalert("Success!", "Validation Successful!",
-                            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
-                        )
-                    } else {
-                        shinyalert("Attention!",
-                            text = validation_message,
-                            confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
-                        )
-                    }
                 }
             }
         } else {
-            shinyalert("Success!", "Validation Successful!",
-                confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+            shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+                confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s",
+                enableCustomization("lamp")
             )
         }
     })
+
     observeEvent(input$validate_spag, {
-        shinyalert("Success!", "Validation Successful!",
-            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        # If Validation Passes
         enableCustomization("spag")
     })
 
