@@ -64,16 +64,14 @@ server <- function(input, output, session) {
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
         # If Validation Passes "no function yet"
-        shinyjs::enable("fisheries_name")
-        shinyjs::hide("fisheries_input_box_cover")
+        enableCustomization("fisheries")
     })
     observeEvent(input$validate_fisher, {
         shinyalert("Success!", "Validation Successful!",
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
         # If Validation Passes
-        shinyjs::enable("fisher_name")
-        shinyjs::hide("fisher_input_box_cover")
+        enableCustomization("fisher")
     })
     observeEvent(input$validate_lamp, {
         source("validation/validate_lampconch_1per.r")
@@ -111,8 +109,7 @@ server <- function(input, output, session) {
                 if (validation_passed | length(validation_message) == 0) {
                     shinyalert("Success!", "Validation Successful!",
                         confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
-                        shinyjs::enable("lamp_name"),
-                        shinyjs::hide("lamp_input_box_cover")
+                        enableCustomization("lamp")
                     )
                 } else {
                     shinyalert("Attention!",
@@ -128,8 +125,7 @@ server <- function(input, output, session) {
             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
         )
         # If Validation Passes
-        shinyjs::enable("spag_name")
-        shinyjs::hide("spag_input_box_cover")
+        enableCustomization("spag")
     })
 
     # Create reports
@@ -266,29 +262,51 @@ server <- function(input, output, session) {
         }
     )
 
-    # Enable/disable input boxes
+    # Observe Periods
+    observeEvent(input$period_fisheries, {
+        disableCustomization("fisheries")
+    })
+    observeEvent(input$period_fisher, {
+        disableCustomization("fisher")
+    })
+    observeEvent(input$period_lamp, {
+        disableCustomization("lamp")
+    })
+    observeEvent(input$period_spag, {
+        disableCustomization("spag")
+    })
+
+    # Observe Datatype
+    observeEvent(input$datatype_lamp, {
+        disableCustomization("lamp")
+    })
+    observeEvent(input$datatype_spag, {
+        disableCustomization("spag")
+    })
+
+    # Observe Upload
     observeEvent(input$upload_fisheries, {
         if (!is.null(input$upload_fisheries)) {
-            shinyjs::enable("validate_fisheries")
-            shinyjs::hide("fisheries_validation_box_cover")
+            enableValidate("fisheries")
+            disableCustomization("fisheries")
         }
     })
     observeEvent(input$upload_fisher, {
         if (!is.null(input$upload_fisher)) {
-            shinyjs::enable("validate_fisher")
-            shinyjs::hide("fisher_validation_box_cover")
+            enableValidate("fisher")
+            disableCustomization("fisher")
         }
     })
     observeEvent(input$upload_lamp, {
         if (!is.null(input$upload_lamp)) {
-            shinyjs::enable("validate_lamp")
-            shinyjs::hide("lamp_validation_box_cover")
+            enableValidate("lamp")
+            disableCustomization("lamp")
         }
     })
     observeEvent(input$upload_spag, {
         if (!is.null(input$upload_spag)) {
-            shinyjs::enable("validate_spag")
-            shinyjs::hide("spag_validation_box_cover")
+            enableValidate("spag")
+            disableCustomization("spag")
         }
     })
 
@@ -323,4 +341,20 @@ server <- function(input, output, session) {
             )
         )
     })
+
+    # Helper Functions
+    disableCustomization <- function(reportType) {
+        shinyjs::disable(paste0(reportType, "_name"))
+        shinyjs::disable(paste0("report_", reportType))
+        shinyjs::show(paste0(reportType, "_input_box_cover"))
+    }
+    enableCustomization <- function(reportType) {
+        shinyjs::enable(paste0(reportType, "_name"))
+        shinyjs::enable(paste0("report_", reportType))
+        shinyjs::hide(paste0(reportType, "_input_box_cover"))
+    }
+    enableValidate <- function(reportType) {
+        shinyjs::enable(paste0("validate_", reportType))
+        shinyjs::hide(paste0(reportType, "_validation_box_cover"))
+    }
 }
