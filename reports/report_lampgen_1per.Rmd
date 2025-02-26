@@ -220,7 +220,7 @@ Since the original site selection in 2021, the aim has been to resurvey these si
 This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
 
 
-```{r figure1, echo = FALSE, fig.width = 178, fig.height = 178}
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
 # Create map for Figure 1 ---------------------------
 df_map <- params$datafile$Sites |>
   select(`Site ID`, Latitude, Longitude) |>
