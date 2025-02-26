@@ -35,6 +35,9 @@ server <- function(input, output, session) {
             if ("Species" %in% sheets_available) {
                 data_list$Species <- read_excel(input$upload_lamp$datapath, sheet = "Species", na = nas)
             }
+            if ("Biomass" %in% sheets_available) {
+                data_list$Biomass <- read_excel(input$upload_lamp$datapath, sheet = "Biomass", na = nas)
+            }
             if ("Sites" %in% sheets_available) {
                 data_list$Sites <- read_excel(input$upload_lamp$datapath, sheet = "Sites", na = nas)
             }
@@ -74,23 +77,17 @@ server <- function(input, output, session) {
         enableCustomization("fisher")
     })
     observeEvent(input$validate_lamp, {
-        source("validation/validate_lampconch_1per.r")
-        sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp())
-        validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp())
-        if (!sheets_passed) {
-            shinyalert("Alert!",
-                text = paste(validation_message_sheets, "Please ensure all required sheets are present prior to validation."),
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
-        } else {
-            completeness_passed <- func_validate_lampconch_1per_completeness_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-            validation_message_completeness <- func_validate_lampconch_1per_completeness(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-            if (!completeness_passed) {
+        if (input$datatype_lamp == "Conch") {
+            source("validation/validate_lampconch_1per.r")
+            sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp())
+            validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp())
+            if (!sheets_passed) {
                 shinyalert("Alert!",
-                    text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
+                    text = paste(validation_message_sheets, "Please ensure all required sheets are present prior to validation."),
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
+
                 validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
                 validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
                 validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
@@ -114,10 +111,26 @@ server <- function(input, output, session) {
                 } else {
                     shinyalert("Attention!",
                         text = validation_message,
-                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
+                        shinyjs::enable("lamp_name"),
+                        shinyjs::hide("lamp_input_box_cover")
                     )
+                    if (validation_passed | length(validation_message) == 0) {
+                        shinyalert("Success!", "Validation Successful!",
+                            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+                        )
+                    } else {
+                        shinyalert("Attention!",
+                            text = validation_message,
+                            confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE
+                        )
+                    }
                 }
             }
+        } else {
+            shinyalert("Success!", "Validation Successful!",
+                confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s"
+            )
         }
     })
     observeEvent(input$validate_spag, {
