@@ -76,7 +76,13 @@ df_lobster <- if ("Lobster" %in% names(params$datafile)) {
 df_urchin_crab <- if ("Diadema_Crab" %in% names(params$datafile)) {
   params$datafile$Diadema_Crab %>%
     left_join(params$datafile$Sites, by = "Site ID") %>%
-    filter(!is.na(`Site ID`) & !is.null(`Site ID`))
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
+    mutate(
+      `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
+      `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
+      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
+    )
 }
 ```
 
