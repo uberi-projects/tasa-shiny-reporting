@@ -18,6 +18,7 @@ ui <- navbarPage(
     id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
     header = div(
+        useShinyjs(),
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
         class = "header", checked = NA,
@@ -30,7 +31,6 @@ ui <- navbarPage(
             )
         )
     ),
-    useShinyjs(),
     tabPanel(
         "Home",
         div(
@@ -534,5 +534,5 @@ ui <- navbarPage(
                 )
             )
         )
-    )
+    ),
 )
