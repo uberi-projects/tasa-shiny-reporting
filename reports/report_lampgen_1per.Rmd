@@ -1209,20 +1209,20 @@ table1lcaption <- if ("Lobster" %in% names(params$datafile)) {
     "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
     "\n\n"
   )
-  figure1lcaption <- if ("Lobster" %in% names(params$datafile)) {
-    paste(
-      "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
-      " at Turneffe Atoll Marine Reserve.",
-      "\n\n"
-    )
-  }
-  figure2lcaption <- if ("Lobster" %in% names(params$datafile)) {
-    paste(
-      "*Figure 2L.* Length-frequency distribution of Caribbean spiny lobster carapace length (mm) for data from", study_year_month,
-      "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
-      "\n\n"
-    )
-  }
+}
+figure1lcaption <- if ("Lobster" %in% names(params$datafile)) {
+  paste(
+    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
+    " at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+figure2lcaption <- if ("Lobster" %in% names(params$datafile)) {
+  paste(
+    "*Figure 2L.* Length-frequency distribution of Caribbean spiny lobster carapace length (mm) for data from", study_year_month,
+    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
+    "\n\n"
+  )
 }
 ```
 
@@ -1344,7 +1344,7 @@ if ("Lobster" %in% names(params$datafile)) {
     "The legal Caribbean spiny lobster carapace length for harvest in Belize is 76mm.",
     proportion_legal_carapace, "% of lobsters found were legal limit or above.",
     "The highest density of Caribbean spiny lobsters was found in the", zone_max_length_lobster_car,
-    "with", max_length_lobster_car, "mm.",
+    "with", max_length_lobster_car, "mm (Figure 2L).",
     "\n\n"
   )
 }
@@ -1372,8 +1372,116 @@ if ("Lobster" %in% names(params$datafile)) {
 
 `r if ("Diadema_Crab" %in% names(params$datafile)){"### *Diadema* and *Mithrax*"}`
 
-- Counts per management zone
-- Map observations/
+
+```{r table1dm_prep, echo = FALSE, include = FALSE}
+if ("Diadema_Crab" %in% names(params$datafile)) {
+  # Prepare df for Table 1DM ---------------------------
+  df_table1dm_overall <- df_urchin_crab %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Adult Diadema` = sum(`Adult Diadema antillarum`),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
+      `Mithrax` = sum(`Mithrax spinosissumus`)
+    ) %>%
+    mutate(`Mgmt Zone` = "Overall")
+  df_table1dm_zones <- df_urchin_crab %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Adult Diadema` = sum(`Adult Diadema antillarum`),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
+      `Mithrax` = sum(`Mithrax spinosissumus`)
+    )
+  df_table1dm <- bind_rows(df_table1dm_zones, df_table1dm_overall)
+
+  # Prepare dynamic text for Table 1DM ---------------------------
+  sites_urchin_lobsters <- length(unique(df_urchin_crab$`Site ID`))
+  total_diadema_ad <- df_table1dm_overall$`Adult Diadema`
+  total_diadema_juv <- df_table1dm_overall$`Juvenile Diadema`
+  total_mithrax <- df_table1dm_overall$`Mithrax`
+}
+```
+
+
+
+```{r diademamithraxtext, echo = FALSE, include = FALSE}
+# Create text about Diadema/Mithrax results ---------------------------
+urchin_crab_summary_text <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  paste(
+    "Across a total of", sites_urchin_lobsters, "sites,",
+    total_diadema_ad, "adult _Diadema_ were found,",
+    total_diadema_juv, "juvenile _Diadema_ were found, and",
+    total_mithrax, "_Mithrax_ were found (Table 1DM; Figure 1DM).",
+    "\n\n"
+  )
+}
+# Create Diadema/Mithrax table/figure captions
+table1dmcaption <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  paste(
+    "**Table 1DM.** _Diadema antillarum_ and _Mithrax spinosissumus_ counts in sampled management zones and overall in",
+    study_year_month,
+    "at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+figure1dmcaption <- if ("Diadema_Crab" %in% names(params$datafile)) {
+  paste(
+    "_Figure 1DM_. Distribution of _Diadema antillarum_ and _Mithrax spinosissumus_ counts per site in",
+    study_year_month,
+    "at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+```
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){urchin_crab_summary_text}`
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){table1dmcaption}`
+
+
+```{r table1dm, echo = FALSE}
+if ("Diadema_Crab" %in% names(params$datafile)) {
+  as.data.frame(df_table1dm)
+}
+```
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){"<br>"}`
+
+
+```{r figure1dm_prep, echo = FALSE, include = FALSE}
+if ("Diadema_Crab" %in% names(params$datafile)) {
+  # Prepare df for Figure 1DM ---------------------------
+  df_figure1dm <- df_urchin_crab %>%
+    pivot_longer(
+      cols = c(`Adult Diadema antillarum`, `Juvenile Diadema antillarum`, `Mithrax spinosissumus`),
+      names_to = "Species", values_to = "Count"
+    ) %>%
+    group_by(`Site ID`, Species) %>%
+    summarize(Count = sum(Count))
+
+  # Define Figure 1DM
+  figure1dm <- ggplot(df_figure1dm, aes(x = Species, y = Count)) +
+    geom_boxplot(color = "black", fill = palette[1]) +
+    theme_custom +
+    theme(axis.text.x = element_text(angle = 0, size = 8))
+}
+```
+
+
+```{r figure1dm, echo = FALSE, fig.width=6, fig.height=2, fig.align = 'left'}
+if ("Diadema_Crab" %in% names(params$datafile)) {
+  figure1dm
+}
+```
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){figure1dmcaption}`
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){"<br>"}`
 
 
 ## Conclusion
