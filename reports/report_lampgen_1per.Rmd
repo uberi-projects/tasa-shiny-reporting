@@ -1491,6 +1491,7 @@ This report supports the aims of the Long-term Atoll Monitoring Program by offer
 supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability 
 of the TAMR fishery while safeguarding the ecological value of the atoll. \ 
 
+<br>
 
 ## Acknowledgments
 
@@ -1514,26 +1515,29 @@ if (length(collectors) == 0) {
 
 Thank you to the data collectors who contributed to this project`r collectors_string`. \
 
+<br>
 
 ## Literature Cited
 
 Acosta, C. A. (2004). Glover’s Reef long-term atoll monitoring program (LAMP). Glover’s Reef Marine Research Station, Wildlife Conservation Society, Belize.
 
-Belize Fisheries Department. (n.d.-a). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
+`r if ("Conch" %in% names(params$datafile)){"Belize Fisheries Department. (n.d.-a). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/"}`
 
-Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/
+`r if ("Finfish" %in% names(params$datafile) | "Lobster" %in% names(params$datafile)){"Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/"}`
 
-Butler, M. J., & Mojica, A. M. (2012). Herbivory by the Caribbean king crab on coral patch reefs. Marine Biology, 159(12), 2697–2706. https://doi.org/10.1007/s00227-012-2027-1
+`r if ("Diadema_Crab" %in% names(params$datafile)){"Butler, M. J., & Mojica, A. M. (2012). Herbivory by the Caribbean king crab on coral patch reefs. Marine Biology, 159(12), 2697–2706. https://doi.org/10.1007/s00227-012-2027-1"}`
 
 Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
 
-Froese, R., & Pauly, D. (2024). FishBase [World Wide Web electronic publication.]. www.fishbase.org
-Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis.
+`r if ("Finfish" %in% names(params$datafile)){"Froese, R., & Pauly, D. (2024). FishBase [World Wide Web electronic publication.]. www.fishbase.org"}`
 
-NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
+`r if ("Lobster" %in% names(params$datafile)){"Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis."}`
 
-Precht, L. L., & Precht, W. F. (2015). The sea urchin Diadema antillarum – keystone herbivore or redundant species? https://doi.org/10.7287/peerj.preprints.1565v2
+`r if ("Conch" %in% names(params$datafile)){"NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science"}`
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){"Precht, L. L., & Precht, W. F. (2015). The sea urchin Diadema antillarum – keystone herbivore or redundant species? https://doi.org/10.7287/peerj.preprints.1565v2"}`
 
 Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
 
-United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf
+`r if ("Finfish" %in% names(params$datafile) | "Lobster" %in% names(params$datafile)){"United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf"}`
+
