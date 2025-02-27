@@ -533,6 +533,9 @@ df_table2
 <br>
 
 
+`r if ("Finfish" %in% names(params$datafile)){"***"}`
+
+
 `r if ("Finfish" %in% names(params$datafile)){"### Finfish"}`
 
 
@@ -785,14 +788,17 @@ if ("Finfish" %in% names(params$datafile)) {
 ```
 
 
-`r if ("Finfish" %in% names(params$datafile)){figure2fcaption}`
-
-
 ```{r figure2f, echo = FALSE, fig.width=6, fig.height=4, fig.align = 'left'}
 if ("Finfish" %in% names(params$datafile)) {
   figure2f
 }
 ```
+
+
+`r if ("Finfish" %in% names(params$datafile)){figure2fcaption}`
+
+
+`r if ("Finfish" %in% names(params$datafile)){"<br>"}`
 
 
 `r if ("Finfish" %in% names(params$datafile)){table2fcaption}`
@@ -878,7 +884,13 @@ if ("Finfish" %in% names(params$datafile)) {
 `r if ("Finfish" %in% names(params$datafile)){figure3fcaption}`
 
 
+`r if ("Finfish" %in% names(params$datafile)){"<br>"}`
+
+
 `r if ("Finfish" %in% names(params$datafile)){fish_size_text}`
+
+
+`r if ("Conch" %in% names(params$datafile)){"***"}`
 
 
 `r if ("Conch" %in% names(params$datafile)){"### Conch"}`
@@ -994,6 +1006,7 @@ if ("Conch" %in% names(params$datafile)) {
 ```
 
 
+`r if ("Conch" %in% names(params$datafile)){"<br>"}`
 
 
 ```{r figure1co_prep, echo = FALSE, include = FALSE}
@@ -1022,6 +1035,9 @@ if ("Conch" %in% names(params$datafile)) {
 
 
 `r if ("Conch" %in% names(params$datafile)){figure1cocaption}`
+
+
+`r if ("Conch" %in% names(params$datafile)){"<br>"}`
 
 
 ```{r figure2co_prep, echo = FALSE, include = FALSE}
@@ -1111,11 +1127,247 @@ if ("Conch" %in% names(params$datafile)) {
 `r if ("Conch" %in% names(params$datafile)){figure2cocaption}`
 
 
+`r if ("Conch" %in% names(params$datafile)){"<br>"}`
+
+
+`r if ("Lobster" %in% names(params$datafile)){"***"}`
+
+
 `r if ("Lobster" %in% names(params$datafile)){"### Lobsters"}`
 
-- Total proportion of female, male, andun-sexed lobsters
-- Caribbean Spiny Lobster density per management zone
-- Size frequency distribution for lobsters encountered/
+
+```{r table1l_prep, echo = FALSE, include = FALSE}
+if ("Lobster" %in% names(params$datafile)) {
+  # Prepare df for Table 1L ---------------------------
+  df_table1l_overall <- df_lobster %>%
+    filter(!is.na(`Site ID`)) %>%
+    summarise(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
+      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
+      Males = sum(Sex %in% c("M", "m", "Male", "male")),
+      Females = sum(Sex %in% c("F", "f", "Female", "female")),
+      Total = `Caribbean Spiny` + `Spotted Spiny`,
+      Unsexed = Total - Males - Females
+    ) %>%
+    select(-`Hec Sampled`) %>%
+    mutate(`Mgmt Zone` = "Overall")
+  df_table1l_zones <- df_lobster %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`) %>%
+    summarise(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
+      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
+      Males = sum(Sex %in% c("M", "m", "Male", "male")),
+      Females = sum(Sex %in% c("F", "f", "Female", "female"))
+    ) %>%
+    select(-`Hec Sampled`)
+  df_table1l <- bind_rows(df_table1l_zones, df_table1l_overall)
+  df_table1l <- select(df_table1l, -Unsexed, -Total)
+
+  # Prepare dynamic text for Table 1L ---------------------------
+  number_lobster_sites <- length(unique(df_lobster$`Site ID`))
+  overall_lobster_car <- df_table1l_overall$`Caribbean Spiny`
+  overall_lobster_spot <- df_table1l_overall$`Spotted Spiny`
+  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Hec`
+  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Hec`)
+  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Hec`)]
+  proportion_lob_male <- round(df_table1l_overall$Males / df_table1l_overall$Total * 100, 1)
+  proportion_lob_female <- round(df_table1l_overall$Females / df_table1l_overall$Total * 100, 1)
+  proportion_lob_unsexed <- round(df_table1l_overall$Unsexed / df_table1l_overall$Total * 100, 1)
+}
+```
+
+
+
+```{r lobstertext, echo = FALSE, include = FALSE}
+# Create text about lobster results ---------------------------
+lobster_summary_text <- if ("Lobster" %in% names(params$datafile)) {
+  paste(
+    "Across a total of", number_lobster_sites, "sampled sites for lobsters,",
+    overall_lobster_car, "Caribbean spiny lobsters (_Panulirus argus_) and",
+    overall_lobster_spot,
+    "spotted spiny lobsters (_Panulirus guttatus_) were found, resulting in a Caribbean spiny lobster density of",
+    density_lobster_car, "individuals per hectare.",
+    "The highest recorded Caribbean spiny lobster density was found in the",
+    zone_max_density_lobster_car, "with", max_density_lobster_car, "individuals per hectare.",
+    "Of all lobsters sampled, ", proportion_lob_male, "% were males, ",
+    proportion_lob_female, "% were females, and",
+    proportion_lob_unsexed, "% were unsexed (Table 1L; Figure 1L).",
+    "\n\n"
+  )
+}
+# Create lobster table/figure captions
+table1lcaption <- if ("Lobster" %in% names(params$datafile)) {
+  paste(
+    "**Table 1L.** Lobster counts in sampled management zones and overall in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
+    "\n\n"
+  )
+  figure1lcaption <- if ("Lobster" %in% names(params$datafile)) {
+    paste(
+      "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
+      " at Turneffe Atoll Marine Reserve.",
+      "\n\n"
+    )
+  }
+  figure2lcaption <- if ("Lobster" %in% names(params$datafile)) {
+    paste(
+      "*Figure 2L.* Length-frequency distribution of Caribbean spiny lobster carapace length (mm) for data from", study_year_month,
+      "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
+      "\n\n"
+    )
+  }
+}
+```
+
+
+`r if ("Lobster" %in% names(params$datafile)){lobster_summary_text}`
+
+
+`r if ("Lobster" %in% names(params$datafile)){table1lcaption}`
+
+
+```{r table1l, echo = FALSE}
+if ("Lobster" %in% names(params$datafile)) {
+  as.data.frame(df_table1l)
+}
+```
+
+
+`r if ("Lobster" %in% names(params$datafile)){"<br>"}`
+
+
+```{r figure1l_prep, echo = FALSE, include = FALSE}
+if ("Lobster" %in% names(params$datafile)) {
+  # Prepare df for Figure 1L ---------------------------
+  df_figure1lA <- df_table1l_overall %>%
+    select(Males, Females, Unsexed) %>%
+    pivot_longer(c(Males, Females, Unsexed), names_to = "Sex", values_to = "Value")
+
+  # Define Figure 1L
+  A <- ggplot(df_figure1lA, aes(x = "", y = Value, fill = Sex)) +
+    geom_col(color = "black") +
+    geom_label(aes(label = Value), position = position_stack(vjust = 0.5), show.legend = FALSE) +
+    coord_polar(theta = "y") +
+    theme_custom +
+    xlab("") +
+    labs(title = "A") +
+    theme(legend.box = "vertical", legend.direction = "vertical") +
+    scale_fill_manual(values = palette[2:4])
+  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Hec`, fill = `Mgmt Zone`)) +
+    geom_col(color = "black") +
+    theme_custom +
+    xlab("Management Zone") +
+    labs(title = "B") +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), legend.box = "vertical", legend.direction = "vertical") +
+    scale_fill_manual(values = c(palette[1], palette[5], palette[6], palette[7], palette[8]))
+
+
+  figure1l <- ggarrange(A, B, ncol = 2, nrow = 1)
+}
+```
+
+
+```{r figure1l, echo = FALSE, fig.width=6, fig.height=4, fig.align = 'left'}
+if ("Lobster" %in% names(params$datafile)) {
+  figure1l
+}
+```
+
+
+`r if ("Lobster" %in% names(params$datafile)){figure1lcaption}`
+
+
+`r if ("Lobster" %in% names(params$datafile)){"<br>"}`
+
+
+```{r figure2l_prep, echo = FALSE, include = FALSE}
+if ("Lobster" %in% names(params$datafile)) {
+  # Prepare df for Figure 2L ---------------------------
+  df_figure2l <- df_lobster %>%
+    filter(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster") %>%
+    filter(
+      `Carapace Length (mm)` != 0 & `Carapace Length (mm)` != "0" & `Carapace Length (mm)` != "0.0" &
+        `Carapace Length (mm)` != "NE" & `Carapace Length (mm)` != "N/E" & `Carapace Length (mm)` != "NA" &
+        `Carapace Length (mm)` != "N/A"
+    )
+
+  # Define Figure 2L
+  A <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Conservation Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "A", subtitle = "Conservation Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  B <- ggplot(filter(df_figure2l, `Mgmt Zone` == "General Use Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "B", subtitle = "General Use Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  C <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Special Management Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "C", subtitle = "Special Management Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  D <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "D", subtitle = "Overall") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+
+  # Assemble Figure 2L
+  figure2l <- ggarrange(A, B, C, D, ncol = 2, nrow = 2)
+
+  # Define Variables for Figure 2L
+  overall_carapace <- round(mean(df_figure2l$`Carapace Length (mm)`), 1)
+  proportion_legal_carapace <- round(
+    sum(df_figure2l$`Carapace Length (mm)` >= 76, na.rm = TRUE) /
+      sum(df_figure2l$`Carapace Length (mm)` != 0),
+    1
+  ) * 100
+  df_figure2l_zones <- df_figure2l %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(`Av Carapace Length (mm)` = mean(`Carapace Length (mm)`))
+  max_length_lobster_car <- round(max(df_figure2l_zones$`Av Carapace Length (mm)`), 1)
+  zone_max_length_lobster_car <- df_figure2l_zones$`Mgmt Zone`[which.max(df_figure2l_zones$`Av Carapace Length (mm)`)]
+  lobster_length_text <- paste(
+    "The average Caribbean spiny lobster (_Panulirus argus_) carapace length at TAMR was found to be", overall_carapace, "mm.",
+    "The legal Caribbean spiny lobster carapace length for harvest in Belize is 76mm.",
+    proportion_legal_carapace, "% of lobsters found were legal limit or above.",
+    "The highest density of Caribbean spiny lobsters was found in the", zone_max_length_lobster_car,
+    "with", max_length_lobster_car, "mm.",
+    "\n\n"
+  )
+}
+```
+
+
+`r if ("Lobster" %in% names(params$datafile)){lobster_length_text}`
+
+
+```{r figure2l, echo = FALSE, fig.width=6, fig.height=5, fig.align = 'left'}
+if ("Lobster" %in% names(params$datafile)) {
+  figure2l
+}
+```
+
+
+`r if ("Lobster" %in% names(params$datafile)){figure2lcaption}`
+
+
+`r if ("Lobster" %in% names(params$datafile)){"<br>"}`
+
+
+`r if ("Diadema_Crab" %in% names(params$datafile)){"***"}`
 
 
 `r if ("Diadema_Crab" %in% names(params$datafile)){"### *Diadema* and *Mithrax*"}`
