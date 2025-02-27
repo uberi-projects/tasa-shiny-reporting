@@ -85,39 +85,82 @@ server <- function(input, output, session) {
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
-                validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
-                validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                validation_message <- c(
-                    if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
-                        paste0(
-                            "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
-                            "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
-                        )
-                    } else if (length(validation_message_surveydata) > 0) {
-                        paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
-                    } else if (length(validation_message_sites) > 0) {
-                        paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
-                    }
-                )
-                if (validation_passed | length(validation_message) == 0) {
-                    shinyalert("Success!", "Validation Successful!",
-                        confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
-                        enableCustomization("lamp")
+                completeness_passed <- func_validate_lampconch_1per_completeness_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                validation_message_completeness <- func_validate_lampconch_1per_completeness(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                if (!completeness_passed) {
+                    shinyalert("Alert!",
+                        text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
+                        confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                     )
                 } else {
-                    shinyalert("Attention!",
-                        text = validation_message,
-                        confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
-                        enableCustomization("lamp")
+                    validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                    validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
+                    validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
+                    validation_message <- c(
+                        if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
+                            paste0(
+                                "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
+                                "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
+                            )
+                        } else if (length(validation_message_surveydata) > 0) {
+                            paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
+                        } else if (length(validation_message_sites) > 0) {
+                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                        }
                     )
+                    if (validation_passed | length(validation_message) == 0) {
+                        shinyalert("Success!", "Validation Successful!",
+                            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
+                            enableCustomization("lamp")
+                        )
+                    } else {
+                        shinyalert("Attention!",
+                            text = validation_message,
+                            confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
+                            enableCustomization("lamp")
+                        )
+                    }
                 }
             }
         } else {
-            shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
-                confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s",
-                enableCustomization("lamp")
-            )
+            source("validation/validate_lampgeneral_1per.r")
+            sheets_passed <- func_validate_lampgeneral_1per_sheets_check(df_upload_lamp())
+            validation_message_sheets <- func_validate_lampgeneral_1per_sheets(df_upload_lamp())
+            if (!sheets_passed) {
+                shinyalert("Alert!",
+                    text = paste(validation_message_sheets, "Please ensure all required sheets are present prior to validation."),
+                    confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+                )
+            } else {
+                completeness_passed <- func_validate_lampgeneral_1per_completeness_check(df_upload_lamp()$Sites)
+                validation_message_completeness <- func_validate_lampgeneral_1per_completeness(df_upload_lamp()$Sites)
+                if (!completeness_passed) {
+                    shinyalert("Alert!",
+                        text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
+                        confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+                    )
+                } else {
+                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp()$Sites)
+                    validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
+                    validation_message <- c(
+                        if (length(validation_message_sites) > 0) {
+                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                        }
+                    )
+                    if (validation_passed | length(validation_message) == 0) {
+                        shinyalert("Success!", "Validation Successful!",
+                            confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
+                            enableCustomization("lamp")
+                        )
+                    } else {
+                        shinyalert("Attention!",
+                            text = validation_message,
+                            confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
+                            enableCustomization("lamp")
+                        )
+                    }
+                }
+            }
         }
     })
 
