@@ -393,7 +393,7 @@ figure2
 ```
 
 
-*Figure 2.* Distribution of queen conch counts for data from `r study_year`. sampling effort at Turneffe Atoll Marine Reserve. 
+*Figure 2.* Distribution of queen conch counts for data from `r study_year` sampling effort at Turneffe Atoll Marine Reserve. 
 Histogram and boxplot of conch counts per transect (bin size = 1) with mean shown by dotted line (A), 
 histogram and boxplot of conch counts per site (bin size = 5) with mean shown by dotted line (B), 
 boxplots of conch counts per transect divided by section with means indicated with triangles (C), 
@@ -700,7 +700,7 @@ if (length(collectors) == 0) {
 ```
 
 
-Thank you to the data collectors who contributed to this project`r collectors_string`. Without you, this dataset would not exist as it is. \
+Thank you to the data collectors who contributed to this project`r collectors_string`.\
 
 
 ## Literature Cited
