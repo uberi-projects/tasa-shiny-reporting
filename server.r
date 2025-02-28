@@ -5,6 +5,7 @@ library(readxl)
 
 # Define server ---------------------------
 server <- function(input, output, session) {
+    shinyjs::hide("feedback-content-box")
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
     df_upload_fisheries <- reactive({
@@ -270,6 +271,20 @@ server <- function(input, output, session) {
             shinyjs::show("input-box-cover")
             shinyjs::show("validation-box-cover")
         }
+    })
+
+
+    observeEvent(input$feedback_opn_bttn, {
+        shinyjs::show("feedback-content-box")
+        shinyjs::hide("feedback_opn_bttn")
+    })
+
+    observeEvent(input$feedback_bttn, {
+        shinyjs::hide("feedback-content-box")
+        shinyjs::show("feedback_opn_bttn")
+        shinyalert("Success!", "Feedback Submitted!",
+            confirmButtonText = "Feedback Submitted!", confirmButtonCol = "#00AE46", type = "", size = "s"
+        )
     })
 
     # Observe action button "Manual" on home page

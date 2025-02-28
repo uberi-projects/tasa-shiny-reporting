@@ -66,12 +66,23 @@ ui <- navbarPage(
                 ),
                 hr(),
                 div(
+                    actionButton("feedback_opn_bttn", "Send Feedback")
+                ),
+                div(
+                    id = "feedback-content-box",
                     class = "feedback-content-box",
-                    actionButton("feedback_bttn", "Send Feedback"),
-                    br(),
                     div(
-                        class = "feedback-box",
-                        textInput("feedback_text", "Your Commentsshin: ", value = "", )
+                        class = "feedback-response-box",
+                        actionButton("feedback_bttn", "Submit Feedback"),
+                        br(),
+                        div(
+                            class = "feedback-box",
+                            textAreaInput("feedback_text", "Describe Issue", value = ""),
+                            prettyRadioButtons("bug_severity",
+                                label = "Severity",
+                                choices = c("1", "2", "3", "4", "5"), inline = TRUE
+                            )
+                        )
                     )
                 )
             )
@@ -162,7 +173,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "", )
+                                        textInput("name", "Your Name: ", value = "")
                                     )
                                 ),
                                 hr(),
