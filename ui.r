@@ -66,14 +66,14 @@ ui <- navbarPage(
                 ),
                 hr(),
                 div(
-                    actionButton("feedback_opn_bttn", "Send Feedback")
+                    actionButton("feedback_opn_bttn", "Report an Issue")
                 ),
                 div(
                     id = "feedback-content-box",
                     class = "feedback-content-box",
                     div(
                         class = "feedback-response-box",
-                        actionButton("feedback_bttn", "Submit Feedback"),
+                        actionButton("feedback_bttn", "Send Feedback"),
                         br(),
                         div(
                             class = "feedback-box",

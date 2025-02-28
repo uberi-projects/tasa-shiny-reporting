@@ -280,11 +280,17 @@ server <- function(input, output, session) {
     })
 
     observeEvent(input$feedback_bttn, {
-        shinyjs::hide("feedback-content-box")
-        shinyjs::show("feedback_opn_bttn")
-        shinyalert("Success!", "Feedback Submitted!",
-            confirmButtonText = "Feedback Submitted!", confirmButtonCol = "#00AE46", type = "", size = "s"
-        )
+        if (is.null(input$feedback_text) || trimws(input$feedback_text) == "") {
+            shinyalert("Error!", "Please enter feedback before submitting.",
+                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            )
+        } else {
+            shinyjs::hide("feedback-content-box")
+            shinyjs::show("feedback_opn_bttn")
+            shinyalert("Success!", "Feedback Submitted!",
+                confirmButtonText = "Okay!", confirmButtonCol = "#00AE46", type = "", size = "s"
+            )
+        }
     })
 
     # Observe action button "Manual" on home page
