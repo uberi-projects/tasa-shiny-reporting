@@ -76,7 +76,10 @@ ui <- navbarPage(
                     "$(document).ready(function(){
                         $('#fisheries_name').prop('disabled', true);
                         $('#validate_fisheries').prop('disabled', true);
-                    });"
+                    });
+                    $(function () {
+                        $('[data-toggle=tooltip]').tooltip()
+                    })"
                 )
             ),
             div(
@@ -128,6 +131,11 @@ ui <- navbarPage(
                                 tags$li(
                                     class = "input-list",
                                     "Validate Data",
+                                    span(
+                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                        title = home_text[10],
+                                        icon("question-circle")
+                                    ),
                                     div(
                                         class = "validation-box-cover",
                                         id = "fisheries_validation_box_cover"

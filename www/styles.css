@@ -211,6 +211,13 @@ label {
   width: 100%;
   background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
 }
+.tooltip > .tooltip-inner{
+  pointer-events: none;
+  background-color: var(--color-secondary);
+  padding: 10px;
+  font-size: 14px;
+  max-width: 550px;
+}
 .validation-box-cover {
     position: absolute;
     width: 100%;
