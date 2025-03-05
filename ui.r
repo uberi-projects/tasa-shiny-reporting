@@ -78,7 +78,7 @@ ui <- navbarPage(
                         $('#validate_fisheries').prop('disabled', true);
                     });
                     $(function () {
-                        $('[data-toggle=tooltip]').tooltip()
+                        $('[data-toggle=tooltip]').tooltip({container: 'body'})
                     })"
                 )
             ),
