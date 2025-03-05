@@ -5,6 +5,7 @@ library(readxl)
 
 # Define server ---------------------------
 server <- function(input, output, session) {
+    shinyjs::hide("feedback-content-box")
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
     df_upload_fisheries <- reactive({
@@ -350,6 +351,27 @@ server <- function(input, output, session) {
         if (!is.null(input$upload_spag)) {
             enableValidate("spag")
             disableCustomization("spag")
+        }
+    })
+
+
+    observeEvent(input$feedback_opn_bttn, {
+        shinyjs::show("feedback-content-box")
+        shinyjs::hide("feedback_opn_bttn")
+    })
+
+    observeEvent(input$feedback_bttn, {
+        if (is.null(input$feedback_text) || trimws(input$feedback_text) == "") {
+            shinyalert("Error!", "Please enter feedback before submitting.",
+                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            )
+        } else {
+            shinyjs::hide("feedback-content-box")
+            shinyjs::show("feedback_opn_bttn")
+            updateTextInput(session, "feedback_text", value = "")
+            shinyalert("Success!", "Feedback Submitted!",
+                confirmButtonText = "Okay!", confirmButtonCol = "#00AE46", type = "", size = "s"
+            )
         }
     })
 

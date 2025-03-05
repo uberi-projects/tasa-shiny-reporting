@@ -155,7 +155,7 @@ label {
   padding: 0 20vw;
   position: absolute;
   right: 0;
-  width: 100vw;
+  width: 100%;
 }
 .grid-generator {
   gap: 20px;
@@ -191,6 +191,32 @@ label {
   padding: 20px 10px;
   position: relative;
   width: 100%;
+}
+.feedback-box {
+  width: 100%;
+  height: 50%;
+}
+.feedback-content-box {
+  padding: 10px 20px;
+  margin-bottom: 50px;
+  background-color: var(--color-primary);
+  text-align: center;
+}
+.feedback-response-box {
+  display: grid;
+}
+#bug_severity > .shiny-options-group {
+  justify-self: center;
+}
+#feedback_text {
+  height: 75px;
+  resize: none;
+}
+#feedback_opn_bttn {
+  margin-bottom: 50px;
+}
+#feedback_bttn {
+  margin: auto;
 }
 .input-box {
   position: relative;
