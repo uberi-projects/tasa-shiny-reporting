@@ -172,6 +172,15 @@ server <- function(input, output, session) {
     })
 
     # Create reports
+
+    observeEvent(input$fisheries_dl_bttn, {
+        shinyjs::click("report_fisheries")
+        showPageSpinner()
+        Sys.sleep(1)
+        hidePageSpinner()
+    })
+
+    # Download Handlers
     output$report_fisheries <- downloadHandler(
         filename = function() {
             report_file <- switch(input$period_fisheries,

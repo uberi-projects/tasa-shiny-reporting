@@ -6,6 +6,7 @@ library(shinyjs)
 library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
+library(shinycssloaders)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
@@ -170,7 +171,8 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_fisheries", "Generate")
+                                        actionButton("fisheries_dl_bttn", "Generate", icon("download")),
+                                        downloadButton("report_fisheries", "Generate", style = "display:none;")
                                     )
                                 )
                             )
@@ -272,7 +274,7 @@ ui <- navbarPage(
                                     "Generate Report",
                                     div(
                                         class = "input-list-content",
-                                        downloadButton("report_fisher", "Generate"),
+                                        downloadButton("report_fisher", "Generate")
                                     )
                                 )
                             )
