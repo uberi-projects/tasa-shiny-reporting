@@ -186,7 +186,8 @@ ui <- navbarPage(
                     "$(document).ready(function(){
                         $('#fisher_name').prop('disabled', true);
                         $('#validate_fisher').prop('disabled', true);
-                    });"
+                    });
+                    "
                 )
             ),
             div(
@@ -238,6 +239,11 @@ ui <- navbarPage(
                                 tags$li(
                                     class = "input-list",
                                     "Validate Data",
+                                    span(
+                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                        title = home_text[10],
+                                        icon("question-circle")
+                                    ),
                                     div(
                                         class = "validation-box-cover",
                                         id = "fisher_validation_box_cover"
@@ -348,6 +354,11 @@ ui <- navbarPage(
                                 tags$li(
                                     class = "input-list",
                                     "Validate Data",
+                                    span(
+                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                        title = home_text[10],
+                                        icon("question-circle")
+                                    ),
                                     div(
                                         class = "validation-box-cover",
                                         id = "lamp_validation_box_cover"
@@ -456,6 +467,11 @@ ui <- navbarPage(
                                 tags$li(
                                     class = "input-list",
                                     "Validate Data",
+                                    span(
+                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                        title = home_text[10],
+                                        icon("question-circle")
+                                    ),
                                     div(
                                         class = "validation-box-cover",
                                         id = "spag_validation_box_cover"
