@@ -287,6 +287,7 @@ server <- function(input, output, session) {
         } else {
             shinyjs::hide("feedback-content-box")
             shinyjs::show("feedback_opn_bttn")
+            updateTextInput(session, "feedback_text", value = "")
             shinyalert("Success!", "Feedback Submitted!",
                 confirmButtonText = "Okay!", confirmButtonCol = "#00AE46", type = "", size = "s"
             )
