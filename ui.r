@@ -18,6 +18,7 @@ ui <- navbarPage(
     id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
     header = div(
+        useShinyjs(),
         includeCSS("www/modern-normalize.css"),
         includeCSS("www/styles.css"),
         class = "header", checked = NA,
@@ -30,7 +31,6 @@ ui <- navbarPage(
             )
         )
     ),
-    useShinyjs(),
     tabPanel(
         "Home",
         div(
@@ -95,8 +95,12 @@ ui <- navbarPage(
             tags$script(
                 HTML(
                     "$(document).ready(function(){
-                $('#name').prop('disabled', true);
-            });"
+                        $('#fisheries_name').prop('disabled', true);
+                        $('#validate_fisheries').prop('disabled', true);
+                    });
+                    $(function () {
+                        $('[data-toggle=tooltip]').tooltip({container: 'body'})
+                    })"
                 )
             ),
             div(
@@ -148,9 +152,14 @@ ui <- navbarPage(
                                 tags$li(
                                     class = "input-list",
                                     "Validate Data",
+                                    span(
+                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                        title = home_text[10],
+                                        icon("question-circle")
+                                    ),
                                     div(
                                         class = "validation-box-cover",
-                                        id = "validation-box-cover"
+                                        id = "fisheries_validation_box_cover"
                                     ),
                                     div(
                                         class = "input-list-content",
@@ -163,7 +172,7 @@ ui <- navbarPage(
                             class = "input-box shorter-input-box",
                             div(
                                 class = "input-box-cover",
-                                id = "input-box-cover"
+                                id = "fisheries_input_box_cover"
                             ),
                             h3("Customize Report"),
                             tags$ol(
@@ -173,7 +182,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "")
+                                        textInput("fisheries_name", "Your Name: ", value = "")
                                     )
                                 ),
                                 hr(),
@@ -193,6 +202,14 @@ ui <- navbarPage(
         ),
         tabPanel(
             "Fisher Catch",
+            tags$script(
+                HTML(
+                    "$(document).ready(function(){
+                        $('#fisher_name').prop('disabled', true);
+                        $('#validate_fisher').prop('disabled', true);
+                    });"
+                )
+            ),
             div(
                 class = "content-container-parent",
                 div(
@@ -243,6 +260,10 @@ ui <- navbarPage(
                                     class = "input-list",
                                     "Validate Data",
                                     div(
+                                        class = "validation-box-cover",
+                                        id = "fisher_validation_box_cover"
+                                    ),
+                                    div(
                                         class = "input-list-content",
                                         actionButton("validate_fisher", "Perform Validation")
                                     )
@@ -251,6 +272,10 @@ ui <- navbarPage(
                         ),
                         div(
                             class = "input-box shorter-input-box",
+                            div(
+                                class = "input-box-cover",
+                                id = "fisher_input_box_cover"
+                            ),
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -259,7 +284,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "")
+                                        textInput("fisher_name", "Your Name: ", value = "")
                                     )
                                 ),
                                 hr(),
@@ -269,7 +294,6 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         downloadButton("report_fisher", "Generate"),
-                                        tags$script(HTML("shinyjs.disable('report_fisheries');"))
                                     )
                                 )
                             )
@@ -280,6 +304,14 @@ ui <- navbarPage(
         ),
         tabPanel(
             "LAMP",
+            tags$script(
+                HTML(
+                    "$(document).ready(function(){
+                        $('#lamp_name').prop('disabled', true);
+                        $('#validate_lamp').prop('disabled', true);
+                    });"
+                )
+            ),
             div(
                 class = "content-container-parent",
                 div(
@@ -338,6 +370,10 @@ ui <- navbarPage(
                                     class = "input-list",
                                     "Validate Data",
                                     div(
+                                        class = "validation-box-cover",
+                                        id = "lamp_validation_box_cover"
+                                    ),
+                                    div(
                                         class = "input-list-content",
                                         actionButton("validate_lamp", "Perform Validation")
                                     )
@@ -346,6 +382,10 @@ ui <- navbarPage(
                         ),
                         div(
                             class = "input-box shorter-input-box",
+                            div(
+                                class = "input-box-cover",
+                                id = "lamp_input_box_cover"
+                            ),
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -354,7 +394,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "")
+                                        textInput("lamp_name", "Your Name: ", value = "")
                                     )
                                 ),
                                 hr(),
@@ -374,6 +414,14 @@ ui <- navbarPage(
         ),
         tabPanel(
             "SPAG",
+            tags$script(
+                HTML(
+                    "$(document).ready(function(){
+                        $('#spag_name').prop('disabled', true);
+                        $('#validate_spag').prop('disabled', true);
+                    });"
+                )
+            ),
             div(
                 class = "content-container-parent",
                 div(
@@ -430,6 +478,10 @@ ui <- navbarPage(
                                     class = "input-list",
                                     "Validate Data",
                                     div(
+                                        class = "validation-box-cover",
+                                        id = "spag_validation_box_cover"
+                                    ),
+                                    div(
                                         class = "input-list-content",
                                         actionButton("validate_spag", "Perform Validation")
                                     )
@@ -438,6 +490,10 @@ ui <- navbarPage(
                         ),
                         div(
                             class = "input-box shorter-input-box",
+                            div(
+                                class = "input-box-cover",
+                                id = "spag_input_box_cover"
+                            ),
                             h3("Customize Report"),
                             tags$ol(
                                 class = "content-list",
@@ -446,7 +502,7 @@ ui <- navbarPage(
                                     "Add Inputs",
                                     div(
                                         class = "input-list-content",
-                                        textInput("name", "Your Name: ", value = "")
+                                        textInput("spag_name", "Your Name: ", value = "")
                                     )
                                 ),
                                 hr(),
@@ -507,5 +563,5 @@ ui <- navbarPage(
                 )
             )
         )
-    )
+    ),
 )
