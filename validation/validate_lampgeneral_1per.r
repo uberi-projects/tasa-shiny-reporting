@@ -108,6 +108,51 @@ validate_zone <- function(x) {
     }
 }
 
+# Define helper functions for finfish sheet ---------------------------
+validate_site_finfish_check <- function(x) {
+    valid <- (is.na(x) | grepl("^(GU|CZ|SM|LO)", x) | x == "MISSING")
+    return(all(valid))
+}
+func_validate_site_finfish <- function(x) {
+    x <- as.character(x)
+    valid <- (is.na(x) | grepl("^(GU|CZ|SM|LO)", x) | x == "MISSING")
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(x[!valid & !is.na(x)])
+        error_message <- ""
+        if (length(invalid_values) > 0) {
+            error_message <- paste0(
+                "- Site IDs are expected to begin with the prefix GU, CZ, SM, or LO. These Site IDs are unexpected: ",
+                paste(invalid_values, collapse = ", "),
+                sprintf(" (unexpected values occurred %d times).", sum(!valid & !is.na(x))),
+                "<br><br>"
+            )
+        }
+        return(error_message)
+    }
+}
+
+func_validate_site_finfish_match_check <- function(x, y) {
+    valid <- is.na(x) | x %in% y
+    return(all(valid))
+}
+func_validate_site_finfish_match <- function(x, y) {
+    invalid_sites <- unique(x[!(is.na(x) | x %in% y)])
+    if (length(invalid_sites) == 0) {
+    } else {
+        display_values <- if (length(invalid_sites) > 10) {
+            paste(c(invalid_sites[1:10], "..."), collapse = ", ")
+        } else {
+            paste(invalid_sites, collapse = ", ")
+        }
+        return(paste0(
+            "- Some Site IDs in the Finfish sheet do not match the surveyed Sites sheet: ",
+            display_values,
+            paste0(" (unexpected values occurred ", length(x[!(is.na(x) | x %in% y)]), " times)."),
+            "<br><br>"
+        ))
+    }
+}
 
 # Define primary functions ---------------------------
 func_validate_lampgeneral_1per_sheets_check <- function(x) {
@@ -118,15 +163,24 @@ func_validate_lampgeneral_1per_completeness_check <- function(x) {
     complete_x <- completeness_check(x, required_columns_sites)
     all(c(complete_x))
 }
-func_validate_lampgeneral_1per_check <- function(x) {
-    date_valid <- validate_date_check(x$Date)
-    site_valid <- validate_site_check(x$`Site ID`)
-    coords_valid <- validate_coords_check(x$Latitude, x$Longitude)
-    recorders_valid <- validate_recorders_check(x$`Recorder(s)`)
-    zones_valid <- validate_zone_check(x$`Mgmt Zone`)
-    return(all(c(
-        date_valid, site_valid, coords_valid, recorders_valid, zones_valid
-    )))
+func_validate_lampgeneral_1per_check <- function(df_list, sites, finfish) {
+    date_valid <- validate_date_check(sites$Date)
+    site_valid <- validate_site_check(sites$`Site ID`)
+    coords_valid <- validate_coords_check(sites$Latitude, sites$Longitude)
+    recorders_valid <- validate_recorders_check(sites$`Recorder(s)`)
+    zones_valid <- validate_zone_check(sites$`Mgmt Zone`)
+    if ("Finfish" %in% names(df_list)) {
+        site_finfish_valid <- validate_site_finfish_check(finfish$`Site ID`)
+    }
+    if ("Finfish" %in% names(df_list)) {
+        return(all(c(
+            date_valid, site_valid, coords_valid, recorders_valid, zones_valid, site_finfish_valid
+        )))
+    } else {
+        return(all(c(
+            date_valid, site_valid, coords_valid, recorders_valid, zones_valid
+        )))
+    }
 }
 func_validate_lampgeneral_1per_sheets <- function(x) {
     sheets(x, c("Species", "Sites"), "General LAMP")
@@ -144,5 +198,13 @@ func_validate_lampgeneral_1per_sites <- function(x) {
     zones_valid <- validate_zone(x$`Mgmt Zone`)
     return(paste(
         date_valid, site_valid, coords_valid, recorders_valid, zones_valid
+    ))
+}
+
+func_validate_lampgeneral_1per_finfish <- function(x, y) {
+    site_valid <- func_validate_site_finfish(x$`Site ID`)
+    site_match_valid <- func_validate_site_finfish_match(x$`Site ID`, y$`Site ID`)
+    return(paste(
+        site_valid, site_match_valid
     ))
 }

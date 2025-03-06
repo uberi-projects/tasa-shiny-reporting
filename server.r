@@ -141,13 +141,23 @@ server <- function(input, output, session) {
                         confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                     )
                 } else {
-                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp()$Sites)
+                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp(), df_upload_lamp()$Sites, df_upload_lamp()$Finfish)
                     validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
-                    validation_message <- c(
-                        if (length(validation_message_sites) > 0) {
-                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
-                        }
-                    )
+                    if ("Finfish" %in% names(df_upload_lamp())) {
+                        validation_message_finfish <- func_validate_lampgeneral_1per_finfish(df_upload_lamp()$Finfish, df_upload_lamp()$Sites)
+                    }
+                    validation_message <- ""
+                    if (length(validation_message_sites) > 0 & length(validation_message_finfish) > 0) {
+                        validation_message <- paste0(
+                            "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>",
+                            "Finfish Sheet:", "<br><br>", validation_message_finfish, "<br><br>"
+                        )
+                    } else if (length(validation_message_sites) > 0) {
+                        validation_message <- paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                    } else if (length(validation_message_finfish) > 0) {
+                        validation_message <- paste0("Finfish Sheet:", "<br><br>", validation_message_finfish, "<br><br>")
+                    }
+
                     if (validation_passed | length(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
                             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
