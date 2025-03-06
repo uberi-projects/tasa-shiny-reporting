@@ -172,7 +172,7 @@ ui <- navbarPage(
                                     div(
                                         class = "input-list-content",
                                         actionButton("fisheries_dl_bttn", "Generate", icon("download")),
-                                        downloadButton("report_fisheries", "Generate", style = "display:none;")
+                                        downloadButton("report_fisheries", "Generate", style = "visibility:hidden;")
                                     )
                                 )
                             )
