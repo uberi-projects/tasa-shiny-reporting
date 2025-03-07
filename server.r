@@ -6,6 +6,7 @@ library(readxl)
 # Define server ---------------------------
 server <- function(input, output, session) {
     shinyjs::hide("feedback-content-box")
+
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
     df_upload_fisheries <- reactive({
@@ -69,13 +70,16 @@ server <- function(input, output, session) {
         )
         enableCustomization("fisheries")
     })
+
     observeEvent(input$validate_fisher, {
         shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("fisher")
     })
+
     observeEvent(input$validate_lamp, {
+        # Validate LAMP Conch 1per
         if (input$datatype_lamp == "Conch") {
             source("validation/validate_lampconch_1per.r")
             sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp())
@@ -97,19 +101,14 @@ server <- function(input, output, session) {
                     validation_passed <- func_validate_lampconch_1per_check(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
                     validation_message_surveydata <- func_validate_lampconch_1per_surveydata(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites)
                     validation_message_sites <- func_validate_lampconch_1per_sites(df_upload_lamp()$Survey_Data, df_upload_lamp()$Sites, df_upload_lamp()$Habitat_Types)
-                    validation_message <- c(
-                        if (length(validation_message_surveydata) > 0 & length(validation_message_sites) > 0) {
-                            paste0(
-                                "Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>",
-                                "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>"
-                            )
-                        } else if (length(validation_message_surveydata) > 0) {
-                            paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
-                        } else if (length(validation_message_sites) > 0) {
-                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
-                        }
-                    )
-                    if (validation_passed | length(validation_message) == 0) {
+                    validation_message <- ""
+                    if (length(validation_message_surveydata) > 0 && validation_message_surveydata != "") {
+                        validation_message <- paste0("Survey Data Sheet:", "<br><br>", validation_message_surveydata, "<br><br>")
+                    }
+                    if (length(validation_message_sites) > 0 && validation_message_sites != "") {
+                        validation_message <- paste0(validation_message, "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                    }
+                    if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
                             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
                             enableCustomization("lamp")
@@ -123,6 +122,8 @@ server <- function(input, output, session) {
                     }
                 }
             }
+
+            # Validate LAMP General 1per
         } else {
             source("validation/validate_lampgeneral_1per.r")
             sheets_passed <- func_validate_lampgeneral_1per_sheets_check(df_upload_lamp())
@@ -133,22 +134,57 @@ server <- function(input, output, session) {
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
-                completeness_passed <- func_validate_lampgeneral_1per_completeness_check(df_upload_lamp()$Sites)
-                validation_message_completeness <- func_validate_lampgeneral_1per_completeness(df_upload_lamp()$Sites)
+                completeness_passed <- func_validate_lampgeneral_1per_completeness_check(df_upload_lamp())
+                validation_message_completeness <- func_validate_lampgeneral_1per_completeness(df_upload_lamp())
                 if (!completeness_passed) {
                     shinyalert("Alert!",
                         text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
                         confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                     )
                 } else {
-                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp()$Sites)
+                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp())
+                    validation_message_species <- func_validate_lampgeneral_1per_species(df_upload_lamp()$Species)
                     validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
-                    validation_message <- c(
-                        if (length(validation_message_sites) > 0) {
-                            paste0("Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
-                        }
-                    )
-                    if (validation_passed | length(validation_message) == 0) {
+                    validation_message_finfish <- if ("Finfish" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_finfish(df_upload_lamp()$Finfish, df_upload_lamp()$Sites, df_upload_lamp()$Species)
+                    } else {
+                        NULL
+                    }
+                    validation_message_conch <- if ("Conch" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_conch(df_upload_lamp()$Conch, df_upload_lamp()$Sites)
+                    } else {
+                        NULL
+                    }
+                    validation_message_lobster <- if ("Lobster" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_lobster(df_upload_lamp()$Lobster, df_upload_lamp()$Sites)
+                    } else {
+                        NULL
+                    }
+                    validation_message_diadema_crab <- if ("Diadema_Crab" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_diadema_crab(df_upload_lamp()$Diadema_Crab, df_upload_lamp()$Sites)
+                    } else {
+                        NULL
+                    }
+                    validation_message <- ""
+                    if (length(validation_message_species) > 0 && validation_message_species != "") {
+                        validation_message <- paste0("Species Sheet:", "<br><br>", validation_message_species, "<br><br>")
+                    }
+                    if (length(validation_message_sites) > 0 && validation_message_sites != "") {
+                        validation_message <- paste0(validation_message, "Sites Sheet:", "<br><br>", validation_message_sites, "<br><br>")
+                    }
+                    if (!is.null(validation_message_finfish) && length(validation_message_finfish) > 0 && validation_message_finfish != "") {
+                        validation_message <- paste0(validation_message, "Finfish Sheet:", "<br><br>", validation_message_finfish, "<br><br>")
+                    }
+                    if (!is.null(validation_message_conch) && length(validation_message_conch) > 0 && validation_message_conch != "") {
+                        validation_message <- paste0(validation_message, "Conch Sheet:", "<br><br>", validation_message_conch, "<br><br>")
+                    }
+                    if (!is.null(validation_message_lobster) && length(validation_message_lobster) > 0 && validation_message_lobster != "") {
+                        validation_message <- paste0(validation_message, "Lobster Sheet:", "<br><br>", validation_message_lobster, "<br><br>")
+                    }
+                    if (!is.null(validation_message_diadema_crab) && length(validation_message_diadema_crab) > 0 && validation_message_diadema_crab != "") {
+                        validation_message <- paste0(validation_message, "Diadema and Crab Sheet:", "<br><br>", validation_message_diadema_crab, "<br><br>")
+                    }
+                    if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
                             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
                             enableCustomization("lamp")
