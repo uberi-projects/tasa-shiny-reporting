@@ -143,7 +143,7 @@ server <- function(input, output, session) {
                     )
                 } else {
                     validation_passed <- func_validate_lampgeneral_1per_check(
-                        df_upload_lamp(), df_upload_lamp()$Species, df_upload_lamp()$Sites, df_upload_lamp()$Finfish, df_upload_lamp()$Conch, df_upload_lamp()$Lobster
+                        df_upload_lamp(), df_upload_lamp()$Species, df_upload_lamp()$Sites, df_upload_lamp()$Finfish, df_upload_lamp()$Conch, df_upload_lamp()$Lobster, df_upload_lamp()$Diadema_Crab
                     )
                     validation_message_species <- func_validate_lampgeneral_1per_species(df_upload_lamp()$Species)
                     validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
@@ -162,6 +162,11 @@ server <- function(input, output, session) {
                     } else {
                         NULL
                     }
+                    validation_message_diadema_crab <- if ("Diadema_Crab" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_diadema_crab(df_upload_lamp()$Diadema_Crab, df_upload_lamp()$Sites)
+                    } else {
+                        NULL
+                    }
                     validation_message <- ""
                     if (length(validation_message_species) > 0 && validation_message_species != "") {
                         validation_message <- paste0("Species Sheet:", "<br><br>", validation_message_species, "<br><br>")
@@ -177,6 +182,9 @@ server <- function(input, output, session) {
                     }
                     if (!is.null(validation_message_lobster) && length(validation_message_lobster) > 0 && validation_message_lobster != "") {
                         validation_message <- paste0(validation_message, "Lobster Sheet:", "<br><br>", validation_message_lobster, "<br><br>")
+                    }
+                    if (!is.null(validation_message_diadema_crab) && length(validation_message_diadema_crab) > 0 && validation_message_diadema_crab != "") {
+                        validation_message <- paste0(validation_message, "Diadema and Crab Sheet:", "<br><br>", validation_message_diadema_crab, "<br><br>")
                     }
                     if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
