@@ -192,11 +192,11 @@ func_validate_site_finfish_match <- function(x, y) {
     }
 }
 func_validate_species_finfish_match_check <- function(x, y) {
-    valid <- is.na(x) | x %in% y
+    valid <- is.na(x) | x %in% y | x == "NE"
     return(all(valid))
 }
 func_validate_species_finfish_match <- function(x, y) {
-    invalid_species <- unique(x[!(is.na(x) | x %in% y)])
+    invalid_species <- unique(x[!(is.na(x) | x %in% y | x == "NE")])
     if (length(invalid_species) == 0) {
     } else {
         display_values <- if (length(invalid_species) > 10) {
@@ -207,7 +207,7 @@ func_validate_species_finfish_match <- function(x, y) {
         return(paste0(
             "- Some Species in the Finfish sheet do not match with a species name on the Species sheet: ",
             display_values,
-            paste0(" (unexpected values occurred ", length(x[!(is.na(x) | x %in% y)]), " times). Only Species with a match will be included in the report."),
+            paste0(" (unexpected values occurred ", length(x[!(is.na(x) | x %in% y | x == "NE")]), " times). Only Species with a match will be included in the report."),
             "<br><br>"
         ))
     }
@@ -235,6 +235,7 @@ func_validate_size_finfish <- function(x, class) {
         ))
     }
 }
+
 # Define helper functions for conch sheet ---------------------------
 validate_site_conch_check <- function(x) {
     valid <- (is.na(x) | grepl("^(GU|CZ|SM|LO)", x) | x == "MISSING")
@@ -348,6 +349,68 @@ func_validate_eggs <- function(x) {
     }
 }
 
+# Define helper functions for lobster sheet ---------------------------
+validate_site_lobster_check <- function(x) {
+    valid <- (is.na(x) | grepl("^(GU|CZ|SM|LO)", x) | x == "MISSING")
+    return(all(valid))
+}
+func_validate_site_lobster <- function(x) {
+    x <- as.character(x)
+    valid <- (is.na(x) | grepl("^(GU|CZ|SM|LO)", x) | x == "MISSING")
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(x[!valid & !is.na(x)])
+        error_message <- ""
+        if (length(invalid_values) > 0) {
+            error_message <- paste0(
+                "- Site IDs are expected to begin with the prefix GU, CZ, SM, or LO. These Site IDs are unexpected: ",
+                paste(invalid_values, collapse = ", "),
+                sprintf(" (unexpected values occurred %d times).", sum(!valid & !is.na(x))),
+                "<br><br>"
+            )
+        }
+        return(error_message)
+    }
+}
+func_validate_site_lobster_match_check <- function(x, y) {
+    valid <- is.na(x) | x %in% y
+    return(all(valid))
+}
+func_validate_site_lobster_match <- function(x, y) {
+    invalid_sites <- unique(x[!(is.na(x) | x %in% y)])
+    if (length(invalid_sites) == 0) {
+    } else {
+        display_values <- if (length(invalid_sites) > 10) {
+            paste(c(invalid_sites[1:10], "..."), collapse = ", ")
+        } else {
+            paste(invalid_sites, collapse = ", ")
+        }
+        return(paste0(
+            "- Some Site IDs in the Lobster sheet do not match the surveyed Sites sheet: ",
+            display_values,
+            paste0(" (unexpected values occurred ", length(x[!(is.na(x) | x %in% y)]), " times)."),
+            "<br><br>"
+        ))
+    }
+}
+func_validate_species_lobster_check <- function(x) {
+    valid <- (x %in% c("Ag", "Sc", "0", "NE"))
+    return(all(valid))
+}
+func_validate_species_lobster <- function(x) {
+    valid <- (x %in% c("Ag", "Sc", "0", "NE"))
+    if (all(valid, na.rm = TRUE)) {
+    } else {
+        invalid <- unique(x[!valid & !is.na(x)])
+        return(paste0(
+            "- Lobster species should be listed using the codes Pa or Pg, with no lobster being indicated by 0 or NE. These values are unexpected: ",
+            paste(invalid, collapse = ", "),
+            sprintf(" (unexpected values occurred %d times).", sum(!valid & !is.na(x))),
+            "<br><br>"
+        ))
+    }
+}
+
 # Define primary functions ---------------------------
 func_validate_lampgeneral_1per_sheets_check <- function(x) {
     sheets_check(x, c("Species", "Sites"))
@@ -357,7 +420,7 @@ func_validate_lampgeneral_1per_completeness_check <- function(x) {
     complete_x <- completeness_check(x, required_columns_sites)
     all(c(complete_x))
 }
-func_validate_lampgeneral_1per_check <- function(df_list, species, sites, finfish, conch) {
+func_validate_lampgeneral_1per_check <- function(df_list, species, sites, finfish, conch, lobster) {
     validation_results <- list(
         validate_grouping_check(species$Grouping),
         validate_date_check(sites$Date),
@@ -389,6 +452,14 @@ func_validate_lampgeneral_1per_check <- function(df_list, species, sites, finfis
             func_validate_shell_thickness_check(conch$`Shell Length (mm)`),
             func_validate_shell_lip_check(conch$`Lip Thickness (mm)`),
             func_validate_eggs_check(conch$Eggs)
+        ))
+    }
+    if ("Lobster" %in% names(df_list)) {
+        validation_results <- c(validation_results, list(
+            validate_site_lobster_check(lobster$`Site ID`),
+            func_validate_site_lobster_match_check(lobster$`Site ID`, species$`Site ID`),
+            func_validate_transect_check(lobster$Transect),
+            func_validate_species_lobster_check(lobster$Species)
         ))
     }
     return(all(unlist(validation_results)))
@@ -442,5 +513,14 @@ func_validate_lampgeneral_1per_conch <- function(conch, sites) {
     eggs_valid <- func_validate_eggs(conch$Eggs)
     return(paste(
         site_valid, site_match_valid, transect_valid, species_valid, shell_thickness_valid, shell_lip_valid, eggs_valid
+    ))
+}
+func_validate_lampgeneral_1per_lobster <- function(lobster, sites) {
+    site_valid <- func_validate_site_lobster(lobster$`Site ID`)
+    site_match_valid <- func_validate_site_lobster_match(lobster$`Site ID`, sites$`Site ID`)
+    transect_valid <- func_validate_transect(lobster$Transect)
+    species_valid <- func_validate_species_lobster(lobster$Species)
+    return(paste(
+        site_valid, site_match_valid, transect_valid, species_valid
     ))
 }

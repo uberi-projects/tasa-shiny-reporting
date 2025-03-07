@@ -143,7 +143,7 @@ server <- function(input, output, session) {
                     )
                 } else {
                     validation_passed <- func_validate_lampgeneral_1per_check(
-                        df_upload_lamp(), df_upload_lamp()$Species, df_upload_lamp()$Sites, df_upload_lamp()$Finfish, df_upload_lamp()$Conch
+                        df_upload_lamp(), df_upload_lamp()$Species, df_upload_lamp()$Sites, df_upload_lamp()$Finfish, df_upload_lamp()$Conch, df_upload_lamp()$Lobster
                     )
                     validation_message_species <- func_validate_lampgeneral_1per_species(df_upload_lamp()$Species)
                     validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
@@ -154,6 +154,11 @@ server <- function(input, output, session) {
                     }
                     validation_message_conch <- if ("Conch" %in% names(df_upload_lamp())) {
                         func_validate_lampgeneral_1per_conch(df_upload_lamp()$Conch, df_upload_lamp()$Sites)
+                    } else {
+                        NULL
+                    }
+                    validation_message_lobster <- if ("Lobster" %in% names(df_upload_lamp())) {
+                        func_validate_lampgeneral_1per_lobster(df_upload_lamp()$Lobster, df_upload_lamp()$Sites)
                     } else {
                         NULL
                     }
@@ -169,6 +174,9 @@ server <- function(input, output, session) {
                     }
                     if (!is.null(validation_message_conch) && length(validation_message_conch) > 0 && validation_message_conch != "") {
                         validation_message <- paste0(validation_message, "Conch Sheet:", "<br><br>", validation_message_conch, "<br><br>")
+                    }
+                    if (!is.null(validation_message_lobster) && length(validation_message_lobster) > 0 && validation_message_lobster != "") {
+                        validation_message <- paste0(validation_message, "Lobster Sheet:", "<br><br>", validation_message_lobster, "<br><br>")
                     }
                     if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
