@@ -87,7 +87,7 @@ df_urchin_crab <- if ("Diadema_Crab" %in% names(params$datafile)) {
 ```
 
 
-# Turneffe Atoll Queen LAMP Dataset Report: `r study_year_month`
+# Turneffe Atoll LAMP Dataset Report: `r study_year_month`
 
 
 Turneffe Atoll Sustainability Association (TASA)
