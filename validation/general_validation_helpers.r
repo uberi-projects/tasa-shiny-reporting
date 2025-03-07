@@ -31,7 +31,7 @@ completeness_check <- function(df, required_columns) {
 completeness <- function(df, required_columns, df_name) {
     missing_cols <- setdiff(required_columns, colnames(df))
     if (length(missing_cols) > 0) {
-        paste("Missing required columns from", df_name, ":", paste(missing_cols, collapse = ", "), "<br><br>")
+        paste0("Missing required columns from ", df_name, ": ", paste(missing_cols, collapse = ", "), "<br><br>")
     }
 }
 

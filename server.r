@@ -134,17 +134,15 @@ server <- function(input, output, session) {
                     confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                 )
             } else {
-                completeness_passed <- func_validate_lampgeneral_1per_completeness_check(df_upload_lamp()$Sites)
-                validation_message_completeness <- func_validate_lampgeneral_1per_completeness(df_upload_lamp()$Sites)
+                completeness_passed <- func_validate_lampgeneral_1per_completeness_check(df_upload_lamp())
+                validation_message_completeness <- func_validate_lampgeneral_1per_completeness(df_upload_lamp())
                 if (!completeness_passed) {
                     shinyalert("Alert!",
                         text = paste(validation_message_completeness, "Please ensure all required columns are present prior to validation."),
                         confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
                     )
                 } else {
-                    validation_passed <- func_validate_lampgeneral_1per_check(
-                        df_upload_lamp(), df_upload_lamp()$Species, df_upload_lamp()$Sites, df_upload_lamp()$Finfish, df_upload_lamp()$Conch, df_upload_lamp()$Lobster, df_upload_lamp()$Diadema_Crab
-                    )
+                    validation_passed <- func_validate_lampgeneral_1per_check(df_upload_lamp())
                     validation_message_species <- func_validate_lampgeneral_1per_species(df_upload_lamp()$Species)
                     validation_message_sites <- func_validate_lampgeneral_1per_sites(df_upload_lamp()$Sites)
                     validation_message_finfish <- if ("Finfish" %in% names(df_upload_lamp())) {
