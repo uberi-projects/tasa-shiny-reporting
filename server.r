@@ -13,6 +13,26 @@ server <- function(input, output, session) {
         req(input$upload_fisheries_1yr)
         read_excel(input$upload_fisheries_1yr$datapath, sheet = 1, na = nas)
     })
+    df_upload_fisheries_multiyr1 <- reactive({
+        req(input$upload_fisheries_multiyr1)
+        read_excel(input$upload_fisheries_multiyr1$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisheries_multiyr2 <- reactive({
+        req(input$upload_fisheries_multiyr2)
+        read_excel(input$upload_fisheries_multiyr2$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisheries_multiyr3 <- reactive({
+        req(input$upload_fisheries_multiyr3)
+        read_excel(input$upload_fisheries_multiyr3$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisheries_multiyr4 <- reactive({
+        req(input$upload_fisheries_multiyr4)
+        read_excel(input$upload_fisheries_multiyr4$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisheries_multiyr5 <- reactive({
+        req(input$upload_fisheries_multiyr5)
+        read_excel(input$upload_fisheries_multiyr5$datapath, sheet = 1, na = nas)
+    })
     df_upload_fisher_1yr <- reactive({
         req(input$upload_fisher_1yr)
         read_excel(input$upload_fisher_1yr$datapath, sheet = 1, na = nas)
@@ -64,11 +84,17 @@ server <- function(input, output, session) {
     })
 
     # Validate dataframes
-    observeEvent(input$validate_fisheries, {
-        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+    observeEvent(input$validate_fisheries_1yr, {
+        shinyalert("Notice!", "Validation has not been implemented for Fisheries Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisheries")
+        enableCustomization("fisheries_1yr")
+    })
+    observeEvent(input$validate_fisheries_multiyr, {
+        shinyalert("Notice!", "Validation has not been implemented for Fisheries Multi-Year as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
+        )
+        enableCustomization("fisheries_multiyr")
     })
 
     observeEvent(input$validate_fisher, {
@@ -209,7 +235,7 @@ server <- function(input, output, session) {
     })
 
     # Create reports
-    output$report_fisheries <- downloadHandler(
+    output$report_fisheries_1yr <- downloadHandler(
         filename = function() "report_fisheries_1yr.docx",
         content = function(file) {
             report_file <- "report_fisheries_1yr.Rmd"
@@ -224,6 +250,26 @@ server <- function(input, output, session) {
             out <- render(
                 report_file,
                 params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries_1yr()),
+                envir = new.env(parent = globalenv())
+            )
+            file.rename(out, file)
+        }
+    )
+    output$report_fisheries_multiyr <- downloadHandler(
+        filename = function() "report_fisheries_multiyr.docx",
+        content = function(file) {
+            report_file <- "report_fisheries_multiyr.Rmd"
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TASA_logo_full_color.png"
+            ))
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            out <- render(
+                report_file,
+                params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries_multiyr1()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -315,8 +361,20 @@ server <- function(input, output, session) {
     # Observe Upload
     observeEvent(input$upload_fisheries_1yr, {
         if (!is.null(input$upload_fisheries_1yr)) {
-            enableValidate("fisheries")
-            disableCustomization("fisheries")
+            enableValidate("fisheries_1yr")
+            disableCustomization("fisheries_1yr")
+        }
+    })
+    observeEvent(input$upload_fisheries_multiyr1, {
+        if (!is.null(input$upload_fisheries_multiyr1) && (!is.null(input$upload_fisheries_multiyr2))) {
+            enableValidate("fisheries_multiyr")
+            disableCustomization("fisheries_multiyr")
+        }
+    })
+    observeEvent(input$upload_fisheries_multiyr2, {
+        if (!is.null(input$upload_fisheries_multiyr2) && (!is.null(input$upload_fisheries_multiyr1))) {
+            enableValidate("fisheries_multiyr")
+            disableCustomization("fisheries_multiyr")
         }
     })
     observeEvent(input$upload_fisher_1yr, {
