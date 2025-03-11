@@ -98,8 +98,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisheries_name').prop('disabled', true);
-                        $('#validate_fisheries').prop('disabled', true);
+                        $('#fisheries_1yr_name').prop('disabled', true);
+                        $('#validate_fisheries_1yr').prop('disabled', true);
                     });
                     $(function () {
                         $('[data-toggle=tooltip]').tooltip({container: 'body'})
@@ -149,11 +149,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_validation_box_cover"
+                                                id = "fisheries_1yr_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisheries", "Perform Validation")
+                                                actionButton("validate_fisheries_1yr", "Perform Validation")
                                             )
                                         )
                                     )
@@ -162,7 +162,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisheries_input_box_cover"
+                                        id = "fisheries_1yr_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -172,7 +172,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisheries_name", "Your Name: ", value = "")
+                                                textInput("fisheries_1yr_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -181,7 +181,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisheries", "Generate")
+                                                downloadButton("report_fisheries_1yr", "Generate")
                                             )
                                         )
                                     )
@@ -192,6 +192,17 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                        $('#fisheries_multiyr_name').prop('disabled', true);
+                        $('#validate_fisheries_multiyr').prop('disabled', true);
+                    });
+                    $(function () {
+                        $('[data-toggle=tooltip]').tooltip({container: 'body'})
+                    })"
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -200,6 +211,126 @@ ui <- navbarPage(
                                 class = "content-box",
                                 h2("Multi-Year Fisheries Catch Reports"),
                                 p(datatype_text[1])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisheries_multiyr1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisheries_multiyr2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisheries_multiyr3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisheries_multiyr4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisheries_multiyr_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_fisheries_multiyr", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "fisheries_multiyr_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("fisheries_multiyr_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list ",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_fisheries_multiyr", "Generate")
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
@@ -242,8 +373,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisher_name').prop('disabled', true);
-                        $('#validate_fisher').prop('disabled', true);
+                        $('#fisher_1yr_name').prop('disabled', true);
+                        $('#validate_fisher_1yr').prop('disabled', true);
                     });
                     "
                         )
@@ -291,11 +422,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_validation_box_cover"
+                                                id = "fisher_1yr_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisher", "Perform Validation")
+                                                actionButton("validate_fisher_1yr", "Perform Validation")
                                             )
                                         )
                                     )
@@ -304,7 +435,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisher_input_box_cover"
+                                        id = "fisher_1yr_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -314,7 +445,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_name", "Your Name: ", value = "")
+                                                textInput("fisher_1yr_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -323,7 +454,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher", "Generate"),
+                                                downloadButton("report_fisher_1yr", "Generate"),
                                             )
                                         )
                                     )
@@ -334,6 +465,15 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                        $('#fisher_multiyr_name').prop('disabled', true);
+                        $('#validate_fisher_multiyr').prop('disabled', true);
+                    });
+                    "
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -342,6 +482,126 @@ ui <- navbarPage(
                                 class = "content-box",
                                 h2("Multi-Year Fisher Catch Project Reports"),
                                 p(dummy_text[1])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_multiyr_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_fisher_multiyr", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "fisher_multiyr_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("fisher_multiyr_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_fisher_multiyr", "Generate"),
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
@@ -384,8 +644,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                                $('#lamp_name').prop('disabled', true);
-                                $('#validate_lamp').prop('disabled', true);
+                                $('#lamp_1per_name').prop('disabled', true);
+                                $('#validate_lamp_1per').prop('disabled', true);
                             });"
                         )
                     ),
@@ -410,7 +670,7 @@ ui <- navbarPage(
                                             "Choose Datatype",
                                             div(
                                                 class = "input-list-content",
-                                                prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                                prettyRadioButtons("datatype_lamp_1per", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
                                             )
                                         ),
                                         hr(),
@@ -441,11 +701,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "lamp_validation_box_cover"
+                                                id = "lamp_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_lamp", "Perform Validation")
+                                                actionButton("validate_lamp_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -454,7 +714,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "lamp_input_box_cover"
+                                        id = "lamp_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -464,7 +724,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("lamp_name", "Your Name: ", value = "")
+                                                textInput("lamp_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -473,7 +733,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_lamp", "Generate")
+                                                downloadButton("report_lamp_1per", "Generate")
                                             )
                                         )
                                     )
@@ -484,6 +744,14 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                                $('#lamp_multiper_name').prop('disabled', true);
+                                $('#validate_lamp_multiper').prop('disabled', true);
+                            });"
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -492,6 +760,135 @@ ui <- navbarPage(
                                 class = "content-box",
                                 h2("Multi-Year LAMP Reports"),
                                 p(datatype_text[2])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_lamp_multiper", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_multiper_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_lamp_multiper", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "lamp_multiper_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("lamp_multiper_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_lamp_multiper", "Generate")
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
@@ -506,8 +903,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#spag_name').prop('disabled', true);
-                        $('#validate_spag').prop('disabled', true);
+                        $('#spag_1per_name').prop('disabled', true);
+                        $('#validate_spag_1per').prop('disabled', true);
                     });"
                         )
                     ),
@@ -532,7 +929,7 @@ ui <- navbarPage(
                                             "Choose Datatype",
                                             div(
                                                 class = "input-list-content",
-                                                prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
+                                                prettyRadioButtons("datatype_spag_1per", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
                                             )
                                         ),
                                         hr(),
@@ -563,11 +960,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "spag_validation_box_cover"
+                                                id = "spag_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_spag", "Perform Validation")
+                                                actionButton("validate_spag_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -576,7 +973,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "spag_input_box_cover"
+                                        id = "spag_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -586,7 +983,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("spag_name", "Your Name: ", value = "")
+                                                textInput("spag_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -595,7 +992,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_spag", "Generate")
+                                                downloadButton("report_spag_1per", "Generate")
                                             )
                                         )
                                     )
@@ -606,14 +1003,151 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                        $('#spag_multiper_name').prop('disabled', true);
+                        $('#validate_spag_multiper').prop('disabled', true);
+                    });"
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multiple Year SPAG Reports"),
+                                h2("Multi-Year SPAG Reports"),
                                 p(datatype_text[3])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_spag_multiper", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_multiper_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_spag_multiper", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "spag_multiper_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("spag_multiper_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_spag_multiper", "Generate")
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
