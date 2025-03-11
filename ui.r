@@ -92,108 +92,154 @@ ui <- navbarPage(
         "Create Reports",
         tabPanel(
             "Fisheries Catch",
-            tags$script(
-                HTML(
-                    "$(document).ready(function(){
+            tabsetPanel(
+                tabPanel(
+                    "Single Year",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
                         $('#fisheries_name').prop('disabled', true);
                         $('#validate_fisheries').prop('disabled', true);
                     });
                     $(function () {
                         $('[data-toggle=tooltip]').tooltip({container: 'body'})
                     })"
-                )
-            ),
-            div(
-                class = "content-container-parent",
-                div(
-                    class = "content-container-grid grid-report",
-                    div(
-                        class = "content-box",
-                        h2("Fisheries Catch Reports"),
-                        p(datatype_text[1])
+                        )
                     ),
                     div(
-                        class = "content-container grid-generator",
+                        class = "content-container-parent",
                         div(
-                            class = "input-box",
-                            h3("Upload Data"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Choose Time Period",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("period_fisheries",
-                                            label = NULL,
-                                            choices = c("One Season", "Multiple Seasons", "One Year", "Multiple Years"), selected = "One Season", inline = TRUE
-                                        )
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose File",
-                                    div(
-                                        class = "input-list-content",
-                                        fileInput(
-                                            "upload_fisheries",
-                                            label = NULL,
-                                            multiple = FALSE,
-                                            accept = c(
-                                                "text/csv",
-                                                "text/comma-separated-values,text/plain",
-                                                ".csv"
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Year Fisheries Catch Reports"),
+                                p(datatype_text[1])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Time Period",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("period_fisheries",
+                                                    label = NULL,
+                                                    choices = c("One Season", "Multiple Seasons", "One Year", "Multiple Years"), selected = "One Season", inline = TRUE
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisheries",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisheries_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_fisheries", "Perform Validation")
                                             )
                                         )
                                     )
                                 ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Validate Data",
-                                    span(
-                                        `data-toggle` = "tooltip", `data-placement` = "right",
-                                        title = home_text[10],
-                                        icon("question-circle")
-                                    ),
+                                div(
+                                    class = "input-box shorter-input-box",
                                     div(
-                                        class = "validation-box-cover",
-                                        id = "fisheries_validation_box_cover"
+                                        class = "input-box-cover",
+                                        id = "fisheries_input_box_cover"
                                     ),
-                                    div(
-                                        class = "input-list-content",
-                                        actionButton("validate_fisheries", "Perform Validation")
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("fisheries_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list ",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_fisheries", "Generate")
+                                            )
+                                        )
                                     )
                                 )
                             )
-                        ),
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Years",
+                    div(
+                        class = "content-container-parent",
                         div(
-                            class = "input-box shorter-input-box",
+                            class = "content-container-grid grid-report",
                             div(
-                                class = "input-box-cover",
-                                id = "fisheries_input_box_cover"
-                            ),
-                            h3("Customize Report"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Add Inputs",
-                                    div(
-                                        class = "input-list-content",
-                                        textInput("fisheries_name", "Your Name: ", value = "")
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list ",
-                                    "Generate Report",
-                                    div(
-                                        class = "input-list-content",
-                                        downloadButton("report_fisheries", "Generate")
-                                    )
-                                )
+                                class = "content-box",
+                                h2("Multi-Year Fisheries Catch Reports"),
+                                p(datatype_text[1])
+                            )
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Single Season",
+                    div(
+                        class = "content-container-parent",
+                        div(
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Season Fisheries Catch Reports"),
+                                p(datatype_text[1])
+                            )
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Seasons",
+                    div(
+                        class = "content-container-parent",
+                        div(
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Multi-Season Fisheries Catch Reports"),
+                                p(datatype_text[1])
                             )
                         )
                     )
@@ -202,106 +248,152 @@ ui <- navbarPage(
         ),
         tabPanel(
             "Fisher Catch",
-            tags$script(
-                HTML(
-                    "$(document).ready(function(){
+            tabsetPanel(
+                tabPanel(
+                    "Single Year",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
                         $('#fisher_name').prop('disabled', true);
                         $('#validate_fisher').prop('disabled', true);
                     });
                     "
-                )
-            ),
-            div(
-                class = "content-container-parent",
-                div(
-                    class = "content-container-grid grid-report",
-                    div(
-                        class = "content-box",
-                        h2("Fisher Catch Project Reports"),
-                        p(dummy_text[1])
+                        )
                     ),
                     div(
-                        class = "content-container grid-generator",
+                        class = "content-container-parent",
                         div(
-                            class = "input-box",
-                            h3("Upload Data"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Choose Time Period",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("period_fisher",
-                                            label = NULL,
-                                            choices = c("One Season", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
-                                        )
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose File",
-                                    div(
-                                        class = "input-list-content",
-                                        fileInput(
-                                            "upload_fisher",
-                                            label = NULL,
-                                            multiple = FALSE,
-                                            accept = c(
-                                                "text/csv",
-                                                "text/comma-separated-values,text/plain",
-                                                ".csv"
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Year Fisher Catch Project Reports"),
+                                p(dummy_text[1])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Time Period",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("period_fisher",
+                                                    label = NULL,
+                                                    choices = c("One Season", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_fisher", "Perform Validation")
                                             )
                                         )
                                     )
                                 ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Validate Data",
-                                    span(
-                                        `data-toggle` = "tooltip", `data-placement` = "right",
-                                        title = home_text[10],
-                                        icon("question-circle")
-                                    ),
+                                div(
+                                    class = "input-box shorter-input-box",
                                     div(
-                                        class = "validation-box-cover",
-                                        id = "fisher_validation_box_cover"
+                                        class = "input-box-cover",
+                                        id = "fisher_input_box_cover"
                                     ),
-                                    div(
-                                        class = "input-list-content",
-                                        actionButton("validate_fisher", "Perform Validation")
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("fisher_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_fisher", "Generate"),
+                                            )
+                                        )
                                     )
                                 )
                             )
-                        ),
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Years",
+                    div(
+                        class = "content-container-parent",
                         div(
-                            class = "input-box shorter-input-box",
+                            class = "content-container-grid grid-report",
                             div(
-                                class = "input-box-cover",
-                                id = "fisher_input_box_cover"
-                            ),
-                            h3("Customize Report"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Add Inputs",
-                                    div(
-                                        class = "input-list-content",
-                                        textInput("fisher_name", "Your Name: ", value = "")
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Generate Report",
-                                    div(
-                                        class = "input-list-content",
-                                        downloadButton("report_fisher", "Generate"),
-                                    )
-                                )
+                                class = "content-box",
+                                h2("Multi-Year Fisher Catch Project Reports"),
+                                p(dummy_text[1])
+                            )
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Single Season",
+                    div(
+                        class = "content-container-parent",
+                        div(
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Season Fisher Catch Project Reports"),
+                                p(dummy_text[1])
+                            )
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Seasons",
+                    div(
+                        class = "content-container-parent",
+                        div(
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Multi-Season Fisher Catch Project Reports"),
+                                p(dummy_text[1])
                             )
                         )
                     )
@@ -310,113 +402,132 @@ ui <- navbarPage(
         ),
         tabPanel(
             "LAMP",
-            tags$script(
-                HTML(
-                    "$(document).ready(function(){
-                        $('#lamp_name').prop('disabled', true);
-                        $('#validate_lamp').prop('disabled', true);
-                    });"
-                )
-            ),
-            div(
-                class = "content-container-parent",
-                div(
-                    class = "content-container-grid grid-report",
-                    div(
-                        class = "content-box",
-                        h2("LAMP Reports"),
-                        p(datatype_text[2])
+            tabsetPanel(
+                tabPanel(
+                    "Single Year",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                                $('#lamp_name').prop('disabled', true);
+                                $('#validate_lamp').prop('disabled', true);
+                            });"
+                        )
                     ),
                     div(
-                        class = "content-container grid-generator",
+                        class = "content-container-parent",
                         div(
-                            class = "input-box",
-                            h3("Upload Data"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Choose Datatype",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose Time Period",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("period_lamp",
-                                            label = NULL,
-                                            choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
-                                        )
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose File",
-                                    div(
-                                        class = "input-list-content",
-                                        fileInput(
-                                            "upload_lamp",
-                                            label = NULL,
-                                            multiple = FALSE,
-                                            accept = c(
-                                                ".xls",
-                                                ".xlsx"
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Year LAMP Reports"),
+                                p(datatype_text[2])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose Time Period",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("period_lamp",
+                                                    label = NULL,
+                                                    choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_lamp", "Perform Validation")
                                             )
                                         )
                                     )
                                 ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Validate Data",
-                                    span(
-                                        `data-toggle` = "tooltip", `data-placement` = "right",
-                                        title = home_text[10],
-                                        icon("question-circle")
-                                    ),
+                                div(
+                                    class = "input-box shorter-input-box",
                                     div(
-                                        class = "validation-box-cover",
-                                        id = "lamp_validation_box_cover"
+                                        class = "input-box-cover",
+                                        id = "lamp_input_box_cover"
                                     ),
-                                    div(
-                                        class = "input-list-content",
-                                        actionButton("validate_lamp", "Perform Validation")
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("lamp_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_lamp", "Generate")
+                                            )
+                                        )
                                     )
                                 )
                             )
-                        ),
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Years",
+                    div(
+                        class = "content-container-parent",
                         div(
-                            class = "input-box shorter-input-box",
+                            class = "content-container-grid grid-report",
                             div(
-                                class = "input-box-cover",
-                                id = "lamp_input_box_cover"
-                            ),
-                            h3("Customize Report"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Add Inputs",
-                                    div(
-                                        class = "input-list-content",
-                                        textInput("lamp_name", "Your Name: ", value = "")
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Generate Report",
-                                    div(
-                                        class = "input-list-content",
-                                        downloadButton("report_lamp", "Generate")
-                                    )
-                                )
+                                class = "content-box",
+                                h2("Multi-Year LAMP Reports"),
+                                p(datatype_text[2])
                             )
                         )
                     )
@@ -425,111 +536,129 @@ ui <- navbarPage(
         ),
         tabPanel(
             "SPAG",
-            tags$script(
-                HTML(
-                    "$(document).ready(function(){
+            tabsetPanel(
+                tabPanel(
+                    "Single Year",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
                         $('#spag_name').prop('disabled', true);
                         $('#validate_spag').prop('disabled', true);
                     });"
-                )
-            ),
-            div(
-                class = "content-container-parent",
-                div(
-                    class = "content-container-grid grid-report",
-                    div(
-                        class = "content-box",
-                        h2("SPAG Reports"),
-                        p(datatype_text[3])
+                        )
                     ),
                     div(
-                        class = "content-container grid-generator",
+                        class = "content-container-parent",
                         div(
-                            class = "input-box",
-                            h3("Upload Data"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Choose Datatype",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose Time Period",
-                                    div(
-                                        class = "input-list-content",
-                                        prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Choose File",
-                                    div(
-                                        class = "input-list-content",
-                                        fileInput(
-                                            "upload_spag",
-                                            label = NULL,
-                                            multiple = FALSE,
-                                            accept = c(
-                                                "text/csv",
-                                                "text/comma-separated-values,text/plain",
-                                                ".csv"
+                            class = "content-container-grid grid-report",
+                            div(
+                                class = "content-box",
+                                h2("Single Year SPAG Reports"),
+                                p(datatype_text[3])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose Time Period",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_spag", "Perform Validation")
                                             )
                                         )
                                     )
                                 ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Validate Data",
-                                    span(
-                                        `data-toggle` = "tooltip", `data-placement` = "right",
-                                        title = home_text[10],
-                                        icon("question-circle")
-                                    ),
+                                div(
+                                    class = "input-box shorter-input-box",
                                     div(
-                                        class = "validation-box-cover",
-                                        id = "spag_validation_box_cover"
+                                        class = "input-box-cover",
+                                        id = "spag_input_box_cover"
                                     ),
-                                    div(
-                                        class = "input-list-content",
-                                        actionButton("validate_spag", "Perform Validation")
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("spag_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_spag", "Generate")
+                                            )
+                                        )
                                     )
                                 )
                             )
-                        ),
+                        )
+                    )
+                ),
+                tabPanel(
+                    "Multiple Years",
+                    div(
+                        class = "content-container-parent",
                         div(
-                            class = "input-box shorter-input-box",
+                            class = "content-container-grid grid-report",
                             div(
-                                class = "input-box-cover",
-                                id = "spag_input_box_cover"
-                            ),
-                            h3("Customize Report"),
-                            tags$ol(
-                                class = "content-list",
-                                tags$li(
-                                    class = "input-list input-list-topbox",
-                                    "Add Inputs",
-                                    div(
-                                        class = "input-list-content",
-                                        textInput("spag_name", "Your Name: ", value = "")
-                                    )
-                                ),
-                                hr(),
-                                tags$li(
-                                    class = "input-list",
-                                    "Generate Report",
-                                    div(
-                                        class = "input-list-content",
-                                        downloadButton("report_spag", "Generate")
-                                    )
-                                )
+                                class = "content-box",
+                                h2("Multiple Year SPAG Reports"),
+                                p(datatype_text[3])
                             )
                         )
                     )
