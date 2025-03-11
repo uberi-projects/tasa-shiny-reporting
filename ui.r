@@ -644,8 +644,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                                $('#lamp_name').prop('disabled', true);
-                                $('#validate_lamp').prop('disabled', true);
+                                $('#lamp_1per_name').prop('disabled', true);
+                                $('#validate_lamp_1per').prop('disabled', true);
                             });"
                         )
                     ),
@@ -670,7 +670,7 @@ ui <- navbarPage(
                                             "Choose Datatype",
                                             div(
                                                 class = "input-list-content",
-                                                prettyRadioButtons("datatype_lamp", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                                prettyRadioButtons("datatype_lamp_1per", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
                                             )
                                         ),
                                         hr(),
@@ -701,11 +701,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "lamp_validation_box_cover"
+                                                id = "lamp_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_lamp", "Perform Validation")
+                                                actionButton("validate_lamp_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -714,7 +714,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "lamp_input_box_cover"
+                                        id = "lamp_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -724,7 +724,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("lamp_name", "Your Name: ", value = "")
+                                                textInput("lamp_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -733,7 +733,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_lamp", "Generate")
+                                                downloadButton("report_lamp_1per", "Generate")
                                             )
                                         )
                                     )
@@ -744,6 +744,14 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                                $('#lamp_multiper_name').prop('disabled', true);
+                                $('#validate_lamp_multiper').prop('disabled', true);
+                            });"
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -752,6 +760,135 @@ ui <- navbarPage(
                                 class = "content-box",
                                 h2("Multi-Year LAMP Reports"),
                                 p(datatype_text[2])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_lamp_multiper", label = NULL, choices = c("Conch", "General LAMP"), selected = "Conch", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_lamp_multiper4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_multiper_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_lamp_multiper", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "lamp_multiper_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("lamp_multiper_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_lamp_multiper", "Generate")
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )

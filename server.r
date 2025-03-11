@@ -29,10 +29,6 @@ server <- function(input, output, session) {
         req(input$upload_fisheries_multiyr4)
         read_excel(input$upload_fisheries_multiyr4$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisheries_multiyr5 <- reactive({
-        req(input$upload_fisheries_multiyr5)
-        read_excel(input$upload_fisheries_multiyr5$datapath, sheet = 1, na = nas)
-    })
     df_upload_fisher_1yr <- reactive({
         req(input$upload_fisher_1yr)
         read_excel(input$upload_fisher_1yr$datapath, sheet = 1, na = nas)
@@ -53,15 +49,11 @@ server <- function(input, output, session) {
         req(input$upload_fisher_multiyr4)
         read_excel(input$upload_fisher_multiyr4$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_multiyr5 <- reactive({
-        req(input$upload_fisher_multiyr5)
-        read_excel(input$upload_fisher_multiyr5$datapath, sheet = 1, na = nas)
-    })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
         sheets_available <- excel_sheets(input$upload_lamp_1per$datapath)
         data_list <- list()
-        if (input$datatype_lamp == "Conch") {
+        if (input$datatype_lamp_1per == "Conch") {
             if ("Survey Data" %in% sheets_available) {
                 data_list$Survey_Data <- read_excel(input$upload_lamp_1per$datapath, sheet = "Survey Data", na = nas)
             }
@@ -98,6 +90,59 @@ server <- function(input, output, session) {
             return(data_list)
         }
     })
+    df_upload_lamp_multiper1 <- reactive({
+        req(input$upload_lamp_multiper1)
+        sheets_available <- excel_sheets(input$upload_lamp_multiper1$datapath)
+        data_list <- list()
+        if (input$datatype_lamp_multiper == "Conch") {
+            if ("Survey Data" %in% sheets_available) {
+                data_list$Survey_Data <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Survey Data", na = nas)
+            }
+            if ("Sites" %in% sheets_available) {
+                data_list$Sites <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Sites", na = nas)
+            }
+            if ("Habitat Types" %in% sheets_available) {
+                data_list$Habitat_Types <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Habitat Types", na = nas)
+            }
+            return(data_list)
+        } else {
+            data_list <- list()
+            if ("Species" %in% sheets_available) {
+                data_list$Species <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Species", na = nas)
+            }
+            if ("Biomass" %in% sheets_available) {
+                data_list$Biomass <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Biomass", na = nas)
+            }
+            if ("Sites" %in% sheets_available) {
+                data_list$Sites <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Sites", na = nas)
+            }
+            if ("Finfish" %in% sheets_available) {
+                data_list$Finfish <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Finfish", na = nas)
+            }
+            if ("Conch" %in% sheets_available) {
+                data_list$Conch <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Conch", na = nas)
+            }
+            if ("Lobster" %in% sheets_available) {
+                data_list$Lobster <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Lobster", na = nas)
+            }
+            if ("Diadema and Crab" %in% sheets_available) {
+                data_list$Diadema_Crab <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Diadema and Crab", na = nas)
+            }
+            return(data_list)
+        }
+    })
+    df_upload_lamp_multiper2 <- reactive({
+        req(input$upload_lamp_multiper2)
+        read_excel(input$upload_lamp_multiper2$datapath, sheet = 1, na = nas)
+    })
+    df_upload_lamp_multiper3 <- reactive({
+        req(input$upload_lamp_multiper3)
+        read_excel(input$upload_lamp_multiper3$datapath, sheet = 1, na = nas)
+    })
+    df_upload_lamp_multiper4 <- reactive({
+        req(input$upload_lamp_multiper4)
+        read_excel(input$upload_lamp_multiper4$datapath, sheet = 1, na = nas)
+    })
     df_upload_spag_1per <- reactive({
         req(input$upload_spag_1per)
         read_excel(input$upload_spag_1per$datapath, sheet = 1, na = nas)
@@ -130,9 +175,9 @@ server <- function(input, output, session) {
         enableCustomization("fisher_multiyr")
     })
 
-    observeEvent(input$validate_lamp, {
+    observeEvent(input$validate_lamp_1per, {
         # Validate LAMP Conch 1per
-        if (input$datatype_lamp == "Conch") {
+        if (input$datatype_lamp_1per == "Conch") {
             source("validation/validate_lampconch_1per.r")
             sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp_1per())
             validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp_1per())
@@ -163,13 +208,13 @@ server <- function(input, output, session) {
                     if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
                             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
-                            enableCustomization("lamp")
+                            enableCustomization("lamp_1per")
                         )
                     } else {
                         shinyalert("Attention!",
                             text = validation_message,
                             confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
-                            enableCustomization("lamp")
+                            enableCustomization("lamp_1per")
                         )
                     }
                 }
@@ -239,18 +284,25 @@ server <- function(input, output, session) {
                     if (validation_passed || nchar(validation_message) == 0) {
                         shinyalert("Success!", "Validation Successful!",
                             confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
-                            enableCustomization("lamp")
+                            enableCustomization("lamp_1per")
                         )
                     } else {
                         shinyalert("Attention!",
                             text = validation_message,
                             confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
-                            enableCustomization("lamp")
+                            enableCustomization("lamp_1per")
                         )
                     }
                 }
             }
         }
+    })
+
+    observeEvent(input$validate_lamp_multiper, {
+        shinyalert("Notice!", "Validation has not been implemented for LAMP Multi-Year as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
+        )
+        enableCustomization("lamp_multiper")
     })
 
     observeEvent(input$validate_spag, {
@@ -335,22 +387,22 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr()),
+                params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr1()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
         }
     )
-    output$report_lamp <- downloadHandler(
+    output$report_lamp_1per <- downloadHandler(
         filename = function() {
-            report_file <- switch(input$datatype_lamp,
+            report_file <- switch(input$datatype_lamp_1per,
                 "Conch" = "report_lampconch_1per.Rmd",
                 "General LAMP" = "report_lampgen_1per.Rmd",
             )
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
-            report_file <- switch(input$datatype_lamp,
+            report_file <- switch(input$datatype_lamp_1per,
                 "Conch" = "report_lampconch_1per.Rmd",
                 "General LAMP" = "report_lampgen_1per.Rmd",
             )
@@ -369,6 +421,39 @@ server <- function(input, output, session) {
             out <- render(
                 report_file,
                 params = list(user_name = input$lamp_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
+                envir = new.env(parent = globalenv())
+            )
+            file.rename(out, file)
+        }
+    )
+    output$report_lamp_multiper <- downloadHandler(
+        filename = function() {
+            report_file <- switch(input$datatype_lamp_multiper,
+                "Conch" = "report_lampconch_multiper.Rmd",
+                "General LAMP" = "report_lampgen_multiper.Rmd",
+            )
+            gsub(".Rmd", ".docx", report_file)
+        },
+        content = function(file) {
+            report_file <- switch(input$datatype_lamp_multiper,
+                "Conch" = "report_lampconch_multiper.Rmd",
+                "General LAMP" = "report_lampgen_multiper.Rmd",
+            )
+            shapefiles <- list.files("shapefiles", full.names = TRUE)
+            normalized_shapefiles <- normalizePath(shapefiles)
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TAMR_map.jpg",
+                "theme.r", "map.r",
+                normalized_shapefiles
+            ))
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
+            out <- render(
+                report_file,
+                params = list(user_name = input$lamp_name, datafile = df_upload_lamp_multiper1()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -443,8 +528,20 @@ server <- function(input, output, session) {
     })
     observeEvent(input$upload_lamp_1per, {
         if (!is.null(input$upload_lamp_1per)) {
-            enableValidate("lamp")
-            disableCustomization("lamp")
+            enableValidate("lamp_1per")
+            disableCustomization("lamp_1per")
+        }
+    })
+    observeEvent(input$upload_lamp_multiper1, {
+        if (!is.null(input$upload_lamp_multiper1) && (!is.null(input$upload_lamp_multiper2))) {
+            enableValidate("lamp_multiper")
+            disableCustomization("lamp_multiper")
+        }
+    })
+    observeEvent(input$upload_lamp_multiper2, {
+        if (!is.null(input$upload_lamp_multiper1) && (!is.null(input$upload_lamp_multiper2))) {
+            enableValidate("lamp_multiper")
+            disableCustomization("lamp_multiper")
         }
     })
     observeEvent(input$upload_spag_1per, {
