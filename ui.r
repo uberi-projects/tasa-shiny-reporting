@@ -123,24 +123,12 @@ ui <- navbarPage(
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
-                                            class = "input-list input-list-topbox",
-                                            "Choose Time Period",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("period_fisheries",
-                                                    label = NULL,
-                                                    choices = c("One Season", "Multiple Seasons", "One Year", "Multiple Years"), selected = "One Season", inline = TRUE
-                                                )
-                                            )
-                                        ),
-                                        hr(),
-                                        tags$li(
                                             class = "input-list",
                                             "Choose File",
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries",
+                                                    "upload_fisheries_1yr",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -277,24 +265,12 @@ ui <- navbarPage(
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
-                                            class = "input-list input-list-topbox",
-                                            "Choose Time Period",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("period_fisher",
-                                                    label = NULL,
-                                                    choices = c("One Season", "Multiple Seasons", "Multiple Years"), selected = "One Season", inline = TRUE
-                                                )
-                                            )
-                                        ),
-                                        hr(),
-                                        tags$li(
                                             class = "input-list",
                                             "Choose File",
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher",
+                                                    "upload_fisher_1yr",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -440,23 +416,11 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Choose Time Period",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("period_lamp",
-                                                    label = NULL,
-                                                    choices = c("One Period", "Multiple Periods"), selected = "One Period", inline = TRUE
-                                                )
-                                            )
-                                        ),
-                                        hr(),
-                                        tags$li(
-                                            class = "input-list",
                                             "Choose File",
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_lamp",
+                                                    "upload_lamp_1per",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -574,20 +538,11 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Choose Time Period",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("period_spag", label = NULL, choices = c("One Year", "Multiple Years"), selected = "One Year", inline = TRUE)
-                                            )
-                                        ),
-                                        hr(),
-                                        tags$li(
-                                            class = "input-list",
                                             "Choose File",
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_spag",
+                                                    "upload_spag_1per",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
