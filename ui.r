@@ -903,8 +903,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#spag_name').prop('disabled', true);
-                        $('#validate_spag').prop('disabled', true);
+                        $('#spag_1per_name').prop('disabled', true);
+                        $('#validate_spag_1per').prop('disabled', true);
                     });"
                         )
                     ),
@@ -929,7 +929,7 @@ ui <- navbarPage(
                                             "Choose Datatype",
                                             div(
                                                 class = "input-list-content",
-                                                prettyRadioButtons("datatype_spag", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
+                                                prettyRadioButtons("datatype_spag_1per", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
                                             )
                                         ),
                                         hr(),
@@ -960,11 +960,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "spag_validation_box_cover"
+                                                id = "spag_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_spag", "Perform Validation")
+                                                actionButton("validate_spag_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -973,7 +973,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "spag_input_box_cover"
+                                        id = "spag_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -983,7 +983,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("spag_name", "Your Name: ", value = "")
+                                                textInput("spag_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -992,7 +992,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_spag", "Generate")
+                                                downloadButton("report_spag_1per", "Generate")
                                             )
                                         )
                                     )
@@ -1003,14 +1003,151 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                        $('#spag_multiper_name').prop('disabled', true);
+                        $('#validate_spag_multiper').prop('disabled', true);
+                    });"
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multiple Year SPAG Reports"),
+                                h2("Multi-Year SPAG Reports"),
                                 p(datatype_text[3])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_spag_multiper", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_spag_multiper4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_multiper_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_spag_multiper", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "spag_multiper_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("spag_multiper_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_spag_multiper", "Generate")
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )

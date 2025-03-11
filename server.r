@@ -147,6 +147,22 @@ server <- function(input, output, session) {
         req(input$upload_spag_1per)
         read_excel(input$upload_spag_1per$datapath, sheet = 1, na = nas)
     })
+    df_upload_spag_multiper1 <- reactive({
+        req(input$upload_spag_multiper1)
+        read_excel(input$upload_spag_multiper1$datapath, sheet = 1, na = nas)
+    })
+    df_upload_spag_multiper2 <- reactive({
+        req(input$upload_spag_multiper2)
+        read_excel(input$upload_spag_multiper2$datapath, sheet = 1, na = nas)
+    })
+    df_upload_spag_multiper3 <- reactive({
+        req(input$upload_spag_multiper3)
+        read_excel(input$upload_spag_multiper3$datapath, sheet = 1, na = nas)
+    })
+    df_upload_spag_multiper4 <- reactive({
+        req(input$upload_spag_multiper4)
+        read_excel(input$upload_spag_multiper4$datapath, sheet = 1, na = nas)
+    })
 
     # Validate dataframes
     observeEvent(input$validate_fisheries_1yr, {
@@ -297,7 +313,6 @@ server <- function(input, output, session) {
             }
         }
     })
-
     observeEvent(input$validate_lamp_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for LAMP Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
@@ -305,11 +320,17 @@ server <- function(input, output, session) {
         enableCustomization("lamp_multiper")
     })
 
-    observeEvent(input$validate_spag, {
-        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+    observeEvent(input$validate_spag_1per, {
+        shinyalert("Notice!", "Validation has not been implemented for SPAG Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("spag")
+        enableCustomization("spag_1per")
+    })
+    observeEvent(input$validate_spag_multiper, {
+        shinyalert("Notice!", "Validation has not been implemented for SPAG Multi-Year as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
+        )
+        enableCustomization("spag_multiper")
     })
 
     # Create reports
@@ -459,16 +480,16 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_spag <- downloadHandler(
+    output$report_spag_1per <- downloadHandler(
         filename = function() {
-            report_file <- switch(input$datatype_spag,
+            report_file <- switch(input$datatype_spag_1per,
                 "Visual Census" = "report_spagvis_1per.Rmd",
                 "Laser" = "report_spaglaser_1per.Rmd"
             )
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
-            report_file <- switch(input$datatype_spag,
+            report_file <- switch(input$datatype_spag_1per,
                 "Visual Census" = "report_spagvis_1per.Rmd",
                 "Laser" = "report_spaglaser_1per.Rmd"
             )
@@ -483,6 +504,35 @@ server <- function(input, output, session) {
             out <- render(
                 report_file,
                 params = list(user_name = input$spag_name, datafile = df_upload_spag_1per()),
+                envir = new.env(parent = globalenv())
+            )
+            file.rename(out, file)
+        }
+    )
+    output$report_spag_multiper <- downloadHandler(
+        filename = function() {
+            report_file <- switch(input$datatype_spag_multiper,
+                "Visual Census" = "report_spagvis_multiper.Rmd",
+                "Laser" = "report_spaglaser_multiper.Rmd"
+            )
+            gsub(".Rmd", ".docx", report_file)
+        },
+        content = function(file) {
+            report_file <- switch(input$datatype_spag_multiper,
+                "Visual Census" = "report_spagvis_multiper.Rmd",
+                "Laser" = "report_spaglaser_multiper.Rmd"
+            )
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TASA_logo_full_color.png"
+            ))
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            out <- render(
+                report_file,
+                params = list(user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -546,8 +596,20 @@ server <- function(input, output, session) {
     })
     observeEvent(input$upload_spag_1per, {
         if (!is.null(input$upload_spag_1per)) {
-            enableValidate("spag")
-            disableCustomization("spag")
+            enableValidate("spag_1per")
+            disableCustomization("spag_1per")
+        }
+    })
+    observeEvent(input$upload_spag_multiper1, {
+        if (!is.null(input$upload_spag_multiper1) && (!is.null(input$upload_spag_multiper2))) {
+            enableValidate("spag_multiper")
+            disableCustomization("spag_multiper")
+        }
+    })
+    observeEvent(input$upload_spag_multiper2, {
+        if (!is.null(input$upload_spag_multiper1) && (!is.null(input$upload_spag_multiper2))) {
+            enableValidate("spag_multiper")
+            disableCustomization("spag_multiper")
         }
     })
 
