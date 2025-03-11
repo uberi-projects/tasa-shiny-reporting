@@ -37,6 +37,26 @@ server <- function(input, output, session) {
         req(input$upload_fisher_1yr)
         read_excel(input$upload_fisher_1yr$datapath, sheet = 1, na = nas)
     })
+    df_upload_fisher_multiyr1 <- reactive({
+        req(input$upload_fisher_multiyr1)
+        read_excel(input$upload_fisher_multiyr1$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisher_multiyr2 <- reactive({
+        req(input$upload_fisher_multiyr2)
+        read_excel(input$upload_fisher_multiyr2$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisher_multiyr3 <- reactive({
+        req(input$upload_fisher_multiyr3)
+        read_excel(input$upload_fisher_multiyr3$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisher_multiyr4 <- reactive({
+        req(input$upload_fisher_multiyr4)
+        read_excel(input$upload_fisher_multiyr4$datapath, sheet = 1, na = nas)
+    })
+    df_upload_fisher_multiyr5 <- reactive({
+        req(input$upload_fisher_multiyr5)
+        read_excel(input$upload_fisher_multiyr5$datapath, sheet = 1, na = nas)
+    })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
         sheets_available <- excel_sheets(input$upload_lamp_1per$datapath)
@@ -97,11 +117,17 @@ server <- function(input, output, session) {
         enableCustomization("fisheries_multiyr")
     })
 
-    observeEvent(input$validate_fisher, {
-        shinyalert("Notice!", "Validation has not been implemented for this dataset as of yet!",
+    observeEvent(input$validate_fisher_1yr, {
+        shinyalert("Notice!", "Validation has not been implemented for Fisher Project Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisher")
+        enableCustomization("fisher_1yr")
+    })
+    observeEvent(input$validate_fisher_multiyr, {
+        shinyalert("Notice!", "Validation has not been implemented for Fisher Project Multi-Year as of yet!",
+            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
+        )
+        enableCustomization("fisher_multiyr")
     })
 
     observeEvent(input$validate_lamp, {
@@ -249,7 +275,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries_1yr()),
+                params = list(user_name = input$fisheries_1yr_name, datafile = df_upload_fisheries_1yr()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -269,13 +295,13 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$fisheries_name, datafile = df_upload_fisheries_multiyr1()),
+                params = list(user_name = input$fisheries_multiyr_name, datafile = df_upload_fisheries_multiyr1()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
         }
     )
-    output$report_fisher <- downloadHandler(
+    output$report_fisher_1yr <- downloadHandler(
         filename = function() "report_fisher_1yr.docx",
         content = function(file) {
             report_file <- "report_fisher_1yr.Rmd"
@@ -289,7 +315,27 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$fisher_name, datafile = df_upload_fisher_1yr()),
+                params = list(user_name = input$fisher_1yr_name, datafile = df_upload_fisher_1yr()),
+                envir = new.env(parent = globalenv())
+            )
+            file.rename(out, file)
+        }
+    )
+    output$report_fisher_multiyr <- downloadHandler(
+        filename = function() "report_fisher_multiyr.docx",
+        content = function(file) {
+            report_file <- "report_fisher_multiyr.Rmd"
+            src <- normalizePath(c(
+                paste0("reports/", report_file),
+                "reports/report_template.docx",
+                "www/images/TASA_logo_full_color.png"
+            ))
+            owd <- setwd(tempdir())
+            on.exit(setwd(owd))
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            out <- render(
+                report_file,
+                params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -381,6 +427,18 @@ server <- function(input, output, session) {
         if (!is.null(input$upload_fisher_1yr)) {
             enableValidate("fisher")
             disableCustomization("fisher")
+        }
+    })
+    observeEvent(input$upload_fisher_multiyr1, {
+        if (!is.null(input$upload_fisher_multiyr1) && (!is.null(input$upload_fisher_multiyr2))) {
+            enableValidate("fisher_multiyr")
+            disableCustomization("fisher_multiyr")
+        }
+    })
+    observeEvent(input$upload_fisher_multiyr2, {
+        if (!is.null(input$upload_fisher_multiyr2) && (!is.null(input$upload_fisher_multiyr1))) {
+            enableValidate("fisher_multiyr")
+            disableCustomization("fisher_multiyr")
         }
     })
     observeEvent(input$upload_lamp_1per, {

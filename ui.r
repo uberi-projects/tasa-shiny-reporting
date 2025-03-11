@@ -373,8 +373,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisher_name').prop('disabled', true);
-                        $('#validate_fisher').prop('disabled', true);
+                        $('#fisher_1yr_name').prop('disabled', true);
+                        $('#validate_fisher_1yr').prop('disabled', true);
                     });
                     "
                         )
@@ -422,11 +422,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_validation_box_cover"
+                                                id = "fisher_1yr_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisher", "Perform Validation")
+                                                actionButton("validate_fisher_1yr", "Perform Validation")
                                             )
                                         )
                                     )
@@ -435,7 +435,7 @@ ui <- navbarPage(
                                     class = "input-box shorter-input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisher_input_box_cover"
+                                        id = "fisher_1yr_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -445,7 +445,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_name", "Your Name: ", value = "")
+                                                textInput("fisher_1yr_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -454,7 +454,7 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher", "Generate"),
+                                                downloadButton("report_fisher_1yr", "Generate"),
                                             )
                                         )
                                     )
@@ -465,6 +465,15 @@ ui <- navbarPage(
                 ),
                 tabPanel(
                     "Multiple Years",
+                    tags$script(
+                        HTML(
+                            "$(document).ready(function(){
+                        $('#fisher_multiyr_name').prop('disabled', true);
+                        $('#validate_fisher_multiyr').prop('disabled', true);
+                    });
+                    "
+                        )
+                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -473,6 +482,126 @@ ui <- navbarPage(
                                 class = "content-box",
                                 h2("Multi-Year Fisher Catch Project Reports"),
                                 p(dummy_text[1])
+                            ),
+                            div(
+                                class = "content-container grid-generator",
+                                div(
+                                    class = "input-box",
+                                    h3("Upload Data"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 1",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr1",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 2",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr2",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 3 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr3",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Choose File 4 (Optional)",
+                                            div(
+                                                class = "input-list-content",
+                                                fileInput(
+                                                    "upload_fisher_multiyr4",
+                                                    label = NULL,
+                                                    multiple = FALSE,
+                                                    accept = c(
+                                                        ".xls",
+                                                        ".xlsx"
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Validate Data",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[10],
+                                                icon("question-circle")
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_multiyr_validation_box_cover"
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("validate_fisher_multiyr", "Perform Validation")
+                                            )
+                                        )
+                                    )
+                                ),
+                                div(
+                                    class = "input-box shorter-input-box",
+                                    div(
+                                        class = "input-box-cover",
+                                        id = "fisher_multiyr_input_box_cover"
+                                    ),
+                                    h3("Customize Report"),
+                                    tags$ol(
+                                        class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Add Inputs",
+                                            div(
+                                                class = "input-list-content",
+                                                textInput("fisher_multiyr_name", "Your Name: ", value = "")
+                                            )
+                                        ),
+                                        hr(),
+                                        tags$li(
+                                            class = "input-list",
+                                            "Generate Report",
+                                            div(
+                                                class = "input-list-content",
+                                                downloadButton("report_fisher_multiyr", "Generate"),
+                                            )
+                                        )
+                                    )
+                                )
                             )
                         )
                     )
