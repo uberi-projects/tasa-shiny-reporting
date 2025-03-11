@@ -136,6 +136,31 @@ label {
   border-color: var(--color-primary);
   padding: 0;
 }
+.nav-tabs {
+  border-bottom: 0px;
+  top: 230px;
+  position: fixed;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+}
+.nav-tabs > li > a {
+  border-radius: 0;
+  background-color: #e5e5e545;
+  border: 0;
+  margin-right: 0;
+  color: black;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover {
+  color: black;
+  cursor: default;
+  background-color: #e5e5e5ad;
+  border: 0px;
+  border-bottom-color: transparent;
+}
 
 /* Grids */
 .content-container-parent {
@@ -145,7 +170,7 @@ label {
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
-  padding: 20px 15vw;
+  padding: 40px 15vw 20px 15vw;
 }
 .content-container-grid {
   display: grid;
@@ -237,7 +262,7 @@ label {
   width: 100%;
   background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
 }
-.tooltip > .tooltip-inner{
+.tooltip > .tooltip-inner {
   pointer-events: none;
   background-color: var(--color-secondary);
   padding: 10px;
@@ -245,12 +270,12 @@ label {
   max-width: 400px;
 }
 .validation-box-cover {
-    position: absolute;
-    width: 100%;
-    height: 31%;
-    background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  width: 100%;
+  height: 31%;
+  background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+  right: 0;
+  bottom: 0;
 }
 /* Pipeline image */
 .pipeline {
