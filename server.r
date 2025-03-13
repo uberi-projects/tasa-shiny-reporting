@@ -3,6 +3,9 @@
 # Attach packages ---------------------------
 library(readxl)
 
+# Source code ---------------------------
+source("server_helpers.r")
+
 # Define server ---------------------------
 server <- function(input, output, session) {
     shinyjs::hide("feedback-content-box")
@@ -51,97 +54,33 @@ server <- function(input, output, session) {
     })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
-        sheets_available <- excel_sheets(input$upload_lamp_1per$datapath)
-        data_list <- list()
-        if (input$datatype_lamp_1per == "Conch") {
-            if ("Survey Data" %in% sheets_available) {
-                data_list$Survey_Data <- read_excel(input$upload_lamp_1per$datapath, sheet = "Survey Data", na = nas)
-            }
-            if ("Sites" %in% sheets_available) {
-                data_list$Sites <- read_excel(input$upload_lamp_1per$datapath, sheet = "Sites", na = nas)
-            }
-            if ("Habitat Types" %in% sheets_available) {
-                data_list$Habitat_Types <- read_excel(input$upload_lamp_1per$datapath, sheet = "Habitat Types", na = nas)
-            }
-            return(data_list)
-        } else {
-            data_list <- list()
-            if ("Species" %in% sheets_available) {
-                data_list$Species <- read_excel(input$upload_lamp_1per$datapath, sheet = "Species", na = nas)
-            }
-            if ("Biomass" %in% sheets_available) {
-                data_list$Biomass <- read_excel(input$upload_lamp_1per$datapath, sheet = "Biomass", na = nas)
-            }
-            if ("Sites" %in% sheets_available) {
-                data_list$Sites <- read_excel(input$upload_lamp_1per$datapath, sheet = "Sites", na = nas)
-            }
-            if ("Finfish" %in% sheets_available) {
-                data_list$Finfish <- read_excel(input$upload_lamp_1per$datapath, sheet = "Finfish", na = nas)
-            }
-            if ("Conch" %in% sheets_available) {
-                data_list$Conch <- read_excel(input$upload_lamp_1per$datapath, sheet = "Conch", na = nas)
-            }
-            if ("Lobster" %in% sheets_available) {
-                data_list$Lobster <- read_excel(input$upload_lamp_1per$datapath, sheet = "Lobster", na = nas)
-            }
-            if ("Diadema and Crab" %in% sheets_available) {
-                data_list$Diadema_Crab <- read_excel(input$upload_lamp_1per$datapath, sheet = "Diadema and Crab", na = nas)
-            }
-            return(data_list)
-        }
+        file_path <- input$upload_lamp_1per$datapath
+        datatype <- input$datatype_lamp_1per
+        read_lamp_data(file_path, datatype)
     })
     df_upload_lamp_multiper1 <- reactive({
         req(input$upload_lamp_multiper1)
-        sheets_available <- excel_sheets(input$upload_lamp_multiper1$datapath)
-        data_list <- list()
-        if (input$datatype_lamp_multiper == "Conch") {
-            if ("Survey Data" %in% sheets_available) {
-                data_list$Survey_Data <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Survey Data", na = nas)
-            }
-            if ("Sites" %in% sheets_available) {
-                data_list$Sites <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Sites", na = nas)
-            }
-            if ("Habitat Types" %in% sheets_available) {
-                data_list$Habitat_Types <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Habitat Types", na = nas)
-            }
-            return(data_list)
-        } else {
-            data_list <- list()
-            if ("Species" %in% sheets_available) {
-                data_list$Species <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Species", na = nas)
-            }
-            if ("Biomass" %in% sheets_available) {
-                data_list$Biomass <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Biomass", na = nas)
-            }
-            if ("Sites" %in% sheets_available) {
-                data_list$Sites <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Sites", na = nas)
-            }
-            if ("Finfish" %in% sheets_available) {
-                data_list$Finfish <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Finfish", na = nas)
-            }
-            if ("Conch" %in% sheets_available) {
-                data_list$Conch <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Conch", na = nas)
-            }
-            if ("Lobster" %in% sheets_available) {
-                data_list$Lobster <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Lobster", na = nas)
-            }
-            if ("Diadema and Crab" %in% sheets_available) {
-                data_list$Diadema_Crab <- read_excel(input$upload_lamp_multiper1$datapath, sheet = "Diadema and Crab", na = nas)
-            }
-            return(data_list)
-        }
+        file_path <- input$upload_lamp_multiper1$datapath
+        datatype <- input$datatype_lamp_multiper
+        read_lamp_data(file_path, datatype)
     })
     df_upload_lamp_multiper2 <- reactive({
         req(input$upload_lamp_multiper2)
-        read_excel(input$upload_lamp_multiper2$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_lamp_multiper2$datapath
+        datatype <- input$datatype_lamp_multiper
+        read_lamp_data(file_path, datatype)
     })
     df_upload_lamp_multiper3 <- reactive({
         req(input$upload_lamp_multiper3)
-        read_excel(input$upload_lamp_multiper3$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_lamp_multiper3$datapath
+        datatype <- input$datatype_lamp_multiper
+        read_lamp_data(file_path, datatype)
     })
     df_upload_lamp_multiper4 <- reactive({
         req(input$upload_lamp_multiper4)
-        read_excel(input$upload_lamp_multiper4$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_lamp_multiper4$datapath
+        datatype <- input$datatype_lamp_multiper
+        read_lamp_data(file_path, datatype)
     })
     df_upload_spag_1per <- reactive({
         req(input$upload_spag_1per)
@@ -179,6 +118,51 @@ server <- function(input, output, session) {
     })
     output$ui_upload_fisheries_multiyr4 <- renderUI({
         check_datafile_dates(df_upload_fisheries_multiyr4())
+    })
+    output$ui_upload_fisher_1yr <- renderUI({
+        check_datafile_dates(df_upload_fisher_1yr())
+    })
+    output$ui_upload_fisher_multiyr1 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiyr1())
+    })
+    output$ui_upload_fisher_multiyr2 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiyr2())
+    })
+    output$ui_upload_fisher_multiyr3 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiyr3())
+    })
+    output$ui_upload_fisher_multiyr4 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiyr4())
+    })
+    output$ui_upload_lamp_1per <- renderUI({
+        check_datafiles_dates(df_upload_lamp_1per())
+    })
+    output$ui_upload_lamp_multiper1 <- renderUI({
+        check_datafiles_dates(df_upload_lamp_multiper1())
+    })
+    output$ui_upload_lamp_multiper2 <- renderUI({
+        check_datafiles_dates(df_upload_lamp_multiper2())
+    })
+    output$ui_upload_lamp_multiper3 <- renderUI({
+        check_datafiles_dates(df_upload_lamp_multiper3())
+    })
+    output$ui_upload_lamp_multiper4 <- renderUI({
+        check_datafiles_dates(df_upload_lamp_multiper4())
+    })
+    output$ui_upload_spag_1per <- renderUI({
+        check_datafile_dates(df_upload_spag_1per())
+    })
+    output$ui_upload_spag_multiper1 <- renderUI({
+        check_datafile_dates(df_upload_spag_multiper1())
+    })
+    output$ui_upload_spag_multiper2 <- renderUI({
+        check_datafile_dates(df_upload_spag_multiper2())
+    })
+    output$ui_upload_spag_multiper3 <- renderUI({
+        check_datafile_dates(df_upload_spag_multiper3())
+    })
+    output$ui_upload_spag_multiper4 <- renderUI({
+        check_datafile_dates(df_upload_spag_multiper4())
     })
 
     # Validate dataframes
@@ -681,39 +665,4 @@ server <- function(input, output, session) {
             )
         )
     })
-
-    # Helper Functions
-    disableCustomization <- function(reportType) {
-        shinyjs::disable(paste0(reportType, "_name"))
-        shinyjs::disable(paste0("report_", reportType))
-        shinyjs::show(paste0(reportType, "_input_box_cover"))
-    }
-    enableCustomization <- function(reportType) {
-        shinyjs::enable(paste0(reportType, "_name"))
-        shinyjs::enable(paste0("report_", reportType))
-        shinyjs::hide(paste0(reportType, "_input_box_cover"))
-    }
-    enableValidate <- function(reportType) {
-        shinyjs::enable(paste0("validate_", reportType))
-        shinyjs::hide(paste0(reportType, "_validation_box_cover"))
-    }
-    check_datafile_dates <- function(df) {
-        show_error <- function(message) {
-            return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
-        }
-        if (is.null(df)) {
-            return(NULL)
-        }
-        if (!"Date" %in% names(df) || all(is.na(df$Date))) {
-            return(show_error("No valid dates detected"))
-        }
-        study_years <- format(range(df$Date, na.rm = TRUE), "%Y")
-        if (study_years[1] != study_years[2]) {
-            return(show_error("Multiple years detected"))
-        }
-        return(div(
-            class = "file-confirmation-button",
-            p(class = "p-black", paste0("Year: ", study_years[1]))
-        ))
-    }
 }
