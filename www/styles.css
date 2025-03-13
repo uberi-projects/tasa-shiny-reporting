@@ -11,8 +11,16 @@
 /* Body */
 body {
   background-attachment: fixed;
-  background-image: url(images/ocean.jpg);
+  background-image: linear-gradient(
+      to right,
+      white 0%,
+      transparent 15%,
+      transparent 85%,
+      white 100%
+    ),
+    url(images/ocean.jpg);
   background-size: cover;
+  background-repeat: no-repeat;
   overflow-x: hidden;
   width: 100vw;
 }
@@ -277,13 +285,9 @@ label {
   right: 0;
   bottom: 0;
 }
-/* Pipeline image */
-.pipeline {
-  max-width: 400px;
-}
-.pipeline-div {
-  display: flex;
-  justify-content: center;
+/* Horizontal lines */
+.home-line {
+  border-color: var(--color-secondary);
 }
 
 /* Data template table */
@@ -318,7 +322,7 @@ label {
   color: #ffffffd7;
 }
 .data-template-table a:hover {
-  background-color: #2ca0d9;
+  background-color: var(--color-secondary);
 }
 .external-link-button {
   width: fit-content;

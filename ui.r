@@ -42,12 +42,8 @@ ui <- navbarPage(
                     h2("Welcome"),
                     p(home_text[1]), p(strong(home_text[3])),
                     br(),
-                    div(class = "pipeline-div", img(class = "pipeline", src = "images/pipeline.png", alt = "Pipeline from field to data to reporting")),
-                    br()
-                ),
-                hr(),
-                div(
-                    class = "content-box",
+                    hr(class = "home-line"),
+                    br(),
                     h2("Using this App"),
                     tags$ol(
                         class = "content-list",
