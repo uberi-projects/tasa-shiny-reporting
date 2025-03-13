@@ -131,7 +131,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_1yr")
                                             )
                                         ),
                                         hr(),
@@ -228,7 +229,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr1")
                                             )
                                         ),
                                         tags$li(
@@ -244,7 +246,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr2")
                                             )
                                         ),
                                         tags$li(
@@ -260,7 +263,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr3")
                                             )
                                         ),
                                         tags$li(
@@ -276,7 +280,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr4")
                                             )
                                         ),
                                         hr(),
@@ -404,7 +409,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisher_1yr")
                                             )
                                         ),
                                         hr(),
@@ -499,7 +505,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisher_multiyr1")
                                             )
                                         ),
                                         tags$li(
@@ -515,7 +522,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisher_multiyr2")
                                             )
                                         ),
                                         tags$li(
@@ -531,7 +539,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisher_multiyr3")
                                             )
                                         ),
                                         tags$li(
@@ -547,7 +556,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisher_multiyr4")
                                             )
                                         ),
                                         hr(),
@@ -683,7 +693,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_lamp_1per")
                                             )
                                         ),
                                         hr(),
@@ -786,7 +797,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_lamp_multiper1")
                                             )
                                         ),
                                         tags$li(
@@ -802,7 +814,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_lamp_multiper2")
                                             )
                                         ),
                                         tags$li(
@@ -818,7 +831,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_lamp_multiper3")
                                             )
                                         ),
                                         tags$li(
@@ -834,7 +848,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_lamp_multiper4")
                                             )
                                         ),
                                         hr(),
@@ -942,7 +957,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_spag_1per")
                                             )
                                         ),
                                         hr(),
@@ -1045,7 +1061,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_spag_multiper1")
                                             )
                                         ),
                                         tags$li(
@@ -1061,7 +1078,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_spag_multiper2")
                                             )
                                         ),
                                         tags$li(
@@ -1077,7 +1095,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_spag_multiper3")
                                             )
                                         ),
                                         tags$li(
@@ -1093,7 +1112,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_spag_multiper4")
                                             )
                                         ),
                                         hr(),
