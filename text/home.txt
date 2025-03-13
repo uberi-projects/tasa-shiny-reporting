@@ -7,5 +7,4 @@ Upload the datafiles on the corresponding Create Reports page for that datatype.
 Press the Validate Data button to perform a data validation operation on the upload. 
 Generate the report by entering any required inputs in the righthand content box, and pressing Generate Report. 
 For additional information on using and maintaining this app, please visit the Manual page.
-Our data validation checks your submitted data for completeness (are all the required sheets present?), standardization (are your data columns formatted according to the data template standards?), and possible errors (are any values in your data unexpected or require further investigation?).
-
+Our data validation checks your submitted data for completeness, standardization, and possible errors.

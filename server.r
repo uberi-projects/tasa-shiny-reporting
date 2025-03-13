@@ -164,6 +164,23 @@ server <- function(input, output, session) {
         read_excel(input$upload_spag_multiper4$datapath, sheet = 1, na = nas)
     })
 
+    # Read and report year of datafile
+    output$ui_upload_fisheries_1yr <- renderUI({
+        check_datafile_dates(df_upload_fisheries_1yr())
+    })
+    output$ui_upload_fisheries_multiyr1 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiyr1())
+    })
+    output$ui_upload_fisheries_multiyr2 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiyr2())
+    })
+    output$ui_upload_fisheries_multiyr3 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiyr3())
+    })
+    output$ui_upload_fisheries_multiyr4 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiyr4())
+    })
+
     # Validate dataframes
     observeEvent(input$validate_fisheries_1yr, {
         shinyalert("Notice!", "Validation has not been implemented for Fisheries Single Year as of yet!",
@@ -679,5 +696,24 @@ server <- function(input, output, session) {
     enableValidate <- function(reportType) {
         shinyjs::enable(paste0("validate_", reportType))
         shinyjs::hide(paste0(reportType, "_validation_box_cover"))
+    }
+    check_datafile_dates <- function(df) {
+        show_error <- function(message) {
+            return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
+        }
+        if (is.null(df)) {
+            return(NULL)
+        }
+        if (!"Date" %in% names(df) || all(is.na(df$Date))) {
+            return(show_error("No valid dates detected"))
+        }
+        study_years <- format(range(df$Date, na.rm = TRUE), "%Y")
+        if (study_years[1] != study_years[2]) {
+            return(show_error("Multiple years detected"))
+        }
+        return(div(
+            class = "file-confirmation-button",
+            p(class = "p-black", paste0("Year: ", study_years[1]))
+        ))
     }
 }

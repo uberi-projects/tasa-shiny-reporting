@@ -131,7 +131,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_1yr")
                                             )
                                         ),
                                         hr(),
@@ -228,7 +229,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr1")
                                             )
                                         ),
                                         tags$li(
@@ -244,7 +246,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr2")
                                             )
                                         ),
                                         tags$li(
@@ -260,7 +263,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr3")
                                             )
                                         ),
                                         tags$li(
@@ -276,7 +280,8 @@ ui <- navbarPage(
                                                         ".xls",
                                                         ".xlsx"
                                                     )
-                                                )
+                                                ),
+                                                uiOutput("ui_upload_fisheries_multiyr4")
                                             )
                                         ),
                                         hr(),
