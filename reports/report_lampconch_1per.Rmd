@@ -654,7 +654,7 @@ maximum_length_section <- max(df_table4_lengths$`Mean Shell Length`[which.max(df
 maximum_length_overall <- max(filter(df_table4_total_lengths, Section == "Overall")$`Mean Shell Length`, na.rm = TRUE)
 ```
 
-The highest mean queen conch shell length was found in the `r maximum_length_overall` section, being `r maximum_length`cm. 
+The highest mean queen conch shell length was found in the `r maximum_length_section` section, being `r maximum_length`cm. 
 This is compared to the overall mean length of `r maximum_length_overall` (Table 4).
 
 
