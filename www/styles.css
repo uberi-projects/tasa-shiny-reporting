@@ -250,8 +250,6 @@ label {
   padding: 10px;
   height: fit-content;
   overflow-x: hidden;
-}
-.shorter-input-box {
   height: 100%;
 }
 .input-box-cover {
@@ -276,6 +274,12 @@ label {
   background-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
   right: 0;
   bottom: 0;
+}
+.datatype-img{
+  display: block;
+  margin: 0px auto;
+  width: 75%;
+  position: relative;
 }
 /* Pipeline image */
 .pipeline {
