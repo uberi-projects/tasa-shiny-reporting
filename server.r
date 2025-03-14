@@ -167,35 +167,39 @@ server <- function(input, output, session) {
 
 
     # Change image based on Datatype
+    # LAMP Image change
     observeEvent(input$datatype_lamp_1per, {
         if (input$datatype_lamp_1per == "Conch") {
-            session$sendCustomMessage("triggerChangeLampImg", list(isConch = TRUE))
+            is_conch <- TRUE
         } else {
-            session$sendCustomMessage("triggerChangeLampImg", list(isConch = FALSE))
+            is_conch <- FALSE
         }
+        session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = FALSE))
     })
     observeEvent(input$datatype_lamp_multiper, {
         if (input$datatype_lamp_multiper == "Conch") {
-            session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = TRUE))
+            is_conch <- TRUE
         } else {
-            session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = FALSE))
+            is_conch <- FALSE
         }
+        session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = TRUE))
     })
-
+    # SPAG Image change
     observeEvent(input$datatype_spag_1per, {
         if (input$datatype_spag_1per == "Laser") {
-            session$sendCustomMessage("triggerChangeSpag1perImg", list(isVisual = FALSE))
+            is_visual <- FALSE
         } else {
-            session$sendCustomMessage("triggerChangeSpag1perImg", list(isVisual = TRUE))
+            is_visual <- TRUE
         }
+        session$sendCustomMessage("triggerChangeSpagImg", list(isVisual = is_visual, isMulti = FALSE))
     })
-
     observeEvent(input$datatype_spag_multiper, {
         if (input$datatype_spag_multiper == "Laser") {
-            session$sendCustomMessage("triggerChangeSpagMultiperImg", list(isVisual = FALSE))
+            is_visual <- FALSE
         } else {
-            session$sendCustomMessage("triggerChangeSpagMultiperImg", list(isVisual = TRUE))
+            is_visual <- TRUE
         }
+        session$sendCustomMessage("triggerChangeSpagImg", list(isVisual = is_visual, isMulti = TRUE))
     })
 
     # Validate dataframes

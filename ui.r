@@ -746,7 +746,7 @@ ui <- navbarPage(
                                                 downloadButton("report_lamp_1per", "Generate")
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -902,7 +902,7 @@ ui <- navbarPage(
                                                 downloadButton("report_lamp_multiper", "Generate")
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-multiper-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-multi-img", class = "datatype-img")
                                     )
                                 )
                             )

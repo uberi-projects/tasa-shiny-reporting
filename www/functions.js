@@ -1,49 +1,32 @@
-// Lamp Image Changing
-function changeLampImg(isConch) {
-    if (isConch) {
-        document.getElementById("datatype-img").setAttribute("src","../images/photos/photo_lamp_conch_03.jpg")
+// Lamp Image Changing---------------------
+function switchLampImage(isConch,isMulti) {
+    if (isMulti) {
+        elem = document.getElementById("datatype-lamp-multi-img")
     } else {
-        document.getElementById("datatype-img").setAttribute("src","../images/photos/photo_lamp_work_01.jpg")
+        elem = document.getElementById("datatype-lamp-1per-img")
+    }
+    if (isConch) {
+        elem.setAttribute("src","../images/photos/photo_lamp_conch_03.jpg")
+    } else {
+        elem.setAttribute("src","../images/photos/photo_lamp_work_01.jpg")
     }
 }
-
 Shiny.addCustomMessageHandler("triggerChangeLampImg", function(message) {
-    changeLampImg(message.isConch);
+    switchLampImage(message.isConch, message.isMulti);
 });
-
-function changeLampMultiperImg(isConch) {
-    if (isConch) {
-        document.getElementById("datatype-multiper-img").setAttribute("src","../images/photos/photo_lamp_conch_03.jpg")
+// SPAG Image Changing---------------------
+function switchSpagImage(isVisual, isMulti) {
+    if (isMulti) {
+        elem = document.getElementById("datatype-spag-multi-img")
     } else {
-        document.getElementById("datatype-multiper-img").setAttribute("src","../images/photos/photo_lamp_work_01.jpg")
+        elem = document.getElementById("datatype-spag-1per-img")
     }
-}
-Shiny.addCustomMessageHandler("triggerChangeLampMultiPerImg", function(message) {
-    changeLampMultiperImg(message.isConch);
-});
-
-
-
-// SPAG Image Changing
-function changeSpag1perImg(isVisual) {
     if (isVisual) {
-        document.getElementById("datatype-spag-1per-img").setAttribute("src","../images/photos/photo_spags_02.png")
+        elem.setAttribute("src","../images/photos/photo_spags_02.png")
     } else {
-        document.getElementById("datatype-spag-1per-img").setAttribute("src","../images/photos/photo_spags_06.jpg")
+        elem.setAttribute("src","../images/photos/photo_spags_06.jpg")
     }
 }
-Shiny.addCustomMessageHandler("triggerChangeSpag1perImg", function(message) {
-    changeSpag1perImg(message.isVisual);
-});
-
-
-function changeSpagMultiperImg(isVisual) {
-    if (isVisual) {
-        document.getElementById("datatype-spag-multi-img").setAttribute("src","../images/photos/photo_spags_02.png")
-    } else {
-        document.getElementById("datatype-spag-multi-img").setAttribute("src","../images/photos/photo_spags_06.jpg")
-    }
-}
-Shiny.addCustomMessageHandler("triggerChangeSpagMultiperImg", function(message) {
-    changeSpagMultiperImg(message.isVisual);
+Shiny.addCustomMessageHandler("triggerChangeSpagImg", function(message) {
+    switchSpagImage(message.isVisual, message.isMulti);
 });
