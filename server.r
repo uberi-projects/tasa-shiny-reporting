@@ -112,13 +112,13 @@ server <- function(input, output, session) {
             session$sendCustomMessage("triggerChangeLampImg", list(isConch = FALSE))
         }
     })
-
     observeEvent(input$datatype_lamp_multiper, {
         if (input$datatype_lamp_multiper == "Conch") {
             session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = TRUE))
         } else {
             session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = FALSE))
         }
+    })
 
     # Read and report year of datafile
     output$ui_upload_fisheries_1yr <- renderUI({
