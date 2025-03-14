@@ -459,7 +459,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$lamp_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
+                params = list(user_name = input$lamp_1per_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
@@ -492,7 +492,13 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$lamp_name, datafile = df_upload_lamp_multiper1()),
+                params = list(
+                    user_name = input$lamp_multiper_name,
+                    datafile1_name = input$upload_lamp_multiper1$name,
+                    datafile1 = df_upload_lamp_multiper1(),
+                    datafile2_name = input$upload_lamp_multiper2$name,
+                    datafile2 = df_upload_lamp_multiper2()
+                ),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
