@@ -13,10 +13,13 @@ home_text <- paste(readLines("text/home.txt"))
 datatype_text <- paste(readLines("text/datatype.txt"))
 link_text <- paste(readLines("text/links.txt"))
 
+# JSFunctions -----------------------------
+
 # Define ui ---------------------------
 ui <- navbarPage(
     id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
+    tags$head(tags$script(src = "functions.js")),
     header = div(
         useShinyjs(),
         includeCSS("www/modern-normalize.css"),
@@ -156,7 +159,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "fisheries_1yr_input_box_cover"
@@ -305,7 +308,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "fisheries_multiyr_input_box_cover"
@@ -434,7 +437,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "fisher_1yr_input_box_cover"
@@ -581,7 +584,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "fisher_multiyr_input_box_cover"
@@ -718,7 +721,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "lamp_1per_input_box_cover"
@@ -742,7 +745,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_lamp_1per", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -873,7 +877,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "lamp_multiper_input_box_cover"
@@ -897,7 +901,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_lamp_multiper", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-multiper-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -982,7 +987,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "spag_1per_input_box_cover"
@@ -1137,7 +1142,7 @@ ui <- navbarPage(
                                     )
                                 ),
                                 div(
-                                    class = "input-box shorter-input-box",
+                                    class = "input-box",
                                     div(
                                         class = "input-box-cover",
                                         id = "spag_multiper_input_box_cover"

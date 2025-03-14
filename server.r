@@ -103,6 +103,23 @@ server <- function(input, output, session) {
         read_excel(input$upload_spag_multiper4$datapath, sheet = 1, na = nas)
     })
 
+
+    # Change image based on Datatype
+    observeEvent(input$datatype_lamp_1per, {
+        if (input$datatype_lamp_1per == "Conch") {
+            session$sendCustomMessage("triggerChangeLampImg", list(isConch = TRUE))
+        } else {
+            session$sendCustomMessage("triggerChangeLampImg", list(isConch = FALSE))
+        }
+    })
+    observeEvent(input$datatype_lamp_multiper, {
+        if (input$datatype_lamp_multiper == "Conch") {
+            session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = TRUE))
+        } else {
+            session$sendCustomMessage("triggerChangeLampMultiPerImg", list(isConch = FALSE))
+        }
+    })
+
     # Read and report year of datafile
     output$ui_upload_fisheries_1yr <- renderUI({
         check_datafile_dates(df_upload_fisheries_1yr())
