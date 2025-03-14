@@ -182,6 +182,22 @@ server <- function(input, output, session) {
         check_datafile_dates(df_upload_spag_multiper4())
     })
 
+    observeEvent(input$datatype_spag_1per, {
+        if (input$datatype_spag_1per == "Laser") {
+            session$sendCustomMessage("triggerChangeSpag1perImg", list(isVisual = FALSE))
+        } else {
+            session$sendCustomMessage("triggerChangeSpag1perImg", list(isVisual = TRUE))
+        }
+    })
+
+    observeEvent(input$datatype_spag_multiper, {
+        if (input$datatype_spag_multiper == "Laser") {
+            session$sendCustomMessage("triggerChangeSpagMultiperImg", list(isVisual = FALSE))
+        } else {
+            session$sendCustomMessage("triggerChangeSpagMultiperImg", list(isVisual = TRUE))
+        }
+    })
+
     # Validate dataframes
     observeEvent(input$validate_fisheries_1yr, {
         shinyalert("Notice!", "Validation has not been implemented for Fisheries Single Year as of yet!",

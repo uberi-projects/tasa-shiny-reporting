@@ -1011,7 +1011,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_spag_1per", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -1166,7 +1167,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_spag_multiper", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
