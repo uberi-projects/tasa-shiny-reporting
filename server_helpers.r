@@ -15,6 +15,10 @@ enableValidate <- function(reportType) {
     shinyjs::enable(paste0("validate_", reportType))
     shinyjs::hide(paste0(reportType, "_validation_box_cover"))
 }
+disableValidate <- function(reportType) {
+    shinyjs::disable(paste0("validate_", reportType))
+    shinyjs::show(paste0(reportType, "_validation_box_cover"))
+}
 
 # Define helpers to check datafile date
 check_datafile_dates <- function(df) {
