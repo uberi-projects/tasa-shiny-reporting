@@ -610,8 +610,8 @@ legal_lipped_overall <- filter(df_table3_total_percent, Attribute == "Legal, Lip
 ```
 
 
-The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the `r maximum_legal_year` year with `r maximum_legal`%, compared to the overall proportion of `r legal_overall`%. 
-The highest proportion of lipped queen conch was found in the `r maximum_lipped_year` with `r maximum_lipped`%, compared to the overall proportion of `r lipped_overall`%. 
+The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in `r maximum_legal_year` with `r maximum_legal`%, compared to the overall proportion of `r legal_overall`%. 
+The highest proportion of lipped queen conch was found in `r maximum_lipped_year` with `r maximum_lipped`%, compared to the overall proportion of `r lipped_overall`%. 
 The highest proportion of legal and lipped queen conch was found in the `r maximum_legal_lipped_year` with `r maximum_legal_lipped`%, compared to the overall proportion of `r legal_lipped_overall`% (Table 3; Figure 3). \
 
 
@@ -685,36 +685,36 @@ df_table3
 
 ```{r table4_prep, echo = FALSE, include = FALSE}
 # Create df for Table 4 ---------------------------
-df_table4_lengths <- df_merged1 %>%
-  group_by(Section) %>%
+df_table4_lengths <- df_merged %>%
+  group_by(Year) %>%
   summarize(
     `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
     `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
     `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
     `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
   ) %>%
-  select(Section, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+  select(Year, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
 
-df_table4_total_lengths <- df_merged1 %>%
+df_table4_total_lengths <- df_merged %>%
   mutate(
-    Section = "Overall",
+    Year = "Overall",
     `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
     `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
     `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
     `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
   ) %>%
-  select(Section, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+  select(Year, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
 
 df_table4 <- bind_rows(df_table4_lengths, df_table4_total_lengths) %>%
   distinct()
 
 # Prepare dynamic variables for Table 4 ---------------------------
 maximum_length <- max(df_table4_lengths$`Mean Shell Length`, na.rm = TRUE)
-maximum_length_section <- max(df_table4_lengths$`Mean Shell Length`[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
-maximum_length_overall <- max(filter(df_table4_total_lengths, Section == "Overall")$`Mean Shell Length`, na.rm = TRUE)
+maximum_length_year <- max(df_table4_lengths$Year[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
+maximum_length_overall <- max(filter(df_table4_total_lengths, Year == "Overall")$`Mean Shell Length`, na.rm = TRUE)
 ```
 
-The highest mean queen conch shell length was found in the `r maximum_length_section` section, being `r maximum_length`cm. 
+The highest mean queen conch shell length was found in `r maximum_length_year`, being `r maximum_length`cm. 
 This is compared to the overall mean length of `r maximum_length_overall` (Table 4).
 
 
