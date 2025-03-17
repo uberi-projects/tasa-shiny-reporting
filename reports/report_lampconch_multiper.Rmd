@@ -321,53 +321,85 @@ df_table2 <- df_sites_summary %>%
   )
 
 # Prepare dynamic variables for Table 2 ---------------------------
-overall_skewness <- round(skewness(df_sites_summary$`Site Conch Count`), 2)
-overall_kurtosis <- round(kurtosis(df_sites_summary$`Site Conch Count`), 2)
-skew_direction <- ifelse(overall_skewness > 0, "positive", "negative")
-skew_intensity <- case_when(abs(overall_skewness) > 3 ~ "highly", abs(overall_skewness) > 1 ~ "moderately", abs(overall_skewness) <= 1 ~ "slightly")
-skew_means_interpretation <- case_when(
-  skew_direction == "positive" & skew_intensity == "highly" ~ "much higher",
-  skew_direction == "negative" & skew_intensity == "highly" ~ "much lower",
-  skew_direction == "positive" ~ "higher",
-  skew_direction == "negative" ~ "lower"
+overall_skewness1 <- round(skewness(filter(df_sites_summary, Year == study1_year)$`Site Conch Count`), 2)
+overall_skewness2 <- round(skewness(filter(df_sites_summary, Year == study2_year)$`Site Conch Count`), 2)
+overall_kurtosis1 <- round(kurtosis(filter(df_sites_summary, Year == study1_year)$`Site Conch Count`), 2)
+overall_kurtosis2 <- round(kurtosis(filter(df_sites_summary, Year == study2_year)$`Site Conch Count`), 2)
+skew_direction1 <- ifelse(overall_skewness1 > 0, "positive", "negative")
+skew_direction2 <- ifelse(overall_skewness2 > 0, "positive", "negative")
+skew_intensity1 <- case_when(abs(overall_skewness1) > 3 ~ "highly", abs(overall_skewness1) > 1 ~ "moderately", abs(overall_skewness1) <= 1 ~ "slightly")
+skew_intensity2 <- case_when(abs(overall_skewness2) > 3 ~ "highly", abs(overall_skewness2) > 1 ~ "moderately", abs(overall_skewness2) <= 1 ~ "slightly")
+skew_presence_interpretation1 <- case_when(
+  skew_direction1 == "positive" & skew_intensity1 == "highly" ~ "absent or found in low numbers",
+  skew_direction1 == "positive" ~ "found in low numbers",
+  skew_direction1 == "negative" ~ "found in high numbers"
 )
-skew_presence_interpretation <- case_when(
-  skew_direction == "positive" & skew_intensity == "highly" ~ "absent or found in low numbers",
-  skew_direction == "positive" ~ "found in low numbers",
-  skew_direction == "negative" ~ "found in high numbers"
+skew_presence_interpretation2 <- case_when(
+  skew_direction2 == "positive" & skew_intensity2 == "highly" ~ "absent or found in low numbers",
+  skew_direction2 == "positive" ~ "found in low numbers",
+  skew_direction2 == "negative" ~ "found in high numbers"
 )
-kurtosis_classification <- case_when(
-  overall_kurtosis > 2.5 & overall_kurtosis < 3.5 ~ "normal distribution",
-  overall_kurtosis > 10 ~ "highly leptokurtic distribution, meaning there are far more extreme outliers than a normal distribution",
-  overall_kurtosis >= 3.5 ~ "leptokurtic distribution, meaning there are more extreme outliers than a normal distribution",
-  overall_kurtosis <= 2.5 ~ "platykurtic distribution, meaning there are fewer outliers than a normal distribution"
+kurtosis_classification1 <- case_when(
+  overall_kurtosis1 > 2.5 & overall_kurtosis1 < 3.5 ~ "normal distribution",
+  overall_kurtosis1 > 10 ~ "highly leptokurtic distribution",
+  overall_kurtosis1 >= 3.5 ~ "leptokurtic distribution",
+  overall_kurtosis1 <= 2.5 ~ "platykurtic distribution"
 )
-kurtosis_presence_interpretation <- case_when(
-  overall_kurtosis > 2.5 & overall_kurtosis < 3.5 ~ "Due to the normal distribution, most conch counts are expected to follow that pattern with some outliers",
-  overall_kurtosis > 10 ~ "However, due to the highly leptokurtic distribution, extreme outliers in counts are expected, potentially many times the median in value",
-  overall_kurtosis >= 3.5 ~ "However, due to the leptokurtic distribution, outliers in counts are expected, potentially many times the median in value",
-  overall_kurtosis <= 2.5 ~ "Due to the platykurtic distribution, most conch counts are expected to follow that pattern with few outliers"
+kurtosis_classification2 <- case_when(
+  overall_kurtosis2 > 2.5 & overall_kurtosis2 < 3.5 ~ "normal distribution",
+  overall_kurtosis2 > 10 ~ "highly leptokurtic distribution",
+  overall_kurtosis2 >= 3.5 ~ "leptokurtic distribution",
+  overall_kurtosis2 <= 2.5 ~ "platykurtic distribution"
 )
+kurtosis_presence_interpretation1 <- case_when(
+  overall_kurtosis1 > 2.5 & overall_kurtosis1 < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
+  overall_kurtosis1 > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
+  overall_kurtosis1 >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
+  overall_kurtosis1 <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
+)
+kurtosis_presence_interpretation2 <- case_when(
+  overall_kurtosis2 > 2.5 & overall_kurtosis2 < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
+  overall_kurtosis2 > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
+  overall_kurtosis2 >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
+  overall_kurtosis2 <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
+)
+
 maximum_conch <- max(df_sites_summary$`Site Conch Count`, na.rm = TRUE)
 maximum_conch_site <- df_sites_summary$`Site ID`[which.max(df_sites_summary$`Site Conch Count`)]
-highest_median_conch <- max(df_table2$Median, na.rm = TRUE)
-# highest_median_conch_section <- df_table2 %>%
-#  filter(Median == highest_median_conch) %>%
-#  pull(Section) %>%
-#  unique()
-# highest_median_conch_section_plural <- ifelse(length(highest_median_conch_section) > 1, "s", "")
-# highest_median_conch_section_str <- knitr::combine_words(highest_median_conch_section)
-# overall_median_conch <- filter(df_table2, Section == "Total")$Median
+maximum_conch_year <- df_sites_summary$Year[which.max(df_sites_summary$`Site Conch Count`)]
+
+highest_mean_conch <- max(filter(df_table2, Year != "Overall")$Mean, na.rm = TRUE)
+highest_mean_conch_year <- df_table2 %>%
+  filter(Mean == highest_mean_conch) %>%
+  pull(Year) %>%
+  unique()
+highest_mean_conch_year_plural <- ifelse(length(highest_mean_conch_year) > 1, "s", "")
+highest_mean_conch_year_str <- knitr::combine_words(highest_mean_conch_year)
+overall_mean_conch <- filter(df_table2, Year == "Overall")$Mean
+
+highest_median_conch <- max(filter(df_table2, Year != "Overall")$Mean, na.rm = TRUE)
+highest_median_conch_year <- df_table2 %>%
+  filter(Median == highest_median_conch) %>%
+  pull(Year) %>%
+  unique()
+highest_median_conch_year_plural <- ifelse(length(highest_median_conch_year) > 1, "s", "")
+highest_median_conch_year_str <- knitr::combine_words(highest_median_conch_year)
+overall_median_conch <- filter(df_table2, Year == "Overall")$Median
 ```
 
 
-The distribution of Queen Conch counts has a skew of `r overall_skewness` and a kurtosis of `r overall_kurtosis`.
-This indicates that Queen Conch counts follow a `r kurtosis_classification`, `r skew_intensity` skewed towards the `r skew_direction` direction.
-This leads to the means of Queen Conch counts to be `r skew_means_interpretation` than the median.
-This suggests that Queen Conch are typically `r skew_presence_interpretation` at Turneffe sites. `r kurtosis_presence_interpretation` (Table 2; Figure 2). 
-The maximum queen conch count of `r maximum_conch` was found at site `r maximum_conch_site`. 
-The highest median queen conch count of `r highest_median_conch` per site was found in the `r "highest_median_conch_section_str"` section`r "highest_median_conch_section_plural"`, 
-compared to the overall median queen conch count of `r "overall_median_conch"` (Table 2). \
+The distribution of Queen Conch counts in `r study1_year` has a `r skew_intensity1` `r skew_direction1` skew of `r overall_skewness1` 
+and a `r kurtosis_classification1` kurtosis of `r overall_kurtosis1`, 
+suggesting that Queen Conch counts are typically `r skew_presence_interpretation1` on transects, with `r kurtosis_presence_interpretation1`. 
+The distribution of Queen Conch counts in `r study2_year` has a `r skew_intensity2` `r skew_direction2` skew of `r overall_skewness2` 
+and a `r kurtosis_classification2` kurtosis of `r overall_kurtosis2`, 
+suggesting that Queen Conch counts are typically `r skew_presence_interpretation2` on transects, with `r kurtosis_presence_interpretation2` (Table 2; Figure 2). 
+
+The maximum queen conch site count of `r maximum_conch` was found at site `r maximum_conch_site` in `r maximum_conch_year`. 
+The highest mean queen conch count of `r highest_mean_conch` per site was found in `r highest_mean_conch_year_str`, 
+compared to the overall mean queen conch count of `r overall_mean_conch`. 
+The highest median (middle value) queen conch count of `r highest_median_conch` per site was found in `r highest_median_conch_year_str`, 
+compared to the overall median queen conch count of `r overall_median_conch` (Table 2). \
 
 
 ```{r figure2_prep, echo = FALSE, include = FALSE}
