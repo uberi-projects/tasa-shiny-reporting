@@ -20,7 +20,6 @@ library(rmarkdown)
 library(tidyverse)
 library(moments) # for kurtosis/skew calculations
 library(ggpubr) # arranging multiple plots
-library(boot) # bootstrap calculations
 
 # Source code  ---------------------------
 source("theme.r")
@@ -650,7 +649,7 @@ df_table4 <- bind_rows(df_table4_lengths, df_table4_total_lengths) %>%
 
 # Prepare dynamic variables for Table 4 ---------------------------
 maximum_length <- max(df_table4_lengths$`Mean Shell Length`, na.rm = TRUE)
-maximum_length_section <- max(df_table4_lengths$`Mean Shell Length`[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
+maximum_length_section <- max(df_table4_lengths$Section[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
 maximum_length_overall <- max(filter(df_table4_total_lengths, Section == "Overall")$`Mean Shell Length`, na.rm = TRUE)
 ```
 

@@ -1,6 +1,4 @@
 ---
-title: "Long-term Atoll Monitoring Program (LAMP) Conch Report: [Periods]"
-subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -8,98 +6,998 @@ output:
       style: table_template
 params:
   user_name: "Unknown"
-  datafile: pressure
+  datafile1: pressure
+  datafile1_name: "Unknown"
+  datafile2: pressure
+  datafile2_name: "Unknown"
+  datafile3: NULL
+  datafile3_name: "Not Chosen"
+  datafile4: NULL
+  datafile4_name: "Not Chosen"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
+library(moments) # for kurtosis/skew calculations
+library(ggpubr) # arranging multiple plots
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Define individual study periods ---------------------------
+study1_start <- min(params$datafile1$Survey_Data$Date, na.rm = TRUE)
+study1_period <- paste0(min(params$datafile1$Survey_Data$Date, na.rm = TRUE), " to ", max(params$datafile1$Survey_Data$Date, na.rm = TRUE))
+study1_year <- format(study1_start, "%Y")
+study2_start <- min(params$datafile2$Survey_Data$Date, na.rm = TRUE)
+study2_period <- paste0(min(params$datafile2$Survey_Data$Date, na.rm = TRUE), " to ", max(params$datafile2$Survey_Data$Date, na.rm = TRUE))
+study2_year <- format(study2_start, "%Y")
+if (!is.null(params$datafile3)) {
+  study3_start <- min(params$datafile3$Survey_Data$Date, na.rm = TRUE)
+  study3_period <- paste0(study3_start, " to ", max(params$datafile3$Survey_Data$Date, na.rm = TRUE))
+  study3_year <- format(study3_start, "%Y")
+}
+if (!is.null(params$datafile4)) {
+  study4_start <- min(params$datafile4$Survey_Data$Date, na.rm = TRUE)
+  study4_period <- paste0(study4_start, " to ", max(params$datafile4$Survey_Data$Date, na.rm = TRUE))
+  study4_year <- format(study4_start, "%Y")
+}
+
+# Define overall study period ---------------------------
+study_periods <- c(study1_period, study2_period)
+study_years <- c(study1_year, study2_year)
+if (!is.null(params$datafile3)) {
+  study_periods <- c(study_periods, study3_period)
+  study_years <- c(study_years, study3_year)
+}
+if (!is.null(params$datafile4)) {
+  study_periods <- c(study_periods, study4_period)
+  study_years <- c(study_years, study4_year)
+}
+study_period <- knitr::combine_words(study_periods)
+study_year <- knitr::combine_words(study_years)
+study_years_count <- length(study_years)
+
+# Define datafiles ---------------------------
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
+
+# Update Site ID ---------------------------
+update_site_id <- function(df) {
+  df |> mutate(`Site ID` = ifelse(is.na(`Site ID`), `Old Site ID`, `Site ID`))
+}
+df_surveys1 <- update_site_id(params$datafile1$Survey_Data)
+df_sites1 <- update_site_id(params$datafile1$Sites)
+df_surveys2 <- update_site_id(params$datafile2$Survey_Data)
+df_sites2 <- update_site_id(params$datafile2$Sites)
+if (!is.null(params$datafile3)) {
+  df_surveys3 <- update_site_id(params$datafile3$Survey_Data)
+  df_sites3 <- update_site_id(params$datafile3$Sites)
+}
+if (!is.null(params$datafile4)) {
+  df_surveys4 <- update_site_id(params$datafile4$Survey_Data)
+  df_sites4 <- update_site_id(params$datafile4$Sites)
+}
+
+# Merge sites and surveys data ---------------------------
+df_merged1 <- df_surveys1 |>
+  left_join(df_sites1, by = "Site ID") |>
+  filter(Section != "NW") |>
+  mutate(`Conch Count` = as.integer(`Conch Count`), Year = study1_year)
+df_merged2 <- df_surveys2 |>
+  left_join(df_sites2, by = "Site ID") |>
+  filter(Section != "NW") |>
+  mutate(`Conch Count` = as.integer(`Conch Count`), Year = study2_year)
+merged_list <- list(df_merged1, df_merged2)
+if (!is.null(params$datafile3)) {
+  df_merged3 <- df_surveys3 |>
+    left_join(df_sites3, by = "Site ID") |>
+    filter(Section != "NW") |>
+    mutate(`Conch Count` = as.integer(`Conch Count`), Year = study3_year)
+  merged_list <- append(merged_list, list(df_merged3))
+}
+if (!is.null(params$datafile4)) {
+  df_merged4 <- df_surveys4 |>
+    left_join(df_sites4, by = "Site ID") |>
+    filter(Section != "NW") |>
+    mutate(`Conch Count` = as.integer(`Conch Count`), Year = study4_year)
+  merged_list <- append(merged_list, list(df_merged4))
+}
+df_merged <- bind_rows(merged_list)
+
+# Create dataframe list ---------------------------
+df_list <- list(df_merged1, df_merged2)
+if (!is.null(params$datafile3)) {
+  df_list <- append(df_list, list(df_merged3))
+}
+if (!is.null(params$datafile4)) {
+  df_list <- append(df_list, list(df_merged4))
+}
+
+# Count number of sites surveyed ---------------------------
+number_sites1 <- length(unique(df_merged1$`Site ID`))
+number_sites2 <- length(unique(df_merged2$`Site ID`))
+all_sites <- c(df_merged1$`Site ID`, df_merged2$`Site ID`)
+site_sets <- list(df_merged1$`Site ID`, df_merged2$`Site ID`)
+if (!is.null(params$datafile3)) {
+  number_sites3 <- length(unique(df_merged3$`Site ID`))
+  all_sites <- c(all_sites, df_merged3$`Site ID`)
+  site_sets <- append(site_sets, list(df_merged3$`Site ID`))
+}
+if (!is.null(params$datafile4)) {
+  number_sites4 <- length(unique(df_merged4$`Site ID`))
+  all_sites <- c(all_sites, df_merged4$`Site ID`)
+  site_sets <- append(site_sets, list(df_merged4$`Site ID`))
+}
+number_sites <- length(unique(all_sites))
+number_sites_common <- Reduce(intersect, site_sets) |> length()
+
+# Define samba conch ---------------------------
+samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch,
+are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
 ```
 
+
+
+# Turneffe Atoll Queen Conch LAMP Dataset Report: `r study_year`
+
+
+Turneffe Atoll Sustainability Association (TASA)
+
+
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
-**Source Data:** Data \
-**Generated by:** `r params$user_name`
+**Source Data:** `r datafiles` \
+**Generated by:** `r params$user_name`\
 
 ***
+
+
+Coral reefs are biodiversity hotspots that provide critical habitats for diverse species, support coastal communities, and offer economic opportunities through the harvest of marine invertebrates and fish. 
+Monitoring these ecosystems is essential to assess health, function, and changes over time, informing management decisions. 
+This report presents findings from monitoring surveys of queen conch (_Aliger gigas_) at Turneffe Atoll Marine Reserve (TAMR) from `r study_year`. 
+Data on conch abundance and shell measurements were collected by TASA staff and collaborators as part of the Long-term Atoll Monitoring Program (LAMP), which tracks key taxa at the atoll through standardized surveys. 
+This report aims to summarize and visualize the queen conch dataset from `r study_year` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+
 
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
 
 ### Long-term Atoll Monitoring Program
 
-Background on reef monitoring dataset type \
+The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), is designed to monitor key fished taxa at the atoll over space and time, including finfish, queen conch (_Aliger gigas_) and milk conch (_Strombus costatus_), Caribbean spiny lobster (_Panulirus argus_) and spotted spiny lobster (_Panulirus guttatus_), black sea urchins (_Diadema antillarum_), and Caribbean king crab (_Mithrax spinosissumus_). 
+The program uses habitat sampling to estimate population sizes and physical characteristics of these taxa, enabling spatial and temporal comparison.
 
-Map of study area \
+LAMP's primary objectives are to assess the viability of these populations by identifying trends in abundance, reproduction, physical characteristics, and habitat quality where applicable. 
+Data collected through LAMP facilitates evaluation of management zone effectiveness. 
+The program data also supports recommendations on enforcement, monitoring, education, outreach, fishing quotas, season lengths, size limits, and other government regulations to ensure the long-term sustainability of the fishery, all while preserving the natural beauty and ecological value of the atoll.
+
+The queen conch dataset is a key component of the overall LAMP data, notable for its extensive historical record and the breadth of information collected. 
+Queen conch is a commercially significant species within the TAMR. 
+As outlined in the Turneffe Atoll Management Plan, regular population monitoring is required to support sustainable management and conservation efforts. 
+In 2013, Zale et al. developed a methodology based on Acosta’s LAMP protocol (2004) to monitor queen conch at TAMR, which was later reused in 2016 and 2017 to assess changes in the stock over time and improve the monitoring methodology (Zale et al. 2016, Zale et al. 2018). 
+From 2023 onward, these datasets are integrated into the broader LAMP program data, which includes crab, lobster, urchins, and finfish, to enhance the program. 
+Data from monitoring surveys of queen conch at TAMR include conch abundance, depth of individuals, and shell measurements (lip thickness and shell length).\
+
+
+### Queen Conch
+
+Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex. 
+Juvenile queen conch have a pink, pearly interior, and the shell has a recognizable dark periostracum layer. 
+Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be observed by removing the conch from its shell. 
+Reproduction occurs during warmer months (Appeldoorn and Baker 2013). 
+`r samba_definition`
+
+In Belize, the queen conch fishery is the second most important commercial fishery in the country. 
+Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats. 
+The fishery is regulated by the Belize Fisheries Department (BFD). 
+National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first. 
+The use of SCUBA for commercial conch harvesting is strictly prohibited. 
+Additionally, commercial fishing activities in Belize require a fishing license (Belize Fisheries Department accessed 2025).
+
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025).\
+
 
 ## Methods
 
-Survey methods\ 
+Survey sites were selected as representative nearshore habitat types (as defined by Mumby and Harborne, 1999) known to be inhabited by Queen Conch based on prior assessments (Zale et al., 2016). 
+Each site is assigned a unique ID and decimal coordinates to facilitate resampling in future years. 
+When a site is re-sampled, habitat classification is reevaluated for the corresponding sampling period. 
+Additionally, each site is categorized within a specific section of TAMR, either North, Northeast, Southeast, or Southwest (Figure 1).
 
- 
-**Table 1.** Table of surveys/dives.
+The survey periods for this report’s dataset extend from `r study_period` at TAMR. 
+Sampling for queen conch LAMP is ideally done during summer before harvest. 
+`r number_sites1` sites were sampled in `r study1_year`, and `r number_sites2` were sampled in `r study2_year`, 
+including `r number_sites` unique sites, and `r number_sites_common` common to the `r study_years_count` sampled years. 
+At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkeling, or wading depending on the depth. 
+Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. 
+Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. 
+The belt transect included 2m of space on either side of the line.
 
-_Dive Surveys_
-```{r table1, echo = FALSE}
-# show table
-head(params$datafile)
+During sampling, two data collectors swam together down either side of each transect approximately 1.5m above the substrate. 
+In sites shallower than 1.5m in depth, data collectors instead snorkeled, and in sites less than 0.25m in depth, data collectors waded. 
+The data collectors counted all living queen conch within 2m of the line on their side of the belt. 
+Queen conch close to 2m from the line were also counted, and their distance from the line recorded. 
+Shell lengths and lip thickness of queen conch were measured during sampling using calipers, as well as depth of capture to the nearest foot using a dive computer. 
+Lip thickness was measured only in lipped individuals, and was measured as 4cm inward from the edge of the middle third of the lip, where the lip is relatively straight instead of wavy. 
+After being measured, all queen conch were returned upright to their original position of capture.
+
+This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create map for Figure 1 ---------------------------
+df_map <- df_merged |>
+  select(`Site ID`, Latitude, Longitude) |>
+  group_by(`Site ID`) |>
+  summarise(
+    Latitude = mean(Latitude, na.rm = TRUE),
+    Longitude = mean(Longitude, na.rm = TRUE),
+    .groups = "drop"
+  )
+generate_map(df_map, "Latitude", "Longitude", "Site ID")
 ```
+
+
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. 
+Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
+Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize 
+(Meerman 2013, Meerman 2017). 
+Sample sites surveyed in `r study_year` are labelled on the map. 
+For sites where latitude/longitude values varied between years, the mean latitude and longitude values were used for each site.\
 
 
 ## Results
 
-Explanation of results \ 
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create function to make Table 1 and dynamic variables ---------------------------
+generate_table1 <- function(df_list) {
+  df_table_list <- list()
+  total_conch_by_dataset <- list()
+  section_sites <- list()
+  sections <- c("NO", "NE", "SW", "SE")
+  for (i in seq_along(df_list)) {
+    df <- df_list[[i]]
+    df_table1 <- df %>%
+      group_by(Section, Year) %>%
+      summarise(
+        `Number Sites` = length(unique(`Site ID`)),
+        `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        `Section Hectares` = `Number Sites` * 0.08,
+        `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+      ) %>%
+      bind_rows(
+        df %>%
+          group_by(Year) %>%
+          summarise(
+            Section = "Annual Total",
+            `Number Sites` = length(unique(`Site ID`)),
+            `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE)
+          ) %>%
+          mutate(
+            `Section Hectares` = `Number Sites` * 0.08,
+            `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+          )
+      )
+    df_table_list[[i]] <- df_table1
+    total_conch_by_dataset[[paste0("total_conch", i)]] <- filter(df_table1, Section == "Annual Total")$`Queen Conch Count`
+    for (section in sections) {
+      site_count <- filter(df_table1, Section == section)$`Number Sites`
+      section_sites[[paste0(section, "_sites", i)]] <- site_count
+    }
+  }
+  df_table1_overall <- bind_rows(df_table_list) %>%
+    summarise(
+      Year = "Grand Total",
+      Section = "Grand Total",
+      `Number Sites` = sum(`Number Sites`),
+      `Queen Conch Count` = sum(`Queen Conch Count`, na.rm = TRUE),
+      `Section Hectares` = sum(`Section Hectares`),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+    )
+  df_table1_plot <- bind_rows(df_table_list, df_table1_overall)
+  return(c(
+    list(
+      df_table1_plot = df_table1_plot,
+      total_conch = filter(df_table1_plot, Section == "Grand Total")$`Queen Conch Count`,
+      total_sites = filter(df_table1_plot, Section == "Grand Total")$`Number Sites`
+    ),
+    total_conch_by_dataset,
+    section_sites
+  ))
+}
 
-![](TASA_logo_full_color.png){width=250px}
+# Create Table 1 ---------------------------
+df_table1_list <- generate_table1(df_list)
+df_table1 <- df_table1_list$df_table1_plot
 
-Figure 1. Results figure. \ 
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 2. Results figure. \
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 3. Results figure. \
-
-
-**Table 2.** Results table.
-
-_Results Table_
-```{r table2, echo = FALSE}
-# show table
-head(params$datafile)
+# Create optional datafile summaries ---------------------------
+if (!is.null(params$datafile3)) {
+  datafile3_table1_results_text <- paste0(
+    "In ", study3_year,
+    ", ", df_table1_list$NE_sites3, " sites were sampled in the Northeast, ",
+    df_table1_list$NO_sites3, " in the North, ",
+    df_table1_list$SE_sites3, " in the Southeast, and ",
+    df_table1_list$SW_sites3, " in the Southwest, with ",
+    df_table1_list$total_conch3, " counted conch"
+  )
+} else {
+  datafile3_table1_results_text <- ""
+}
+if (!is.null(params$datafile4)) {
+  datafile4_table1_results_text <- paste0(
+    ". In ", study4_year,
+    " , ", df_table1_list$NE_sites4, " sites were sampled in the Northeast, ",
+    df_table1_list$NO_sites4, " in the North, ",
+    df_table1_list$SE_sites4, " in the Southeast, and ",
+    df_table1_list$SW_sites4, " in the Southwest, with ",
+    df_table1_list$total_conch4, " counted conch"
+  )
+} else {
+  datafile3_table1_results_text <- ""
+  datafile4_table1_results_text <- ""
+}
 ```
 
 
-## Discussion
+In total, in `r study_years_count` years, `r df_table1_list$total_conch` queen conch were counted. 
+In `r study1_year`, `r df_table1_list$NE_sites1` sites were sampled in the Northeast, `r df_table1_list$NO_sites1` in the North, 
+`r df_table1_list$SE_sites1` in the Southeast, and `r df_table1_list$SW_sites1` in the Southwest, with `r df_table1_list$total_conch1` counted conch. 
+In `r study2_year`, `r df_table1_list$NE_sites2` sites were sampled in the Northeast, `r df_table1_list$NO_sites2` in the North, 
+`r df_table1_list$SE_sites2` in the Southeast, and `r df_table1_list$SW_sites2` in the Southwest, with `r df_table1_list$total_conch2` counted conch. 
+`r datafile3_table1_results_text``r datafile4_table1_results_text` (Table 1).\
 
-Interpretation of results \ 
 
-Conclusions and recommendations \ 
+**Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_year`. 
+NO is north, NE is northeast, SE is southeast, and SW is southwest.\
+
+```{r table1, echo = FALSE}
+df_table1
+```
+
+<br>
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_sites_summary <- df_merged %>%
+  group_by(Year, `Site ID`) %>%
+  summarise(`Site Conch Count` = sum(`Conch Count`), .groups = "drop")
+df_table2 <- df_sites_summary %>%
+  group_by(Year) %>%
+  summarise(
+    Mean = round(mean(`Site Conch Count`), 1),
+    Min = round(min(`Site Conch Count`), 1),
+    Q1 = round(quantile(`Site Conch Count`, 0.25), 1),
+    Median = round(median(`Site Conch Count`), 1),
+    Q3 = round(quantile(`Site Conch Count`, 0.75), 1),
+    Max = round(max(`Site Conch Count`), 1),
+    Var = round(var(`Site Conch Count`), 1),
+    SD = round(sd(`Site Conch Count`), 1),
+    .groups = "drop"
+  ) %>%
+  bind_rows(
+    df_sites_summary %>%
+      summarise(
+        Year = "Overall",
+        Mean = round(mean(`Site Conch Count`), 1),
+        Min = round(min(`Site Conch Count`), 1),
+        Q1 = round(quantile(`Site Conch Count`, 0.25), 1),
+        Median = round(median(`Site Conch Count`), 1),
+        Q3 = round(quantile(`Site Conch Count`, 0.75), 1),
+        Max = round(max(`Site Conch Count`), 1),
+        Var = round(var(`Site Conch Count`), 1),
+        SD = round(sd(`Site Conch Count`), 1),
+        .groups = "drop"
+      )
+  )
+
+# Prepare dynamic variables for Table 2 ---------------------------
+calculate_skew_kurtosis <- function(df_sites_summary, years) {
+  skewness_results <- list()
+  kurtosis_results <- list()
+  skew_direction <- list()
+  skew_intensity <- list()
+  skew_presence_interpretation <- list()
+  kurtosis_classification <- list()
+  kurtosis_presence_interpretation <- list()
+  for (year in years) {
+    skew <- round(skewness(filter(df_sites_summary, Year == year)$`Site Conch Count`), 2)
+    kurt <- round(kurtosis(filter(df_sites_summary, Year == year)$`Site Conch Count`), 2)
+    skewness_results[[year]] <- skew
+    kurtosis_results[[year]] <- kurt
+    skew_direction[[year]] <- ifelse(skew > 0, "positive", "negative")
+    skew_intensity[[year]] <- case_when(
+      abs(skew) > 3 ~ "highly",
+      abs(skew) > 1 ~ "moderately",
+      abs(skew) <= 1 ~ "slightly"
+    )
+    skew_presence_interpretation[[year]] <- case_when(
+      skew_direction[[year]] == "positive" & skew_intensity[[year]] == "highly" ~ "absent or found in low numbers",
+      skew_direction[[year]] == "positive" ~ "found in low numbers",
+      skew_direction[[year]] == "negative" ~ "found in high numbers"
+    )
+    kurtosis_classification[[year]] <- case_when(
+      kurt > 2.5 & kurt < 3.5 ~ "normal distribution",
+      kurt > 10 ~ "highly leptokurtic distribution",
+      kurt >= 3.5 ~ "leptokurtic distribution",
+      kurt <= 2.5 ~ "platykurtic distribution"
+    )
+    kurtosis_presence_interpretation[[year]] <- case_when(
+      kurt > 2.5 & kurt < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
+      kurt > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
+      kurt >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
+      kurt <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
+    )
+  }
+  return(list(
+    overall_skewness = skewness_results,
+    overall_kurtosis = kurtosis_results,
+    skew_direction = skew_direction,
+    skew_intensity = skew_intensity,
+    skew_presence_interpretation = skew_presence_interpretation,
+    kurtosis_classification = kurtosis_classification,
+    kurtosis_presence_interpretation = kurtosis_presence_interpretation
+  ))
+}
+skew_kurtosis_list <- calculate_skew_kurtosis(df_sites_summary, study_years)
+if (!is.null(params$datafile3)) {
+  datafile3_skew_kurtosis_text <- paste0(
+    "The distribution of Queen Conch counts in ",
+    study3_year, " has a ", skew_kurtosis_list$skew_intensity[[study3_year]], " ",
+    skew_kurtosis_list$skew_direction[[study3_year]], " skew of ",
+    skew_kurtosis_list$overall_skewness[[study3_year]], " and a ",
+    skew_kurtosis_list$kurtosis_classification[[study3_year]], " kurtosis of ",
+    skew_kurtosis_list$overall_kurtosis[[study3_year]], ", ",
+    "suggesting that Queen Conch counts are typically ",
+    skew_kurtosis_list$skew_presence_interpretation[[study3_year]], " on transects, ",
+    "with ", skew_kurtosis_list$kurtosis_presence_interpretation[[study3_year]]
+  )
+} else {
+  datafile3_skew_kurtosis_text <- ""
+}
+if (!is.null(params$datafile4)) {
+  datafile4_skew_kurtosis_text <- paste0(
+    ". The distribution of Queen Conch counts in ",
+    study4_year, " has a ", skew_kurtosis_list$skew_intensity[[study4_year]], " ",
+    skew_kurtosis_list$skew_direction[[study4_year]], " skew of ",
+    skew_kurtosis_list$overall_skewness[[study4_year]], " and a ",
+    skew_kurtosis_list$kurtosis_classification[[study4_year]], " kurtosis of ",
+    skew_kurtosis_list$overall_kurtosis[[study4_year]], ", ",
+    "suggesting that Queen Conch counts are typically ",
+    skew_kurtosis_list$skew_presence_interpretation[[study4_year]], " on transects, ",
+    "with ", skew_kurtosis_list$kurtosis_presence_interpretation[[study4_year]]
+  )
+} else {
+  datafile4_skew_kurtosis_text <- ""
+}
+maximum_conch <- max(df_sites_summary$`Site Conch Count`, na.rm = TRUE)
+maximum_conch_site <- df_sites_summary$`Site ID`[which.max(df_sites_summary$`Site Conch Count`)]
+maximum_conch_year <- df_sites_summary$Year[which.max(df_sites_summary$`Site Conch Count`)]
+highest_mean_conch <- max(filter(df_table2, Year != "Overall")$Mean, na.rm = TRUE)
+highest_mean_conch_year <- df_table2 %>%
+  filter(Mean == highest_mean_conch) %>%
+  pull(Year) %>%
+  unique()
+highest_mean_conch_year_plural <- ifelse(length(highest_mean_conch_year) > 1, "s", "")
+highest_mean_conch_year_str <- knitr::combine_words(highest_mean_conch_year)
+overall_mean_conch <- filter(df_table2, Year == "Overall")$Mean
+highest_median_conch <- max(df_table2$Median, na.rm = TRUE)
+highest_median_conch_year <- df_table2 %>%
+  filter(Median == highest_median_conch) %>%
+  pull(Year) %>%
+  unique()
+highest_median_conch_year_plural <- ifelse(length(highest_median_conch_year) > 1, "s", "")
+highest_median_conch_year_str <- knitr::combine_words(highest_median_conch_year)
+overall_median_conch <- filter(df_table2, Year == "Overall")$Median
+```
+
+
+The distribution of Queen Conch counts in `r study1_year` has a 
+`r skew_kurtosis_list$skew_intensity[[study1_year]]` `r skew_kurtosis_list$skew_direction[[study1_year]]` skew of `r skew_kurtosis_list$overall_skewness[[study1_year]]` 
+and a `r skew_kurtosis_list$kurtosis_classification[[study1_year]]` kurtosis of `r skew_kurtosis_list$overall_kurtosis[[study1_year]]`, 
+suggesting that Queen Conch counts are typically `r skew_kurtosis_list$skew_presence_interpretation[[study1_year]]` on transects, 
+with `r skew_kurtosis_list$kurtosis_presence_interpretation[[study1_year]]`. 
+The distribution of Queen Conch counts in `r study2_year` has a 
+`r skew_kurtosis_list$skew_intensity[[study2_year]]` `r skew_kurtosis_list$skew_direction[[study2_year]]` skew of `r skew_kurtosis_list$overall_skewness[[study2_year]]` 
+and a `r skew_kurtosis_list$kurtosis_classification[[study2_year]]` kurtosis of `r skew_kurtosis_list$overall_kurtosis[[study2_year]]`, 
+suggesting that Queen Conch counts are typically `r skew_kurtosis_list$skew_presence_interpretation[[study2_year]]` on transects, 
+with `r skew_kurtosis_list$kurtosis_presence_interpretation[[study2_year]]`. 
+`r datafile3_skew_kurtosis_text``r datafile4_skew_kurtosis_text` (Table 2; Figure 2). 
+
+The maximum queen conch site count of `r maximum_conch` was found at site `r maximum_conch_site` in `r maximum_conch_year`. 
+The highest mean queen conch count of `r highest_mean_conch` per site was found in `r highest_mean_conch_year_str`, 
+compared to the overall mean queen conch count of `r overall_mean_conch`. 
+The highest median (middle value) queen conch count of `r highest_median_conch` per site was found in 
+`r highest_median_conch_year_str`, 
+compared to the overall median queen conch count of `r overall_median_conch` (Table 2). \
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create summary dfs for Figure 2 ---------------------------
+summary_transect <- df_merged %>%
+  group_by(Date.x, `Site ID`, Transect, Section, Year) %>%
+  summarize(Conch_Count_Transect = sum(`Conch Count`)) %>%
+  ungroup()
+summary_site <- summary_transect %>%
+  group_by(`Site ID`, Section, Year) %>%
+  summarize(
+    Num_Transects = n(),
+    Conch_Count_Site = sum(Conch_Count_Transect),
+    Mean_Conch_Per_Transect = mean(Conch_Count_Transect),
+    Median_Conch_Per_Transect = median(Conch_Count_Transect),
+    Min_Conch_Per_Transect = min(Conch_Count_Transect),
+    Max_Conch_Per_Transect = max(Conch_Count_Transect)
+  )
+mean_per_site <- summary_site %>%
+  group_by(Section, Year) %>%
+  summarize(Mean_Conch_Per_Site = mean(Conch_Count_Site))
+
+# Create panels for Figure 2 ---------------------------
+max_y <- max(summary_site$Conch_Count_Site, na.rm = TRUE)
+A <- ggplot(
+  filter(summary_site, Year == study1_year),
+  aes(x = Section, y = Conch_Count_Site, fill = Section)
+) +
+  geom_boxplot(fill = "white") +
+  geom_point(
+    data = filter(mean_per_site, Year == study1_year),
+    aes(x = Section, y = Mean_Conch_Per_Site),
+    size = 5, shape = 2, stroke = 1
+  ) +
+  theme_custom +
+  theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+  ylab("Conch per Site") +
+  guides(fill = "none") +
+  labs(title = "A", subtitle = study1_year) +
+  scale_y_continuous(limits = c(0, max_y))
+B <- ggplot(
+  filter(summary_site, Year == study2_year),
+  aes(x = Section, y = Conch_Count_Site, fill = Section)
+) +
+  geom_boxplot(fill = "white") +
+  geom_point(
+    data = filter(mean_per_site, Year == study2_year),
+    aes(x = Section, y = Mean_Conch_Per_Site),
+    size = 5, shape = 2, stroke = 1
+  ) +
+  theme_custom +
+  theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+  ylab("") +
+  guides(fill = "none") +
+  labs(title = "B", subtitle = study2_year) +
+  scale_y_continuous(limits = c(0, max_y))
+
+# Conditionally assemble Figure 2 ---------------------------
+if (!is.null(params$datafile3)) {
+  C <- ggplot(
+    filter(summary_site, Year == study3_year),
+    aes(x = Section, y = Conch_Count_Site, fill = Section)
+  ) +
+    geom_boxplot(fill = "white") +
+    geom_point(
+      data = filter(mean_per_site, Year == study3_year),
+      aes(x = Section, y = Mean_Conch_Per_Site),
+      size = 5, shape = 2, stroke = 1
+    ) +
+    theme_custom +
+    theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+    ylab("") +
+    guides(fill = "none") +
+    labs(title = "C", subtitle = study3_year) +
+    scale_y_continuous(limits = c(0, max_y))
+  if (!is.null(params$datafile4)) {
+    D <- ggplot(
+      filter(summary_site, Year == study4_year),
+      aes(x = Section, y = Conch_Count_Site, fill = Section)
+    ) +
+      geom_boxplot(fill = "white") +
+      geom_point(
+        data = filter(mean_per_site, Year == study4_year),
+        aes(x = Section, y = Mean_Conch_Per_Site),
+        size = 5, shape = 2, stroke = 1
+      ) +
+      theme_custom +
+      theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+      ylab("") +
+      guides(fill = "none") +
+      labs(title = "D", subtitle = study4_year) +
+      scale_y_continuous(limits = c(0, max_y))
+    figure2 <- ggarrange(A, B, C, D)
+  } else {
+    figure2 <- ggarrange(A, B, C)
+  }
+} else {
+  figure2 <- ggarrange(A, B)
+}
+if (!is.null(params$datafile3) & !is.null(params$datafile4)) {
+  datafile3_fig2_caption <- paste0(" and ", study3_year, " (C) and ", study4_year, " (D)")
+} else if (!is.null(params$datafile3)) {
+  datafile3_fig2_caption <- paste0(" and ", study3_year, " (C)")
+} else {
+  datafile3_fig2_caption <- ""
+}
+```
+
+
+```{r figure2, fig.width=6, fig.height=5, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Distribution of queen conch counts for data from `r study_year` 
+at Turneffe Atoll Marine Reserve. 
+Boxplots of conch counts per site divided by section with means indicated with triangles in 
+`r study1_year` (A) and `r study2_year` (B)`r datafile3_fig2_caption`. 
+For all boxplots, the box encompasses 50% of the data, 
+and the whiskers span the calculated minima to maxima. 
+The bar inside the box represents the median.\
+
+
+**Table 2.**  Table of summary statistics for conch counts per site in `r study_year` at Turneffe Atoll Marine Reserve. 
+Summary statistics include mean, minimum, first quartile, median, third quartile, maximum, variance, and standard deviation.\
+
+
+```{r table2, echo = FALSE}
+df_table2
+```
+
+<br>
+
+
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3_percent <- df_merged %>%
+  group_by(Year) %>%
+  summarize(
+    Type = "(%)",
+    `Legal (≥ 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal (< 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Possibly Mature (≥ 4 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Probably Mature (≥ 15 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Possibly Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Probably Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(100 * sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE) / sum(`Conch Count`), 0)
+  ) %>%
+  pivot_longer(
+    cols = -c(Year, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_counts <- df_merged %>%
+  group_by(Year) %>%
+  summarize(
+    Type = "(#)",
+    `Legal (≥ 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal (< 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE), 1),
+    `Possibly Mature (≥ 4 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE), 1),
+    `Probably Mature (≥ 15 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE), 1),
+    `Legal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Possibly Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Probably Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE), 1)
+  ) %>%
+  pivot_longer(
+    cols = -c(Year, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_total_percent <- df_merged %>%
+  summarize(
+    Year = "Overall",
+    Type = "(%)",
+    `Legal (≥ 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal (< 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Possibly Mature (≥ 4 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Probably Mature (≥ 15 mm lip)` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Possibly Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Legal, Probably Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Sublegal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(100 * sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE) / sum(`Conch Count`), 0)
+  ) %>%
+  pivot_longer(
+    cols = -c(Year, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_total_counts <- df_merged %>%
+  summarize(
+    Year = "Overall",
+    Type = "(#)",
+    `Legal (≥ 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal (< 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0], na.rm = TRUE), 1),
+    `Possibly Mature (≥ 4 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4], na.rm = TRUE), 1),
+    `Probably Mature (≥ 15 mm lip)` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15], na.rm = TRUE), 1),
+    `Legal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Possibly Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Legal, Probably Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
+    `Sublegal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE), 1),
+    `Samba (17.5-17.8cm, 4-6mm lip)` = round(sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 4 &
+        `Lip Thickness (mm)` <= 6 &
+        `Shell Length (in)` >= 6.89 &
+        `Shell Length (in)` <= 7
+    ], na.rm = TRUE), 1)
+  ) %>%
+  pivot_longer(
+    cols = -c(Year, Type),
+    names_to = "Attribute",
+    values_to = "Value"
+  )
+df_table3_bound <- bind_rows(df_table3_percent, df_table3_counts, df_table3_total_percent, df_table3_total_counts)
+df_table3 <- df_table3_bound %>%
+  pivot_wider(names_from = Type, values_from = Value) %>%
+  mutate(Combined = paste0(`(%)`, "%, (", `(#)`, ")")) %>%
+  select(Year, Attribute, Combined) %>%
+  pivot_wider(names_from = Year, values_from = Combined)
+
+# Prepare dynamic variables for Table 3 ---------------------------
+maximum_legal <- max(filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Value, na.rm = TRUE)
+maximum_legal_year <- filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Year[which.max(filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Value)]
+legal_overall <- filter(df_table3_total_percent, Attribute == "Legal (≥ 17.8 cm)")$Value
+maximum_lipped <- max(filter(df_table3_percent, Attribute == "Lipped")$Value, na.rm = TRUE)
+maximum_lipped_year <- filter(df_table3_percent, Attribute == "Lipped")$Year[which.max(filter(df_table3_percent, Attribute == "Lipped")$Value)]
+lipped_overall <- filter(df_table3_total_percent, Attribute == "Lipped")$Value
+maximum_legal_lipped <- max(filter(df_table3_percent, Attribute == "Legal, Lipped")$Value, na.rm = TRUE)
+maximum_legal_lipped_year <- filter(df_table3_percent, Attribute == "Legal, Lipped")$Year[which.max(filter(df_table3_percent, Attribute == "Legal, Lipped")$Value)]
+legal_lipped_overall <- filter(df_table3_total_percent, Attribute == "Legal, Lipped")$Value
+```
+
+
+The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in `r maximum_legal_year` with `r maximum_legal`%, compared to the overall proportion of `r legal_overall`%. 
+The highest proportion of lipped queen conch was found in `r maximum_lipped_year` with `r maximum_lipped`%, compared to the overall proportion of `r lipped_overall`%. 
+The highest proportion of legal and lipped queen conch was found in the `r maximum_legal_lipped_year` with `r maximum_legal_lipped`%, compared to the overall proportion of `r legal_lipped_overall`% (Table 3; Figure 3). \
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create df for Figure 3 ---------------------------
+df_fig3 <- df_merged %>%
+  mutate(
+    `Shell Length (cm)` = `Shell Length (in)` * 2.54,
+    Lipped = factor(
+      case_when(
+        is.na(`Lip Thickness (mm)`) ~ "Not Lipped",
+        `Lip Thickness (mm)` > 0 ~ "Lipped",
+        TRUE ~ "Not Lipped"
+      ),
+      levels = c("Not Lipped", "Lipped")
+    )
+  )
+
+# Create panels for Figure 3 ---------------------------
+
+A <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "A", subtitle = study1_year) +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+B <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  labs(title = "B", subtitle = study2_year) +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+
+# Conditionally assemble Figure 2 ---------------------------
+if (!is.null(params$datafile3)) {
+  C <- ggplot(filter(df_fig3, Year == study3_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "C", subtitle = study3_year) +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  if (!is.null(params$datafile4)) {
+    D <- ggplot(filter(df_fig3, Year == study4_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+      theme_custom +
+      labs(title = "D", subtitle = study4_year) +
+      scale_fill_manual(values = c(palette[3], palette[4])) +
+      geom_vline(xintercept = 17.8, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+    figure3 <- ggarrange(A, B, C, D)
+  } else {
+    figure3 <- ggarrange(A, B, C)
+  }
+} else {
+  figure3 <- ggarrange(A, B)
+}
+
+# Assemble end of Figure 3 caption ---------------------------
+if (!is.null(params$datafile3) & !is.null(params$datafile4)) {
+  datafile3_fig3_caption <- paste0(" and ", study3_year, " (C) and ", study4_year, " (D)")
+} else if (!is.null(params$datafile3)) {
+  datafile3_fig3_caption <- paste0(" and ", study3_year, " (C)")
+} else {
+  datafile3_fig3_caption <- ""
+}
+```
+
+
+```{r figure3, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) 
+for data from `r study1_year` (A), `r study2_year` (B)`r datafile3_fig3_caption` at Turneffe Atoll Marine Reserve. 
+The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
+
+<br>
+
+
+**Table 3.**  Table of queen conch survey attributes at Turneffe Atoll Marine Reserve 
+for data from `r study_year`. 
+Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
+
+
+```{r table3, echo = FALSE}
+df_table3
+```
+
+
+<br>
+
+
+```{r table4_prep, echo = FALSE, include = FALSE}
+# Create df for Table 4 ---------------------------
+df_table4_lengths <- df_merged %>%
+  group_by(Year) %>%
+  summarize(
+    `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
+    `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
+  ) %>%
+  select(Year, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+
+df_table4_total_lengths <- df_merged %>%
+  mutate(
+    Year = "Overall",
+    `Mean Shell Length` = round(mean(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` > 0], na.rm = TRUE) * 2.54, 1),
+    `Mean Shell Length (non-Lipped)` = round(mean(`Shell Length (in)`[`Lip Thickness (mm)` == 0 | is.na(`Lip Thickness (mm)`)], na.rm = TRUE) * 2.54, 1),
+    `Median Shell Length` = round(median(`Shell Length (in)`, na.rm = TRUE) * 2.54, 1)
+  ) %>%
+  select(Year, `Mean Shell Length`, `Mean Shell Length (Lipped)`, `Mean Shell Length (non-Lipped)`, `Median Shell Length`)
+
+df_table4 <- bind_rows(df_table4_lengths, df_table4_total_lengths) %>%
+  distinct()
+
+# Prepare dynamic variables for Table 4 ---------------------------
+maximum_length <- max(df_table4_lengths$`Mean Shell Length`, na.rm = TRUE)
+maximum_length_year <- max(df_table4_lengths$Year[which.max(df_table4_lengths$`Mean Shell Length`)], na.rm = TRUE)
+maximum_length_overall <- max(filter(df_table4_total_lengths, Year == "Overall")$`Mean Shell Length`, na.rm = TRUE)
+```
+
+The highest mean queen conch shell length was found in `r maximum_length_year`, being `r maximum_length`cm. 
+This is compared to the overall mean length of `r maximum_length_overall` (Table 4).
+
+
+
+**Table 4.**  Table of queen conch shell lengths (cm) for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
+ NO is north, NE is northeast, SE is southeast, and SW is southwest. \
+
+
+```{r table4, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+df_table4
+```
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the queen conch LAMP survey data from `r study_year`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the ecological value of the atoll.\
 
 
 ## Acknowledgments
 
-List of data collectors \
 
-Other acknowledgements \
+
+```{r collectors_prep, echo = FALSE, include = FALSE}
+# Create dynamic variable for acknowledgements ---------------------------
+collectors <- df_merged$`Recorder(s)` %>%
+  as.character() %>%
+  na.omit() %>%
+  strsplit(", ") %>%
+  unlist()
+if (length(collectors) == 0) {
+  collectors_string <- ""
+} else {
+  collectors <- unique(collectors)
+  collectors_string <- ifelse(length(collectors) > 1,
+    paste0(": ", knitr::combine_words(setdiff(collectors, "Missing"))),
+    ""
+  )
+}
+```
+
+
+Thank you to the data collectors who contributed to this project`r collectors_string`.\
 
 
 ## Literature Cited
 
-List of citations \ 
+Acosta, C. A. (2004). Glover’s Reef long-term atoll monitoring program (LAMP). Glover’s Reef Marine Research Station, Wildlife Conservation Society, Belize.
 
+Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
 
-## Appendix
+Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
 
-Additional details/tables/figures \
+Belize Geomatics. (2022). Turneffe Atoll Areas, Belize Replenishment Zones Project [Dataset].
+
+Egan, B. D. (1985). Aspects of the reproductive biology of Strombus gigas. [Masters Thesis]. University of British Columbia, Vancouver.
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Foley, J. R., & Takahashi, M. (2017). Shell Lip Thickness Is the Most Reliable Proxy to Sexual Maturity in Queen Conch (Lobatus gigas) of Port Honduras Marine Reserve, Belize; Informing Management to Reduce the Risk of Growth Overfishing. Frontiers in Marine Science, 4, 179. https://doi.org/10.3389/fmars.2017.00179
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Mumby, P. J., & Harborne, A. R. (1999). Classification scheme for marine habitats of Belize, 5th draft. UNDP/GEF Belize Coastal Zone Management Project.
+
+NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Stoner, A. W., Mueller, K. W., Brown-Peterson, N. J., Davis, M. H., & Booker, C. J. (2012). Maturation and age in queen conch (Strombus gigas): Urgent need for changes in harvest criteria. Fisheries Research, 131–133, 76–84. https://doi.org/10.1016/j.fishres.2012.07.017
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+Zale, A. V., Bramblett, R. G., & Anderson, A. R. (2016). Baseline population abundance estimate and development of a monitoring plan for Queen Conch at Turneffe Atoll Marine Reserve. Submitted to Turneffe Atoll Marine Reserve.
+
