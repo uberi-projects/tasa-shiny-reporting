@@ -497,7 +497,9 @@ server <- function(input, output, session) {
                     datafile1_name = input$upload_lamp_multiper1$name,
                     datafile1 = df_upload_lamp_multiper1(),
                     datafile2_name = input$upload_lamp_multiper2$name,
-                    datafile2 = df_upload_lamp_multiper2()
+                    datafile2 = df_upload_lamp_multiper2(),
+                    datafile3_name = input$upload_lamp_multiper3$name,
+                    datafile3 = df_upload_lamp_multiper3()
                 ),
                 envir = new.env(parent = globalenv())
             )

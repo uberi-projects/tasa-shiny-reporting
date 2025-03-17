@@ -10,6 +10,8 @@ params:
   datafile1_name: "Unknown"
   datafile2: pressure
   datafile2_name: "Unknown"
+  datafile3: NULL
+  datafile3_name: "Not Chosen"
 ---
 
 ```{r setup, include=FALSE}
@@ -34,13 +36,29 @@ study1_year <- format(study1_start, "%Y")
 study2_start <- min(params$datafile2$Survey_Data$Date, na.rm = TRUE)
 study2_period <- paste0(min(params$datafile2$Survey_Data$Date, na.rm = TRUE), " to ", max(params$datafile2$Survey_Data$Date, na.rm = TRUE))
 study2_year <- format(study2_start, "%Y")
+if (!is.null(params$datafile3)) {
+  study3_start <- min(params$datafile3$Survey_Data$Date, na.rm = TRUE)
+  study3_period <- paste0(study3_start, " to ", max(params$datafile3$Survey_Data$Date, na.rm = TRUE))
+  study3_year <- format(study3_start, "%Y")
+}
 
 # Define overall study period ---------------------------
-study_period <- knitr::combine_words(c(study1_period, study2_period))
-study_year <- knitr::combine_words(c(study1_year, study2_year))
+study_periods <- c(study1_period, study2_period)
+study_years <- c(study1_year, study2_year)
+if (!is.null(params$datafile3)) {
+  study_periods <- c(study_periods, study3_period)
+  study_years <- c(study_years, study3_year)
+}
+study_period <- knitr::combine_words(study_periods)
+study_year <- knitr::combine_words(study_years)
+study_years_count <- length(study_years)
 
 # Define datafiles ---------------------------
-datafiles <- knitr::combine_words(c(params$datafile1_name, params$datafile2_name))
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
 
 # Update Site ID ---------------------------
 update_site_id <- function(df) {
@@ -50,6 +68,10 @@ df_surveys1 <- update_site_id(params$datafile1$Survey_Data)
 df_sites1 <- update_site_id(params$datafile1$Sites)
 df_surveys2 <- update_site_id(params$datafile2$Survey_Data)
 df_sites2 <- update_site_id(params$datafile2$Sites)
+if (!is.null(params$datafile3)) {
+  df_surveys3 <- update_site_id(params$datafile3$Survey_Data)
+  df_sites3 <- update_site_id(params$datafile3$Sites)
+}
 
 # Merge sites and surveys data ---------------------------
 df_merged1 <- df_surveys1 |>
@@ -60,17 +82,41 @@ df_merged2 <- df_surveys2 |>
   left_join(df_sites2, by = "Site ID") |>
   filter(Section != "NW") |>
   mutate(`Conch Count` = as.integer(`Conch Count`), Year = study2_year)
-df_merged <- bind_rows(df_merged1, df_merged2)
+merged_list <- list(df_merged1, df_merged2)
+if (!is.null(params$datafile3)) {
+  df_merged3 <- df_surveys3 |>
+    left_join(df_sites3, by = "Site ID") |>
+    filter(Section != "NW") |>
+    mutate(`Conch Count` = as.integer(`Conch Count`), Year = study3_year)
+  merged_list <- append(merged_list, list(df_merged3))
+}
+df_merged <- bind_rows(merged_list)
+
+# Create dataframe list ---------------------------
+df_list <- list(df_merged1, df_merged2)
+if (!is.null(params$datafile3)) {
+  df_list <- append(df_list, list(df_merged3))
+}
 
 # Count number of sites surveyed ---------------------------
 number_sites1 <- length(unique(df_merged1$`Site ID`))
 number_sites2 <- length(unique(df_merged2$`Site ID`))
-number_sites <- length(unique(c(df_merged1$`Site ID`, df_merged2$`Site ID`)))
-number_sites_common <- length(intersect(df_merged1$`Site ID`, df_merged2$`Site ID`))
+all_sites <- c(df_merged1$`Site ID`, df_merged2$`Site ID`)
+site_sets <- list(df_merged1$`Site ID`, df_merged2$`Site ID`)
+if (!is.null(params$datafile3)) {
+  number_sites3 <- length(unique(df_merged3$`Site ID`))
+  all_sites <- c(all_sites, df_merged3$`Site ID`)
+  site_sets <- append(site_sets, list(df_merged3$`Site ID`))
+}
+number_sites <- length(unique(all_sites))
+number_sites_common <- Reduce(intersect, site_sets) |> length()
 
 # Define samba conch ---------------------------
-samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
+samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch,
+are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
 ```
+
+
 
 # Turneffe Atoll Queen Conch LAMP Dataset Report: `r study_year`
 
@@ -148,7 +194,7 @@ Additionally, each site is categorized within a specific section of TAMR, either
 The survey periods for this report’s dataset extend from `r study_period` at TAMR. 
 Sampling for queen conch LAMP is ideally done during summer before harvest. 
 `r number_sites1` sites were sampled in `r study1_year`, and `r number_sites2` were sampled in `r study2_year`, 
-including `r number_sites` unique sites, and `r number_sites_common` common to `r "both"` sampled years. 
+including `r number_sites` unique sites, and `r number_sites_common` common to the `r study_years_count` sampled years. 
 At each site, four 50m by 4m belt transects were surveyed by data collectors either diving, snorkeling, or wading depending on the depth. 
 Transects were placed parallel to each other 10m apart and parallel to wind direction where possible. 
 Each transect line was established using one white 3/16” non-stretchable sinking Dacron rope, which was pulled taut and anchored at either end with buoy lines on each anchor extended to the surface for retrieval. 
@@ -190,90 +236,80 @@ For sites where latitude/longitude values varied between years, the mean latitud
 ## Results
 
 ```{r table1_prep, echo = FALSE, include = FALSE}
-# Create df for Table 1 ---------------------------
-df_table1_1 <- df_merged1 %>%
-  group_by(Section, Year) %>%
-  summarise(
-    `Number Sites` = length(unique(`Site ID`)),
-    `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    `Section Hectares` = `Number Sites` * 0.08,
-    `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
-  ) %>%
-  bind_rows(
-    df_merged1 %>%
-      group_by(Year) %>%
+# Create function to make Table 1 and dynamic variables ---------------------------
+generate_table1 <- function(df_list) {
+  df_table_list <- list()
+  total_conch_by_dataset <- list()
+  section_sites <- list()
+  sections <- c("NO", "NE", "SW", "SE")
+  for (i in seq_along(df_list)) {
+    df <- df_list[[i]]
+    df_table1 <- df %>%
+      group_by(Section, Year) %>%
       summarise(
-        Section = "Annual Total",
         `Number Sites` = length(unique(`Site ID`)),
-        `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE)
+        `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
+        .groups = "drop"
       ) %>%
       mutate(
         `Section Hectares` = `Number Sites` * 0.08,
         `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
-      )
-  )
-df_table1_2 <- df_merged2 %>%
-  group_by(Section, Year) %>%
-  summarise(
-    `Number Sites` = length(unique(`Site ID`)),
-    `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    `Section Hectares` = `Number Sites` * 0.08,
-    `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
-  ) %>%
-  bind_rows(
-    df_merged2 %>%
-      group_by(Year) %>%
-      summarise(
-        Section = "Annual Total",
-        `Number Sites` = length(unique(`Site ID`)),
-        `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE)
       ) %>%
-      mutate(
-        `Section Hectares` = `Number Sites` * 0.08,
-        `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+      bind_rows(
+        df %>%
+          group_by(Year) %>%
+          summarise(
+            Section = "Annual Total",
+            `Number Sites` = length(unique(`Site ID`)),
+            `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE)
+          ) %>%
+          mutate(
+            `Section Hectares` = `Number Sites` * 0.08,
+            `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+          )
       )
-  )
-df_table1_overall <- df_merged %>%
-  summarise(
-    Year = "Grand Total",
-    Section = "Grand Total",
-    `Number Sites` = length(unique(`Site ID`)),
-    `Queen Conch Count` = sum(`Conch Count`, na.rm = TRUE),
-    `Section Hectares` = filter(df_table1_1, Section == "Annual Total")$`Section Hectares` + filter(df_table1_2, Section == "Annual Total")$`Section Hectares`,
-    .groups = "drop"
-  ) %>%
-  mutate(
-    `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
-  )
-df_table1 <- bind_rows(df_table1_1, df_table1_2, df_table1_overall)
+    df_table_list[[i]] <- df_table1
+    total_conch_by_dataset[[paste0("total_conch", i)]] <- filter(df_table1, Section == "Annual Total")$`Queen Conch Count`
+    for (section in sections) {
+      site_count <- filter(df_table1, Section == section)$`Number Sites`
+      section_sites[[paste0(section, "_sites", i)]] <- site_count
+    }
+  }
+  df_table1_overall <- bind_rows(df_table_list) %>%
+    summarise(
+      Year = "Grand Total",
+      Section = "Grand Total",
+      `Number Sites` = sum(`Number Sites`),
+      `Queen Conch Count` = sum(`Queen Conch Count`, na.rm = TRUE),
+      `Section Hectares` = sum(`Section Hectares`),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      `Conch / Hectare` = round(`Queen Conch Count` / `Section Hectares`, 0)
+    )
+  df_table1_plot <- bind_rows(df_table_list, df_table1_overall)
+  return(c(
+    list(
+      df_table1_plot = df_table1_plot,
+      total_conch = filter(df_table1_plot, Section == "Grand Total")$`Queen Conch Count`,
+      total_sites = filter(df_table1_plot, Section == "Grand Total")$`Number Sites`
+    ),
+    total_conch_by_dataset,
+    section_sites
+  ))
+}
 
-# Prepare dynamic variables for Table 1 ---------------------------
-total_conch <- filter(df_table1, Section == "Grand Total")$`Queen Conch Count`
-total_conch1 <- filter(df_table1_1, Section == "Annual Total")$`Queen Conch Count`
-total_conch2 <- filter(df_table1_2, Section == "Annual Total")$`Queen Conch Count`
-total_sites <- filter(df_table1, Section == "Grand Total")$`Number Sites`
-NO_sites1 <- filter(df_table1_1, Section == "NO")$`Number Sites`
-NE_sites1 <- filter(df_table1_1, Section == "NE")$`Number Sites`
-SW_sites1 <- filter(df_table1_1, Section == "SW")$`Number Sites`
-SE_sites1 <- filter(df_table1_1, Section == "SE")$`Number Sites`
-NO_sites2 <- filter(df_table1_2, Section == "NO")$`Number Sites`
-NE_sites2 <- filter(df_table1_2, Section == "NE")$`Number Sites`
-SW_sites2 <- filter(df_table1_2, Section == "SW")$`Number Sites`
-SE_sites2 <- filter(df_table1_2, Section == "SE")$`Number Sites`
+# Create Table 1 ---------------------------
+df_table1_list <- generate_table1(df_list)
+df_table1 <- df_table1_list$df_table1_plot
 ```
 
 
-In total, in `r "2"` years, `r total_conch` queen conch were counted. 
-In `r study1_year`, `r NE_sites1` sites were sampled in the Northeast, `r NO_sites1` in the North, 
-`r SE_sites1` in the Southeast, and `r SW_sites1` in the Southwest, with `r total_conch1` counted conch. 
-In `r study2_year`, `r NE_sites2` sites were sampled in the Northeast, `r NO_sites2` in the North, 
-`r SE_sites2` in the Southeast, and `r SW_sites2` in the Southwest, with `r total_conch2` counted conch. 
+In total, in `r study_years_count` years, `r df_table1_list$total_conch` queen conch were counted. 
+In `r study1_year`, `r df_table1_list$NE_sites1` sites were sampled in the Northeast, `r df_table1_list$NO_sites1` in the North, 
+`r df_table1_list$SE_sites1` in the Southeast, and `r df_table1_list$SW_sites1` in the Southwest, with `r df_table1_list$total_conch1` counted conch. 
+In `r study2_year`, `r df_table1_list$NE_sites2` sites were sampled in the Northeast, `r df_table1_list$NO_sites2` in the North, 
+`r df_table1_list$SE_sites2` in the Southeast, and `r df_table1_list$SW_sites2` in the Southwest, with `r df_table1_list$total_conch2` counted conch. 
 (Table 1).\
 
 
@@ -743,7 +779,7 @@ This report supports the aims of the Long-term Atoll Monitoring Program by offer
 
 ```{r collectors_prep, echo = FALSE, include = FALSE}
 # Create dynamic variable for acknowledgements ---------------------------
-collectors <- df_merged1$`Recorder(s)` %>%
+collectors <- df_merged$`Recorder(s)` %>%
   as.character() %>%
   na.omit() %>%
   strsplit(", ") %>%
