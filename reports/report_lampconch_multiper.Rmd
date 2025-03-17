@@ -302,6 +302,20 @@ generate_table1 <- function(df_list) {
 # Create Table 1 ---------------------------
 df_table1_list <- generate_table1(df_list)
 df_table1 <- df_table1_list$df_table1_plot
+
+# Create optional datafile summaries ---------------------------
+if (!is.null(params$datafile3)) {
+  datafile3_table1_results_text <- paste0(
+    "In", study3_year,
+    ", ", df_table1_list$NE_sites3, " sites were sampled in the Northeast, ",
+    df_table1_list$NO_sites3, " in the North, ",
+    df_table1_list$SE_sites3, " in the Southeast, and ",
+    df_table1_list$SW_sites3, " in the Southwest, with ",
+    df_table1_list$total_conch3, " counted conch"
+  )
+} else {
+  datafile3_table1_results_text <- ""
+}
 ```
 
 
@@ -310,7 +324,7 @@ In `r study1_year`, `r df_table1_list$NE_sites1` sites were sampled in the North
 `r df_table1_list$SE_sites1` in the Southeast, and `r df_table1_list$SW_sites1` in the Southwest, with `r df_table1_list$total_conch1` counted conch. 
 In `r study2_year`, `r df_table1_list$NE_sites2` sites were sampled in the Northeast, `r df_table1_list$NO_sites2` in the North, 
 `r df_table1_list$SE_sites2` in the Southeast, and `r df_table1_list$SW_sites2` in the Southwest, with `r df_table1_list$total_conch2` counted conch. 
-(Table 1).\
+`r datafile3_table1_results_text` (Table 1).\
 
 
 **Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_year`. 
@@ -357,53 +371,72 @@ df_table2 <- df_sites_summary %>%
   )
 
 # Prepare dynamic variables for Table 2 ---------------------------
-overall_skewness1 <- round(skewness(filter(df_sites_summary, Year == study1_year)$`Site Conch Count`), 2)
-overall_skewness2 <- round(skewness(filter(df_sites_summary, Year == study2_year)$`Site Conch Count`), 2)
-overall_kurtosis1 <- round(kurtosis(filter(df_sites_summary, Year == study1_year)$`Site Conch Count`), 2)
-overall_kurtosis2 <- round(kurtosis(filter(df_sites_summary, Year == study2_year)$`Site Conch Count`), 2)
-skew_direction1 <- ifelse(overall_skewness1 > 0, "positive", "negative")
-skew_direction2 <- ifelse(overall_skewness2 > 0, "positive", "negative")
-skew_intensity1 <- case_when(abs(overall_skewness1) > 3 ~ "highly", abs(overall_skewness1) > 1 ~ "moderately", abs(overall_skewness1) <= 1 ~ "slightly")
-skew_intensity2 <- case_when(abs(overall_skewness2) > 3 ~ "highly", abs(overall_skewness2) > 1 ~ "moderately", abs(overall_skewness2) <= 1 ~ "slightly")
-skew_presence_interpretation1 <- case_when(
-  skew_direction1 == "positive" & skew_intensity1 == "highly" ~ "absent or found in low numbers",
-  skew_direction1 == "positive" ~ "found in low numbers",
-  skew_direction1 == "negative" ~ "found in high numbers"
-)
-skew_presence_interpretation2 <- case_when(
-  skew_direction2 == "positive" & skew_intensity2 == "highly" ~ "absent or found in low numbers",
-  skew_direction2 == "positive" ~ "found in low numbers",
-  skew_direction2 == "negative" ~ "found in high numbers"
-)
-kurtosis_classification1 <- case_when(
-  overall_kurtosis1 > 2.5 & overall_kurtosis1 < 3.5 ~ "normal distribution",
-  overall_kurtosis1 > 10 ~ "highly leptokurtic distribution",
-  overall_kurtosis1 >= 3.5 ~ "leptokurtic distribution",
-  overall_kurtosis1 <= 2.5 ~ "platykurtic distribution"
-)
-kurtosis_classification2 <- case_when(
-  overall_kurtosis2 > 2.5 & overall_kurtosis2 < 3.5 ~ "normal distribution",
-  overall_kurtosis2 > 10 ~ "highly leptokurtic distribution",
-  overall_kurtosis2 >= 3.5 ~ "leptokurtic distribution",
-  overall_kurtosis2 <= 2.5 ~ "platykurtic distribution"
-)
-kurtosis_presence_interpretation1 <- case_when(
-  overall_kurtosis1 > 2.5 & overall_kurtosis1 < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
-  overall_kurtosis1 > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
-  overall_kurtosis1 >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
-  overall_kurtosis1 <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
-)
-kurtosis_presence_interpretation2 <- case_when(
-  overall_kurtosis2 > 2.5 & overall_kurtosis2 < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
-  overall_kurtosis2 > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
-  overall_kurtosis2 >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
-  overall_kurtosis2 <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
-)
-
+calculate_skew_kurtosis <- function(df_sites_summary, years) {
+  skewness_results <- list()
+  kurtosis_results <- list()
+  skew_direction <- list()
+  skew_intensity <- list()
+  skew_presence_interpretation <- list()
+  kurtosis_classification <- list()
+  kurtosis_presence_interpretation <- list()
+  for (year in years) {
+    skew <- round(skewness(filter(df_sites_summary, Year == year)$`Site Conch Count`), 2)
+    kurt <- round(kurtosis(filter(df_sites_summary, Year == year)$`Site Conch Count`), 2)
+    skewness_results[[year]] <- skew
+    kurtosis_results[[year]] <- kurt
+    skew_direction[[year]] <- ifelse(skew > 0, "positive", "negative")
+    skew_intensity[[year]] <- case_when(
+      abs(skew) > 3 ~ "highly",
+      abs(skew) > 1 ~ "moderately",
+      abs(skew) <= 1 ~ "slightly"
+    )
+    skew_presence_interpretation[[year]] <- case_when(
+      skew_direction[[year]] == "positive" & skew_intensity[[year]] == "highly" ~ "absent or found in low numbers",
+      skew_direction[[year]] == "positive" ~ "found in low numbers",
+      skew_direction[[year]] == "negative" ~ "found in high numbers"
+    )
+    kurtosis_classification[[year]] <- case_when(
+      kurt > 2.5 & kurt < 3.5 ~ "normal distribution",
+      kurt > 10 ~ "highly leptokurtic distribution",
+      kurt >= 3.5 ~ "leptokurtic distribution",
+      kurt <= 2.5 ~ "platykurtic distribution"
+    )
+    kurtosis_presence_interpretation[[year]] <- case_when(
+      kurt > 2.5 & kurt < 3.5 ~ "most conch counts being expected to follow that pattern with some outliers",
+      kurt > 10 ~ "extreme outliers in counts being expected, potentially many times the median in value",
+      kurt >= 3.5 ~ "outliers in counts being expected, potentially many times the median in value",
+      kurt <= 2.5 ~ "most conch counts being expected to follow that pattern with few outliers"
+    )
+  }
+  return(list(
+    overall_skewness = skewness_results,
+    overall_kurtosis = kurtosis_results,
+    skew_direction = skew_direction,
+    skew_intensity = skew_intensity,
+    skew_presence_interpretation = skew_presence_interpretation,
+    kurtosis_classification = kurtosis_classification,
+    kurtosis_presence_interpretation = kurtosis_presence_interpretation
+  ))
+}
+skew_kurtosis_list <- calculate_skew_kurtosis(df_sites_summary, study_years)
+if (!is.null(params$datafile3)) {
+  datafile3_skew_kurtosis_text <- paste0(
+    "The distribution of Queen Conch counts in ",
+    study3_year, " has a ", skew_kurtosis_list$skew_intensity[[study3_year]], " ",
+    skew_kurtosis_list$skew_direction[[study3_year]], " skew of ",
+    skew_kurtosis_list$overall_skewness[[study3_year]], " and a ",
+    skew_kurtosis_list$kurtosis_classification[[study3_year]], " kurtosis of ",
+    skew_kurtosis_list$overall_kurtosis[[study3_year]], ", ",
+    "suggesting that Queen Conch counts are typically ",
+    skew_kurtosis_list$skew_presence_interpretation[[study3_year]], " on transects, ",
+    "with ", skew_kurtosis_list$kurtosis_presence_interpretation[[study3_year]]
+  )
+} else {
+  datafile3_skew_kurtosis_text <- ""
+}
 maximum_conch <- max(df_sites_summary$`Site Conch Count`, na.rm = TRUE)
 maximum_conch_site <- df_sites_summary$`Site ID`[which.max(df_sites_summary$`Site Conch Count`)]
 maximum_conch_year <- df_sites_summary$Year[which.max(df_sites_summary$`Site Conch Count`)]
-
 highest_mean_conch <- max(filter(df_table2, Year != "Overall")$Mean, na.rm = TRUE)
 highest_mean_conch_year <- df_table2 %>%
   filter(Mean == highest_mean_conch) %>%
@@ -412,7 +445,6 @@ highest_mean_conch_year <- df_table2 %>%
 highest_mean_conch_year_plural <- ifelse(length(highest_mean_conch_year) > 1, "s", "")
 highest_mean_conch_year_str <- knitr::combine_words(highest_mean_conch_year)
 overall_mean_conch <- filter(df_table2, Year == "Overall")$Mean
-
 highest_median_conch <- max(df_table2$Median, na.rm = TRUE)
 highest_median_conch_year <- df_table2 %>%
   filter(Median == highest_median_conch) %>%
@@ -424,12 +456,17 @@ overall_median_conch <- filter(df_table2, Year == "Overall")$Median
 ```
 
 
-The distribution of Queen Conch counts in `r study1_year` has a `r skew_intensity1` `r skew_direction1` skew of `r overall_skewness1` 
-and a `r kurtosis_classification1` kurtosis of `r overall_kurtosis1`, 
-suggesting that Queen Conch counts are typically `r skew_presence_interpretation1` on transects, with `r kurtosis_presence_interpretation1`. 
-The distribution of Queen Conch counts in `r study2_year` has a `r skew_intensity2` `r skew_direction2` skew of `r overall_skewness2` 
-and a `r kurtosis_classification2` kurtosis of `r overall_kurtosis2`, 
-suggesting that Queen Conch counts are typically `r skew_presence_interpretation2` on transects, with `r kurtosis_presence_interpretation2` (Table 2; Figure 2). 
+The distribution of Queen Conch counts in `r study1_year` has a 
+`r skew_kurtosis_list$skew_intensity[[study1_year]]` `r skew_kurtosis_list$skew_direction[[study1_year]]` skew of `r skew_kurtosis_list$overall_skewness[[study1_year]]` 
+and a `r skew_kurtosis_list$kurtosis_classification[[study1_year]]` kurtosis of `r skew_kurtosis_list$overall_kurtosis[[study1_year]]`, 
+suggesting that Queen Conch counts are typically `r skew_kurtosis_list$skew_presence_interpretation[[study1_year]]` on transects, 
+with `r skew_kurtosis_list$kurtosis_presence_interpretation[[study1_year]]`. 
+The distribution of Queen Conch counts in `r study2_year` has a 
+`r skew_kurtosis_list$skew_intensity[[study2_year]]` `r skew_kurtosis_list$skew_direction[[study2_year]]` skew of `r skew_kurtosis_list$overall_skewness[[study2_year]]` 
+and a `r skew_kurtosis_list$kurtosis_classification[[study2_year]]` kurtosis of `r skew_kurtosis_list$overall_kurtosis[[study2_year]]`, 
+suggesting that Queen Conch counts are typically `r skew_kurtosis_list$skew_presence_interpretation[[study2_year]]` on transects, 
+with `r skew_kurtosis_list$kurtosis_presence_interpretation[[study2_year]]`. 
+`r datafile3_skew_kurtosis_text` (Table 2; Figure 2). 
 
 The maximum queen conch site count of `r maximum_conch` was found at site `r maximum_conch_site` in `r maximum_conch_year`. 
 The highest mean queen conch count of `r highest_mean_conch` per site was found in `r highest_mean_conch_year_str`, 
@@ -489,17 +526,42 @@ B <- ggplot(
   ) +
   theme_custom +
   theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
-  ylab("Conch per Site") +
+  ylab("") +
   guides(fill = "none") +
   labs(title = "B", subtitle = study2_year) +
   scale_y_continuous(limits = c(0, max_y))
 
-# Assemble Figure 2 ---------------------------
-figure2 <- ggarrange(A, B)
+# Conditionally assemble Figure 2 ---------------------------
+if (!is.null(params$datafile3)) {
+  C <- ggplot(
+    filter(summary_site, Year == study3_year),
+    aes(x = Section, y = Conch_Count_Site, fill = Section)
+  ) +
+    geom_boxplot(fill = "white") +
+    geom_point(
+      data = filter(mean_per_site, Year == study3_year),
+      aes(x = Section, y = Mean_Conch_Per_Site),
+      size = 5, shape = 2, stroke = 1
+    ) +
+    theme_custom +
+    theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+    ylab("") +
+    guides(fill = "none") +
+    labs(title = "C", subtitle = study3_year) +
+    scale_y_continuous(limits = c(0, max_y))
+  figure2 <- ggarrange(A, B, C)
+} else {
+  figure2 <- ggarrange(A, B)
+}
+if (!is.null(params$datafile3)) {
+  datafile3_fig2_caption <- paste0(", and ", study3_year, " (C)")
+} else {
+  datafile3_fig2_caption <- ""
+}
 ```
 
 
-```{r figure2, fig.width=6, fig.height=4, fig.align = 'left', echo = FALSE}
+```{r figure2, fig.width=6, fig.height=5, fig.align = 'left', echo = FALSE}
 figure2
 ```
 
@@ -507,7 +569,7 @@ figure2
 *Figure 2.* Distribution of queen conch counts for data from `r study_year` 
 at Turneffe Atoll Marine Reserve. 
 Boxplots of conch counts per site divided by section with means indicated with triangles in 
-`r study1_year` (A) and `r study2_year` (B). 
+`r study1_year` (A) and `r study2_year` (B)`r datafile3_fig2_caption`. 
 For all boxplots, the box encompasses 50% of the data, 
 and the whiskers span the calculated minima to maxima. 
 The bar inside the box represents the median.\
@@ -667,30 +729,48 @@ df_fig3 <- df_merged %>%
   )
 
 # Create panels for Figure 3 ---------------------------
-A <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+panels <- list()
+panels[["A"]] <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "A", subtitle = study1_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-B <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+panels[["B"]] <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "B", subtitle = study2_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-C <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+if (!is.null(params$datafile3)) {
+  panels[["C"]] <- ggplot(filter(df_fig3, Year == study3_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "C", subtitle = study3_year) +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+}
+last_panel_letter <- LETTERS[length(panels) + 1]
+panels[[last_panel_letter]] <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
-  labs(title = "C", subtitle = "Overall") +
+  labs(title = last_panel_letter, subtitle = "Overall") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
 
 # Assemble Figure 3 ---------------------------
-figure3 <- ggarrange(A, B, C)
+figure3 <- do.call(ggarrange, panels)
+
+# Assemble end of Figure 3 caption ---------------------------
+if (!is.null(params$datafile3)) {
+  fig3_end_caption <- paste0(study3_year, "(C), and overall (D)")
+} else {
+  fig3_end_caption <- ", and overall (C)"
+}
 ```
 
 
@@ -700,7 +780,7 @@ figure3
 
 
 *Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) 
-for data from `r study1_year` (A), `r study2_year` (B), and overall (C) at Turneffe Atoll Marine Reserve. 
+for data from `r study1_year` (A), `r study2_year` (B)`r fig3_end_caption` at Turneffe Atoll Marine Reserve. 
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 <br>
