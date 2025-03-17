@@ -490,8 +490,8 @@ df_table2
 
 ```{r table3_prep, echo = FALSE, include = FALSE}
 # Create df for Table 3 ---------------------------
-df_table3_percent <- df_merged1 %>%
-  group_by(Section) %>%
+df_table3_percent <- df_merged %>%
+  group_by(Year) %>%
   summarize(
     Type = "(%)",
     `Legal (≥ 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
@@ -511,12 +511,12 @@ df_table3_percent <- df_merged1 %>%
     ], na.rm = TRUE) / sum(`Conch Count`), 0)
   ) %>%
   pivot_longer(
-    cols = -c(Section, Type),
+    cols = -c(Year, Type),
     names_to = "Attribute",
     values_to = "Value"
   )
-df_table3_counts <- df_merged1 %>%
-  group_by(Section) %>%
+df_table3_counts <- df_merged %>%
+  group_by(Year) %>%
   summarize(
     Type = "(#)",
     `Legal (≥ 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE), 1),
@@ -536,13 +536,13 @@ df_table3_counts <- df_merged1 %>%
     ], na.rm = TRUE), 1)
   ) %>%
   pivot_longer(
-    cols = -c(Section, Type),
+    cols = -c(Year, Type),
     names_to = "Attribute",
     values_to = "Value"
   )
-df_table3_total_percent <- df_merged1 %>%
+df_table3_total_percent <- df_merged %>%
   summarize(
-    Section = "Overall",
+    Year = "Overall",
     Type = "(%)",
     `Legal (≥ 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
     `Sublegal (< 17.8 cm)` = round(100 * sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
@@ -561,13 +561,13 @@ df_table3_total_percent <- df_merged1 %>%
     ], na.rm = TRUE) / sum(`Conch Count`), 0)
   ) %>%
   pivot_longer(
-    cols = -c(Section, Type),
+    cols = -c(Year, Type),
     names_to = "Attribute",
     values_to = "Value"
   )
-df_table3_total_counts <- df_merged1 %>%
+df_table3_total_counts <- df_merged %>%
   summarize(
-    Section = "Overall",
+    Year = "Overall",
     Type = "(#)",
     `Legal (≥ 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` >= 7], na.rm = TRUE), 1),
     `Sublegal (< 17.8 cm)` = round(sum(`Conch Count`[`Shell Length (in)` < 7], na.rm = TRUE), 1),
@@ -586,7 +586,7 @@ df_table3_total_counts <- df_merged1 %>%
     ], na.rm = TRUE), 1)
   ) %>%
   pivot_longer(
-    cols = -c(Section, Type),
+    cols = -c(Year, Type),
     names_to = "Attribute",
     values_to = "Value"
   )
@@ -594,25 +594,25 @@ df_table3_bound <- bind_rows(df_table3_percent, df_table3_counts, df_table3_tota
 df_table3 <- df_table3_bound %>%
   pivot_wider(names_from = Type, values_from = Value) %>%
   mutate(Combined = paste0(`(%)`, "%, (", `(#)`, ")")) %>%
-  select(Section, Attribute, Combined) %>%
-  pivot_wider(names_from = Section, values_from = Combined)
+  select(Year, Attribute, Combined) %>%
+  pivot_wider(names_from = Year, values_from = Combined)
 
 # Prepare dynamic variables for Table 3 ---------------------------
 maximum_legal <- max(filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Value, na.rm = TRUE)
-maximum_legal_section <- filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Section[which.max(filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Value)]
+maximum_legal_year <- filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Year[which.max(filter(df_table3_percent, Attribute == "Legal (≥ 17.8 cm)")$Value)]
 legal_overall <- filter(df_table3_total_percent, Attribute == "Legal (≥ 17.8 cm)")$Value
 maximum_lipped <- max(filter(df_table3_percent, Attribute == "Lipped")$Value, na.rm = TRUE)
-maximum_lipped_section <- filter(df_table3_percent, Attribute == "Lipped")$Section[which.max(filter(df_table3_percent, Attribute == "Lipped")$Value)]
+maximum_lipped_year <- filter(df_table3_percent, Attribute == "Lipped")$Year[which.max(filter(df_table3_percent, Attribute == "Lipped")$Value)]
 lipped_overall <- filter(df_table3_total_percent, Attribute == "Lipped")$Value
 maximum_legal_lipped <- max(filter(df_table3_percent, Attribute == "Legal, Lipped")$Value, na.rm = TRUE)
-maximum_legal_lipped_section <- filter(df_table3_percent, Attribute == "Legal, Lipped")$Section[which.max(filter(df_table3_percent, Attribute == "Legal, Lipped")$Value)]
+maximum_legal_lipped_year <- filter(df_table3_percent, Attribute == "Legal, Lipped")$Year[which.max(filter(df_table3_percent, Attribute == "Legal, Lipped")$Value)]
 legal_lipped_overall <- filter(df_table3_total_percent, Attribute == "Legal, Lipped")$Value
 ```
 
 
-The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the `r maximum_legal_section` section with `r maximum_legal`%, compared to the overall proportion of `r legal_overall`%. 
-The highest proportion of lipped queen conch was found in the `r maximum_lipped_section` with `r maximum_lipped`%, compared to the overall proportion of `r lipped_overall`%. 
-The highest proportion of legal and lipped queen conch was found in the `r maximum_legal_lipped_section` with `r maximum_legal_lipped`%, compared to the overall proportion of `r legal_lipped_overall`% (Table 3; Figure 3). \
+The highest proportion of legal (≥ 17.8 cm shell length) queen conch was found in the `r maximum_legal_year` year with `r maximum_legal`%, compared to the overall proportion of `r legal_overall`%. 
+The highest proportion of lipped queen conch was found in the `r maximum_lipped_year` with `r maximum_lipped`%, compared to the overall proportion of `r lipped_overall`%. 
+The highest proportion of legal and lipped queen conch was found in the `r maximum_legal_lipped_year` with `r maximum_legal_lipped`%, compared to the overall proportion of `r legal_lipped_overall`% (Table 3; Figure 3). \
 
 
 ```{r figure3_prep, echo = FALSE, include = FALSE}
@@ -684,9 +684,9 @@ The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.
 <br>
 
 
-**Table 3.**  Table of queen conch survey attributes for sampled sections of North, Northeast, Southeast, and Southwest Turneffe Atoll Marine Reserve as well as overall for data from `r study_year`.
- NO is north, NE is northeast, SE is southeast, and SW is southwest. 
- Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
+**Table 3.**  Table of queen conch survey attributes at Turneffe Atoll Marine Reserve 
+for data from `r study_year`. 
+Values for each attribute are presented as a percentage of total conch from the section, as well as count.\
 
 
 ```{r table3, echo = FALSE}
