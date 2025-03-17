@@ -360,6 +360,7 @@ if (!is.null(params$datafile4)) {
   )
 } else {
   datafile3_table1_results_text <- ""
+  datafile4_table1_results_text <- ""
 }
 ```
 
