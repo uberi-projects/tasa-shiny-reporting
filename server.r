@@ -501,6 +501,10 @@ server <- function(input, output, session) {
                 params_list$datafile3_name <- input$upload_lamp_multiper3$name
                 params_list$datafile3 <- df_upload_lamp_multiper3()
             }
+            if (!is.null(input$upload_lamp_multiper4)) {
+                params_list$datafile4_name <- input$upload_lamp_multiper4$name
+                params_list$datafile4 <- df_upload_lamp_multiper4()
+            }
             out <- render(
                 report_file,
                 params = params_list,

@@ -12,6 +12,8 @@ params:
   datafile2_name: "Unknown"
   datafile3: NULL
   datafile3_name: "Not Chosen"
+  datafile4: NULL
+  datafile4_name: "Not Chosen"
 ---
 
 ```{r setup, include=FALSE}
@@ -41,6 +43,11 @@ if (!is.null(params$datafile3)) {
   study3_period <- paste0(study3_start, " to ", max(params$datafile3$Survey_Data$Date, na.rm = TRUE))
   study3_year <- format(study3_start, "%Y")
 }
+if (!is.null(params$datafile4)) {
+  study4_start <- min(params$datafile4$Survey_Data$Date, na.rm = TRUE)
+  study4_period <- paste0(study4_start, " to ", max(params$datafile4$Survey_Data$Date, na.rm = TRUE))
+  study4_year <- format(study4_start, "%Y")
+}
 
 # Define overall study period ---------------------------
 study_periods <- c(study1_period, study2_period)
@@ -48,6 +55,10 @@ study_years <- c(study1_year, study2_year)
 if (!is.null(params$datafile3)) {
   study_periods <- c(study_periods, study3_period)
   study_years <- c(study_years, study3_year)
+}
+if (!is.null(params$datafile4)) {
+  study_periods <- c(study_periods, study4_period)
+  study_years <- c(study_years, study4_year)
 }
 study_period <- knitr::combine_words(study_periods)
 study_year <- knitr::combine_words(study_years)
@@ -57,6 +68,9 @@ study_years_count <- length(study_years)
 datafile_names <- c(params$datafile1_name, params$datafile2_name)
 if (!is.null(params$datafile3)) {
   datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
 }
 datafiles <- knitr::combine_words(datafile_names)
 
@@ -71,6 +85,10 @@ df_sites2 <- update_site_id(params$datafile2$Sites)
 if (!is.null(params$datafile3)) {
   df_surveys3 <- update_site_id(params$datafile3$Survey_Data)
   df_sites3 <- update_site_id(params$datafile3$Sites)
+}
+if (!is.null(params$datafile4)) {
+  df_surveys4 <- update_site_id(params$datafile4$Survey_Data)
+  df_sites4 <- update_site_id(params$datafile4$Sites)
 }
 
 # Merge sites and surveys data ---------------------------
@@ -90,12 +108,22 @@ if (!is.null(params$datafile3)) {
     mutate(`Conch Count` = as.integer(`Conch Count`), Year = study3_year)
   merged_list <- append(merged_list, list(df_merged3))
 }
+if (!is.null(params$datafile4)) {
+  df_merged4 <- df_surveys4 |>
+    left_join(df_sites4, by = "Site ID") |>
+    filter(Section != "NW") |>
+    mutate(`Conch Count` = as.integer(`Conch Count`), Year = study4_year)
+  merged_list <- append(merged_list, list(df_merged4))
+}
 df_merged <- bind_rows(merged_list)
 
 # Create dataframe list ---------------------------
 df_list <- list(df_merged1, df_merged2)
 if (!is.null(params$datafile3)) {
   df_list <- append(df_list, list(df_merged3))
+}
+if (!is.null(params$datafile4)) {
+  df_list <- append(df_list, list(df_merged4))
 }
 
 # Count number of sites surveyed ---------------------------
@@ -107,6 +135,11 @@ if (!is.null(params$datafile3)) {
   number_sites3 <- length(unique(df_merged3$`Site ID`))
   all_sites <- c(all_sites, df_merged3$`Site ID`)
   site_sets <- append(site_sets, list(df_merged3$`Site ID`))
+}
+if (!is.null(params$datafile4)) {
+  number_sites4 <- length(unique(df_merged4$`Site ID`))
+  all_sites <- c(all_sites, df_merged4$`Site ID`)
+  site_sets <- append(site_sets, list(df_merged4$`Site ID`))
 }
 number_sites <- length(unique(all_sites))
 number_sites_common <- Reduce(intersect, site_sets) |> length()
@@ -306,12 +339,24 @@ df_table1 <- df_table1_list$df_table1_plot
 # Create optional datafile summaries ---------------------------
 if (!is.null(params$datafile3)) {
   datafile3_table1_results_text <- paste0(
-    "In", study3_year,
+    "In ", study3_year,
     ", ", df_table1_list$NE_sites3, " sites were sampled in the Northeast, ",
     df_table1_list$NO_sites3, " in the North, ",
     df_table1_list$SE_sites3, " in the Southeast, and ",
     df_table1_list$SW_sites3, " in the Southwest, with ",
     df_table1_list$total_conch3, " counted conch"
+  )
+} else {
+  datafile3_table1_results_text <- ""
+}
+if (!is.null(params$datafile4)) {
+  datafile4_table1_results_text <- paste0(
+    ". In ", study4_year,
+    " , ", df_table1_list$NE_sites4, " sites were sampled in the Northeast, ",
+    df_table1_list$NO_sites4, " in the North, ",
+    df_table1_list$SE_sites4, " in the Southeast, and ",
+    df_table1_list$SW_sites4, " in the Southwest, with ",
+    df_table1_list$total_conch4, " counted conch"
   )
 } else {
   datafile3_table1_results_text <- ""
@@ -324,7 +369,7 @@ In `r study1_year`, `r df_table1_list$NE_sites1` sites were sampled in the North
 `r df_table1_list$SE_sites1` in the Southeast, and `r df_table1_list$SW_sites1` in the Southwest, with `r df_table1_list$total_conch1` counted conch. 
 In `r study2_year`, `r df_table1_list$NE_sites2` sites were sampled in the Northeast, `r df_table1_list$NO_sites2` in the North, 
 `r df_table1_list$SE_sites2` in the Southeast, and `r df_table1_list$SW_sites2` in the Southwest, with `r df_table1_list$total_conch2` counted conch. 
-`r datafile3_table1_results_text` (Table 1).\
+`r datafile3_table1_results_text``r datafile4_table1_results_text` (Table 1).\
 
 
 **Table 1.**  Table of summary data for sampled sections of Turneffe Atoll Marine Reserve for data from `r study_year`. 
@@ -434,6 +479,21 @@ if (!is.null(params$datafile3)) {
 } else {
   datafile3_skew_kurtosis_text <- ""
 }
+if (!is.null(params$datafile4)) {
+  datafile4_skew_kurtosis_text <- paste0(
+    ". The distribution of Queen Conch counts in ",
+    study4_year, " has a ", skew_kurtosis_list$skew_intensity[[study4_year]], " ",
+    skew_kurtosis_list$skew_direction[[study4_year]], " skew of ",
+    skew_kurtosis_list$overall_skewness[[study4_year]], " and a ",
+    skew_kurtosis_list$kurtosis_classification[[study4_year]], " kurtosis of ",
+    skew_kurtosis_list$overall_kurtosis[[study4_year]], ", ",
+    "suggesting that Queen Conch counts are typically ",
+    skew_kurtosis_list$skew_presence_interpretation[[study4_year]], " on transects, ",
+    "with ", skew_kurtosis_list$kurtosis_presence_interpretation[[study4_year]]
+  )
+} else {
+  datafile4_skew_kurtosis_text <- ""
+}
 maximum_conch <- max(df_sites_summary$`Site Conch Count`, na.rm = TRUE)
 maximum_conch_site <- df_sites_summary$`Site ID`[which.max(df_sites_summary$`Site Conch Count`)]
 maximum_conch_year <- df_sites_summary$Year[which.max(df_sites_summary$`Site Conch Count`)]
@@ -466,7 +526,7 @@ The distribution of Queen Conch counts in `r study2_year` has a
 and a `r skew_kurtosis_list$kurtosis_classification[[study2_year]]` kurtosis of `r skew_kurtosis_list$overall_kurtosis[[study2_year]]`, 
 suggesting that Queen Conch counts are typically `r skew_kurtosis_list$skew_presence_interpretation[[study2_year]]` on transects, 
 with `r skew_kurtosis_list$kurtosis_presence_interpretation[[study2_year]]`. 
-`r datafile3_skew_kurtosis_text` (Table 2; Figure 2). 
+`r datafile3_skew_kurtosis_text``r datafile4_skew_kurtosis_text` (Table 2; Figure 2). 
 
 The maximum queen conch site count of `r maximum_conch` was found at site `r maximum_conch_site` in `r maximum_conch_year`. 
 The highest mean queen conch count of `r highest_mean_conch` per site was found in `r highest_mean_conch_year_str`, 
@@ -549,12 +609,34 @@ if (!is.null(params$datafile3)) {
     guides(fill = "none") +
     labs(title = "C", subtitle = study3_year) +
     scale_y_continuous(limits = c(0, max_y))
-  figure2 <- ggarrange(A, B, C)
+  if (!is.null(params$datafile4)) {
+    D <- ggplot(
+      filter(summary_site, Year == study4_year),
+      aes(x = Section, y = Conch_Count_Site, fill = Section)
+    ) +
+      geom_boxplot(fill = "white") +
+      geom_point(
+        data = filter(mean_per_site, Year == study4_year),
+        aes(x = Section, y = Mean_Conch_Per_Site),
+        size = 5, shape = 2, stroke = 1
+      ) +
+      theme_custom +
+      theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+      ylab("") +
+      guides(fill = "none") +
+      labs(title = "D", subtitle = study4_year) +
+      scale_y_continuous(limits = c(0, max_y))
+    figure2 <- ggarrange(A, B, C, D)
+  } else {
+    figure2 <- ggarrange(A, B, C)
+  }
 } else {
   figure2 <- ggarrange(A, B)
 }
-if (!is.null(params$datafile3)) {
-  datafile3_fig2_caption <- paste0(", and ", study3_year, " (C)")
+if (!is.null(params$datafile3) & !is.null(params$datafile4)) {
+  datafile3_fig2_caption <- paste0(" and ", study3_year, " (C) and ", study4_year, " (D)")
+} else if (!is.null(params$datafile3)) {
+  datafile3_fig2_caption <- paste0(" and ", study3_year, " (C)")
 } else {
   datafile3_fig2_caption <- ""
 }
@@ -729,47 +811,54 @@ df_fig3 <- df_merged %>%
   )
 
 # Create panels for Figure 3 ---------------------------
-panels <- list()
-panels[["A"]] <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+
+A <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "A", subtitle = study1_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-panels[["B"]] <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+B <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "B", subtitle = study2_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+
+# Conditionally assemble Figure 2 ---------------------------
 if (!is.null(params$datafile3)) {
-  panels[["C"]] <- ggplot(filter(df_fig3, Year == study3_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+  C <- ggplot(filter(df_fig3, Year == study3_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
     geom_histogram(color = "black", position = "identity", alpha = 0.5) +
     theme_custom +
     labs(title = "C", subtitle = study3_year) +
     scale_fill_manual(values = c(palette[3], palette[4])) +
     geom_vline(xintercept = 17.8, linetype = "dashed") +
     scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  if (!is.null(params$datafile4)) {
+    D <- ggplot(filter(df_fig3, Year == study4_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+      theme_custom +
+      labs(title = "D", subtitle = study4_year) +
+      scale_fill_manual(values = c(palette[3], palette[4])) +
+      geom_vline(xintercept = 17.8, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+    figure3 <- ggarrange(A, B, C, D)
+  } else {
+    figure3 <- ggarrange(A, B, C)
+  }
+} else {
+  figure3 <- ggarrange(A, B)
 }
-last_panel_letter <- LETTERS[length(panels) + 1]
-panels[[last_panel_letter]] <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
-  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-  theme_custom +
-  labs(title = last_panel_letter, subtitle = "Overall") +
-  scale_fill_manual(values = c(palette[3], palette[4])) +
-  geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-
-# Assemble Figure 3 ---------------------------
-figure3 <- do.call(ggarrange, panels)
 
 # Assemble end of Figure 3 caption ---------------------------
-if (!is.null(params$datafile3)) {
-  fig3_end_caption <- paste0(study3_year, "(C), and overall (D)")
+if (!is.null(params$datafile3) & !is.null(params$datafile4)) {
+  datafile3_fig3_caption <- paste0(" and ", study3_year, " (C) and ", study4_year, " (D)")
+} else if (!is.null(params$datafile3)) {
+  datafile3_fig3_caption <- paste0(" and ", study3_year, " (C)")
 } else {
-  fig3_end_caption <- ", and overall (C)"
+  datafile3_fig3_caption <- ""
 }
 ```
 
@@ -780,7 +869,7 @@ figure3
 
 
 *Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) 
-for data from `r study1_year` (A), `r study2_year` (B)`r fig3_end_caption` at Turneffe Atoll Marine Reserve. 
+for data from `r study1_year` (A), `r study2_year` (B)`r datafile3_fig3_caption` at Turneffe Atoll Marine Reserve. 
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 <br>
