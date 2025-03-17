@@ -377,7 +377,7 @@ highest_mean_conch_year_plural <- ifelse(length(highest_mean_conch_year) > 1, "s
 highest_mean_conch_year_str <- knitr::combine_words(highest_mean_conch_year)
 overall_mean_conch <- filter(df_table2, Year == "Overall")$Mean
 
-highest_median_conch <- max(filter(df_table2, Year != "Overall")$Mean, na.rm = TRUE)
+highest_median_conch <- max(df_table2$Median, na.rm = TRUE)
 highest_median_conch_year <- df_table2 %>%
   filter(Median == highest_median_conch) %>%
   pull(Year) %>%
@@ -398,19 +398,19 @@ suggesting that Queen Conch counts are typically `r skew_presence_interpretation
 The maximum queen conch site count of `r maximum_conch` was found at site `r maximum_conch_site` in `r maximum_conch_year`. 
 The highest mean queen conch count of `r highest_mean_conch` per site was found in `r highest_mean_conch_year_str`, 
 compared to the overall mean queen conch count of `r overall_mean_conch`. 
-The highest median (middle value) queen conch count of `r highest_median_conch` per site was found in `r highest_median_conch_year_str`, 
+The highest median (middle value) queen conch count of `r highest_median_conch` per site was found in 
+`r highest_median_conch_year_str`, 
 compared to the overall median queen conch count of `r overall_median_conch` (Table 2). \
 
 
 ```{r figure2_prep, echo = FALSE, include = FALSE}
 # Create summary dfs for Figure 2 ---------------------------
-summary_transect <- df_merged1 %>%
-  select(Date.x, `Site ID`, Transect, Section, `Conch Count`, `Shell Length (in)`, `Lip Thickness (mm)`) %>%
-  group_by(Date.x, `Site ID`, Transect, Section) %>%
+summary_transect <- df_merged %>%
+  group_by(Date.x, `Site ID`, Transect, Section, Year) %>%
   summarize(Conch_Count_Transect = sum(`Conch Count`)) %>%
   ungroup()
 summary_site <- summary_transect %>%
-  group_by(`Site ID`, Section) %>%
+  group_by(`Site ID`, Section, Year) %>%
   summarize(
     Num_Transects = n(),
     Conch_Count_Site = sum(Conch_Count_Transect),
@@ -419,100 +419,62 @@ summary_site <- summary_transect %>%
     Min_Conch_Per_Transect = min(Conch_Count_Transect),
     Max_Conch_Per_Transect = max(Conch_Count_Transect)
   )
-mean_per_transect <- summary_transect %>%
-  group_by(Section) %>%
-  summarize(Mean_Conch_Per_Transect = mean(Conch_Count_Transect))
 mean_per_site <- summary_site %>%
-  group_by(Section) %>%
+  group_by(Section, Year) %>%
   summarize(Mean_Conch_Per_Site = mean(Conch_Count_Site))
 
-# Create panels for FIgure 2 ---------------------------
-A <- ggplot(summary_transect, aes(x = Conch_Count_Transect)) +
-  geom_histogram(
-    binwidth = 1, color = "black",
-    fill = "white", boundary = 0
-  ) +
-  geom_boxplot(aes(y = 175), width = 10, size = 1) +
-  geom_vline(
-    xintercept = mean(summary_transect$Conch_Count_Transect),
-    size = 1, linetype = "dashed"
-  ) +
-  theme_custom +
-  xlab("Conch per Transect") +
-  ylab("Number of Transects") +
-  labs(title = "A") +
-  scale_x_continuous(
-    breaks = c(0, 20, 40, 60, 80, 100),
-    labels = c(0, 20, 40, 60, 80, 100)
-  ) +
-  coord_cartesian(xlim = c(1, 110))
-B <- ggplot(summary_site, aes(x = Conch_Count_Site)) +
-  geom_histogram(
-    binwidth = 5, color = "black",
-    fill = "white", boundary = 0
-  ) +
-  geom_boxplot(aes(y = 45), width = 3.5, size = 1) +
-  geom_vline(
-    xintercept = mean(summary_site$Conch_Count_Site),
-    size = 1, linetype = "dashed"
-  ) +
-  theme_custom +
-  xlab("Conch per Site") +
-  ylab("Number of Sites") +
-  labs(title = "B") +
-  scale_x_continuous(
-    breaks = c(0, 50, 100, 150, 200, 250),
-    labels = c(0, 50, 100, 150, 200, 250)
-  ) +
-  coord_cartesian(xlim = c(1, 275))
-C <- ggplot(
-  summary_transect,
-  aes(x = Section, y = Conch_Count_Transect, fill = Section)
-) +
-  geom_boxplot(fill = "white") +
-  geom_point(
-    data = mean_per_transect,
-    aes(x = Section, y = Mean_Conch_Per_Transect),
-    size = 5, shape = 2, stroke = 1
-  ) +
-  theme_custom +
-  ylab("Conch per Transect") +
-  guides(fill = "none") +
-  labs(title = "C")
-D <- ggplot(
-  summary_site,
+# Create panels for Figure 2 ---------------------------
+max_y <- max(summary_site$Conch_Count_Site, na.rm = TRUE)
+A <- ggplot(
+  filter(summary_site, Year == study1_year),
   aes(x = Section, y = Conch_Count_Site, fill = Section)
 ) +
   geom_boxplot(fill = "white") +
   geom_point(
-    data = mean_per_site,
+    data = filter(mean_per_site, Year == study1_year),
     aes(x = Section, y = Mean_Conch_Per_Site),
     size = 5, shape = 2, stroke = 1
   ) +
   theme_custom +
+  theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
   ylab("Conch per Site") +
   guides(fill = "none") +
-  labs(title = "D")
+  labs(title = "A", subtitle = study1_year) +
+  scale_y_continuous(limits = c(0, max_y))
+B <- ggplot(
+  filter(summary_site, Year == study2_year),
+  aes(x = Section, y = Conch_Count_Site, fill = Section)
+) +
+  geom_boxplot(fill = "white") +
+  geom_point(
+    data = filter(mean_per_site, Year == study2_year),
+    aes(x = Section, y = Mean_Conch_Per_Site),
+    size = 5, shape = 2, stroke = 1
+  ) +
+  theme_custom +
+  theme(panel.grid.minor.y = element_line(color = "grey85", linewidth = 0.3)) +
+  ylab("Conch per Site") +
+  guides(fill = "none") +
+  labs(title = "B", subtitle = study2_year) +
+  scale_y_continuous(limits = c(0, max_y))
 
 # Assemble Figure 2 ---------------------------
-figure2_bottom <- ggarrange(C, D, ncol = 2, nrow = 1)
-figure2 <- ggarrange(A, B, figure2_bottom, ncol = 1, nrow = 3)
+figure2 <- ggarrange(A, B)
 ```
 
 
-```{r figure2, fig.width=6, fig.height=7.5, fig.align = 'left', echo = FALSE}
+```{r figure2, fig.width=6, fig.height=4, fig.align = 'left', echo = FALSE}
 figure2
 ```
 
 
-*Figure 2.* Distribution of queen conch counts for data from `r study_year` sampling effort at Turneffe Atoll Marine Reserve. 
-Histogram and boxplot of conch counts per transect (bin size = 1) with mean shown by dotted line (A), 
-histogram and boxplot of conch counts per site (bin size = 5) with mean shown by dotted line (B), 
-boxplots of conch counts per transect divided by section with means indicated with triangles (C), 
-and boxplots of conch counts per site divided by section with means indicated with triangles (D). 
-For all boxplots, the box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. 
+*Figure 2.* Distribution of queen conch counts for data from `r study_year` 
+at Turneffe Atoll Marine Reserve. 
+Boxplots of conch counts per site divided by section with means indicated with triangles in 
+`r study1_year` (A) and `r study2_year` (B). 
+For all boxplots, the box encompasses 50% of the data, 
+and the whiskers span the calculated minima to maxima. 
 The bar inside the box represents the median.\
-
 
 
 **Table 2.**  Table of summary statistics for conch counts per site in `r study_year` at Turneffe Atoll Marine Reserve. 
