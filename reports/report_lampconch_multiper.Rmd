@@ -617,7 +617,7 @@ The highest proportion of legal and lipped queen conch was found in the `r maxim
 
 ```{r figure3_prep, echo = FALSE, include = FALSE}
 # Create df for Figure 3 ---------------------------
-df_fig3 <- df_merged1 %>%
+df_fig3 <- df_merged %>%
   mutate(
     `Shell Length (cm)` = `Shell Length (in)` * 2.54,
     Lipped = factor(
@@ -631,54 +631,40 @@ df_fig3 <- df_merged1 %>%
   )
 
 # Create panels for Figure 3 ---------------------------
-A <- ggplot(filter(df_fig3, Section == "NE"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+A <- ggplot(filter(df_fig3, Year == study1_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
-  labs(title = "A", subtitle = "Northeast") +
+  labs(title = "A", subtitle = study1_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-B <- ggplot(filter(df_fig3, Section == "NO"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+B <- ggplot(filter(df_fig3, Year == study2_year), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
-  labs(title = "B", subtitle = "North") +
+  labs(title = "B", subtitle = study2_year) +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-C <- ggplot(filter(df_fig3, Section == "SE"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+C <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
-  labs(title = "C", subtitle = "Southeast") +
-  scale_fill_manual(values = c(palette[3], palette[4])) +
-  geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-D <- ggplot(filter(df_fig3, Section == "SW"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
-  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-  theme_custom +
-  labs(title = "D", subtitle = "Southwest") +
-  scale_fill_manual(values = c(palette[3], palette[4])) +
-  geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-E <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
-  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-  theme_custom +
-  labs(title = "E", subtitle = "Overall") +
+  labs(title = "C", subtitle = "Overall") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
   scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
 
 # Assemble Figure 3 ---------------------------
-figure3 <- ggarrange(A, B, C, D, E, nrow = 3, ncol = 2)
+figure3 <- ggarrange(A, B, C)
 ```
 
 
-```{r figure3, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+```{r figure3, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
 figure3
 ```
 
 
-*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm)  for data from `r study_year` in the northeast (A),
-north (B),southeast (C), southwest (D), and overall (E) at Turneffe Atoll Marine Reserve. 
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) 
+for data from `r study1_year` (A), `r study2_year` (B), and overall (C) at Turneffe Atoll Marine Reserve. 
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.\
 
 <br>
