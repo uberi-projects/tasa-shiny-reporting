@@ -231,12 +231,7 @@ server <- function(input, output, session) {
 
     source("validation/validation_observers/validate_lamp_observer_1per.r", local = TRUE)
 
-    observeEvent(input$validate_lamp_multiper, {
-        shinyalert("Notice!", "Validation has not been implemented for LAMP Multi-Year as of yet!",
-            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
-        )
-        enableCustomization("lamp_multiper")
-    })
+    source("validation/validation_observers/validate_lamp_observer_multiper.r", local = TRUE)
 
     observeEvent(input$validate_spag_1per, {
         shinyalert("Notice!", "Validation has not been implemented for SPAG Single Year as of yet!",
