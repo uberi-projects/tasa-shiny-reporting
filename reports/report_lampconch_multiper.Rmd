@@ -90,6 +90,28 @@ if (!is.null(params$datafile4)) {
   df_surveys4 <- update_site_id(params$datafile4$Survey_Data)
   df_sites4 <- update_site_id(params$datafile4$Sites)
 }
+correct_site_id <- function(df, site_col = "Site ID") {
+  df %>%
+    mutate(
+      !!site_col := str_replace(
+        !!sym(site_col),
+        "^([A-Z]+)(\\d{1})$",
+        "\\10\\2"
+      )
+    )
+}
+df_surveys1 <- correct_site_id(params$datafile1$Survey_Data)
+df_sites1 <- correct_site_id(params$datafile1$Sites)
+df_surveys2 <- correct_site_id(params$datafile2$Survey_Data)
+df_sites2 <- correct_site_id(params$datafile2$Sites)
+if (!is.null(params$datafile3)) {
+  df_surveys3 <- correct_site_id(params$datafile3$Survey_Data)
+  df_sites3 <- correct_site_id(params$datafile3$Sites)
+}
+if (!is.null(params$datafile4)) {
+  df_surveys4 <- correct_site_id(params$datafile4$Survey_Data)
+  df_sites4 <- correct_site_id(params$datafile4$Sites)
+}
 
 # Merge sites and surveys data ---------------------------
 df_merged1 <- df_surveys1 |>
@@ -352,7 +374,7 @@ if (!is.null(params$datafile3)) {
 if (!is.null(params$datafile4)) {
   datafile4_table1_results_text <- paste0(
     ". In ", study4_year,
-    " , ", df_table1_list$NE_sites4, " sites were sampled in the Northeast, ",
+    ", ", df_table1_list$NE_sites4, " sites were sampled in the Northeast, ",
     df_table1_list$NO_sites4, " in the North, ",
     df_table1_list$SE_sites4, " in the Southeast, and ",
     df_table1_list$SW_sites4, " in the Southwest, with ",
