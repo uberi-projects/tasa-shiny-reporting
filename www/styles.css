@@ -291,7 +291,7 @@ label {
 }
 
 /* Images */
-.datatype-img{
+.datatype-img {
   display: block;
   margin: 0px auto;
   width: 75%;
@@ -324,7 +324,7 @@ label {
 }
 .data-template-table tr {
   font-size: 2rem;
-  color: #ffffffd7;
+  color: white;
 }
 .data-template-table a {
   background-color: rgba(0, 160, 154, 0.5);
@@ -332,7 +332,7 @@ label {
   color: black;
   border-radius: 5px;
   text-decoration: none;
-  color: #ffffffd7;
+  color: white;
 }
 .data-template-table a:hover {
   background-color: var(--color-secondary);
@@ -340,6 +340,7 @@ label {
 .external-link-button {
   width: fit-content;
   background-color: var(--color-primary);
+  margin: 1.5rem;
 }
 .external-link-button:hover {
   background-color: var(--color-secondary);
