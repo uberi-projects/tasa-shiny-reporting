@@ -768,7 +768,7 @@ if ("Finfish" %in% names(params$datafile)) {
   highest_fish_biomass_density_comm <- max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`, na.rm = TRUE)
   fish_biomass_text <- paste(
     "Overall, the average fish biomass for commercial fish was", overall_mean_fish_biomass_density_com,
-    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", zone_highest_fish_biomass_density_comm,
+    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", paste0(zone_highest_fish_biomass_density_comm, "."),
     "Overall, the average fish biomass for herbivorous fish was", overall_mean_fish_biomass_density_herb,
     "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", zone_highest_fish_biomass_density_comm,
     "(Figure 2F; Table 3F).", "\n\n"
