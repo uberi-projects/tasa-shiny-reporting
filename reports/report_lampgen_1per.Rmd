@@ -644,9 +644,9 @@ fish_stock_text <- if ("Finfish" %in% names(params$datafile)) {
     "The highest density of commercial fish was found in the", zone_highest_commercial_fish_stock_density, "with",
     highest_commercial_fish_stock_density, "fish per 100m2, herbivorous in the",
     zone_highest_herbivorous_fish_stock_density, "with ",
-    highest_herbivorous_fish_stock_density, "other target species in the", zone_highest_target_fish_stock_density, "with",
-    highest_target_fish_stock_density, "and reef fish in the", zone_highest_reef_fish_stock_density, "with",
-    highest_reef_fish_stock_density, "(Figure 1F; Table 2F).", "\n\n"
+    highest_herbivorous_fish_stock_density, "fish per 100m2, other target species in the", zone_highest_target_fish_stock_density, "with",
+    highest_target_fish_stock_density, "fish per 100m2, and reef fish in the", zone_highest_reef_fish_stock_density, "with",
+    highest_reef_fish_stock_density, "fish per 100m2 (Figure 1F; Table 2F).", "\n\n"
   )
 }
 # Create fish table/figure captions
