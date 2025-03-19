@@ -672,7 +672,7 @@ table2fcaption <- if ("Finfish" %in% names(params$datafile)) {
 figure2fcaption <- if ("Finfish" %in% names(params$datafile)) {
   paste(
     "*Figure 2F.* Boxplot of finfish biomass site averages (in grams per 100m2) in sampled management zones by fish grouping in", study_year_month,
-    "where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
+    "at Turneffe Atoll Marine Reserve. where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
     "\n\n"
   )
 }
