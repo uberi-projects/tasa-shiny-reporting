@@ -968,7 +968,7 @@ if ("Conch" %in% names(params$datafile)) {
 # Create text about conch density  ---------------------------
 conch_density_text <- if ("Conch" %in% names(params$datafile)) {
   paste(
-    "Out of", conch_number_sites, "sampled,", conch_number_overall_queen, "queen conch and",
+    "Out of", conch_number_sites, "sampled sites,", conch_number_overall_queen, "queen conch and",
     conch_number_overall_milk, "milk conch were found, resulting in an extrapolated density of",
     conch_density_overall_queen, "queen conch per hectare and",
     conch_density_overall_milk, "milk conch per hectare.",
@@ -1111,7 +1111,7 @@ if ("Conch" %in% names(params$datafile)) {
   conch_shell_text <- if ("Conch" %in% names(params$datafile)) {
     paste(
       "The overall mean queen conch shell length observed within the TAMR was", conch_length, "cm.",
-      "The largest queen conch individual encountered was in", zone_max_conch_length,
+      "The largest queen conch individual encountered was in the", zone_max_conch_length,
       "with a shell length of", max_conch_length, "cm. The", zone_max_average_conch_length,
       "had the highest mean shell length for queen conch individuals of", max_average_conch_length,
       "cm.", percent_legal, "% of queen conch individuals found are of legal size (Figure 2Co).", "\n\n"
@@ -1349,7 +1349,7 @@ if ("Lobster" %in% names(params$datafile)) {
     "The average Caribbean spiny lobster (_Panulirus argus_) carapace length at TAMR was found to be", overall_carapace, "mm.",
     "The legal Caribbean spiny lobster carapace length for harvest in Belize is 76mm.",
     proportion_legal_carapace, "% of lobsters found were legal limit or above.",
-    "The highest density of Caribbean spiny lobsters was found in the", zone_max_length_lobster_car,
+    "The highest average length was found in the", zone_max_length_lobster_car,
     "with", max_length_lobster_car, "mm (Figure 2L).",
     "\n\n"
   )
@@ -1522,7 +1522,6 @@ if (length(collectors) == 0) {
 Thank you to the data collectors who contributed to this project`r collectors_string`. \
 
 <br>
-
 ## Literature Cited
 
 Acosta, C. A. (2004). Glover’s Reef long-term atoll monitoring program (LAMP). Glover’s Reef Marine Research Station, Wildlife Conservation Society, Belize.
