@@ -1,6 +1,4 @@
 ---
-title: "Long-term Atoll Monitoring Program (LAMP) Report: [Periods]"
-subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -8,98 +6,1748 @@ output:
       style: table_template
 params:
   user_name: "Unknown"
-  datafile: pressure
+  datafile1: pressure
+  datafile1_name: "Unknown"
+  datafile2: pressure
+  datafile2_name: "Unknown"
+  datafile3: NULL
+  datafile3_name: "Not Chosen"
+  datafile4: NULL
+  datafile4_name: "Not Chosen"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Check for datafiles and sheets ---------------------------
+file_check3 <- !is.null(params$datafile3)
+file_check4 <- !is.null(params$datafile4)
+study_conch_check1 <- "Conch" %in% names(params$datafile1)
+study_lobster_check1 <- "Lobster" %in% names(params$datafile1)
+study_finfish_check1 <- "Finfish" %in% names(params$datafile1)
+study_urchin_crab_check1 <- "Diadema_Crab" %in% names(params$datafile1)
+study_conch_check2 <- "Conch" %in% names(params$datafile2)
+study_lobster_check2 <- "Lobster" %in% names(params$datafile2)
+study_finfish_check2 <- "Finfish" %in% names(params$datafile2)
+study_urchin_crab_check2 <- "Diadema_Crab" %in% names(params$datafile2)
+study_conch_check3 <- "Conch" %in% names(params$datafile3)
+study_lobster_check3 <- "Lobster" %in% names(params$datafile3)
+study_finfish_check3 <- "Finfish" %in% names(params$datafile3)
+study_urchin_crab_check3 <- "Diadema_Crab" %in% names(params$datafile3)
+study_conch_check4 <- "Conch" %in% names(params$datafile4)
+study_lobster_check4 <- "Lobster" %in% names(params$datafile4)
+study_finfish_check4 <- "Finfish" %in% names(params$datafile4)
+study_urchin_crab_check4 <- "Diadema_Crab" %in% names(params$datafile4)
+study_conch_check <- any(c(study_conch_check1, study_conch_check2, study_conch_check3, study_conch_check4))
+study_lobster_check <- any(c(study_lobster_check1, study_lobster_check2, study_lobster_check3, study_lobster_check4))
+study_finfish_check <- any(c(study_finfish_check1, study_finfish_check2, study_finfish_check3, study_finfish_check4))
+study_urchin_crab_check <- any(c(study_urchin_crab_check1, study_urchin_crab_check2, study_urchin_crab_check3, study_urchin_crab_check4))
+
+# Define study period ---------------------------
+study1_start <- as.Date(min(params$datafile1$Sites$Date, na.rm = TRUE))
+study1_period <- paste0(study1_start, " to ", as.Date(max(params$datafile1$Sites$Date, na.rm = TRUE)))
+study1_year_month <- format(study1_start, "%b %Y")
+study2_start <- as.Date(min(params$datafile2$Sites$Date, na.rm = TRUE))
+study2_period <- paste0(study2_start, " to ", as.Date(max(params$datafile2$Sites$Date, na.rm = TRUE)))
+study2_year_month <- format(study2_start, "%b %Y")
+if (!is.null(params$datafile3)) {
+  study3_start <- as.Date(min(params$datafile3$Sites$Date, na.rm = TRUE))
+  study3_period <- paste0(study3_start, " to ", as.Date(max(params$datafile3$Sites$Date, na.rm = TRUE)))
+  study3_year_month <- format(study3_start, "%b %Y")
+}
+if (!is.null(params$datafile4)) {
+  study4_start <- as.Date(min(params$datafile4$Sites$Date, na.rm = TRUE))
+  study4_period <- paste0(study4_start, " to ", as.Date(max(params$datafile4$Sites$Date, na.rm = TRUE)))
+  study4_year_month <- format(study4_start, "%b %Y")
+}
+
+# Define overall study period ---------------------------
+study_periods <- c(study1_period, study2_period)
+study_years_months <- c(study1_year_month, study2_year_month)
+if (!is.null(params$datafile3)) {
+  study_periods <- c(study_periods, study3_period)
+  study_years_months <- c(study_years_months, study3_year_month)
+}
+if (!is.null(params$datafile4)) {
+  study_periods <- c(study_periods, study4_period)
+  study_years_months <- c(study_years_months, study4_year_month)
+}
+study_period <- knitr::combine_words(study_periods)
+study_year_month <- knitr::combine_words(study_years_months)
+study_years_months_count <- length(study_years_months)
+
+# Define datafiles ---------------------------
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
+
+# Define study taxa ---------------------------
+study_conch <- if (study_conch_check) "queen conch (_Aliger gigas_)"
+study_conch2 <- if (study_conch_check) "milk conch (_Strombus costatus_)"
+study_lobster <- if (study_lobster_check) "Caribbean spiny lobster (_Panulirus argus_)"
+study_lobster2 <- if (study_lobster_check) "spotted spiny lobster (_Panulirus guttatus_)"
+study_finfish <- if (study_finfish_check) "finfish"
+study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
+study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithrax spinosissimus_)"
+studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
+
+# Create merged finfish dataframes ---------------------------
+df_finfish_list <- c()
+if (study_finfish_check1) {
+  df_finfish1 <- params$datafile1$Finfish %>%
+    left_join(params$datafile1$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study1_year_month)
+  df_finfish_list <- append(df_finfish_list, list(df_finfish1))
+}
+if (study_finfish_check2) {
+  df_finfish2 <- params$datafile2$Finfish %>%
+    left_join(params$datafile2$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study2_year_month)
+  df_finfish_list <- append(df_finfish_list, list(df_finfish2))
+}
+if (study_finfish_check3) {
+  df_finfish3 <- params$datafile3$Finfish %>%
+    left_join(params$datafile3$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study3_year_month)
+  df_finfish_list <- append(df_finfish_list, list(df_finfish3))
+}
+if (study_finfish_check4) {
+  df_finfish4 <- params$datafile4$Finfish %>%
+    left_join(params$datafile4$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study4_year_month)
+  df_finfish_list <- append(df_finfish_list, list(df_finfish4))
+}
+df_finfish <- bind_rows(df_finfish_list)
+
+# Create merged conch dataframes ---------------------------
+df_conch_list <- c()
+if (study_conch_check1) {
+  df_conch1 <- params$datafile1$Conch %>%
+    left_join(params$datafile1$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study1_year_month)
+  df_conch_list <- append(df_conch_list, list(df_conch1))
+}
+if (study_conch_check2) {
+  df_conch2 <- params$datafile2$Conch %>%
+    left_join(params$datafile2$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study2_year_month)
+  df_conch_list <- append(df_conch_list, list(df_conch2))
+}
+if (study_conch_check3) {
+  df_conch3 <- params$datafile3$Conch %>%
+    left_join(params$datafile3$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study3_year_month)
+  df_conch_list <- append(df_conch_list, list(df_conch3))
+}
+if (study_conch_check4) {
+  df_conch4 <- params$datafile4$Conch %>%
+    left_join(params$datafile4$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study4_year_month)
+  df_conch_list <- append(df_conch_list, list(df_conch4))
+}
+df_conch <- bind_rows(df_conch_list)
+
+# Create merged lobster dataframes ---------------------------
+df_lobster_list <- c()
+if (study_lobster_check1) {
+  df_lobster1 <- params$datafile1$Lobster %>%
+    left_join(params$datafile1$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study1_year_month)
+  df_lobster_list <- append(df_lobster_list, list(df_lobster1))
+}
+if (study_lobster_check2) {
+  df_lobster2 <- params$datafile2$Lobster %>%
+    left_join(params$datafile2$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study2_year_month)
+  df_lobster_list <- append(df_lobster_list, list(df_lobster2))
+}
+if (study_lobster_check3) {
+  df_lobster3 <- params$datafile3$Lobster %>%
+    left_join(params$datafile3$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study3_year_month)
+  df_lobster_list <- append(df_lobster_list, list(df_lobster3))
+}
+if (study_lobster_check4) {
+  df_lobster4 <- params$datafile4$Lobster %>%
+    left_join(params$datafile4$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate("Survey" = study4_year_month)
+  df_lobster_list <- append(df_lobster_list, list(df_lobster4))
+}
+df_lobster <- bind_rows(df_lobster_list)
+
+# Create merged urchin_crab dataframes ---------------------------
+df_urchin_crab_list <- c()
+if (study_urchin_crab_check1) {
+  df_urchin_crab1 <- params$datafile1$Diadema_Crab %>%
+    left_join(params$datafile1$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
+    mutate(
+      `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
+      `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
+      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`),
+      "Survey" = study1_year_month
+    )
+  df_urchin_crab_list <- append(df_urchin_crab_list, list(df_urchin_crab1))
+}
+if (study_urchin_crab_check2) {
+  df_urchin_crab2 <- params$datafile2$Diadema_Crab %>%
+    left_join(params$datafile2$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
+    mutate(
+      `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
+      `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
+      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`),
+      "Survey" = study2_year_month
+    )
+  df_urchin_crab_list <- append(df_urchin_crab_list, list(df_urchin_crab2))
+}
+if (study_urchin_crab_check3) {
+  df_urchin_crab3 <- params$datafile3$Diadema_Crab %>%
+    left_join(params$datafile3$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
+    mutate(
+      `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
+      `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
+      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`),
+      "Survey" = study3_year_month
+    )
+  df_urchin_crab_list <- append(df_urchin_crab_list, list(df_urchin_crab3))
+}
+if (study_urchin_crab_check4) {
+  df_urchin_crab4 <- params$datafile4$Diadema_Crab %>%
+    left_join(params$datafile4$Sites, by = "Site ID") %>%
+    filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
+    mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
+    mutate(
+      `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
+      `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
+      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`),
+      "Survey" = study4_year_month
+    )
+  df_urchin_crab_list <- append(df_urchin_crab_list, list(df_urchin_crab4))
+}
+df_urchin_crab <- bind_rows(df_urchin_crab_list)
+
+# Create biomass dataframes ---------------------------
+df_biomass <- if (study_finfish_check1) params$datafile1$Biomass
+if (study_finfish_check2) df_biomass <- params$datafile2$Biomass
+if (study_finfish_check3) df_biomass <- params$datafile3$Biomass
+if (study_finfish_check4) df_biomass <- params$datafile4$Biomass
+
+# Create sites dataframes ---------------------------
+site_cols <- c("Mgmt Zone", "Site ID", "Latitude", "Longitude")
+safe_column_select <- function(df, cols) {
+  df %>%
+    select(any_of(cols)) %>%
+    bind_cols(setNames(replicate(length(setdiff(cols, names(.))), NA, simplify = FALSE), setdiff(cols, names(.)))) %>%
+    select(all_of(cols))
+}
+sites_list <- list(
+  mutate(safe_column_select(params$datafile1$Sites, site_cols), "Survey" = study1_year_month),
+  mutate(safe_column_select(params$datafile2$Sites, site_cols), "Survey" = study2_year_month)
+)
+if (file_check3) {
+  sites_list <- append(sites_list, list(mutate(safe_column_select(params$datafile3$Sites, site_cols), "Survey" = study3_year_month)))
+}
+if (file_check4) {
+  sites_list <- append(sites_list, list(mutate(safe_column_select(params$datafile4$Sites, site_cols), "Survey" = study4_year_month)))
+}
+df_sites <- bind_rows(sites_list) %>% distinct()
+
+# Create species dataframe ---------------------------
+species_cols <- c("Family", "Family Label", "Species", "Scientific Name", "Grouping")
+species_list <- list(
+  mutate(safe_column_select(params$datafile1$Sites, species_cols), "Survey" = study1_year_month),
+  mutate(safe_column_select(params$datafile2$Sites, species_cols), "Survey" = study2_year_month)
+)
+if (file_check3) {
+  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile3$Sites, species_cols), "Survey" = study3_year_month)))
+}
+if (file_check4) {
+  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile4$Sites, species_cols), "Survey" = study4_year_month)))
+}
+df_species <- bind_rows(species_list) %>% distinct()
+
+
+# Count number of sites surveyed ---------------------------
+number_sites <- length(unique(df_sites$`Site ID`))
 ```
 
+
+# Turneffe Atoll LAMP Dataset Report: `r study_year_month`
+
+
+Turneffe Atoll Sustainability Association (TASA)
+
+
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
-**Source Data:** Data \
-**Generated by:** `r params$user_name`
+**Source Data:** `r datafiles` \
+**Generated by:** `r params$user_name`\
 
 ***
+
+
+Coral reefs are biodiversity hotspots that provide critical habitats for diverse species, support coastal communities, and offer economic opportunities through the harvest of marine invertebrates and fish. 
+Monitoring these ecosystems is essential to assess health, function, and changes over time, informing management decisions. 
+This report presents findings from monitoring surveys of `r studies` at Turneffe Atoll Marine Reserve (TAMR) from `r study_year_month`. 
+Data on population abundances and characteristics were collected by TASA staff and collaborators under the Long-term Atoll Monitoring Program (LAMP), 
+which tracks key taxa at the atoll through standardized surveys. 
+This report aims to summarize and visualize the LAMP dataset from `r study_year_month` to facilitate data interpretation and support management decisions by TASA staff, collaborators, and stakeholders.\
+
 
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
 
 ### Long-term Atoll Monitoring Program
 
-Background on reef monitoring dataset type \
+The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), 
+is designed to monitor key fished taxa at the atoll over space and time, including `r studies`. 
+The program uses habitat sampling to estimate population sizes and physical characteristics of these taxa, enabling spatial and temporal comparison.
 
-Map of study area \
+LAMP’s primary objectives are to assess the viability of these populations by identifying trends in abundance, reproduction, physical characteristics, and habitat quality where applicable. 
+Data collected through LAMP facilitates evaluation of management zone effectiveness. 
+The program data also supports recommendations on enforcement, monitoring, education, outreach, fishing quotas, season lengths, 
+size limits, and other government regulations to ensure the long-term sustainability of the fishery, 
+all while preserving the natural beauty and ecological value of the atoll.\
+
+
+```{r background, include=FALSE}
+# Define background text for key taxa  ---------------------------
+text_finfish <- if (study_finfish_check) {
+  "Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals such as shellfish or cuttlefish.
+In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as Mutton Snapper (_Lutjanus analis_),
+Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being listed as Vulnerable conservation status on the IUCN.
+Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation.
+Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily),
+long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020).
+Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD),
+with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations,
+such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b).
+To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity,
+and biodiversity of key taxa."
+}
+text_conch <- if (study_conch_check) {
+  "Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex.
+Milk conch (_Strombus costatus_) are similar to queen conch, but with a smaller, flatter shell with varied pattern.
+In Belize, the conch fishery is the second most important commercial fishery in the country.
+Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats.
+The fishery is regulated by the BFD.
+National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first (Belize Fisheries Department accessed 2025-a).
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025)."
+}
+text_lobster <- if (study_lobster_check) {
+  "Caribbean spiny lobsters (_Panulirus argus_) are brown-grey striped malacostracans, which can grow to around 60cm long, and have spines covering their shells instead of the large pinching claws of other lobsters (Holthuis, 1991).
+Spotted spiny lobster (_Panulirus guttatus_) are smaller than Caribbean spiny lobsters, with more distinct spots and shorter antennae.
+In Belize, the lobster fishery is the most important fishery in the country.
+Lobsters are caught using freediving and a hook stick, trapezoidal-shaped lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020).
+Regulations for Caribbean spiny lobster from the BFD include that no person shall fish moutling lobster or lobster with eggs, that fished lobster have minimum carapace length of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed open season.
+Closed season is March 1st to June 30th for lobster (Belize Fisheries Department accessed 2025-b).
+Tar spots on female lobsters indicate recent mating, and females with eggs (‘berried’ females) indicate reproductive success.
+Monitoring sex ratio and presence of reproductive indicators is key for this species."
+}
+text_urchin_crab <- if (study_urchin_crab_check) {
+  "Black sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
+Black sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
+A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean.
+Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015).
+The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize.
+The Caribbean king crab (_Mithrax spinosissimus_) has a similar, though less studied, role in coral reef ecosystems as an algal herbivore.
+Caribbean king crabs, a type of reddish-brown spider crab,  exceed the per capita grazing rate of many herbivorous fish.
+However, the crabs themselves typically appear in low densities on reefs (Butler & Mojica, 2012)."
+}
+text_taxa <- paste(c(text_finfish, text_conch, text_lobster, text_urchin_crab), collapse = "\n\n")
+
+
+# Define background text for survey methods  ---------------------------
+text_survey_period <- paste0(
+  "The survey period for this report’s dataset extended from ", study_period, " at TAMR. ",
+  number_sites, " sites were sampled in total."
+)
+text_sampling_area <- if ((study_conch_check | study_lobster_check | study_urchin_crab_check) & study_finfish_check) {
+  "The total sampling area per site is 800m² (four 50m x 4m belt transects) for invertebrate surveys, and 400m² (four 50m x 2m belt transects) for finfish."
+} else if (study_conch_check | study_lobster_check | study_urchin_crab_check) {
+  "The total sampling area per site is 800m² (four 50m x 4m belt transects) for invertebrate surveys."
+} else if (study_finfish_check) {
+  "The total sampling area per site is 400m² (four 50m x 2m belt transects) for finfish."
+}
+
+text_survey_methods <- "During sampling, surveyors used a combination of SCUBA (>15 ft depth) and snorkeling (≤15 ft depth)."
+text_finfish_methods <- if (study_finfish_check) {
+  "Finfish species were surveyed using a count method categorized by estimated size classes, and separated into groups of commercial fish (Snappers and Groupers), herbivorous fish (Surgeon fish and Parrotfish), other target species (Barracuda, Hogfish, Jacks, and Grunts), and reef fish (Triggerfish, Angelfish, Butterflyfish, Filefish, Damselfish, etc.)."
+}
+text_conch_methods <- if (study_conch_check) {
+  "For conch specimens, data collected included total length, lip thickness, and the presence or absence of eggs."
+}
+text_lobster_methods <- if (study_lobster_check) {
+  "Lobster specimens were assessed for carapace length (measured with a tickle stick), sex, and egg presence (+/-)."
+}
+text_urchin_crab_methods <- if (study_urchin_crab_check) {
+  "Urchins were counted and classified into juvenile and adult stages, while crab specimens were recorded using a count method."
+}
+text_survey <- paste(c(
+  paste(text_survey_period, text_sampling_area),
+  paste(text_survey_methods, text_finfish_methods, text_conch_methods, text_lobster_methods, text_urchin_crab_methods)
+), collapse = "\n\n")
+```
+
+### Key Taxa
+
+`r text_taxa`\
+
 
 ## Methods
 
-Survey methods\ 
+Survey sites were selected within various management zones (Conservation Zones, General Use Zone, Special Management Zone) (Figure 1). 
+Since the original site selection in 2021, the aim has been to resurvey these sites biannually.
+
+`r text_survey`
+
+This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
+
+
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create map for Figure 1 ---------------------------
+df_map <- df_sites |>
+  select(`Site ID`, Latitude, Longitude) |>
+  distinct()
+generate_map(df_map, "Latitude", "Longitude", "Site ID")
+```
+
+
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
+Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).
+Sample sites surveyed in `r study_year_month` are labelled on the map.\
 
  
-**Table 1.** Table of surveys/dives.
-
-_Dive Surveys_
-```{r table1, echo = FALSE}
-# show table
-head(params$datafile)
-```
-
-
 ## Results
 
-Explanation of results \ 
+```{r table1/2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+empty_counts <- c("0.0", "0", "NE", "N/E", NA, "")
+df_table1_sum_sites <- df_sites %>%
+  group_by(`Survey`) %>%
+  summarise(Sites = length(unique(`Site ID`))) %>%
+  bind_rows(
+    df_sites %>%
+      summarise(
+        `Survey` = "Overall",
+        Sites = length(unique(`Site ID`))
+      )
+  )
+df_table1_sum_finfish <- if (study_finfish_check) {
+  df_finfish %>%
+    group_by(`Survey`) %>%
+    summarise(`Finfish Species` = length(unique(Species))) %>%
+    bind_rows(
+      df_finfish %>%
+        summarise(
+          `Survey` = "Overall",
+          `Finfish Species` = length(unique(Species))
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table1_sum_conch <- if (study_conch_check) {
+  df_conch %>%
+    group_by(`Survey`) %>%
+    summarise(`Conch` = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    bind_rows(
+      df_conch %>%
+        summarise(
+          `Survey` = "Overall",
+          `Conch` = sum(!(Species %in% empty_counts), na.rm = TRUE)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table1_sum_lobster <- if (study_lobster_check) {
+  df_lobster %>%
+    group_by(`Survey`) %>%
+    summarise(`Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    bind_rows(
+      df_lobster %>%
+        summarise(
+          `Survey` = "Overall",
+          `Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table1_sum_urchin_crab <- if (study_urchin_crab_check) {
+  df_urchin_crab %>%
+    group_by(`Survey`) %>%
+    summarise(
+      `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
+        sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
+      `Mithrax` = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+    ) %>%
+    bind_rows(
+      df_urchin_crab %>%
+        summarise(
+          `Survey` = "Overall",
+          `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
+            sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
+          `Mithrax` = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table1 <- df_table1_sum_sites %>%
+  left_join(df_table1_sum_finfish, by = "Survey") %>%
+  left_join(df_table1_sum_conch, by = "Survey") %>%
+  left_join(df_table1_sum_lobster, by = "Survey") %>%
+  left_join(df_table1_sum_urchin_crab, by = "Survey")
 
-![](TASA_logo_full_color.png){width=250px}
+# Prepare dynamic variables for Table 1 ---------------------------
+total_finfish_div <- if (study_finfish_check) {
+  filter(df_table1, Survey == "Overall")$`Finfish Species`
+}
+total_conch <- if (study_conch_check) {
+  filter(df_table1, Survey == "Overall")$`Conch`
+}
+total_lobster <- if (study_lobster_check) {
+  filter(df_table1, Survey == "Overall")$`Lobster`
+}
+total_urchin <- if (study_urchin_crab_check) {
+  filter(df_table1, Survey == "Overall")$`Diadema`
+}
+total_crab <- if (study_urchin_crab_check) {
+  filter(df_table1, Survey == "Overall")$`Mithrax`
+}
+count_conservation <- filter(df_table1, Survey == "Conserv.")$Sites
+count_general <- filter(df_table1, Survey == "General")$Sites
+count_special <- filter(df_table1, Survey == "Special")$Sites
 
-Figure 1. Results figure. \ 
+# Prepare df for Table 2 ---------------------------
+df_table2_sites <- df_sites %>%
+  group_by(`Survey`) %>%
+  summarise(Sites = length(unique(`Site ID`))) %>%
+  bind_rows(
+    df_sites %>%
+      summarise(
+        `Survey` = "Overall",
+        Sites = length(unique(`Site ID`))
+      )
+  )
+df_table2_finfish <- if (study_finfish_check) {
+  df_finfish %>%
+    group_by(`Site ID`) %>%
+    summarise(Species = length(unique(Species))) %>%
+    left_join(df_sites, by = "Site ID") %>%
+    group_by(`Survey`) %>%
+    summarise(`Finfish Species / Site` = round(mean(Species, na.rm = TRUE), 1)) %>%
+    bind_rows(
+      df_finfish %>%
+        group_by(`Site ID`) %>%
+        summarise(Species = length(unique(Species))) %>%
+        summarise(
+          `Survey` = "Overall",
+          `Finfish Species / Site` = round(mean(Species, na.rm = TRUE), 1)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table2_conch <- if (study_conch_check) {
+  df_conch %>%
+    group_by(`Site ID`) %>%
+    summarise(Count = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    left_join(df_sites, by = "Site ID") %>%
+    group_by(`Survey`) %>%
+    summarise(`Conch / Site` = round(mean(Count, na.rm = TRUE), 1)) %>%
+    bind_rows(
+      df_conch %>%
+        group_by(`Site ID`) %>%
+        summarise(Count = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+        summarise(
+          `Survey` = "Overall",
+          `Conch / Site` = round(mean(Count, na.rm = TRUE), 1)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table2_lobster <- if (study_lobster_check) {
+  df_lobster %>%
+    group_by(`Site ID`) %>%
+    summarise(Count = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    left_join(df_sites, by = "Site ID") %>%
+    group_by(`Survey`) %>%
+    summarise(`Lobster / Site` = round(mean(Count, na.rm = TRUE), 1)) %>%
+    bind_rows(
+      df_lobster %>%
+        group_by(`Site ID`) %>%
+        summarise(Count = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+        summarise(
+          `Survey` = "Overall",
+          `Lobster / Site` = round(mean(Count, na.rm = TRUE), 1)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table2_urchin_crab <- if (study_urchin_crab_check) {
+  df_urchin_crab %>%
+    group_by(`Site ID`) %>%
+    summarise(
+      Diadema_Count = sum(
+        !(`Adult Diadema antillarum` %in% empty_counts),
+        na.rm = TRUE
+      ) + sum(
+        !(`Juvenile Diadema antillarum` %in% empty_counts),
+        na.rm = TRUE
+      ),
+      Mithrax_Count = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    left_join(df_sites, by = "Site ID") %>%
+    group_by(`Survey`) %>%
+    summarise(
+      `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
+      `Mithrax / Site` = round(mean(Mithrax_Count, na.rm = TRUE), 1)
+    ) %>%
+    bind_rows(
+      df_urchin_crab %>%
+        group_by(`Site ID`) %>%
+        summarise(
+          Diadema_Count = sum(
+            !(`Adult Diadema antillarum` %in% empty_counts),
+            na.rm = TRUE
+          ) + sum(
+            !(`Juvenile Diadema antillarum` %in% empty_counts),
+            na.rm = TRUE
+          ),
+          Mithrax_Count = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+        ) %>%
+        summarise(
+          `Survey` = "Overall",
+          `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
+          `Mithrax / Site` = round(mean(Mithrax_Count, na.rm = TRUE), 1)
+        )
+    )
+} else {
+  tibble(`Survey` = character())
+}
+df_table2 <- df_table2_sites %>%
+  left_join(df_table2_finfish, by = "Survey") %>%
+  left_join(df_table2_conch, by = "Survey") %>%
+  left_join(df_table2_lobster, by = "Survey") %>%
+  left_join(df_table2_urchin_crab, by = "Survey") %>%
+  select(-Sites)
 
-Explanation of results \ 
+# Prepare dynamic variables for Table 2 ---------------------------
+overall_finfish_av <- if (study_finfish_check) {
+  filter(df_table2, Survey == "Overall")$`Finfish Species / Site`
+}
+overall_conch_av <- if (study_conch_check) {
+  filter(df_table2, Survey == "Overall")$`Conch / Site`
+}
+overall_lobster_av <- if (study_lobster_check) {
+  filter(df_table2, Survey == "Overall")$`Lobster / Site`
+}
+overall_urchin_av <- if (study_urchin_crab_check) {
+  filter(df_table2, Survey == "Overall")$`Diadema / Site`
+}
+overall_crab_av <- if (study_urchin_crab_check) {
+  filter(df_table2, Survey == "Overall")$`Mithrax / Site`
+}
 
-![](TASA_logo_full_color.png){width=250px}
+# Prepare dynamic text for Tables 1/2 ---------------------------
+tables1_2_text <- knitr::combine_words(na.omit(c(
+  if (study_finfish_check) paste(total_finfish_div, "unique finfish species"),
+  if (study_conch_check) paste(total_conch, "conch"),
+  if (study_lobster_check) paste(total_lobster, "lobsters"),
+  if (study_urchin_crab_check) paste(total_urchin, "_Diadema_"),
+  if (study_urchin_crab_check) paste(total_crab, "_Mithrax_")
+)))
+tables1_2_text2 <- knitr::combine_words(na.omit(c(
+  if (study_finfish_check) paste(overall_finfish_av, "finfish species"),
+  if (study_conch_check) paste(overall_conch_av, "conch"),
+  if (study_lobster_check) paste(overall_lobster_av, "lobsters"),
+  if (study_urchin_crab_check) paste(overall_urchin_av, "_Diadema_"),
+  if (study_urchin_crab_check) paste(overall_crab_av, "_Mithrax_")
+)))
 
-Figure 2. Results figure. \
 
-Explanation of results \ 
+tables1_2_text
+```
 
-![](TASA_logo_full_color.png){width=250px}
+In `r study_year_month`, TASA surveyed a total of `r number_sites` LAMP monitoring sites within the TAMR: `r count_conservation` in Conservation Zones, 
+`r count_general` in the General Use Zone, and `r count_special` in the Special Management Zone. 
+Across the atoll, `r tables1_2_text` were found (Table 1). 
+On average, `r tables1_2_text2` were found per site (Table 2).\
 
-Figure 3. Results figure. \
+
+**Table 1.** Summary of sampled management zones in `r study_year_month` at Turneffe Atoll Marine Reserve, including 
+finfish diversity (number of species), conch count, lobster count,  _Diadema_ count, and _Mithrax_ count. \
+
+```{r table1, echo = FALSE}
+df_table1
+```
+
+<br>
 
 
-**Table 2.** Results table.
+**Table 2.** Summary of sampled management zones in `r study_year_month` at Turneffe Atoll Marine Reserve, including number of sampled sites, 
+average finfish diversity (number of species) per site, average conch count per site, average lobster count per site, 
+average  _Diadema_ count per site, and average _Mithrax_ count per site. \
 
-_Results Table_
+
 ```{r table2, echo = FALSE}
-# show table
-head(params$datafile)
+df_table2
+```
+
+<br>
+
+
+`r if (study_finfish_check) {"***"}`
+
+
+`r if (study_finfish_check) {"### Finfish"}`
+
+
+```{r table1f_2f_prep, echo = FALSE, include = FALSE}
+if (study_finfish_check) {
+  # Prepare df for Table 1F ---------------------------
+  df_table1f_transect_density <- df_finfish %>%
+    left_join(df_species, by = "Species") %>%
+    mutate(Total = rowSums(across(`0-5 cm`:`>40 cm`, as.numeric), na.rm = TRUE)) %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`, `Site ID`, Transect) %>%
+    summarise(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Area (m2)` = Transects * 100,
+      `Count` = sum(Total),
+      `Density / 100m2 (Transect)` = (`Count` / `Area (m2)`) * 100,
+      .groups = "drop"
+    )
+  df_table1f <- df_table1f_transect_density %>%
+    group_by(`Mgmt Zone`) %>%
+    summarise(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Count` = sum(`Count`),
+      `Density / 100m2` = round(`Count` / `Area (m2)` * 100, 1),
+      `Median Density / 100m2` = round(median(`Density / 100m2 (Transect)`), 1),
+      .groups = "drop"
+    )
+  df_table1f_overall <- df_table1f_transect_density %>%
+    summarise(
+      `Mgmt Zone` = "Overall",
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Count` = sum(`Count`),
+      `Density / 100m2` = round(`Count` / `Area (m2)` * 100, 1),
+      `Median Density / 100m2` = round(median(`Density / 100m2 (Transect)`), 1)
+    )
+  df_table1f <- bind_rows(df_table1f, df_table1f_overall)
+
+  # Prepare df for Table 2F ---------------------------
+  df_table2f <- df_finfish %>%
+    left_join(df_species, by = "Species") %>%
+    mutate(Total = as.numeric(`0-5 cm`) + as.numeric(`6-10 cm`) + as.numeric(`11-20 cm`) + as.numeric(`21-30 cm`) + as.numeric(`31-40 cm`) + as.numeric(`>40 cm`)) %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`, Grouping) %>%
+    left_join(df_table1f, by = "Mgmt Zone") %>%
+    summarise(
+      Count = sum(Total),
+      `Density / 100m2` = round(Count / `Area (m2)` * 100, 1)
+    ) %>%
+    distinct() %>%
+    na.omit() %>%
+    arrange(Grouping)
+
+  # Prepare dynamic text for Tables 1F/2F ---------------------------
+  fish_number_sites <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Sites`
+  overall_mean_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Density / 100m2`
+  overall_median_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Median Density / 100m2`
+  zone_highest_fish_stock_density <- df_table1f$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  highest_fish_stock_density <- max(df_table1f$`Density / 100m2`, na.rm = TRUE)
+  zone_highest_fish_stock_median_density <- df_table1f$`Mgmt Zone`[which.max(df_table1f$`Median Density / 100m2`)]
+  highest_fish_stock_median_density <- max(df_table1f$`Median Density / 100m2`, na.rm = TRUE)
+  zone_highest_commercial_fish_stock_density <- filter(df_table2f, Grouping == "Commercial")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  highest_commercial_fish_stock_density <- max(filter(df_table2f, Grouping == "Commercial")$`Density / 100m2`, na.rm = TRUE)
+  zone_highest_herbivorous_fish_stock_density <- filter(df_table2f, Grouping == "Herbivorous")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  highest_herbivorous_fish_stock_density <- max(filter(df_table2f, Grouping == "Herbivorous")$`Density / 100m2`, na.rm = TRUE)
+  zone_highest_target_fish_stock_density <- filter(df_table2f, Grouping == "Other Target")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  highest_target_fish_stock_density <- max(filter(df_table2f, Grouping == "Other Target")$`Density / 100m2`, na.rm = TRUE)
+  zone_highest_reef_fish_stock_density <- filter(df_table2f, Grouping == "Reef Fish")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  highest_reef_fish_stock_density <- max(filter(df_table2f, Grouping == "Reef Fish")$`Density / 100m2`, na.rm = TRUE)
+}
+```
+
+```{r figure1f_prep, echo = FALSE, include = FALSE}
+# Create Figure 1f ---------------------------
+if (study_finfish_check) {
+  figure1f <- ggplot(df_table2f, aes(x = `Mgmt Zone`, y = `Density / 100m2`, fill = Grouping)) +
+    geom_col(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    ylab("Fish Density per 100m2") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8])
+}
+```
+
+```{r fishtext, echo = FALSE, include = FALSE}
+# Create text about fish stock results ---------------------------
+fish_stock_text <- if (study_finfish_check) {
+  paste(
+    "Out of", fish_number_sites, "sampled sites,",
+    "the overall mean fish stock density was", overall_mean_fish_stock_density, "fish per 100m2,",
+    "with a median density of", overall_median_fish_stock_density, "fish per 100m2.",
+    "The highest density of fish was found in the", zone_highest_fish_stock_density, "with",
+    highest_fish_stock_density, "fish per 100m2,",
+    "and the highest median density was found in the", zone_highest_fish_stock_median_density, "with",
+    highest_fish_stock_median_density, "fish per 100m2 (Table 1F).",
+    "The highest density of commercial fish was found in the", zone_highest_commercial_fish_stock_density, "with",
+    highest_commercial_fish_stock_density, "fish per 100m2, herbivorous in the",
+    zone_highest_herbivorous_fish_stock_density, "with ",
+    highest_herbivorous_fish_stock_density, "fish per 100m2, other target species in the", zone_highest_target_fish_stock_density, "with",
+    highest_target_fish_stock_density, "fish per 100m2, and reef fish in the", zone_highest_reef_fish_stock_density, "with",
+    highest_reef_fish_stock_density, "fish per 100m2 (Figure 1F; Table 2F).", "\n\n"
+  )
+}
+# Create fish table/figure captions
+figure1fcaption <- if (study_finfish_check) {
+  paste(
+    "*Figure 1F.* Finfish density in sampled management zones by fish grouping in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, where colors represent grouping for a management zone. Height of bars is proportional to fish density per 100m2.", "\n\n"
+  )
+}
+table1fcaption <- if (study_finfish_check) {
+  paste(
+    "**Table 1F.** Finfish density in sampled management zones and overall in", study_year_month,
+    " at Turneffe Atoll Marine Reserve, represented by number of sites, number of transects, area sampled in meters squared, finfish count, density per 100 meters squared, and median density per 100 meters squared.",
+    "\n\n"
+  )
+}
+table2fcaption <- if (study_finfish_check) {
+  paste(
+    "**Table 2F.** Finfish density in sampled management zones by fish grouping in",
+    study_year_month, "at Turneffe Atoll Marine Reserve, represented by finfish count, and density per 100 meters squared.", "\n\n"
+  )
+}
+figure2fcaption <- if (study_finfish_check) {
+  paste(
+    "*Figure 2F.* Boxplot of finfish biomass site averages (in grams per 100m2) in sampled management zones by fish grouping in", study_year_month,
+    "at Turneffe Atoll Marine Reserve. where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
+    "\n\n"
+  )
+}
+table3fcaption <- if (study_finfish_check) {
+  paste(
+    "**Table 3F.** Finfish biomass (g/100m2) in sampled management zones and overall for commercial and herbivorous fish in", study_year_month,
+    "at Turneffe Atoll Marine Reserve.", "\n\n"
+  )
+}
+
+figure3fcaption <- if (study_finfish_check) {
+  paste(
+    "*Fig 3F*. Finfish size frequency distribution in sampled management zones for commercial (Panel A) and herbivorous (Panel B) fish in", study_year_month,
+    "at Turneffe Atoll Marine Reserve.", "\n\n"
+  )
+}
 ```
 
 
-## Discussion
+`r if (study_finfish_check) {fish_stock_text}`
 
-Interpretation of results \ 
 
-Conclusions and recommendations \ 
+`r if (study_finfish_check) {table1fcaption}`
 
+
+```{r table1f, echo = FALSE}
+if (study_finfish_check) {
+  df_table1f
+}
+```
+
+`r if (study_finfish_check) {"<br>"}`
+
+```{r figure1f, fig.width=6, fig.height=3, fig.align = 'left', echo = FALSE}
+if (study_finfish_check) {
+  figure1f
+}
+```
+
+
+`r if (study_finfish_check) {figure1fcaption}`
+
+
+`r if (study_finfish_check) {table2fcaption}`
+
+
+```{r table2f, echo = FALSE}
+if (study_finfish_check) {
+  as.data.frame(df_table2f)
+}
+```
+
+`r if (study_finfish_check) {"<br>"}`
+
+```{r table3f_prep, echo = FALSE, include = FALSE}
+if (study_finfish_check) {
+  # Prepare df for Table 3F ---------------------------
+  df_table3f_prelim <- df_finfish %>%
+    left_join(df_species, by = "Species") %>%
+    left_join(df_biomass, by = c("Family", "Scientific Name")) %>%
+    mutate(
+      `0-5cm BM` = as.numeric(`0-5 cm`) * (LWRa * ((LWRconv * 2.5)^LWRb)),
+      `6-10cm BM` = as.numeric(`6-10 cm`) * (LWRa * ((LWRconv * 8)^LWRb)),
+      `11-20cm BM` = as.numeric(`11-20 cm`) * (LWRa * ((LWRconv * 15.5)^LWRb)),
+      `21-30cm BM` = as.numeric(`21-30 cm`) * (LWRa * ((LWRconv * 25.5)^LWRb)),
+      `31-40cm BM` = as.numeric(`31-40 cm`) * (LWRa * ((LWRconv * 35.5)^LWRb)),
+      `>40cm BM` = as.numeric(`>40 cm`) * (LWRa * ((LWRconv * 40)^LWRb)),
+      Biomass = `0-5cm BM` + `6-10cm BM` + `11-20cm BM` + `21-30cm BM` + `31-40cm BM` + `>40cm BM`
+    ) %>%
+    group_by(`Mgmt Zone`, Grouping, `Site ID`) %>%
+    summarize(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Site Biomass` = sum(Biomass, na.rm = TRUE),
+      `Site Biomass Density (g/100m2)` = `Site Biomass` / Transects # Calculate density here
+    )
+  df_table3f_overall <- df_table3f_prelim %>%
+    filter(Grouping %in% c("Commercial", "Herbivorous")) %>%
+    group_by(Grouping) %>%
+    summarize(`Average Site Biomass Density (g/100m2)` = round(mean(`Site Biomass Density (g/100m2)`), 1)) %>%
+    mutate(`Mgmt Zone` = "Overall")
+  df_table3f_zones <- df_table3f_prelim %>%
+    filter(Grouping %in% c("Commercial", "Herbivorous")) %>%
+    group_by(`Mgmt Zone`, Grouping) %>%
+    summarize(`Average Site Biomass Density (g/100m2)` = round(mean(`Site Biomass Density (g/100m2)`), 1))
+  df_table3f <- bind_rows(df_table3f_zones, df_table3f_overall)
+
+  # Prepare dynamic text for Table 3F ---------------------------
+  overall_mean_fish_biomass_density_herb <- filter(df_table3f, `Mgmt Zone` == "Overall" & Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`
+  overall_mean_fish_biomass_density_com <- filter(df_table3f, `Mgmt Zone` == "Overall" & Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`
+  zone_highest_fish_biomass_density_herb <- df_table3f$`Mgmt Zone`[which.max(filter(df_table3f, Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`)]
+  highest_fish_biomass_density_herb <- max(filter(df_table3f, Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`, na.rm = TRUE)
+  zone_highest_fish_biomass_density_comm <- df_table3f$`Mgmt Zone`[which.max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`)]
+  highest_fish_biomass_density_comm <- max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`, na.rm = TRUE)
+  fish_biomass_text <- paste(
+    "Overall, the average fish biomass for commercial fish was", overall_mean_fish_biomass_density_com,
+    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", paste0(zone_highest_fish_biomass_density_comm, "."),
+    "Overall, the average fish biomass for herbivorous fish was", overall_mean_fish_biomass_density_herb,
+    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", zone_highest_fish_biomass_density_comm,
+    "(Figure 2F; Table 3F).", "\n\n"
+  )
+}
+```
+
+
+`r if (study_finfish_check) {fish_biomass_text}`
+
+
+```{r figure2f_prep, echo = FALSE, include = FALSE}
+# Create Figure 2F ---------------------------
+if (study_finfish_check) {
+  figure2f <- ggplot(filter(df_table3f_prelim, Grouping %in% c("Commercial", "Herbivorous")), aes(x = `Mgmt Zone`, y = `Site Biomass Density (g/100m2)`, fill = Grouping)) +
+    geom_boxplot(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    ylab("Fish Biomass (g per 100m2)") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8])
+}
+```
+
+
+```{r figure2f, echo = FALSE, fig.width=6, fig.height=4, fig.align = 'left'}
+if (study_finfish_check) {
+  figure2f
+}
+```
+
+
+`r if (study_finfish_check) {figure2fcaption}`
+
+
+`r if (study_finfish_check) {"<br>"}`
+
+
+`r if (study_finfish_check) {table2fcaption}`
+
+
+```{r table3f, echo = FALSE}
+if (study_finfish_check) {
+  as.data.frame(df_table3f)
+}
+```
+
+`r if (study_finfish_check) {"<br>"}`
+
+```{r table4f_prep, echo = FALSE, include = FALSE}
+if (study_finfish_check) {
+  # Prepare df for Table 4F, which will not be displayed by default ---------------------------
+  df_table4f <- df_finfish %>%
+    left_join(df_species, by = "Species") %>%
+    left_join(df_biomass, by = c("Family", "Scientific Name")) %>%
+    rename("40+ cm" = `>40 cm`) %>%
+    rename("06-10 cm" = `6-10 cm`) %>%
+    rename("0-05 cm" = `0-5 cm`) %>%
+    pivot_longer(
+      cols = c("0-05 cm", "06-10 cm", "11-20 cm", "21-30 cm", "31-40 cm", "40+ cm"),
+      names_to = "Size Class", values_to = "Count"
+    ) %>%
+    group_by(`Mgmt Zone`, Grouping, `Size Class`) %>%
+    summarize(Frequency = sum(as.numeric(Count))) %>%
+    filter(Grouping %in% c("Commercial", "Herbivorous"))
+
+  # Prepare dynamic text for Table 4F ---------------------------
+  df_table4f_cat_summed <- df_table4f %>%
+    group_by(Grouping, `Size Class`) %>%
+    summarise(Frequency = sum(Frequency))
+  df_table4f_summed <- df_table4f %>%
+    group_by(`Size Class`) %>%
+    summarise(Frequency = sum(Frequency))
+  size_freqency_herb <- df_table4f_cat_summed$`Size Class`[which.max(filter(df_table4f_cat_summed, Grouping == "Herbivorous")$Frequency)]
+  size_freqency_com <- df_table4f_cat_summed$`Size Class`[which.max(filter(df_table4f_cat_summed, Grouping == "Commercial")$Frequency)]
+  size_freqency_combined <- df_table4f_summed$`Size Class`[which.max(df_table4f_summed$Frequency)]
+  fish_size_text <- paste(
+    "For commercial fish, the most common size class was", size_freqency_com,
+    "and for herbivorous fish, the most common size class was", paste0(size_freqency_herb, "."),
+    "Overall, the most common size class was", size_freqency_combined, "(Figure 3F).", "\n\n"
+  )
+}
+```
+
+
+```{r figure3f_prep, echo = FALSE, include = FALSE}
+if (study_finfish_check) {
+  # Create Figure 3F ---------------------------
+  A <- ggplot(filter(df_table4f, Grouping == "Commercial"), aes(x = `Mgmt Zone`, y = Frequency, fill = `Size Class`)) +
+    geom_col(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8]) +
+    labs(title = "A", subtitle = "Commercial Fish") +
+    guides(fill = "none")
+  B <- ggplot(filter(df_table4f, Grouping == "Herbivorous"), aes(x = `Mgmt Zone`, y = Frequency, fill = `Size Class`)) +
+    geom_col(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8]) +
+    labs(title = "B", subtitle = "Herbivorous Fish") +
+    theme(legend.position = "bottom")
+
+  # Assemble Figure 3F ---------------------------
+  figure3f <- ggarrange(A, B, ncol = 1, nrow = 2, heights = c(1, 1.2))
+}
+```
+
+
+```{r figure3f, echo = FALSE, fig.width=6, fig.height=6, fig.align = 'left'}
+if (study_finfish_check) {
+  figure3f
+}
+```
+
+
+`r if (study_finfish_check) {figure3fcaption}`
+
+
+`r if (study_finfish_check) {"<br>"}`
+
+
+`r if (study_finfish_check) {fish_size_text}`
+
+
+`r if (study_conch_check){"***"}`
+
+
+`r if (study_conch_check){"### Conch"}`
+
+
+```{r table1co_prep, echo = FALSE, include = FALSE}
+if (study_conch_check) {
+  # Prepare df for Table 1Co ---------------------------
+
+  df_table1co_overall <- df_conch %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Site ID`) %>%
+    summarise(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Area (m2)` = Transects * 200,
+      `Milk Conch Count` = sum(Species == "Sc" | Species == "Strombus costatus" | Species == "Milk Conch"),
+      `Queen Conch Count` = sum(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch")
+    ) %>%
+    ungroup() %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Area (Hec)` = `Area (m2)` / 10000,
+      `Queen Conch` = sum(`Queen Conch Count`),
+      `Milk Conch` = sum(`Milk Conch Count`),
+      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
+      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+    ) %>%
+    select(-Transects, -`Area (m2)`) %>%
+    mutate(`Mgmt Zone` = "Overall")
+
+  df_table1co_zones <- df_conch %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`, `Site ID`) %>%
+    summarise(
+      Transects = n_distinct(Transect, na.rm = TRUE),
+      `Area (m2)` = Transects * 200,
+      `Milk Conch Count` = sum(Species == "Sc" | Species == "Strombus costatus" | Species == "Milk Conch"),
+      `Queen Conch Count` = sum(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch")
+    ) %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Transects = sum(Transects),
+      `Area (m2)` = sum(`Area (m2)`),
+      `Area (Hec)` = `Area (m2)` / 10000,
+      `Queen Conch` = sum(`Queen Conch Count`),
+      `Milk Conch` = sum(`Milk Conch Count`),
+      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
+      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+    ) %>%
+    select(-Transects, -`Area (m2)`)
+  df_table1co <- bind_rows(df_table1co_zones, df_table1co_overall)
+
+  # Prepare dynamic text for Table 1Co ---------------------------
+  conch_number_sites <- filter(df_table1co, `Mgmt Zone` == "Overall")$Sites
+  conch_number_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch`
+  conch_number_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch`
+  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Hec`
+  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Hec`
+  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Hec`)
+  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Hec`)]
+}
+```
+
+
+```{r conchtext, echo = FALSE, include = FALSE}
+# Create text about conch density  ---------------------------
+conch_density_text <- if (study_conch_check) {
+  paste(
+    "Out of", conch_number_sites, "sampled sites,", conch_number_overall_queen, "queen conch and",
+    conch_number_overall_milk, "milk conch were found, resulting in an extrapolated density of",
+    conch_density_overall_queen, "queen conch per hectare and",
+    conch_density_overall_milk, "milk conch per hectare.",
+    "The management zone with the highest queen conch density was", zone_conch_max_density, "with",
+    conch_max_density, "queen conch per hectare (Table 1Co; Figure 1Co).", "\n\n"
+  )
+}
+# Create conch table/figure captions
+table1cocaption <- if (study_finfish_check) {
+  paste(
+    "**Table 1Co.** Conch density in sampled management zones and overall in", study_year_month,
+    " at Turneffe Atoll Marine Reserve, represented by number of sites, area sampled in hectares, milk conch and queen conch count, and milk conch and queen conch density (per hectare).",
+    "\n\n"
+  )
+}
+figure1cocaption <- if (study_conch_check) {
+  paste(
+    "*Figure 1Co.* Queen conch and milk conch density in sampled management zones in", study_year_month,
+    "where colors represent species for a management zone. Height of bars is proportional to conch density per hectare.", "\n\n"
+  )
+}
+figure2cocaption <- if (study_conch_check) {
+  paste(
+    "*Figure 2Co.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for data from", study_year_month,
+    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.", "\n\n"
+  )
+}
+```
+
+
+`r if (study_conch_check){conch_density_text}`
+
+
+`r if (study_conch_check){table1cocaption}`
+
+
+```{r table1co, echo = FALSE}
+if (study_conch_check) {
+  as.data.frame(df_table1co)
+}
+```
+
+
+`r if (study_conch_check){"<br>"}`
+
+
+```{r figure1co_prep, echo = FALSE, include = FALSE}
+if (study_conch_check) {
+  # Prepare df for Figure 1Co ---------------------------
+  df_figure1co <- df_table1co_zones %>%
+    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
+    pivot_longer(cols = c(`Queen Conch`, `Milk Conch`), names_to = "Species", values_to = "Density (Conch/Hectare)")
+
+  # Define Figure 1Co
+  figure1co <- ggplot(df_figure1co, aes(x = `Mgmt Zone`, y = `Density (Conch/Hectare)`, fill = Species)) +
+    geom_col(color = "black", position = "dodge") +
+    theme_custom +
+    xlab("Management Zone") +
+    theme(axis.text.x = element_text(angle = 0)) +
+    scale_fill_manual(values = palette[2:8])
+}
+```
+
+
+```{r figure1co, echo = FALSE, fig.width=6, fig.height=2, fig.align = 'left'}
+if (study_conch_check) {
+  figure1co
+}
+```
+
+
+`r if (study_conch_check){figure1cocaption}`
+
+
+`r if (study_conch_check){"<br>"}`
+
+
+```{r figure2co_prep, echo = FALSE, include = FALSE}
+if (study_conch_check) {
+  # Create df for Figure 2Co ---------------------------
+  df_figure2co <- df_conch %>%
+    filter(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch") %>%
+    mutate(
+      `Shell Length (cm)` = `Shell Length (mm)` / 10,
+      Lipped = factor(
+        case_when(
+          is.na(`Lip Thickness (mm)`) ~ "Not Lipped",
+          `Lip Thickness (mm)` > 0 ~ "Lipped",
+          TRUE ~ "Not Lipped"
+        ),
+        levels = c("Not Lipped", "Lipped")
+      )
+    )
+
+  # Create panels for Figure 2Co ---------------------------
+  A <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Conservation Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "A", subtitle = "Conservation Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  B <- ggplot(filter(df_figure2co, `Mgmt Zone` == "General Use Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "B", subtitle = "General Use Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  C <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Special Management Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "C", subtitle = "Special Management Zone") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  D <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+    theme_custom +
+    labs(title = "D", subtitle = "Overall") +
+    scale_fill_manual(values = c(palette[3], palette[4])) +
+    geom_vline(xintercept = 17.8, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+
+  # Assemble Figure 2Co ---------------------------
+  figure2co <- ggarrange(A, B, C, D, nrow = 2, ncol = 2)
+
+  # Create dynamic variables and text about conch shell length  ---------------------------
+  df_figure2co_zone <- df_figure2co %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(`Av Shell Length (cm)` = round(mean(`Shell Length (cm)`), 1))
+  df_figure2co_legality <- df_figure2co %>%
+    summarize(`Percent Lipped` = round(100 * sum(`Lipped` == "Lipped", na.rm = TRUE) / n(), 1))
+  conch_length <- round(mean(df_figure2co$`Shell Length (cm)`), 1)
+  zone_max_conch_length <- df_figure2co$`Mgmt Zone`[which.max(df_figure2co$`Shell Length (cm)`)]
+  max_conch_length <- max(df_figure2co$`Shell Length (cm)`)
+  zone_max_average_conch_length <- df_figure2co_zone$`Mgmt Zone`[which.max(df_figure2co_zone$`Av Shell Length (cm)`)]
+  max_average_conch_length <- max(df_figure2co_zone$`Av Shell Length (cm)`)
+  percent_legal <- df_figure2co_legality$`Percent Lipped`
+  conch_shell_text <- if (study_conch_check) {
+    paste(
+      "The overall mean queen conch shell length observed within the TAMR was", conch_length, "cm.",
+      "The largest queen conch individual encountered was in the", zone_max_conch_length,
+      "with a shell length of", max_conch_length, "cm. The", zone_max_average_conch_length,
+      "had the highest mean shell length for queen conch individuals of", max_average_conch_length,
+      "cm.", percent_legal, "% of queen conch individuals found are of legal size (Figure 2Co).", "\n\n"
+    )
+  }
+}
+```
+
+`r if (study_conch_check){conch_shell_text}`
+
+
+```{r figure2co, echo = FALSE, fig.width=6, fig.height=5.5, fig.align = 'left'}
+if (study_conch_check) {
+  figure2co
+}
+```
+
+
+`r if (study_conch_check){figure2cocaption}`
+
+
+`r if (study_conch_check){"<br>"}`
+
+
+`r if (study_lobster_check){"***"}`
+
+
+`r if (study_lobster_check){"### Lobsters"}`
+
+
+```{r table1l_prep, echo = FALSE, include = FALSE}
+if (study_lobster_check) {
+  # Prepare df for Table 1L ---------------------------
+  df_table1l_overall <- df_lobster %>%
+    filter(!is.na(`Site ID`)) %>%
+    summarise(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
+      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
+      Males = sum(Sex %in% c("M", "m", "Male", "male")),
+      Females = sum(Sex %in% c("F", "f", "Female", "female")),
+      Total = `Caribbean Spiny` + `Spotted Spiny`,
+      Unsexed = Total - Males - Females
+    ) %>%
+    select(-`Hec Sampled`) %>%
+    mutate(`Mgmt Zone` = "Overall")
+  df_table1l_zones <- df_lobster %>%
+    filter(!is.na(`Site ID`)) %>%
+    group_by(`Mgmt Zone`) %>%
+    summarise(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
+      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
+      Males = sum(Sex %in% c("M", "m", "Male", "male")),
+      Females = sum(Sex %in% c("F", "f", "Female", "female"))
+    ) %>%
+    select(-`Hec Sampled`)
+  df_table1l <- bind_rows(df_table1l_zones, df_table1l_overall)
+  df_table1l <- select(df_table1l, -Unsexed, -Total)
+
+  # Prepare dynamic text for Table 1L ---------------------------
+  number_lobster_sites <- length(unique(df_lobster$`Site ID`))
+  overall_lobster_car <- df_table1l_overall$`Caribbean Spiny`
+  overall_lobster_spot <- df_table1l_overall$`Spotted Spiny`
+  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Hec`
+  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Hec`)
+  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Hec`)]
+  proportion_lob_male <- round(df_table1l_overall$Males / df_table1l_overall$Total * 100, 1)
+  proportion_lob_female <- round(df_table1l_overall$Females / df_table1l_overall$Total * 100, 1)
+  proportion_lob_unsexed <- round(df_table1l_overall$Unsexed / df_table1l_overall$Total * 100, 1)
+}
+```
+
+
+
+```{r lobstertext, echo = FALSE, include = FALSE}
+# Create text about lobster results ---------------------------
+lobster_summary_text <- if (study_lobster_check) {
+  paste(
+    "Across a total of", number_lobster_sites, "sampled sites for lobsters,",
+    overall_lobster_car, "Caribbean spiny lobsters (_Panulirus argus_) and",
+    overall_lobster_spot,
+    "spotted spiny lobsters (_Panulirus guttatus_) were found, resulting in a Caribbean spiny lobster density of",
+    density_lobster_car, "individuals per hectare.",
+    "The highest recorded Caribbean spiny lobster density was found in the",
+    zone_max_density_lobster_car, "with", max_density_lobster_car, "individuals per hectare.",
+    "Of all lobsters sampled, ", proportion_lob_male, "% were males, ",
+    proportion_lob_female, "% were females, and",
+    proportion_lob_unsexed, "% were unsexed (Table 1L; Figure 1L).",
+    "\n\n"
+  )
+}
+# Create lobster table/figure captions
+table1lcaption <- if (study_lobster_check) {
+  paste(
+    "**Table 1L.** Lobster counts in sampled management zones and overall in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
+    "\n\n"
+  )
+}
+figure1lcaption <- if (study_lobster_check) {
+  paste(
+    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
+    " at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+figure2lcaption <- if (study_lobster_check) {
+  paste(
+    "*Figure 2L.* Length-frequency distribution of Caribbean spiny lobster carapace length (mm) for data from", study_year_month,
+    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
+    "\n\n"
+  )
+}
+```
+
+
+`r if (study_lobster_check){lobster_summary_text}`
+
+
+`r if (study_lobster_check){table1lcaption}`
+
+
+```{r table1l, echo = FALSE}
+if (study_lobster_check) {
+  as.data.frame(df_table1l)
+}
+```
+
+
+`r if (study_lobster_check){"<br>"}`
+
+
+```{r figure1l_prep, echo = FALSE, include = FALSE}
+if (study_lobster_check) {
+  # Prepare df for Figure 1L ---------------------------
+  df_figure1lA <- df_table1l_overall %>%
+    select(Males, Females, Unsexed) %>%
+    pivot_longer(c(Males, Females, Unsexed), names_to = "Sex", values_to = "Value")
+
+  # Define Figure 1L
+  A <- ggplot(df_figure1lA, aes(x = "", y = Value, fill = Sex)) +
+    geom_col(color = "black") +
+    geom_label(aes(label = Value), position = position_stack(vjust = 0.5), show.legend = FALSE) +
+    coord_polar(theta = "y") +
+    theme_custom +
+    xlab("") +
+    labs(title = "A") +
+    theme(legend.box = "vertical", legend.direction = "vertical") +
+    scale_fill_manual(values = palette[2:4])
+  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Hec`, fill = `Mgmt Zone`)) +
+    geom_col(color = "black") +
+    theme_custom +
+    xlab("Management Zone") +
+    labs(title = "B") +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), legend.box = "vertical", legend.direction = "vertical") +
+    scale_fill_manual(values = c(palette[1], palette[5], palette[6], palette[7], palette[8]))
+
+
+  figure1l <- ggarrange(A, B, ncol = 2, nrow = 1)
+}
+```
+
+
+```{r figure1l, echo = FALSE, fig.width=6, fig.height=4, fig.align = 'left'}
+if (study_lobster_check) {
+  figure1l
+}
+```
+
+
+`r if (study_lobster_check){figure1lcaption}`
+
+
+`r if (study_lobster_check){"<br>"}`
+
+
+```{r figure2l_prep, echo = FALSE, include = FALSE}
+if (study_lobster_check) {
+  # Prepare df for Figure 2L ---------------------------
+  df_figure2l <- df_lobster %>%
+    filter(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster") %>%
+    filter(
+      `Carapace Length (mm)` != 0 & `Carapace Length (mm)` != "0" & `Carapace Length (mm)` != "0.0" &
+        `Carapace Length (mm)` != "NE" & `Carapace Length (mm)` != "N/E" & `Carapace Length (mm)` != "NA" &
+        `Carapace Length (mm)` != "N/A"
+    )
+
+  # Define Figure 2L
+  A <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Conservation Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "A", subtitle = "Conservation Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  B <- ggplot(filter(df_figure2l, `Mgmt Zone` == "General Use Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "B", subtitle = "General Use Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  C <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Special Management Zone"), aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "C", subtitle = "Special Management Zone") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  D <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
+    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+    theme_custom +
+    labs(title = "D", subtitle = "Overall") +
+    geom_vline(xintercept = 76, linetype = "dashed") +
+    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+
+  # Assemble Figure 2L
+  figure2l <- ggarrange(A, B, C, D, ncol = 2, nrow = 2)
+
+  # Define Variables for Figure 2L
+  overall_carapace <- round(mean(df_figure2l$`Carapace Length (mm)`), 1)
+  proportion_legal_carapace <- round(
+    sum(df_figure2l$`Carapace Length (mm)` >= 76, na.rm = TRUE) /
+      sum(df_figure2l$`Carapace Length (mm)` != 0),
+    1
+  ) * 100
+  df_figure2l_zones <- df_figure2l %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(`Av Carapace Length (mm)` = mean(`Carapace Length (mm)`))
+  max_length_lobster_car <- round(max(df_figure2l_zones$`Av Carapace Length (mm)`), 1)
+  zone_max_length_lobster_car <- df_figure2l_zones$`Mgmt Zone`[which.max(df_figure2l_zones$`Av Carapace Length (mm)`)]
+  lobster_length_text <- paste(
+    "The average Caribbean spiny lobster (_Panulirus argus_) carapace length at TAMR was found to be", overall_carapace, "mm.",
+    "The legal Caribbean spiny lobster carapace length for harvest in Belize is 76mm.",
+    proportion_legal_carapace, "% of lobsters found were legal limit or above.",
+    "The highest average length was found in the", zone_max_length_lobster_car,
+    "with", max_length_lobster_car, "mm (Figure 2L).",
+    "\n\n"
+  )
+}
+```
+
+
+`r if (study_lobster_check){lobster_length_text}`
+
+
+```{r figure2l, echo = FALSE, fig.width=6, fig.height=5, fig.align = 'left'}
+if (study_lobster_check) {
+  figure2l
+}
+```
+
+
+`r if (study_lobster_check){figure2lcaption}`
+
+
+`r if (study_lobster_check){"<br>"}`
+
+
+`r if (study_urchin_crab_check){"***"}`
+
+
+`r if (study_urchin_crab_check){"### *Diadema* and *Mithrax*"}`
+
+
+```{r table1dm_prep, echo = FALSE, include = FALSE}
+if (study_urchin_crab_check) {
+  # Prepare df for Table 1DM ---------------------------
+  df_table1dm_overall <- df_urchin_crab %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Adult Diadema` = sum(`Adult Diadema antillarum`),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
+      `Mithrax` = sum(`Mithrax spinosissumus`)
+    ) %>%
+    mutate(`Mgmt Zone` = "Overall")
+  df_table1dm_zones <- df_urchin_crab %>%
+    group_by(`Mgmt Zone`) %>%
+    summarize(
+      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      `Adult Diadema` = sum(`Adult Diadema antillarum`),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
+      `Mithrax` = sum(`Mithrax spinosissumus`)
+    )
+  df_table1dm <- bind_rows(df_table1dm_zones, df_table1dm_overall)
+
+  # Prepare dynamic text for Table 1DM ---------------------------
+  sites_urchin_lobsters <- length(unique(df_urchin_crab$`Site ID`))
+  total_diadema_ad <- df_table1dm_overall$`Adult Diadema`
+  total_diadema_juv <- df_table1dm_overall$`Juvenile Diadema`
+  total_mithrax <- df_table1dm_overall$`Mithrax`
+}
+```
+
+
+
+```{r diademamithraxtext, echo = FALSE, include = FALSE}
+# Create text about Diadema/Mithrax results ---------------------------
+urchin_crab_summary_text <- if (study_urchin_crab_check) {
+  paste(
+    "Across a total of", sites_urchin_lobsters, "sites,",
+    total_diadema_ad, "adult _Diadema_ were found,",
+    total_diadema_juv, "juvenile _Diadema_ were found, and",
+    total_mithrax, "_Mithrax_ were found (Table 1DM; Figure 1DM).",
+    "\n\n"
+  )
+}
+# Create Diadema/Mithrax table/figure captions
+table1dmcaption <- if (study_urchin_crab_check) {
+  paste(
+    "**Table 1DM.** _Diadema antillarum_ and _Mithrax spinosissumus_ counts in sampled management zones and overall in",
+    study_year_month,
+    "at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+figure1dmcaption <- if (study_urchin_crab_check) {
+  paste(
+    "_Figure 1DM_. Distribution of _Diadema antillarum_ and _Mithrax spinosissumus_ counts per site in",
+    study_year_month,
+    "at Turneffe Atoll Marine Reserve.",
+    "\n\n"
+  )
+}
+```
+
+
+`r if (study_urchin_crab_check){urchin_crab_summary_text}`
+
+
+`r if (study_urchin_crab_check){table1dmcaption}`
+
+
+```{r table1dm, echo = FALSE}
+if (study_urchin_crab_check) {
+  as.data.frame(df_table1dm)
+}
+```
+
+
+`r if (study_urchin_crab_check){"<br>"}`
+
+
+```{r figure1dm_prep, echo = FALSE, include = FALSE}
+if (study_urchin_crab_check) {
+  # Prepare df for Figure 1DM ---------------------------
+  df_figure1dm <- df_urchin_crab %>%
+    pivot_longer(
+      cols = c(`Adult Diadema antillarum`, `Juvenile Diadema antillarum`, `Mithrax spinosissumus`),
+      names_to = "Species", values_to = "Count"
+    ) %>%
+    group_by(`Site ID`, Species) %>%
+    summarize(Count = sum(Count))
+
+  # Define Figure 1DM
+  figure1dm <- ggplot(df_figure1dm, aes(x = Species, y = Count)) +
+    geom_boxplot(color = "black", fill = palette[1]) +
+    theme_custom +
+    theme(axis.text.x = element_text(angle = 0, size = 8))
+}
+```
+
+
+```{r figure1dm, echo = FALSE, fig.width=6, fig.height=2, fig.align = 'left'}
+if (study_urchin_crab_check) {
+  figure1dm
+}
+```
+
+
+`r if (study_urchin_crab_check){figure1dmcaption}`
+
+
+`r if (study_urchin_crab_check){"<br>"}`
+
+
+## Conclusion
+
+By summarizing and visualizing the LAMP general survey data from `r study_year_month`, researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Long-term Atoll Monitoring Program by offering a more understandable view of the data itself, 
+supporting future efforts to create recommendations on enforcement, monitoring, education, outreach, and regulations to ensure the long-term sustainability 
+of the TAMR fishery while safeguarding the ecological value of the atoll. \ 
+
+<br>
 
 ## Acknowledgments
 
-List of data collectors \
+```{r collectors_prep, echo = FALSE, include = FALSE}
+# Create dynamic variable for acknowledgements ---------------------------
+collectors <- df_sites$`Recorder(s)` %>%
+  as.character() %>%
+  na.omit() %>%
+  strsplit(", ") %>%
+  unlist()
+if (length(collectors) == 0) {
+  collectors_string <- ""
+} else {
+  collectors <- unique(collectors)
+  collectors_string <- ifelse(length(collectors) > 1,
+    paste0(": ", knitr::combine_words(setdiff(collectors, "Missing"))),
+    ""
+  )
+}
+```
 
-Other acknowledgements \
+Thank you to the data collectors who contributed to this project`r collectors_string`. 
 
+<br>
 
 ## Literature Cited
 
-List of citations \ 
+Acosta, C. A. (2004). Glover’s Reef long-term atoll monitoring program (LAMP). Glover’s Reef Marine Research Station, Wildlife Conservation Society, Belize.
 
+`r if (study_conch_check){"Belize Fisheries Department. (n.d.-a). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/"}`
 
-## Appendix
+`r if (study_finfish_check | study_lobster_check){"Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/"}`
 
-Additional details/tables/figures \
+`r if (study_urchin_crab_check){"Butler, M. J., & Mojica, A. M. (2012). Herbivory by the Caribbean king crab on coral patch reefs. Marine Biology, 159(12), 2697–2706. https://doi.org/10.1007/s00227-012-2027-1"}`
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+`r if (study_finfish_check) {"Froese, R., & Pauly, D. (2024). FishBase [World Wide Web electronic publication.]. www.fishbase.org"}`
+
+`r if (study_lobster_check){"Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis."}`
+
+`r if (study_conch_check){"NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science"}`
+
+`r if (study_urchin_crab_check){"Precht, L. L., & Precht, W. F. (2015). The sea urchin Diadema antillarum – keystone herbivore or redundant species? https://doi.org/10.7287/peerj.preprints.1565v2"}`
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+`r if (study_finfish_check | study_lobster_check){"United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf"}`
+
