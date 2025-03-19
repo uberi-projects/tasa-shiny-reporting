@@ -653,7 +653,7 @@ fish_stock_text <- if ("Finfish" %in% names(params$datafile)) {
 figure1fcaption <- if ("Finfish" %in% names(params$datafile)) {
   paste(
     "*Figure 1F.* Finfish density in sampled management zones by fish grouping in", study_year_month,
-    "where colors represent grouping for a management zone. Height of bars is proportional to fish density per 100m2.", "\n\n"
+    "at Turneffe Atoll Marine Reserve, where colors represent grouping for a management zone. Height of bars is proportional to fish density per 100m2.", "\n\n"
   )
 }
 table1fcaption <- if ("Finfish" %in% names(params$datafile)) {
