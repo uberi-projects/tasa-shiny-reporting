@@ -305,15 +305,19 @@ number_sites <- length(unique(df_sites$`Site ID`))
 number_sites1 <- paste0(length(unique(filter(df_sites, Survey == study1_year_month)$`Site ID`)), " in ", study1_year_month)
 number_sites2 <- paste0(length(unique(filter(df_sites, Survey == study2_year_month)$`Site ID`)), " in ", study2_year_month)
 number_sites_vector <- c(number_sites1, number_sites2)
+site_sets <- list(filter(df_sites, Survey == study1_year_month)$`Site ID`, filter(df_sites, Survey == study2_year_month)$`Site ID`)
 if (file_check3) {
   number_sites3 <- paste0(length(unique(filter(df_sites, Survey == study3_year_month)$`Site ID`)), " in ", study3_year_month)
   number_sites_vector <- c(number_sites_vector, number_sites3)
+  site_sets <- append(site_sets, list(filter(df_sites, Survey == study3_year_month)$`Site ID`))
 }
 if (file_check4) {
   number_sites4 <- paste0(length(unique(filter(df_sites, Survey == study4_year_month)$`Site ID`)), " in ", study4_year_month)
   number_sites_vector <- c(number_sites_vector, number_sites4)
+  site_sets <- append(site_sets, list(filter(df_sites, Survey == study4_year_month)$`Site ID`))
 }
 number_sites_string <- knitr::combine_words(number_sites_vector)
+number_sites_common <- length(Reduce(intersect, site_sets))
 ```
 
 
@@ -411,8 +415,9 @@ text_taxa <- paste(c(text_finfish, text_conch, text_lobster, text_urchin_crab), 
 
 # Define background text for survey methods  ---------------------------
 text_survey_period <- paste0(
-  "The survey period for this report’s dataset extended from ", study_period, " at TAMR. ",
-  number_sites, " sites were sampled in total."
+  "The survey period for this report’s dataset extended from ", study_period, " at TAMR. Sites sampled included ",
+  number_sites_string, ", including ", number_sites, " unique sites, and ",
+  number_sites_common, " sites common to all study periods."
 )
 text_sampling_area <- if ((study_conch_check | study_lobster_check | study_urchin_crab_check) & study_finfish_check) {
   "The total sampling area per site is 800m² (four 50m x 4m belt transects) for invertebrate surveys, and 400m² (four 50m x 2m belt transects) for finfish."
