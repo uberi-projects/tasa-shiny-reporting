@@ -118,7 +118,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -216,7 +223,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -396,7 +410,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -492,7 +513,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -671,7 +699,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -776,7 +811,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -937,7 +979,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -1042,7 +1091,14 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data",
+                                        span(
+                                            `data-toggle` = "tooltip", `data-placement` = "right",
+                                            title = home_text[11],
+                                            icon("question-circle")
+                                        )
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
