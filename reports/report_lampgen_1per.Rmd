@@ -665,7 +665,7 @@ table2fcaption <- if (study_finfish_check) {
 figure2fcaption <- if (study_finfish_check) {
   paste(
     "*Figure 2F.* Boxplot of finfish biomass site averages (in grams per 100m2) in sampled management zones by fish grouping in", study_year_month,
-    "at Turneffe Atoll Marine Reserve. where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
+    "at Turneffe Atoll Marine Reserve, where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
     "\n\n"
   )
 }
@@ -800,7 +800,7 @@ if (study_finfish_check) {
 `r if (study_finfish_check) {"<br>"}`
 
 
-`r if (study_finfish_check) {table2fcaption}`
+`r if (study_finfish_check) {table3fcaption}`
 
 
 ```{r table3f, echo = FALSE}

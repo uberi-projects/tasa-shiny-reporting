@@ -86,6 +86,10 @@ if (!is.null(params$datafile4)) {
 study_period <- knitr::combine_words(study_periods)
 study_year_month <- knitr::combine_words(study_years_months)
 study_years_months_count <- length(study_years_months)
+study_years_months_finfish_count <- sum(c(study_finfish_check1, study_finfish_check2, study_finfish_check3, study_finfish_check4))
+study_years_months_conch_count <- sum(c(study_conch_check1, study_conch_check2, study_conch_check3, study_conch_check4))
+study_years_months_lobster_count <- sum(c(study_lobster_check1, study_lobster_check2, study_lobster_check3, study_lobster_check4))
+study_years_months_urchin_crab_count <- sum(c(study_urchin_crab_check1, study_urchin_crab_check2, study_urchin_crab_check3, study_urchin_crab_check4))
 
 # Define datafiles ---------------------------
 datafile_names <- c(params$datafile1_name, params$datafile2_name)
@@ -113,28 +117,28 @@ if (study_finfish_check1) {
   df_finfish1 <- params$datafile1$Finfish %>%
     left_join(params$datafile1$Sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
-    mutate("Survey" = study1_year_month)
+    mutate(Survey = study1_year_month)
   df_finfish_list <- append(df_finfish_list, list(df_finfish1))
 }
 if (study_finfish_check2) {
   df_finfish2 <- params$datafile2$Finfish %>%
     left_join(params$datafile2$Sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
-    mutate("Survey" = study2_year_month)
+    mutate(Survey = study2_year_month)
   df_finfish_list <- append(df_finfish_list, list(df_finfish2))
 }
 if (study_finfish_check3) {
   df_finfish3 <- params$datafile3$Finfish %>%
     left_join(params$datafile3$Sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
-    mutate("Survey" = study3_year_month)
+    mutate(Survey = study3_year_month)
   df_finfish_list <- append(df_finfish_list, list(df_finfish3))
 }
 if (study_finfish_check4) {
   df_finfish4 <- params$datafile4$Finfish %>%
     left_join(params$datafile4$Sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
-    mutate("Survey" = study4_year_month)
+    mutate(Survey = study4_year_month)
   df_finfish_list <- append(df_finfish_list, list(df_finfish4))
 }
 df_finfish <- bind_rows(df_finfish_list)
@@ -268,9 +272,12 @@ if (study_finfish_check4) df_biomass <- params$datafile4$Biomass
 # Create sites dataframes ---------------------------
 site_cols <- c("Mgmt Zone", "Site ID", "Latitude", "Longitude")
 safe_column_select <- function(df, cols) {
-  df %>%
-    select(any_of(cols)) %>%
-    bind_cols(setNames(replicate(length(setdiff(cols, names(.))), NA, simplify = FALSE), setdiff(cols, names(.)))) %>%
+  existing_cols <- intersect(cols, names(df))
+  missing_cols <- setdiff(cols, names(df))
+  df_with_na <- df %>%
+    select(all_of(existing_cols)) %>%
+    bind_cols(setNames(replicate(length(missing_cols), NA, simplify = FALSE), missing_cols))
+  df_with_na %>%
     select(all_of(cols))
 }
 sites_list <- list(
@@ -288,14 +295,14 @@ df_sites <- bind_rows(sites_list) %>% distinct()
 # Create species dataframe ---------------------------
 species_cols <- c("Family", "Family Label", "Species", "Scientific Name", "Grouping")
 species_list <- list(
-  mutate(safe_column_select(params$datafile1$Sites, species_cols), "Survey" = study1_year_month),
-  mutate(safe_column_select(params$datafile2$Sites, species_cols), "Survey" = study2_year_month)
+  mutate(safe_column_select(params$datafile1$Species, species_cols), "Survey" = study1_year_month),
+  mutate(safe_column_select(params$datafile2$Species, species_cols), "Survey" = study2_year_month)
 )
 if (file_check3) {
-  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile3$Sites, species_cols), "Survey" = study3_year_month)))
+  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile3$Species, species_cols), "Survey" = study3_year_month)))
 }
 if (file_check4) {
-  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile4$Sites, species_cols), "Survey" = study4_year_month)))
+  species_list <- append(species_list, list(mutate(safe_column_select(params$datafile4$Species, species_cols), "Survey" = study4_year_month)))
 }
 df_species <- bind_rows(species_list) %>% distinct()
 
@@ -762,10 +769,9 @@ df_table2
 if (study_finfish_check) {
   # Prepare df for Table 1F ---------------------------
   df_table1f_transect_density <- df_finfish %>%
-    left_join(df_species, by = "Species") %>%
-    mutate(Total = rowSums(across(`0-5 cm`:`>40 cm`, as.numeric), na.rm = TRUE)) %>%
-    filter(!is.na(`Site ID`)) %>%
-    group_by(`Mgmt Zone`, `Site ID`, Transect) %>%
+    left_join(select(df_species, -Survey), by = "Species") %>%
+    mutate(Total = rowSums(across(c("0-5 cm", "6-10 cm", "11-20 cm", "21-30 cm", "31-40 cm", ">40 cm"), as.numeric), na.rm = TRUE)) %>%
+    group_by(Survey, `Site ID`, Transect) %>%
     summarise(
       Transects = n_distinct(Transect, na.rm = TRUE),
       `Area (m2)` = Transects * 100,
@@ -774,7 +780,7 @@ if (study_finfish_check) {
       .groups = "drop"
     )
   df_table1f <- df_table1f_transect_density %>%
-    group_by(`Mgmt Zone`) %>%
+    group_by(Survey) %>%
     summarise(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
@@ -786,8 +792,8 @@ if (study_finfish_check) {
     )
   df_table1f_overall <- df_table1f_transect_density %>%
     summarise(
-      `Mgmt Zone` = "Overall",
-      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Survey = "Overall",
+      Sites = n_distinct(paste(Survey, `Site ID`), na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
       `Count` = sum(`Count`),
@@ -798,34 +804,34 @@ if (study_finfish_check) {
 
   # Prepare df for Table 2F ---------------------------
   df_table2f <- df_finfish %>%
-    left_join(df_species, by = "Species") %>%
+    left_join(select(df_species, -Survey), by = "Species") %>%
     mutate(Total = as.numeric(`0-5 cm`) + as.numeric(`6-10 cm`) + as.numeric(`11-20 cm`) + as.numeric(`21-30 cm`) + as.numeric(`31-40 cm`) + as.numeric(`>40 cm`)) %>%
     filter(!is.na(`Site ID`)) %>%
-    group_by(`Mgmt Zone`, Grouping) %>%
-    left_join(df_table1f, by = "Mgmt Zone") %>%
+    group_by(Survey, Grouping) %>%
+    left_join(df_table1f, by = "Survey") %>%
     summarise(
       Count = sum(Total),
       `Density / 100m2` = round(Count / `Area (m2)` * 100, 1)
     ) %>%
     distinct() %>%
     na.omit() %>%
-    arrange(Grouping)
+    arrange(Survey, Grouping)
 
   # Prepare dynamic text for Tables 1F/2F ---------------------------
-  fish_number_sites <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Sites`
-  overall_mean_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Density / 100m2`
-  overall_median_fish_stock_density <- filter(df_table1f, `Mgmt Zone` == "Overall")$`Median Density / 100m2`
-  zone_highest_fish_stock_density <- df_table1f$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  fish_number_sites <- filter(df_table1f, Survey == "Overall")$`Sites`
+  overall_mean_fish_stock_density <- filter(df_table1f, Survey == "Overall")$`Density / 100m2`
+  overall_median_fish_stock_density <- filter(df_table1f, Survey == "Overall")$`Median Density / 100m2`
+  survey_highest_fish_stock_density <- df_table1f$Survey[which.max(df_table1f$`Density / 100m2`)]
   highest_fish_stock_density <- max(df_table1f$`Density / 100m2`, na.rm = TRUE)
-  zone_highest_fish_stock_median_density <- df_table1f$`Mgmt Zone`[which.max(df_table1f$`Median Density / 100m2`)]
+  survey_highest_fish_stock_median_density <- df_table1f$Survey[which.max(df_table1f$`Median Density / 100m2`)]
   highest_fish_stock_median_density <- max(df_table1f$`Median Density / 100m2`, na.rm = TRUE)
-  zone_highest_commercial_fish_stock_density <- filter(df_table2f, Grouping == "Commercial")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  survey_highest_commercial_fish_stock_density <- filter(df_table2f, Grouping == "Commercial")$Survey[which.max(df_table1f$`Density / 100m2`)]
   highest_commercial_fish_stock_density <- max(filter(df_table2f, Grouping == "Commercial")$`Density / 100m2`, na.rm = TRUE)
-  zone_highest_herbivorous_fish_stock_density <- filter(df_table2f, Grouping == "Herbivorous")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  survey_highest_herbivorous_fish_stock_density <- filter(df_table2f, Grouping == "Herbivorous")$Survey[which.max(df_table1f$`Density / 100m2`)]
   highest_herbivorous_fish_stock_density <- max(filter(df_table2f, Grouping == "Herbivorous")$`Density / 100m2`, na.rm = TRUE)
-  zone_highest_target_fish_stock_density <- filter(df_table2f, Grouping == "Other Target")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  survey_highest_target_fish_stock_density <- filter(df_table2f, Grouping == "Other Target")$Survey[which.max(df_table1f$`Density / 100m2`)]
   highest_target_fish_stock_density <- max(filter(df_table2f, Grouping == "Other Target")$`Density / 100m2`, na.rm = TRUE)
-  zone_highest_reef_fish_stock_density <- filter(df_table2f, Grouping == "Reef Fish")$`Mgmt Zone`[which.max(df_table1f$`Density / 100m2`)]
+  survey_highest_reef_fish_stock_density <- filter(df_table2f, Grouping == "Reef Fish")$Survey[which.max(df_table1f$`Density / 100m2`)]
   highest_reef_fish_stock_density <- max(filter(df_table2f, Grouping == "Reef Fish")$`Density / 100m2`, na.rm = TRUE)
 }
 ```
@@ -833,10 +839,10 @@ if (study_finfish_check) {
 ```{r figure1f_prep, echo = FALSE, include = FALSE}
 # Create Figure 1f ---------------------------
 if (study_finfish_check) {
-  figure1f <- ggplot(df_table2f, aes(x = `Mgmt Zone`, y = `Density / 100m2`, fill = Grouping)) +
+  figure1f <- ggplot(df_table2f, aes(x = Survey, y = `Density / 100m2`, fill = Grouping)) +
     geom_col(color = "black", position = "dodge") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     ylab("Fish Density per 100m2") +
     theme(axis.text.x = element_text(angle = 0)) +
     scale_fill_manual(values = palette[2:8])
@@ -847,58 +853,58 @@ if (study_finfish_check) {
 # Create text about fish stock results ---------------------------
 fish_stock_text <- if (study_finfish_check) {
   paste(
-    "Out of", fish_number_sites, "sampled sites,",
+    "In", study_years_months_finfish_count, "surveys,",
     "the overall mean fish stock density was", overall_mean_fish_stock_density, "fish per 100m2,",
     "with a median density of", overall_median_fish_stock_density, "fish per 100m2.",
-    "The highest density of fish was found in the", zone_highest_fish_stock_density, "with",
+    "The highest density of fish was found in", survey_highest_fish_stock_density, "with",
     highest_fish_stock_density, "fish per 100m2,",
-    "and the highest median density was found in the", zone_highest_fish_stock_median_density, "with",
+    "and the highest median density was found in", survey_highest_fish_stock_median_density, "with",
     highest_fish_stock_median_density, "fish per 100m2 (Table 1F).",
-    "The highest density of commercial fish was found in the", zone_highest_commercial_fish_stock_density, "with",
-    highest_commercial_fish_stock_density, "fish per 100m2, herbivorous in the",
-    zone_highest_herbivorous_fish_stock_density, "with ",
-    highest_herbivorous_fish_stock_density, "fish per 100m2, other target species in the", zone_highest_target_fish_stock_density, "with",
-    highest_target_fish_stock_density, "fish per 100m2, and reef fish in the", zone_highest_reef_fish_stock_density, "with",
+    "The highest density of commercial fish was found in", survey_highest_commercial_fish_stock_density, "with",
+    highest_commercial_fish_stock_density, "fish per 100m2, herbivorous in",
+    survey_highest_herbivorous_fish_stock_density, "with ",
+    highest_herbivorous_fish_stock_density, "fish per 100m2, other target species in", survey_highest_target_fish_stock_density, "with",
+    highest_target_fish_stock_density, "fish per 100m2, and reef fish in the", survey_highest_reef_fish_stock_density, "with",
     highest_reef_fish_stock_density, "fish per 100m2 (Figure 1F; Table 2F).", "\n\n"
   )
 }
 # Create fish table/figure captions
 figure1fcaption <- if (study_finfish_check) {
   paste(
-    "*Figure 1F.* Finfish density in sampled management zones by fish grouping in", study_year_month,
-    "at Turneffe Atoll Marine Reserve, where colors represent grouping for a management zone. Height of bars is proportional to fish density per 100m2.", "\n\n"
+    "*Figure 1F.* Finfish density by fish grouping in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, where colors represent grouping for a survey. Height of bars is proportional to fish density per 100m2.", "\n\n"
   )
 }
 table1fcaption <- if (study_finfish_check) {
   paste(
-    "**Table 1F.** Finfish density in sampled management zones and overall in", study_year_month,
-    " at Turneffe Atoll Marine Reserve, represented by number of sites, number of transects, area sampled in meters squared, finfish count, density per 100 meters squared, and median density per 100 meters squared.",
+    "**Table 1F.** Finfish density in", study_year_month,
+    ", and overall at Turneffe Atoll Marine Reserve, represented by number of sites, number of transects, area sampled in meters squared, finfish count, density per 100 meters squared, and median density per 100 meters squared.",
     "\n\n"
   )
 }
 table2fcaption <- if (study_finfish_check) {
   paste(
-    "**Table 2F.** Finfish density in sampled management zones by fish grouping in",
+    "**Table 2F.** Finfish density by fish grouping in",
     study_year_month, "at Turneffe Atoll Marine Reserve, represented by finfish count, and density per 100 meters squared.", "\n\n"
   )
 }
 figure2fcaption <- if (study_finfish_check) {
   paste(
-    "*Figure 2F.* Boxplot of finfish biomass site averages (in grams per 100m2) in sampled management zones by fish grouping in", study_year_month,
-    "at Turneffe Atoll Marine Reserve. where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
+    "*Figure 2F.* Boxplot of finfish biomass site averages (in grams per 100m2) by fish grouping in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, where colors represent grouping. The box encompasses 50% of the data, and the whiskers span the calculated minima to maxima. The bar inside the box represents the median.",
     "\n\n"
   )
 }
 table3fcaption <- if (study_finfish_check) {
   paste(
-    "**Table 3F.** Finfish biomass (g/100m2) in sampled management zones and overall for commercial and herbivorous fish in", study_year_month,
-    "at Turneffe Atoll Marine Reserve.", "\n\n"
+    "**Table 3F.** Finfish biomass (g/100m2) for commercial and herbivorous fish in", study_year_month,
+    ", and overall at Turneffe Atoll Marine Reserve.", "\n\n"
   )
 }
 
 figure3fcaption <- if (study_finfish_check) {
   paste(
-    "*Fig 3F*. Finfish size frequency distribution in sampled management zones for commercial (Panel A) and herbivorous (Panel B) fish in", study_year_month,
+    "*Fig 3F*. Finfish size frequency distribution for commercial (Panel A) and herbivorous (Panel B) fish in", study_year_month,
     "at Turneffe Atoll Marine Reserve.", "\n\n"
   )
 }
@@ -944,7 +950,7 @@ if (study_finfish_check) {
 if (study_finfish_check) {
   # Prepare df for Table 3F ---------------------------
   df_table3f_prelim <- df_finfish %>%
-    left_join(df_species, by = "Species") %>%
+    left_join(select(df_species, -Survey), by = "Species") %>%
     left_join(df_biomass, by = c("Family", "Scientific Name")) %>%
     mutate(
       `0-5cm BM` = as.numeric(`0-5 cm`) * (LWRa * ((LWRconv * 2.5)^LWRb)),
@@ -955,7 +961,7 @@ if (study_finfish_check) {
       `>40cm BM` = as.numeric(`>40 cm`) * (LWRa * ((LWRconv * 40)^LWRb)),
       Biomass = `0-5cm BM` + `6-10cm BM` + `11-20cm BM` + `21-30cm BM` + `31-40cm BM` + `>40cm BM`
     ) %>%
-    group_by(`Mgmt Zone`, Grouping, `Site ID`) %>%
+    group_by(Survey, Grouping, `Site ID`) %>%
     summarize(
       Transects = n_distinct(Transect, na.rm = TRUE),
       `Site Biomass` = sum(Biomass, na.rm = TRUE),
@@ -965,25 +971,25 @@ if (study_finfish_check) {
     filter(Grouping %in% c("Commercial", "Herbivorous")) %>%
     group_by(Grouping) %>%
     summarize(`Average Site Biomass Density (g/100m2)` = round(mean(`Site Biomass Density (g/100m2)`), 1)) %>%
-    mutate(`Mgmt Zone` = "Overall")
-  df_table3f_zones <- df_table3f_prelim %>%
+    mutate(Survey = "Overall")
+  df_table3f_surveys <- df_table3f_prelim %>%
     filter(Grouping %in% c("Commercial", "Herbivorous")) %>%
-    group_by(`Mgmt Zone`, Grouping) %>%
+    group_by(Survey, Grouping) %>%
     summarize(`Average Site Biomass Density (g/100m2)` = round(mean(`Site Biomass Density (g/100m2)`), 1))
-  df_table3f <- bind_rows(df_table3f_zones, df_table3f_overall)
+  df_table3f <- bind_rows(df_table3f_surveys, df_table3f_overall)
 
   # Prepare dynamic text for Table 3F ---------------------------
-  overall_mean_fish_biomass_density_herb <- filter(df_table3f, `Mgmt Zone` == "Overall" & Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`
-  overall_mean_fish_biomass_density_com <- filter(df_table3f, `Mgmt Zone` == "Overall" & Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`
-  zone_highest_fish_biomass_density_herb <- df_table3f$`Mgmt Zone`[which.max(filter(df_table3f, Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`)]
+  overall_mean_fish_biomass_density_herb <- filter(df_table3f, Survey == "Overall" & Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`
+  overall_mean_fish_biomass_density_com <- filter(df_table3f, Survey == "Overall" & Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`
+  survey_highest_fish_biomass_density_herb <- df_table3f$Survey[which.max(filter(df_table3f, Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`)]
   highest_fish_biomass_density_herb <- max(filter(df_table3f, Grouping == "Herbivorous")$`Average Site Biomass Density (g/100m2)`, na.rm = TRUE)
-  zone_highest_fish_biomass_density_comm <- df_table3f$`Mgmt Zone`[which.max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`)]
+  survey_highest_fish_biomass_density_comm <- df_table3f$Survey[which.max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`)]
   highest_fish_biomass_density_comm <- max(filter(df_table3f, Grouping == "Commercial")$`Average Site Biomass Density (g/100m2)`, na.rm = TRUE)
   fish_biomass_text <- paste(
     "Overall, the average fish biomass for commercial fish was", overall_mean_fish_biomass_density_com,
-    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", paste0(zone_highest_fish_biomass_density_comm, "."),
+    "g/100m2 with the highest survey average of", highest_fish_biomass_density_comm, "g/100m2 in", paste0(survey_highest_fish_biomass_density_comm, "."),
     "Overall, the average fish biomass for herbivorous fish was", overall_mean_fish_biomass_density_herb,
-    "g/100m2 with the highest zone average of", highest_fish_biomass_density_comm, "g/100m2 in the", zone_highest_fish_biomass_density_comm,
+    "g/100m2 with the highest survey average of", highest_fish_biomass_density_comm, "g/100m2 in", survey_highest_fish_biomass_density_comm,
     "(Figure 2F; Table 3F).", "\n\n"
   )
 }
@@ -996,10 +1002,10 @@ if (study_finfish_check) {
 ```{r figure2f_prep, echo = FALSE, include = FALSE}
 # Create Figure 2F ---------------------------
 if (study_finfish_check) {
-  figure2f <- ggplot(filter(df_table3f_prelim, Grouping %in% c("Commercial", "Herbivorous")), aes(x = `Mgmt Zone`, y = `Site Biomass Density (g/100m2)`, fill = Grouping)) +
+  figure2f <- ggplot(filter(df_table3f_prelim, Grouping %in% c("Commercial", "Herbivorous")), aes(x = Survey, y = `Site Biomass Density (g/100m2)`, fill = Grouping)) +
     geom_boxplot(color = "black", position = "dodge") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     ylab("Fish Biomass (g per 100m2)") +
     theme(axis.text.x = element_text(angle = 0)) +
     scale_fill_manual(values = palette[2:8])
@@ -1020,7 +1026,7 @@ if (study_finfish_check) {
 `r if (study_finfish_check) {"<br>"}`
 
 
-`r if (study_finfish_check) {table2fcaption}`
+`r if (study_finfish_check) {table3fcaption}`
 
 
 ```{r table3f, echo = FALSE}
@@ -1035,7 +1041,7 @@ if (study_finfish_check) {
 if (study_finfish_check) {
   # Prepare df for Table 4F, which will not be displayed by default ---------------------------
   df_table4f <- df_finfish %>%
-    left_join(df_species, by = "Species") %>%
+    left_join(select(df_species, -Survey), by = "Species") %>%
     left_join(df_biomass, by = c("Family", "Scientific Name")) %>%
     rename("40+ cm" = `>40 cm`) %>%
     rename("06-10 cm" = `6-10 cm`) %>%
@@ -1044,7 +1050,7 @@ if (study_finfish_check) {
       cols = c("0-05 cm", "06-10 cm", "11-20 cm", "21-30 cm", "31-40 cm", "40+ cm"),
       names_to = "Size Class", values_to = "Count"
     ) %>%
-    group_by(`Mgmt Zone`, Grouping, `Size Class`) %>%
+    group_by(Survey, Grouping, `Size Class`) %>%
     summarize(Frequency = sum(as.numeric(Count))) %>%
     filter(Grouping %in% c("Commercial", "Herbivorous"))
 
@@ -1070,18 +1076,18 @@ if (study_finfish_check) {
 ```{r figure3f_prep, echo = FALSE, include = FALSE}
 if (study_finfish_check) {
   # Create Figure 3F ---------------------------
-  A <- ggplot(filter(df_table4f, Grouping == "Commercial"), aes(x = `Mgmt Zone`, y = Frequency, fill = `Size Class`)) +
+  A <- ggplot(filter(df_table4f, Grouping == "Commercial"), aes(x = Survey, y = Frequency, fill = `Size Class`)) +
     geom_col(color = "black", position = "dodge") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     theme(axis.text.x = element_text(angle = 0)) +
     scale_fill_manual(values = palette[2:8]) +
     labs(title = "A", subtitle = "Commercial Fish") +
     guides(fill = "none")
-  B <- ggplot(filter(df_table4f, Grouping == "Herbivorous"), aes(x = `Mgmt Zone`, y = Frequency, fill = `Size Class`)) +
+  B <- ggplot(filter(df_table4f, Grouping == "Herbivorous"), aes(x = Survey, y = Frequency, fill = `Size Class`)) +
     geom_col(color = "black", position = "dodge") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     theme(axis.text.x = element_text(angle = 0)) +
     scale_fill_manual(values = palette[2:8]) +
     labs(title = "B", subtitle = "Herbivorous Fish") +
@@ -1101,9 +1107,6 @@ if (study_finfish_check) {
 
 
 `r if (study_finfish_check) {figure3fcaption}`
-
-
-`r if (study_finfish_check) {"<br>"}`
 
 
 `r if (study_finfish_check) {fish_size_text}`
@@ -1181,7 +1184,8 @@ if (study_conch_check) {
 # Create text about conch density  ---------------------------
 conch_density_text <- if (study_conch_check) {
   paste(
-    "Out of", conch_number_sites, "sampled sites,", conch_number_overall_queen, "queen conch and",
+    "In", study_years_months_conch_count, "surveys,",
+    conch_number_overall_queen, "queen conch and",
     conch_number_overall_milk, "milk conch were found, resulting in an extrapolated density of",
     conch_density_overall_queen, "queen conch per hectare and",
     conch_density_overall_milk, "milk conch per hectare.",
@@ -1408,7 +1412,7 @@ if (study_lobster_check) {
 # Create text about lobster results ---------------------------
 lobster_summary_text <- if (study_lobster_check) {
   paste(
-    "Across a total of", number_lobster_sites, "sampled sites for lobsters,",
+    "In", study_years_months_lobster_count, "surveys,",
     overall_lobster_car, "Caribbean spiny lobsters (_Panulirus argus_) and",
     overall_lobster_spot,
     "spotted spiny lobsters (_Panulirus guttatus_) were found, resulting in a Caribbean spiny lobster density of",
@@ -1627,7 +1631,7 @@ if (study_urchin_crab_check) {
 # Create text about Diadema/Mithrax results ---------------------------
 urchin_crab_summary_text <- if (study_urchin_crab_check) {
   paste(
-    "Across a total of", sites_urchin_lobsters, "sites,",
+    "In", study_years_months_urchin_crab_count, "surveys,",
     total_diadema_ad, "adult _Diadema_ were found,",
     total_diadema_juv, "juvenile _Diadema_ were found, and",
     total_mithrax, "_Mithrax_ were found (Table 1DM; Figure 1DM).",
