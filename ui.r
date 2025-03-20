@@ -124,6 +124,11 @@ ui <- navbarPage(
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -217,12 +222,19 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data"
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -398,12 +410,19 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data"
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -495,12 +514,19 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data"
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -675,7 +701,9 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data"
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -690,6 +718,11 @@ ui <- navbarPage(
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -795,6 +828,11 @@ ui <- navbarPage(
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -941,7 +979,9 @@ ui <- navbarPage(
                                 class = "content-container grid-generator",
                                 div(
                                     class = "input-box",
-                                    h3("Upload Data"),
+                                    h3(
+                                        "Upload Data"
+                                    ),
                                     tags$ol(
                                         class = "content-list",
                                         tags$li(
@@ -956,6 +996,11 @@ ui <- navbarPage(
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
@@ -1061,6 +1106,11 @@ ui <- navbarPage(
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
+                                            span(
+                                                `data-toggle` = "tooltip", `data-placement` = "right",
+                                                title = home_text[11],
+                                                icon("question-circle")
+                                            ),
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(

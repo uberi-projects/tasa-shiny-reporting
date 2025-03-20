@@ -8,3 +8,4 @@ Press the Validate Data button to perform a data validation operation on the upl
 Generate the report by entering any required inputs in the righthand content box, and pressing Generate Report. 
 For additional information on using and maintaining this app, please visit the Manual page.
 Our data validation checks your submitted data for completeness, standardization, and possible errors.
+Please upload only .xls or .xlsx datafiles. If you are unsure how to format your data, please reference the Data Templates panel for guidance.
