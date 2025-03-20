@@ -183,7 +183,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisheries_1yr", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
                                     )
                                 )
                             )
@@ -332,7 +333,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisheries_multiyr", "Generate")
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
                                     )
                                 )
                             )
@@ -461,7 +463,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisher_1yr", "Generate"),
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
                                     )
                                 )
                             )
@@ -608,7 +611,8 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisher_multiyr", "Generate"),
                                             )
-                                        )
+                                        ),
+                                        img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
                                     )
                                 )
                             )
