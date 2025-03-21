@@ -281,11 +281,11 @@ func_validate_site_conch_match <- function(x, y) {
     }
 }
 func_validate_species_conch_check <- function(x) {
-    valid <- (x %in% c("Ag", "Sc", "0", "NE"))
+    valid <- (x %in% c("Ag", "Sc", "0", "0.0", "NE"))
     return(all(valid))
 }
 func_validate_species_conch <- function(x) {
-    valid <- (x %in% c("Ag", "Sc", "0", "NE"))
+    valid <- (x %in% c("Ag", "Sc", "0", "0.0", "NE"))
     if (all(valid, na.rm = TRUE)) {
     } else {
         invalid <- unique(x[!valid & !is.na(x)])
@@ -332,11 +332,11 @@ func_validate_shell_lip <- function(x) {
     }
 }
 func_validate_eggs_check <- function(x) {
-    valid <- (is.na(x) | x %in% c("Y", "N", "0"))
+    valid <- (is.na(x) | x %in% c("Y", "N", "0", "0.0"))
     return(all(valid))
 }
 func_validate_eggs <- function(x) {
-    valid <- (is.na(x) | x %in% c("Y", "N", "0"))
+    valid <- (is.na(x) | x %in% c("Y", "N", "0", "0.0"))
     if (all(valid, na.rm = TRUE)) {
     } else {
         invalid <- unique(x[!valid & !is.na(x)])
@@ -394,11 +394,11 @@ func_validate_site_lobster_match <- function(x, y) {
     }
 }
 func_validate_species_lobster_check <- function(x) {
-    valid <- (x %in% c("Pa", "Pg", "0", "NE"))
+    valid <- (x %in% c("Pa", "Pg", "0", "0.0", "NE"))
     return(all(valid))
 }
 func_validate_species_lobster <- function(x) {
-    valid <- (x %in% c("Pa", "Pg", "0", "NE"))
+    valid <- (x %in% c("Pa", "Pg", "0", "0.0", "NE"))
     if (all(valid, na.rm = TRUE)) {
     } else {
         invalid <- unique(x[!valid & !is.na(x)])
@@ -456,11 +456,11 @@ func_validate_site_diadema_crab_match <- function(x, y) {
     }
 }
 func_validate_diadema_crab_counts_check <- function(x) {
-    valid <- (x %in% c(0:200) | x %in% as.character(c(0:200)))
+    valid <- (x %in% c(0:200) | x %in% as.character(c(0:200)) | x == "NE" | x == "N/E")
     return(all(valid))
 }
 func_validate_diadema_crab_counts <- function(x, type) {
-    valid <- (x %in% c(0:200) | x %in% as.character(c(0:200)))
+    valid <- (x %in% c(0:200) | x %in% as.character(c(0:200)) | x == "NE" | x == "N/E")
     if (all(valid, na.rm = TRUE)) {
     } else {
         invalid <- unique(x[!valid & !is.na(x)])
