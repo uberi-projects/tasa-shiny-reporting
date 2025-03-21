@@ -1122,9 +1122,9 @@ if (study_finfish_check) {
 if (study_conch_check) {
   # Prepare df for Table 1Co ---------------------------
 
-  df_table1co_overall <- df_conch %>%
+  df_table1co_overall <- df_conch %>% # need to rethink
     filter(!is.na(`Site ID`)) %>%
-    group_by(`Site ID`) %>%
+    group_by(`Site ID`, Survey) %>%
     summarise(
       Transects = n_distinct(Transect, na.rm = TRUE),
       `Area (m2)` = Transects * 200,
@@ -1133,7 +1133,7 @@ if (study_conch_check) {
     ) %>%
     ungroup() %>%
     summarize(
-      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Sites = n_distinct(paste0(`Site ID`, Survey), na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
       `Area (Hec)` = `Area (m2)` / 10000,
@@ -1143,18 +1143,18 @@ if (study_conch_check) {
       `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`) %>%
-    mutate(`Mgmt Zone` = "Overall")
+    mutate(Survey = "Overall")
 
-  df_table1co_zones <- df_conch %>%
+  df_table1co_surveys <- df_conch %>%
     filter(!is.na(`Site ID`)) %>%
-    group_by(`Mgmt Zone`, `Site ID`) %>%
+    group_by(Survey, `Site ID`) %>%
     summarise(
       Transects = n_distinct(Transect, na.rm = TRUE),
       `Area (m2)` = Transects * 200,
       `Milk Conch Count` = sum(Species == "Sc" | Species == "Strombus costatus" | Species == "Milk Conch"),
       `Queen Conch Count` = sum(Species == "Ag" | Species == "Aliger gigas" | Species == "Queen Conch")
     ) %>%
-    group_by(`Mgmt Zone`) %>%
+    group_by(Survey) %>%
     summarize(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
@@ -1166,16 +1166,16 @@ if (study_conch_check) {
       `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`)
-  df_table1co <- bind_rows(df_table1co_zones, df_table1co_overall)
+  df_table1co <- bind_rows(df_table1co_surveys, df_table1co_overall)
 
   # Prepare dynamic text for Table 1Co ---------------------------
-  conch_number_sites <- filter(df_table1co, `Mgmt Zone` == "Overall")$Sites
-  conch_number_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch`
-  conch_number_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch`
-  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Hec`
-  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Hec`
-  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Hec`)
-  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Hec`)]
+  conch_number_sites <- filter(df_table1co, Survey == "Overall")$Sites
+  conch_number_overall_queen <- filter(df_table1co, Survey == "Overall")$`Queen Conch`
+  conch_number_overall_milk <- filter(df_table1co, Survey == "Overall")$`Milk Conch`
+  conch_density_overall_queen <- filter(df_table1co, Survey == "Overall")$`Queen Conch / Hec`
+  conch_density_overall_milk <- filter(df_table1co, Survey == "Overall")$`Milk Conch / Hec`
+  conch_max_density <- max(filter(df_table1co, Survey != "Overall")$`Queen Conch / Hec`)
+  survey_conch_max_density <- filter(df_table1co, Survey != "Overall")$Survey[which.max(df_table1co$`Queen Conch / Hec`)]
 }
 ```
 
@@ -1189,28 +1189,28 @@ conch_density_text <- if (study_conch_check) {
     conch_number_overall_milk, "milk conch were found, resulting in an extrapolated density of",
     conch_density_overall_queen, "queen conch per hectare and",
     conch_density_overall_milk, "milk conch per hectare.",
-    "The management zone with the highest queen conch density was", zone_conch_max_density, "with",
+    "The survey with the highest queen conch density was", survey_conch_max_density, "with",
     conch_max_density, "queen conch per hectare (Table 1Co; Figure 1Co).", "\n\n"
   )
 }
 # Create conch table/figure captions
 table1cocaption <- if (study_finfish_check) {
   paste(
-    "**Table 1Co.** Conch density in sampled management zones and overall in", study_year_month,
+    "**Table 1Co.** Conch density in surveys and overall in", study_year_month,
     " at Turneffe Atoll Marine Reserve, represented by number of sites, area sampled in hectares, milk conch and queen conch count, and milk conch and queen conch density (per hectare).",
     "\n\n"
   )
 }
 figure1cocaption <- if (study_conch_check) {
   paste(
-    "*Figure 1Co.* Queen conch and milk conch density in sampled management zones in", study_year_month,
-    "where colors represent species for a management zone. Height of bars is proportional to conch density per hectare.", "\n\n"
+    "*Figure 1Co.* Queen conch and milk conch density in", study_year_month,
+    "where colors represent species for a survey. Height of bars is proportional to conch density per hectare.", "\n\n"
   )
 }
 figure2cocaption <- if (study_conch_check) {
   paste(
     "*Figure 2Co.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) for data from", study_year_month,
-    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.", "\n\n"
+    "and overall at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.", "\n\n"
   )
 }
 ```
@@ -1235,15 +1235,15 @@ if (study_conch_check) {
 ```{r figure1co_prep, echo = FALSE, include = FALSE}
 if (study_conch_check) {
   # Prepare df for Figure 1Co ---------------------------
-  df_figure1co <- df_table1co_zones %>%
-    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
+  df_figure1co <- df_table1co_surveys %>%
+    select(Survey, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
     pivot_longer(cols = c(`Queen Conch`, `Milk Conch`), names_to = "Species", values_to = "Density (Conch/Hectare)")
 
   # Define Figure 1Co
-  figure1co <- ggplot(df_figure1co, aes(x = `Mgmt Zone`, y = `Density (Conch/Hectare)`, fill = Species)) +
+  figure1co <- ggplot(df_figure1co, aes(x = Survey, y = `Density (Conch/Hectare)`, fill = Species)) +
     geom_col(color = "black", position = "dodge") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     theme(axis.text.x = element_text(angle = 0)) +
     scale_fill_manual(values = palette[2:8])
 }
@@ -1279,57 +1279,100 @@ if (study_conch_check) {
         levels = c("Not Lipped", "Lipped")
       )
     )
+  finfish_checks <- c(
+    study1_year_month = study_finfish_check1,
+    study2_year_month = study_finfish_check2,
+    study3_year_month = study_finfish_check3,
+    study4_year_month = study_finfish_check4
+  )
+  finfish_panels <- names(finfish_checks[finfish_checks])
 
   # Create panels for Figure 2Co ---------------------------
-  A <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Conservation Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-    theme_custom +
-    labs(title = "A", subtitle = "Conservation Zone") +
-    scale_fill_manual(values = c(palette[3], palette[4])) +
-    geom_vline(xintercept = 17.8, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-  B <- ggplot(filter(df_figure2co, `Mgmt Zone` == "General Use Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-    theme_custom +
-    labs(title = "B", subtitle = "General Use Zone") +
-    scale_fill_manual(values = c(palette[3], palette[4])) +
-    geom_vline(xintercept = 17.8, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-  C <- ggplot(filter(df_figure2co, `Mgmt Zone` == "Special Management Zone"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-    theme_custom +
-    labs(title = "C", subtitle = "Special Management Zone") +
-    scale_fill_manual(values = c(palette[3], palette[4])) +
-    geom_vline(xintercept = 17.8, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-  D <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5) +
-    theme_custom +
-    labs(title = "D", subtitle = "Overall") +
-    scale_fill_manual(values = c(palette[3], palette[4])) +
-    geom_vline(xintercept = 17.8, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-
-  # Assemble Figure 2Co ---------------------------
-  figure2co <- ggarrange(A, B, C, D, nrow = 2, ncol = 2)
+  if (length(finfish_panels) == 1) {
+    figure2co <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+      theme_custom +
+      scale_fill_manual(values = c(palette[3], palette[4])) +
+      geom_vline(xintercept = 17.8, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  } else {
+    A <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[1])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+      theme_custom +
+      labs(title = "A", subtitle = get(finfish_panels[1])) +
+      scale_fill_manual(values = c(palette[3], palette[4])) +
+      geom_vline(xintercept = 17.8, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+    B <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[2])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+      theme_custom +
+      labs(title = "B", subtitle = get(finfish_panels[2])) +
+      scale_fill_manual(values = c(palette[3], palette[4])) +
+      geom_vline(xintercept = 17.8, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+    if (length(finfish_panels) == 2) {
+      C <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+        geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+        theme_custom +
+        labs(title = "C", subtitle = "Overall") +
+        scale_fill_manual(values = c(palette[3], palette[4])) +
+        geom_vline(xintercept = 17.8, linetype = "dashed") +
+        scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+      figure2co <- ggarrange(A, B, C)
+    } else {
+      C <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[3])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+        geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+        theme_custom +
+        labs(title = "C", subtitle = get(finfish_panels[3])) +
+        scale_fill_manual(values = c(palette[3], palette[4])) +
+        geom_vline(xintercept = 17.8, linetype = "dashed") +
+        scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+      if (length(finfish_panels) == 3) {
+        D <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+          theme_custom +
+          labs(title = "D", subtitle = "Overall") +
+          scale_fill_manual(values = c(palette[3], palette[4])) +
+          geom_vline(xintercept = 17.8, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+        figure2co <- ggarrange(A, B, C, D)
+      } else {
+        D <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[4])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+          theme_custom +
+          labs(title = "D", subtitle = get(finfish_panels[4])) +
+          scale_fill_manual(values = c(palette[3], palette[4])) +
+          geom_vline(xintercept = 17.8, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+        E <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+          theme_custom +
+          labs(title = "E", subtitle = "Overall") +
+          scale_fill_manual(values = c(palette[3], palette[4])) +
+          geom_vline(xintercept = 17.8, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+        figure2co <- ggarrange(A, B, C, D, E)
+      }
+    }
+  }
 
   # Create dynamic variables and text about conch shell length  ---------------------------
-  df_figure2co_zone <- df_figure2co %>%
-    group_by(`Mgmt Zone`) %>%
+  df_figure2co_survey <- df_figure2co %>%
+    group_by(Survey) %>%
     summarize(`Av Shell Length (cm)` = round(mean(`Shell Length (cm)`), 1))
   df_figure2co_legality <- df_figure2co %>%
     summarize(`Percent Lipped` = round(100 * sum(`Lipped` == "Lipped", na.rm = TRUE) / n(), 1))
   conch_length <- round(mean(df_figure2co$`Shell Length (cm)`), 1)
-  zone_max_conch_length <- df_figure2co$`Mgmt Zone`[which.max(df_figure2co$`Shell Length (cm)`)]
+  survey_max_conch_length <- df_figure2co$Survey[which.max(df_figure2co$`Shell Length (cm)`)]
   max_conch_length <- max(df_figure2co$`Shell Length (cm)`)
-  zone_max_average_conch_length <- df_figure2co_zone$`Mgmt Zone`[which.max(df_figure2co_zone$`Av Shell Length (cm)`)]
-  max_average_conch_length <- max(df_figure2co_zone$`Av Shell Length (cm)`)
+  survey_max_average_conch_length <- df_figure2co_survey$Survey[which.max(df_figure2co_survey$`Av Shell Length (cm)`)]
+  max_average_conch_length <- max(df_figure2co_survey$`Av Shell Length (cm)`)
   percent_legal <- df_figure2co_legality$`Percent Lipped`
   conch_shell_text <- if (study_conch_check) {
     paste(
       "The overall mean queen conch shell length observed within the TAMR was", conch_length, "cm.",
-      "The largest queen conch individual encountered was in the", zone_max_conch_length,
-      "with a shell length of", max_conch_length, "cm. The", zone_max_average_conch_length,
+      "The largest queen conch individual encountered was in", survey_max_conch_length,
+      "with a shell length of", max_conch_length, "cm. The", survey_max_average_conch_length,
       "had the highest mean shell length for queen conch individuals of", max_average_conch_length,
       "cm.", percent_legal, "% of queen conch individuals found are of legal size (Figure 2Co).", "\n\n"
     )
