@@ -13,8 +13,6 @@ home_text <- paste(readLines("text/home.txt"))
 datatype_text <- paste(readLines("text/datatype.txt"))
 link_text <- paste(readLines("text/links.txt"))
 
-# JSFunctions -----------------------------
-
 # Define ui ---------------------------
 ui <- navbarPage(
     id = "navbar_page",
