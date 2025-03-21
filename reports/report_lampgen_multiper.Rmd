@@ -270,7 +270,7 @@ if (study_finfish_check3) df_biomass <- params$datafile3$Biomass
 if (study_finfish_check4) df_biomass <- params$datafile4$Biomass
 
 # Create sites dataframes ---------------------------
-site_cols <- c("Mgmt Zone", "Site ID", "Latitude", "Longitude")
+site_cols <- c("Mgmt Zone", "Site ID", "Latitude", "Longitude", "Recorder(s)")
 safe_column_select <- function(df, cols) {
   existing_cols <- intersect(cols, names(df))
   missing_cols <- setdiff(cols, names(df))
@@ -1684,21 +1684,21 @@ if (study_urchin_crab_check) {
   # Prepare df for Table 1DM ---------------------------
   df_table1dm_overall <- df_urchin_crab %>%
     summarize(
-      Sites = n_distinct(`Site ID`, na.rm = TRUE),
+      Sites = n_distinct(paste(Survey, `Site ID`), na.rm = TRUE),
       `Adult Diadema` = sum(`Adult Diadema antillarum`),
       `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
       `Mithrax` = sum(`Mithrax spinosissumus`)
     ) %>%
-    mutate(`Mgmt Zone` = "Overall")
-  df_table1dm_zones <- df_urchin_crab %>%
-    group_by(`Mgmt Zone`) %>%
+    mutate(Survey = "Overall")
+  df_table1dm_surveys <- df_urchin_crab %>%
+    group_by(Survey) %>%
     summarize(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       `Adult Diadema` = sum(`Adult Diadema antillarum`),
       `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
       `Mithrax` = sum(`Mithrax spinosissumus`)
     )
-  df_table1dm <- bind_rows(df_table1dm_zones, df_table1dm_overall)
+  df_table1dm <- bind_rows(df_table1dm_surveys, df_table1dm_overall)
 
   # Prepare dynamic text for Table 1DM ---------------------------
   sites_urchin_lobsters <- length(unique(df_urchin_crab$`Site ID`))
@@ -1707,7 +1707,6 @@ if (study_urchin_crab_check) {
   total_mithrax <- df_table1dm_overall$`Mithrax`
 }
 ```
-
 
 
 ```{r diademamithraxtext, echo = FALSE, include = FALSE}
@@ -1724,7 +1723,7 @@ urchin_crab_summary_text <- if (study_urchin_crab_check) {
 # Create Diadema/Mithrax table/figure captions
 table1dmcaption <- if (study_urchin_crab_check) {
   paste(
-    "**Table 1DM.** _Diadema antillarum_ and _Mithrax spinosissumus_ counts in sampled management zones and overall in",
+    "**Table 1DM.** _Diadema antillarum_ and _Mithrax spinosissumus_ counts in surveys and overall in",
     study_year_month,
     "at Turneffe Atoll Marine Reserve.",
     "\n\n"
@@ -1765,7 +1764,7 @@ if (study_urchin_crab_check) {
       cols = c(`Adult Diadema antillarum`, `Juvenile Diadema antillarum`, `Mithrax spinosissumus`),
       names_to = "Species", values_to = "Count"
     ) %>%
-    group_by(`Site ID`, Species) %>%
+    group_by(`Site ID`, Survey, Species) %>%
     summarize(Count = sum(Count))
 
   # Define Figure 1DM
@@ -1777,7 +1776,7 @@ if (study_urchin_crab_check) {
 ```
 
 
-```{r figure1dm, echo = FALSE, fig.width=6, fig.height=2, fig.align = 'left'}
+```{r figure1dm, echo = FALSE, fig.width=6, fig.height=4, fig.align = 'left'}
 if (study_urchin_crab_check) {
   figure1dm
 }
