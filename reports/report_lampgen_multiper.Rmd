@@ -1279,16 +1279,16 @@ if (study_conch_check) {
         levels = c("Not Lipped", "Lipped")
       )
     )
-  finfish_checks <- c(
-    study1_year_month = study_finfish_check1,
-    study2_year_month = study_finfish_check2,
-    study3_year_month = study_finfish_check3,
-    study4_year_month = study_finfish_check4
+  conch_checks <- c(
+    study1_year_month = study_conch_check1,
+    study2_year_month = study_conch_check2,
+    study3_year_month = study_conch_check3,
+    study4_year_month = study_conch_check4
   )
-  finfish_panels <- names(finfish_checks[finfish_checks])
+  conch_panels <- names(conch_checks[conch_checks])
 
   # Create panels for Figure 2Co ---------------------------
-  if (length(finfish_panels) == 1) {
+  if (length(conch_panels) == 1) {
     figure2co <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
       geom_histogram(color = "black", position = "identity", alpha = 0.5) +
       theme_custom +
@@ -1296,21 +1296,21 @@ if (study_conch_check) {
       geom_vline(xintercept = 17.8, linetype = "dashed") +
       scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
   } else {
-    A <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[1])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    A <- ggplot(filter(df_figure2co, Survey == get(conch_panels[1])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
       geom_histogram(color = "black", position = "identity", alpha = 0.5) +
       theme_custom +
-      labs(title = "A", subtitle = get(finfish_panels[1])) +
+      labs(title = "A", subtitle = get(conch_panels[1])) +
       scale_fill_manual(values = c(palette[3], palette[4])) +
       geom_vline(xintercept = 17.8, linetype = "dashed") +
       scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-    B <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[2])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+    B <- ggplot(filter(df_figure2co, Survey == get(conch_panels[2])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
       geom_histogram(color = "black", position = "identity", alpha = 0.5) +
       theme_custom +
-      labs(title = "B", subtitle = get(finfish_panels[2])) +
+      labs(title = "B", subtitle = get(conch_panels[2])) +
       scale_fill_manual(values = c(palette[3], palette[4])) +
       geom_vline(xintercept = 17.8, linetype = "dashed") +
       scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-    if (length(finfish_panels) == 2) {
+    if (length(conch_panels) == 2) {
       C <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
         geom_histogram(color = "black", position = "identity", alpha = 0.5) +
         theme_custom +
@@ -1320,14 +1320,14 @@ if (study_conch_check) {
         scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
       figure2co <- ggarrange(A, B, C)
     } else {
-      C <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[3])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+      C <- ggplot(filter(df_figure2co, Survey == get(conch_panels[3])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
         geom_histogram(color = "black", position = "identity", alpha = 0.5) +
         theme_custom +
-        labs(title = "C", subtitle = get(finfish_panels[3])) +
+        labs(title = "C", subtitle = get(conch_panels[3])) +
         scale_fill_manual(values = c(palette[3], palette[4])) +
         geom_vline(xintercept = 17.8, linetype = "dashed") +
         scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
-      if (length(finfish_panels) == 3) {
+      if (length(conch_panels) == 3) {
         D <- ggplot(df_figure2co, aes(x = `Shell Length (cm)`, fill = Lipped)) +
           geom_histogram(color = "black", position = "identity", alpha = 0.5) +
           theme_custom +
@@ -1337,10 +1337,10 @@ if (study_conch_check) {
           scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
         figure2co <- ggarrange(A, B, C, D)
       } else {
-        D <- ggplot(filter(df_figure2co, Survey == get(finfish_panels[4])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
+        D <- ggplot(filter(df_figure2co, Survey == get(conch_panels[4])), aes(x = `Shell Length (cm)`, fill = Lipped)) +
           geom_histogram(color = "black", position = "identity", alpha = 0.5) +
           theme_custom +
-          labs(title = "D", subtitle = get(finfish_panels[4])) +
+          labs(title = "D", subtitle = get(conch_panels[4])) +
           scale_fill_manual(values = c(palette[3], palette[4])) +
           geom_vline(xintercept = 17.8, linetype = "dashed") +
           scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
@@ -1408,8 +1408,8 @@ if (study_lobster_check) {
   df_table1l_overall <- df_lobster %>%
     filter(!is.na(`Site ID`)) %>%
     summarise(
-      Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      Sites = n_distinct(paste(`Site ID`, Survey), na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect, Survey), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
       `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
@@ -1419,13 +1419,13 @@ if (study_lobster_check) {
       Unsexed = Total - Males - Females
     ) %>%
     select(-`Hec Sampled`) %>%
-    mutate(`Mgmt Zone` = "Overall")
-  df_table1l_zones <- df_lobster %>%
+    mutate(Survey = "Overall")
+  df_table1l_surveys <- df_lobster %>%
     filter(!is.na(`Site ID`)) %>%
-    group_by(`Mgmt Zone`) %>%
+    group_by(Survey) %>%
     summarise(
-      Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      Sites = n_distinct(paste(Survey, `Site ID`), na.rm = TRUE),
+      `Hec Sampled` = n_distinct(paste0(Survey, `Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
       `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
@@ -1433,7 +1433,7 @@ if (study_lobster_check) {
       Females = sum(Sex %in% c("F", "f", "Female", "female"))
     ) %>%
     select(-`Hec Sampled`)
-  df_table1l <- bind_rows(df_table1l_zones, df_table1l_overall)
+  df_table1l <- bind_rows(df_table1l_surveys, df_table1l_overall)
   df_table1l <- select(df_table1l, -Unsexed, -Total)
 
   # Prepare dynamic text for Table 1L ---------------------------
@@ -1441,8 +1441,8 @@ if (study_lobster_check) {
   overall_lobster_car <- df_table1l_overall$`Caribbean Spiny`
   overall_lobster_spot <- df_table1l_overall$`Spotted Spiny`
   density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Hec`
-  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Hec`)
-  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Hec`)]
+  max_density_lobster_car <- max(df_table1l_surveys$`Caribbean Spiny / Hec`)
+  survey_max_density_lobster_car <- df_table1l_surveys$Survey[which.max(df_table1l_surveys$`Caribbean Spiny / Hec`)]
   proportion_lob_male <- round(df_table1l_overall$Males / df_table1l_overall$Total * 100, 1)
   proportion_lob_female <- round(df_table1l_overall$Females / df_table1l_overall$Total * 100, 1)
   proportion_lob_unsexed <- round(df_table1l_overall$Unsexed / df_table1l_overall$Total * 100, 1)
@@ -1460,25 +1460,26 @@ lobster_summary_text <- if (study_lobster_check) {
     overall_lobster_spot,
     "spotted spiny lobsters (_Panulirus guttatus_) were found, resulting in a Caribbean spiny lobster density of",
     density_lobster_car, "individuals per hectare.",
-    "The highest recorded Caribbean spiny lobster density was found in the",
-    zone_max_density_lobster_car, "with", max_density_lobster_car, "individuals per hectare.",
-    "Of all lobsters sampled, ", proportion_lob_male, "% were males, ",
-    proportion_lob_female, "% were females, and",
-    proportion_lob_unsexed, "% were unsexed (Table 1L; Figure 1L).",
+    "The highest recorded Caribbean spiny lobster density was found in",
+    survey_max_density_lobster_car, "with", max_density_lobster_car, "individuals per hectare.",
+    "Of all lobsters sampled, ", paste0(proportion_lob_male, "% were males, "),
+    paste0(proportion_lob_female, "% were females, and"),
+    paste0(proportion_lob_unsexed, "% were unsexed (Table 1L; Figure 1L)."),
     "\n\n"
   )
 }
 # Create lobster table/figure captions
 table1lcaption <- if (study_lobster_check) {
   paste(
-    "**Table 1L.** Lobster counts in sampled management zones and overall in", study_year_month,
-    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
+    "**Table 1L.** Lobster counts in surveys and overall in", study_year_month,
+    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found,
+    extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
     "\n\n"
   )
 }
 figure1lcaption <- if (study_lobster_check) {
   paste(
-    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
+    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by survey in", study_year_month,
     " at Turneffe Atoll Marine Reserve.",
     "\n\n"
   )
@@ -1486,7 +1487,7 @@ figure1lcaption <- if (study_lobster_check) {
 figure2lcaption <- if (study_lobster_check) {
   paste(
     "*Figure 2L.* Length-frequency distribution of Caribbean spiny lobster carapace length (mm) for data from", study_year_month,
-    "in sites within the conservation zone (Panel A), general use zone (Panel B), special management zone (Panel C), and overall (Panel D), at Turneffe Atoll Marine Reserve. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
+    "and overall. The dotted vertical lines indicate the legal carapace length (76 mm) for harvest.",
     "\n\n"
   )
 }
@@ -1526,10 +1527,10 @@ if (study_lobster_check) {
     labs(title = "A") +
     theme(legend.box = "vertical", legend.direction = "vertical") +
     scale_fill_manual(values = palette[2:4])
-  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Hec`, fill = `Mgmt Zone`)) +
+  B <- ggplot(df_table1l_surveys, aes(x = Survey, y = `Caribbean Spiny / Hec`, fill = Survey)) +
     geom_col(color = "black") +
     theme_custom +
-    xlab("Management Zone") +
+    xlab("Survey") +
     labs(title = "B") +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), legend.box = "vertical", legend.direction = "vertical") +
     scale_fill_manual(values = c(palette[1], palette[5], palette[6], palette[7], palette[8]))
@@ -1565,33 +1566,72 @@ if (study_lobster_check) {
     )
 
   # Define Figure 2L
-  A <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Conservation Zone"), aes(x = `Carapace Length (mm)`)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
-    theme_custom +
-    labs(title = "A", subtitle = "Conservation Zone") +
-    geom_vline(xintercept = 76, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
-  B <- ggplot(filter(df_figure2l, `Mgmt Zone` == "General Use Zone"), aes(x = `Carapace Length (mm)`)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
-    theme_custom +
-    labs(title = "B", subtitle = "General Use Zone") +
-    geom_vline(xintercept = 76, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
-  C <- ggplot(filter(df_figure2l, `Mgmt Zone` == "Special Management Zone"), aes(x = `Carapace Length (mm)`)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
-    theme_custom +
-    labs(title = "C", subtitle = "Special Management Zone") +
-    geom_vline(xintercept = 76, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
-  D <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
-    geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
-    theme_custom +
-    labs(title = "D", subtitle = "Overall") +
-    geom_vline(xintercept = 76, linetype = "dashed") +
-    scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
-
-  # Assemble Figure 2L
-  figure2l <- ggarrange(A, B, C, D, ncol = 2, nrow = 2)
+  lobster_checks <- c(
+    study1_year_month = study_lobster_check1,
+    study2_year_month = study_lobster_check2,
+    study3_year_month = study_lobster_check3,
+    study4_year_month = study_lobster_check4
+  )
+  lobster_panels <- names(lobster_checks[lobster_checks])
+  if (length(lobster_panels) == 1) {
+    figure2l <- ggplot(filter(df_figure2l, Survey == get(lobster_panels[1])), aes(x = `Carapace Length (mm)`)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+      theme_custom +
+      geom_vline(xintercept = 76, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+  } else {
+    A <- ggplot(filter(df_figure2l, Survey == get(lobster_panels[1])), aes(x = `Carapace Length (mm)`)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+      theme_custom +
+      labs(title = "A", subtitle = get(lobster_panels[1])) +
+      geom_vline(xintercept = 76, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+    B <- ggplot(filter(df_figure2l, Survey == get(lobster_panels[2])), aes(x = `Carapace Length (mm)`)) +
+      geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+      theme_custom +
+      labs(title = "B", subtitle = get(lobster_panels[2])) +
+      geom_vline(xintercept = 76, linetype = "dashed") +
+      scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+    if (length(lobster_panels) == 2) {
+      C <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
+        geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+        theme_custom +
+        labs(title = "C", subtitle = "Overall") +
+        geom_vline(xintercept = 76, linetype = "dashed") +
+        scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+      figure2l <- ggarrange(A, B, C)
+    } else {
+      C <- ggplot(filter(df_figure2l, Survey == get(lobster_panels[3])), aes(x = `Carapace Length (mm)`)) +
+        geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+        theme_custom +
+        labs(title = "C", subtitle = get(lobster_panels[3])) +
+        geom_vline(xintercept = 76, linetype = "dashed") +
+        scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+      if (length(lobster_panels) == 3) {
+        D <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+          theme_custom +
+          labs(title = "D", subtitle = "Overall") +
+          geom_vline(xintercept = 76, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+        figure2l <- ggarrange(A, B, C, D)
+      } else {
+        D <- ggplot(filter(df_figure2l, Survey == get(lobster_panels[4])), aes(x = `Carapace Length (mm)`)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+          theme_custom +
+          labs(title = "D", subtitle = get(lobster_panels[4])) +
+          geom_vline(xintercept = 76, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+        E <- ggplot(df_figure2l, aes(x = `Carapace Length (mm)`)) +
+          geom_histogram(color = "black", position = "identity", alpha = 0.5, fill = palette[1]) +
+          theme_custom +
+          labs(title = "E", subtitle = "Overall") +
+          geom_vline(xintercept = 76, linetype = "dashed") +
+          scale_x_continuous(limits = c(0, 150), breaks = seq(0, 150, 25))
+        figure2l <- ggarrange(A, B, C, D, E)
+      }
+    }
+  }
 
   # Define Variables for Figure 2L
   overall_carapace <- round(mean(df_figure2l$`Carapace Length (mm)`), 1)
@@ -1600,16 +1640,16 @@ if (study_lobster_check) {
       sum(df_figure2l$`Carapace Length (mm)` != 0),
     1
   ) * 100
-  df_figure2l_zones <- df_figure2l %>%
-    group_by(`Mgmt Zone`) %>%
+  df_figure2l_surveys <- df_figure2l %>%
+    group_by(Survey) %>%
     summarize(`Av Carapace Length (mm)` = mean(`Carapace Length (mm)`))
-  max_length_lobster_car <- round(max(df_figure2l_zones$`Av Carapace Length (mm)`), 1)
-  zone_max_length_lobster_car <- df_figure2l_zones$`Mgmt Zone`[which.max(df_figure2l_zones$`Av Carapace Length (mm)`)]
+  max_length_lobster_car <- round(max(df_figure2l_surveys$`Av Carapace Length (mm)`), 1)
+  survey_max_length_lobster_car <- df_figure2l_surveys$Survey[which.max(df_figure2l_surveys$`Av Carapace Length (mm)`)]
   lobster_length_text <- paste(
     "The average Caribbean spiny lobster (_Panulirus argus_) carapace length at TAMR was found to be", overall_carapace, "mm.",
     "The legal Caribbean spiny lobster carapace length for harvest in Belize is 76mm.",
-    proportion_legal_carapace, "% of lobsters found were legal limit or above.",
-    "The highest average length was found in the", zone_max_length_lobster_car,
+    paste0(proportion_legal_carapace, "% of lobsters found were legal limit or above."),
+    "The highest average length was found in", survey_max_length_lobster_car,
     "with", max_length_lobster_car, "mm (Figure 2L).",
     "\n\n"
   )
