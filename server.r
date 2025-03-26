@@ -165,9 +165,7 @@ server <- function(input, output, session) {
         check_datafile_dates(df_upload_spag_multiper4())
     })
 
-
-    # Change image based on Datatype
-    # LAMP Image change
+    # Change image based on datatype
     observeEvent(input$datatype_lamp_1per, {
         if (input$datatype_lamp_1per == "Conch") {
             is_conch <- TRUE
@@ -184,7 +182,6 @@ server <- function(input, output, session) {
         }
         session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = TRUE))
     })
-    # SPAG Image change
     observeEvent(input$datatype_spag_1per, {
         if (input$datatype_spag_1per == "Laser") {
             is_visual <- FALSE
@@ -215,7 +212,6 @@ server <- function(input, output, session) {
         )
         enableCustomization("fisheries_multiyr")
     })
-
     observeEvent(input$validate_fisher_1yr, {
         shinyalert("Notice!", "Validation has not been implemented for Fisher Project Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
@@ -228,11 +224,8 @@ server <- function(input, output, session) {
         )
         enableCustomization("fisher_multiyr")
     })
-
     source("validation/validation_observers/validate_lamp_observer_1per.r", local = TRUE)
-
     source("validation/validation_observers/validate_lamp_observer_multiper.r", local = TRUE)
-
     observeEvent(input$validate_spag_1per, {
         shinyalert("Notice!", "Validation has not been implemented for SPAG Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
