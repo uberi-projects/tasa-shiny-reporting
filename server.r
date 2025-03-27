@@ -166,17 +166,21 @@ server <- function(input, output, session) {
         }
     })
     output$ui_upload_lamp_multiper3 <- renderUI({
-        if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper3(), type = "year")
-        } else {
-            check_datafiles_dates(df_upload_lamp_multiper3(), type = "period")
+        if (lamp_multiper3_flag()) {
+            if (input$datatype_lamp_multiper == "Conch") {
+                check_datafiles_dates(df_upload_lamp_multiper3(), type = "year")
+            } else {
+                check_datafiles_dates(df_upload_lamp_multiper3(), type = "period")
+            }
         }
     })
     output$ui_upload_lamp_multiper4 <- renderUI({
-        if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper4(), type = "year")
-        } else {
-            check_datafiles_dates(df_upload_lamp_multiper4(), type = "period")
+        if (lamp_multiper4_flag()) {
+            if (input$datatype_lamp_multiper == "Conch") {
+                check_datafiles_dates(df_upload_lamp_multiper4(), type = "year")
+            } else {
+                check_datafiles_dates(df_upload_lamp_multiper4(), type = "period")
+            }
         }
     })
     output$ui_upload_spag_1per <- renderUI({
@@ -285,7 +289,6 @@ server <- function(input, output, session) {
         disableCustomization("lamp_multiper")
         lamp_multiper4_flag(TRUE)
     })
-    ## SPAG
     observeEvent(input$upload_spag_multiper1, {
         enableUpload("spag_multiper2")
         disableCustomization("spag_multiper")
@@ -642,7 +645,7 @@ server <- function(input, output, session) {
         }
     )
 
-    # Change image based on datatype
+    # Observe Datatype
     observeEvent(input$datatype_lamp_1per, {
         if (input$datatype_lamp_1per == "Conch") {
             is_conch <- TRUE
@@ -679,6 +682,7 @@ server <- function(input, output, session) {
         disableCustomization("spag_multiper")
         session$sendCustomMessage("triggerChangeSpagImg", list(isVisual = is_visual, isMulti = TRUE))
     })
+
     # Observe Feedback
     observeEvent(input$feedback_opn_bttn, {
         shinyjs::show("feedback-content-box")

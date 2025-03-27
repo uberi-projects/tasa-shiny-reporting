@@ -80,10 +80,11 @@ check_datafiles_dates <- function(dfs, type) {
     show_error <- function(message) {
         return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
     }
+    if (is.null(dfs) || length(dfs) == 0) {
+        disableValidate("lamp_1per")
+        return(show_error("No valid data uploaded"))
+    }
     find_date_column <- function(df) {
-        if (is.null(df)) {
-            return(show_error("No valid data uploaded"))
-        }
         if (!"Date" %in% names(df) || all(is.na(df$Date))) {
             return(NULL)
         }
@@ -98,8 +99,12 @@ check_datafiles_dates <- function(dfs, type) {
     for (df in dfs) {
         valid_df <- find_date_column(df)
         if (!is.null(valid_df)) {
+            valid_dates <- valid_df$Date[!is.na(valid_df$Date)]
+            if (length(valid_dates) == 0) {
+                next
+            }
             if (type == "year") {
-                study_years <- format(range(valid_df$Date, na.rm = TRUE), "%Y")
+                study_years <- format(range(valid_dates), "%Y")
                 if (study_years[1] != study_years[2]) {
                     return(show_error(paste0("Multiple years: ", study_years[1], "-", study_years[2])))
                 }
@@ -109,7 +114,7 @@ check_datafiles_dates <- function(dfs, type) {
                 ))
             }
             if (type == "period") {
-                study_periods <- format(range(df$Date, na.rm = TRUE), "%b %Y")
+                study_periods <- format(range(valid_dates), "%b %Y")
                 if (study_periods[1] != study_periods[2]) {
                     return(show_error(paste0("Multiple periods: ", study_periods[1], "-", study_periods[2])))
                 }
@@ -122,7 +127,6 @@ check_datafiles_dates <- function(dfs, type) {
     }
     return(show_error("No valid dates detected"))
 }
-
 
 # Create helper to read LAMP data
 read_lamp_data <- function(file_path, datatype) {
