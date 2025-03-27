@@ -95,7 +95,7 @@ observeEvent(input$validate_lamp_multiper, {
         validation_status <- c(validation_status, file2_valid)
 
         # Validate LAMP Conch multiper file 3
-        if (!is.null(input$upload_lamp_multiper3)) {
+        if (lamp_multiper3_flag()) {
             file3_valid <- FALSE
             sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp_multiper3())
             validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp_multiper3())
@@ -141,7 +141,7 @@ observeEvent(input$validate_lamp_multiper, {
         }
 
         # Validate LAMP Conch multiper file 4
-        if (!is.null(input$upload_lamp_multiper4)) {
+        if (lamp_multiper4_flag()) {
             file4_valid <- FALSE
             sheets_passed <- func_validate_lampconch_1per_sheets_check(df_upload_lamp_multiper4())
             validation_message_sheets <- func_validate_lampconch_1per_sheets(df_upload_lamp_multiper4())
@@ -348,7 +348,7 @@ observeEvent(input$validate_lamp_multiper, {
         validation_status <- c(validation_status, file2_valid)
 
         # Validate LAMP General multiper file 3
-        if (!is.null(input$upload_lamp_multiper3)) {
+        if (lamp_multiper3_flag()) {
             file3_valid <- FALSE
             sheets_passed <- func_validate_lampgeneral_1per_sheets_check(df_upload_lamp_multiper3())
             validation_message_sheets <- func_validate_lampgeneral_1per_sheets(df_upload_lamp_multiper3())
@@ -426,7 +426,7 @@ observeEvent(input$validate_lamp_multiper, {
         }
 
         # Validate LAMP General multiper file 4
-        if (!is.null(input$upload_lamp_multiper4)) {
+        if (lamp_multiper4_flag()) {
             file3_valid <- FALSE
             sheets_passed <- func_validate_lampgeneral_1per_sheets_check(df_upload_lamp_multiper4())
             validation_message_sheets <- func_validate_lampgeneral_1per_sheets(df_upload_lamp_multiper4())
