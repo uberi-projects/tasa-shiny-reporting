@@ -478,34 +478,10 @@ server <- function(input, output, session) {
             disableCustomization("fisheries_1yr")
         }
     })
-    observeEvent(input$upload_fisheries_multiyr1, {
-        if (!is.null(input$upload_fisheries_multiyr1) && (!is.null(input$upload_fisheries_multiyr2))) {
-            enableValidate("fisheries_multiyr")
-            disableCustomization("fisheries_multiyr")
-        }
-    })
-    observeEvent(input$upload_fisheries_multiyr2, {
-        if (!is.null(input$upload_fisheries_multiyr2) && (!is.null(input$upload_fisheries_multiyr1))) {
-            enableValidate("fisheries_multiyr")
-            disableCustomization("fisheries_multiyr")
-        }
-    })
     observeEvent(input$upload_fisher_1yr, {
         if (!is.null(input$upload_fisher_1yr)) {
             enableValidate("fisher_1yr")
             disableCustomization("fisher_1yr")
-        }
-    })
-    observeEvent(input$upload_fisher_multiyr1, {
-        if (!is.null(input$upload_fisher_multiyr1) && (!is.null(input$upload_fisher_multiyr2))) {
-            enableValidate("fisher_multiyr")
-            disableCustomization("fisher_multiyr")
-        }
-    })
-    observeEvent(input$upload_fisher_multiyr2, {
-        if (!is.null(input$upload_fisher_multiyr2) && (!is.null(input$upload_fisher_multiyr1))) {
-            enableValidate("fisher_multiyr")
-            disableCustomization("fisher_multiyr")
         }
     })
     observeEvent(input$upload_lamp_1per, {
@@ -514,52 +490,26 @@ server <- function(input, output, session) {
             disableCustomization("lamp_1per")
         }
     })
-    observeEvent(input$upload_lamp_multiper1, {
-        if (!is.null(input$upload_lamp_multiper1) && (!is.null(input$upload_lamp_multiper2))) {
-            enableValidate("lamp_multiper")
-            disableCustomization("lamp_multiper")
-        }
-    })
-    observeEvent(input$upload_lamp_multiper2, {
-        if (!is.null(input$upload_lamp_multiper1) && (!is.null(input$upload_lamp_multiper2))) {
-            enableValidate("lamp_multiper")
-            disableCustomization("lamp_multiper")
-        }
-    })
     observeEvent(input$upload_spag_1per, {
         if (!is.null(input$upload_spag_1per)) {
             enableValidate("spag_1per")
             disableCustomization("spag_1per")
         }
     })
-    observeEvent(input$upload_spag_multiper1, {
-        if (!is.null(input$upload_spag_multiper1) && (!is.null(input$upload_spag_multiper2))) {
-            enableValidate("spag_multiper")
-            disableCustomization("spag_multiper")
-        }
-    })
-    observeEvent(input$upload_spag_multiper2, {
-        if (!is.null(input$upload_spag_multiper1) && (!is.null(input$upload_spag_multiper2))) {
-            enableValidate("spag_multiper")
-            disableCustomization("spag_multiper")
-        }
-    })
 
     # Observe Multiyear
     ## Fisheries Catch
     observeEvent(input$upload_fisheries_multiyr1, {
-        enableValidate("fisheries_multiyr")
         enableUpload("fisheries_multiyr2")
         disableCustomization("fisheries_multiyr")
     })
     observeEvent(input$upload_fisheries_multiyr2, {
         enableUpload("fisheries_multiyr3")
-        enableUploadRemoveBttn("fisheries_multiyr2")
+        enableValidate("fisheries_multiyr")
         disableCustomization("fisheries_multiyr")
     })
     observeEvent(input$upload_fisheries_multiyr3, {
         enableUpload("fisheries_multiyr4")
-        disableUploadRemoveBttn("fisheries_multiyr2")
         enableUploadRemoveBttn("fisheries_multiyr3")
         disableCustomization("fisheries_multiyr")
     })
@@ -570,18 +520,16 @@ server <- function(input, output, session) {
     })
     ## Fisher Catch
     observeEvent(input$upload_fisher_multiyr1, {
-        enableValidate("fisher_multiyr")
         enableUpload("fisher_multiyr2")
         disableCustomization("fisher_multiyr")
     })
     observeEvent(input$upload_fisher_multiyr2, {
         enableUpload("fisher_multiyr3")
-        enableUploadRemoveBttn("fisher_multiyr2")
+        enableValidate("fisher_multiyr")
         disableCustomization("fisher_multiyr")
     })
     observeEvent(input$upload_fisher_multiyr3, {
         enableUpload("fisher_multiyr4")
-        disableUploadRemoveBttn("fisher_multiyr2")
         enableUploadRemoveBttn("fisher_multiyr3")
         disableCustomization("fisher_multiyr")
     })
@@ -592,18 +540,16 @@ server <- function(input, output, session) {
     })
     ## LAMP
     observeEvent(input$upload_lamp_multiper1, {
-        enableValidate("lamp_multiper")
         enableUpload("lamp_multiper2")
         disableCustomization("lamp_multiper")
     })
     observeEvent(input$upload_lamp_multiper2, {
         enableUpload("lamp_multiper3")
-        enableUploadRemoveBttn("lamp_multiper2")
+        enableValidate("lamp_multiper")
         disableCustomization("lamp_multiper")
     })
     observeEvent(input$upload_lamp_multiper3, {
         enableUpload("lamp_multiper4")
-        disableUploadRemoveBttn("lamp_multiper2")
         enableUploadRemoveBttn("lamp_multiper3")
         disableCustomization("lamp_multiper")
     })
@@ -614,18 +560,16 @@ server <- function(input, output, session) {
     })
     ## SPAG
     observeEvent(input$upload_spag_multiper1, {
-        enableValidate("spag_multiper")
         enableUpload("spag_multiper2")
         disableCustomization("spag_multiper")
     })
     observeEvent(input$upload_spag_multiper2, {
         enableUpload("spag_multiper3")
-        enableUploadRemoveBttn("spag_multiper2")
+        enableValidate("spag_multiper")
         disableCustomization("spag_multiper")
     })
     observeEvent(input$upload_spag_multiper3, {
         enableUpload("spag_multiper4")
-        disableUploadRemoveBttn("spag_multiper2")
         enableUploadRemoveBttn("spag_multiper3")
         disableCustomization("spag_multiper")
     })
@@ -635,18 +579,8 @@ server <- function(input, output, session) {
         disableCustomization("spag_multiper")
     })
 
-
-
     # Observe File Removal
     ## Fisheries
-    observeEvent(input$remove_fisheries_multiyr2_bttn, {
-        reset("upload_fisheries_multiyr2")
-        removeUI(selector = "#ui_upload_fisheries_multiyr2 > .file-error-button")
-        enableUpload("fisheries_multiyr2")
-        disableUpload("fisheries_multiyr3")
-        disableUploadRemoveBttn("fisheries_multiyr2")
-        removeConfirmation("fisheries_multiyr2")
-    })
     observeEvent(input$remove_fisheries_multiyr3_bttn, {
         reset("upload_fisheries_multiyr3")
         enableUpload("fisheries_multiyr3")
@@ -663,13 +597,6 @@ server <- function(input, output, session) {
         removeConfirmation("fisheries_multiyr4")
     })
     ## Fisher
-    observeEvent(input$remove_fisher_multiyr2_bttn, {
-        reset("upload_fisher_multiyr2")
-        enableUpload("fisher_multiyr2")
-        disableUpload("fisher_multiyr3")
-        disableUploadRemoveBttn("fisher_multiyr2")
-        removeConfirmation("fisher_multiyr2")
-    })
     observeEvent(input$remove_fisher_multiyr3_bttn, {
         reset("upload_fisher_multiyr3")
         enableUpload("fisher_multiyr3")
@@ -686,19 +613,11 @@ server <- function(input, output, session) {
         removeConfirmation("fisher_multiyr4")
     })
     ## LAMP
-    observeEvent(input$remove_lamp_multiper2_bttn, {
-        reset("upload_lamp_multiper2")
-        enableUpload("lamp_multiper2")
-        disableUpload("lamp_multiper3")
-        disableUploadRemoveBttn("lamp_multiper2")
-        removeConfirmation("lamp_multiper2")
-    })
     observeEvent(input$remove_lamp_multiper3_bttn, {
         reset("upload_lamp_multiper3")
         enableUpload("lamp_multiper3")
         disableUpload("lamp_multiper4")
         disableUploadRemoveBttn("lamp_multiper3")
-        enableUploadRemoveBttn("lamp_multiper2")
         removeConfirmation("lamp_multiper3")
     })
     observeEvent(input$remove_lamp_multiper4_bttn, {
@@ -709,13 +628,6 @@ server <- function(input, output, session) {
         removeConfirmation("lamp_multiper4")
     })
     ## SPAG
-    observeEvent(input$remove_spag_multiper2_bttn, {
-        reset("upload_spag_multiper2")
-        enableUpload("spag_multiper2")
-        disableUpload("spag_multiper3")
-        disableUploadRemoveBttn("spag_multiper2")
-        removeConfirmation("spag_multiper2")
-    })
     observeEvent(input$remove_spag_multiper3_bttn, {
         reset("upload_spag_multiper3")
         enableUpload("spag_multiper3")
@@ -731,13 +643,6 @@ server <- function(input, output, session) {
         enableUploadRemoveBttn("spag_multiper3")
         removeConfirmation("spag_multiper4")
     })
-
-
-
-
-
-
-
 
     # Observe Feedback
     observeEvent(input$feedback_opn_bttn, {

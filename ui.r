@@ -266,13 +266,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr2"),
-                                                actionButton(
-                                                    class = "remove-file-bttn",
-                                                    style = "display:none;",
-                                                    "remove_fisheries_multiyr2_bttn",
-                                                    "X"
-                                                )
+                                                uiOutput("ui_upload_fisheries_multiyr2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
@@ -591,13 +585,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr2"),
-                                                actionButton(
-                                                    class = "remove-file-bttn",
-                                                    style = "display:none;",
-                                                    "remove_fisher_multiyr2_bttn",
-                                                    "X"
-                                                )
+                                                uiOutput("ui_upload_fisher_multiyr2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
@@ -930,13 +918,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_lamp_multiper2"),
-                                                actionButton(
-                                                    class = "remove-file-bttn",
-                                                    style = "display:none;",
-                                                    "remove_lamp_multiper2_bttn",
-                                                    "X"
-                                                )
+                                                uiOutput("ui_upload_lamp_multiper2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
@@ -1241,13 +1223,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_spag_multiper2"),
-                                                actionButton(
-                                                    class = "remove-file-bttn",
-                                                    style = "display:none;",
-                                                    "remove_spag_multiper2_bttn",
-                                                    "X"
-                                                )
+                                                uiOutput("ui_upload_spag_multiper2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
