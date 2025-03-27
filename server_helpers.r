@@ -19,6 +19,24 @@ disableValidate <- function(reportType) {
     shinyjs::disable(paste0("validate_", reportType))
     shinyjs::show(paste0(reportType, "_validation_box_cover"))
 }
+enableUpload <- function(reportType) {
+    shinyjs::enable(paste0("upload_", reportType))
+    shinyjs::hide(paste0(reportType, "_upload_box_cover"))
+}
+disableUpload <- function(reportType) {
+    shinyjs::disable(paste0("upload_", reportType))
+    shinyjs::show(paste0(reportType, "_upload_box_cover"))
+}
+enableUploadRemoveBttn <- function(reportType) {
+    shinyjs::show(paste0("remove_", reportType, "_bttn"))
+}
+disableUploadRemoveBttn <- function(reportType) {
+    shinyjs::hide(paste0("remove_", reportType, "_bttn"))
+}
+removeConfirmation <- function(reportType) {
+    removeUI(selector = paste0("#ui_upload_", reportType, " > .file-error-button"))
+    removeUI(selector = paste0("#ui_upload_", reportType, " > .file-confirmation-button"))
+}
 
 # Define helpers to check datafile date
 check_datafile_dates <- function(df) {
