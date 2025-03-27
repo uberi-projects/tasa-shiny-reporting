@@ -115,64 +115,84 @@ server <- function(input, output, session) {
 
     # Read and report year of datafile
     output$ui_upload_fisheries_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisheries_1yr())
+        check_datafile_dates(df_upload_fisheries_1yr(), type = "year")
     })
     output$ui_upload_fisheries_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr1())
+        check_datafile_dates(df_upload_fisheries_multiyr1(), type = "year")
     })
     output$ui_upload_fisheries_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr2())
+        check_datafile_dates(df_upload_fisheries_multiyr2(), type = "year")
     })
     output$ui_upload_fisheries_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr3())
+        check_datafile_dates(df_upload_fisheries_multiyr3(), type = "year")
     })
     output$ui_upload_fisheries_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr4())
+        check_datafile_dates(df_upload_fisheries_multiyr4(), type = "year")
     })
     output$ui_upload_fisher_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisher_1yr())
+        check_datafile_dates(df_upload_fisher_1yr(), type = "year")
     })
     output$ui_upload_fisher_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr1())
+        check_datafile_dates(df_upload_fisher_multiyr1(), type = "year")
     })
     output$ui_upload_fisher_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr2())
+        check_datafile_dates(df_upload_fisher_multiyr2(), type = "year")
     })
     output$ui_upload_fisher_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr3())
+        check_datafile_dates(df_upload_fisher_multiyr3(), type = "year")
     })
     output$ui_upload_fisher_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr4())
+        check_datafile_dates(df_upload_fisher_multiyr4(), type = "year")
     })
     output$ui_upload_lamp_1per <- renderUI({
-        check_datafiles_dates(df_upload_lamp_1per())
+        if (input$datatype_lamp_1per == "Conch") {
+            check_datafiles_dates(df_upload_lamp_1per(), type = "year")
+        } else {
+            check_datafiles_dates(df_upload_lamp_1per(), type = "period")
+        }
     })
     output$ui_upload_lamp_multiper1 <- renderUI({
-        check_datafiles_dates(df_upload_lamp_multiper1())
+        if (input$datatype_lamp_multiper == "Conch") {
+            check_datafiles_dates(df_upload_lamp_multiper1(), type = "year")
+        } else {
+            check_datafiles_dates(df_upload_lamp_multiper1(), type = "period")
+        }
     })
     output$ui_upload_lamp_multiper2 <- renderUI({
-        check_datafiles_dates(df_upload_lamp_multiper2())
+        if (input$datatype_lamp_multiper == "Conch") {
+            check_datafiles_dates(df_upload_lamp_multiper2(), type = "year")
+        } else {
+            check_datafiles_dates(df_upload_lamp_multiper2(), type = "period")
+        }
     })
     output$ui_upload_lamp_multiper3 <- renderUI({
-        check_datafiles_dates(df_upload_lamp_multiper3())
+        if (input$datatype_lamp_multiper == "Conch") {
+            check_datafiles_dates(df_upload_lamp_multiper3(), type = "year")
+        } else {
+            check_datafiles_dates(df_upload_lamp_multiper3(), type = "period")
+        }
     })
     output$ui_upload_lamp_multiper4 <- renderUI({
-        check_datafiles_dates(df_upload_lamp_multiper4())
+        if (input$datatype_lamp_multiper == "Conch") {
+            check_datafiles_dates(df_upload_lamp_multiper4(), type = "year")
+        } else {
+            check_datafiles_dates(df_upload_lamp_multiper4(), type = "period")
+        }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafile_dates(df_upload_spag_1per())
+        check_datafile_dates(df_upload_spag_1per(), type = "period")
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper1())
+        check_datafile_dates(df_upload_spag_multiper1(), type = "period")
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper2())
+        check_datafile_dates(df_upload_spag_multiper2(), type = "period")
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper3())
+        check_datafile_dates(df_upload_spag_multiper3(), type = "period")
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper4())
+        check_datafile_dates(df_upload_spag_multiper4(), type = "period")
     })
 
     # Observe Upload
