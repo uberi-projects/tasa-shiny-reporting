@@ -203,6 +203,9 @@ ui <- navbarPage(
                             "$(document).ready(function(){
                         $('#fisheries_multiyr_name').prop('disabled', true);
                         $('#validate_fisheries_multiyr').prop('disabled', true);
+                        $('#upload_fisheries_multiyr2').prop('disabled', true);
+                        $('#upload_fisheries_multiyr3').prop('disabled', true);
+                        $('#upload_fisheries_multiyr4').prop('disabled', true);
                     });
                     $(function () {
                         $('[data-toggle=tooltip]').tooltip({container: 'body'})
@@ -263,7 +266,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr2")
+                                                uiOutput("ui_upload_fisheries_multiyr2"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisheries_multiyr2_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisheries_multiyr2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -280,7 +293,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr3")
+                                                uiOutput("ui_upload_fisheries_multiyr3"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisheries_multiyr3_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisheries_multiyr3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -297,7 +320,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr4")
+                                                uiOutput("ui_upload_fisheries_multiyr4"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisheries_multiyr4_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisheries_multiyr4_upload_box_cover"
                                             )
                                         ),
                                         hr(),
@@ -497,6 +530,9 @@ ui <- navbarPage(
                             "$(document).ready(function(){
                         $('#fisher_multiyr_name').prop('disabled', true);
                         $('#validate_fisher_multiyr').prop('disabled', true);
+                        $('#upload_fisher_multiyr2').prop('disabled', true);
+                        $('#upload_fisher_multiyr3').prop('disabled', true);
+                        $('#upload_fisher_multiyr4').prop('disabled', true);
                     });
                     "
                         )
@@ -555,7 +591,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr2")
+                                                uiOutput("ui_upload_fisher_multiyr2"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisher_multiyr2_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_multiyr2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -572,7 +618,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr3")
+                                                uiOutput("ui_upload_fisher_multiyr3"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisher_multiyr3_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_multiyr3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -589,7 +645,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr4")
+                                                uiOutput("ui_upload_fisher_multiyr4"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_fisher_multiyr4_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "fisher_multiyr4_upload_box_cover"
                                             )
                                         ),
                                         hr(),
@@ -797,6 +863,9 @@ ui <- navbarPage(
                             "$(document).ready(function(){
                                 $('#lamp_multiper_name').prop('disabled', true);
                                 $('#validate_lamp_multiper').prop('disabled', true);
+                                $('#upload_lamp_multiper2').prop('disabled', true);
+                                $('#upload_lamp_multiper3').prop('disabled', true);
+                                $('#upload_lamp_multiper4').prop('disabled', true);
                             });"
                         )
                     ),
@@ -861,7 +930,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_lamp_multiper2")
+                                                uiOutput("ui_upload_lamp_multiper2"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_lamp_multiper2_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_multiper2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -878,7 +957,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_lamp_multiper3")
+                                                uiOutput("ui_upload_lamp_multiper3"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_lamp_multiper3_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_multiper3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -895,7 +984,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_lamp_multiper4")
+                                                uiOutput("ui_upload_lamp_multiper4"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_lamp_multiper4_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "lamp_multiper4_upload_box_cover"
                                             )
                                         ),
                                         hr(),
@@ -1075,6 +1174,9 @@ ui <- navbarPage(
                             "$(document).ready(function(){
                         $('#spag_multiper_name').prop('disabled', true);
                         $('#validate_spag_multiper').prop('disabled', true);
+                        $('#upload_spag_multiper2').prop('disabled', true);
+                        $('#upload_spag_multiper3').prop('disabled', true);
+                        $('#upload_spag_multiper4').prop('disabled', true);
                     });"
                         )
                     ),
@@ -1139,7 +1241,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_spag_multiper2")
+                                                uiOutput("ui_upload_spag_multiper2"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_spag_multiper2_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_multiper2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -1156,7 +1268,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_spag_multiper3")
+                                                uiOutput("ui_upload_spag_multiper3"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_spag_multiper3_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_multiper3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -1173,7 +1295,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_spag_multiper4")
+                                                uiOutput("ui_upload_spag_multiper4"),
+                                                actionButton(
+                                                    class = "remove-file-bttn",
+                                                    style = "display:none;",
+                                                    "remove_spag_multiper4_bttn",
+                                                    "X"
+                                                )
+                                            ),
+                                            div(
+                                                class = "validation-box-cover",
+                                                id = "spag_multiper4_upload_box_cover"
                                             )
                                         ),
                                         hr(),

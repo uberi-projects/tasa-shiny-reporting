@@ -268,6 +268,7 @@ label {
   height: 100%;
 }
 .input-box-cover {
+  z-index: 1;
   position: absolute;
   top: 0;
   right: 0;
@@ -290,9 +291,19 @@ label {
   right: 0;
   bottom: 0;
 }
+.remove-file-bttn {
+  border:none;
+  border-radius: 0;
+  position: absolute;
+  padding: 0 6px;
+  height: 32px;
+  top: 41px;
+  left: 360px;
+}
 
 /* Images */
 .datatype-img {
+  z-index: 2;
   display: block;
   margin: 0px auto;
   width: 75%;
