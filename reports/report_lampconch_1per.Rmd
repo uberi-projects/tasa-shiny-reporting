@@ -41,7 +41,12 @@ df_merged <- df_surveys |>
   mutate(`Conch Count` = as.integer(`Conch Count`))
 if (as.character(params$lamp_1per_year_selection) != "None") {
   df_merged <- df_merged |>
-    filter(format(Date.x, "%Y") == params$lamp_1per_year_selection)
+    filter(format(Date.x, "%Y") == params$lamp_1per_year_selection) |>
+    filter(format(Date.y, "%Y") == params$lamp_1per_year_selection)
+  df_sites <- df_sites |>
+    filter(format(Date, "%Y") == params$lamp_1per_year_selection)
+  df_surveys <- df_surveys |>
+    filter(format(Date, "%Y") == params$lamp_1per_year_selection)
 }
 
 # Count number of sites surveyed ---------------------------

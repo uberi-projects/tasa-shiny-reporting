@@ -8,6 +8,8 @@ params:
   user_name: "Unknown"
   datafile: pressure
   datafile_name: "Unknown"
+  lamp_1per_year_selection: "None"
+  lamp_1per_period_selection: "None"
 ---
 
 ```{r setup, include=FALSE}
@@ -24,12 +26,6 @@ library(ggpubr)
 source("theme.r")
 source("map.r")
 
-# Define study period ---------------------------
-study_start <- as.Date(min(params$datafile$Sites$Date, na.rm = TRUE))
-study_end <- as.Date(max(params$datafile$Sites$Date, na.rm = TRUE))
-study_year <- format(study_start, "%Y")
-study_year_month <- format(study_start, "%b %Y")
-
 # Define study taxa ---------------------------
 study_conch_check <- "Conch" %in% names(params$datafile)
 study_lobster_check <- "Lobster" %in% names(params$datafile)
@@ -45,24 +41,32 @@ study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithra
 studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
 
 # Create merged dataframes ---------------------------
+df_biomass <- if (study_finfish_check) params$datafile$Biomass
+if (as.character(params$lamp_1per_period_selection) != "None") {
+  df_sites <- params$datafile$Sites |>
+    filter(format(Date, "%b %Y") == params$lamp_1per_period_selection)
+} else {
+  df_sites <- params$datafile$Sites
+}
+df_species <- params$datafile$Species
 df_finfish <- if (study_finfish_check) {
   params$datafile$Finfish %>%
-    left_join(params$datafile$Sites, by = "Site ID") %>%
+    inner_join(df_sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_conch <- if (study_conch_check) {
   params$datafile$Conch %>%
-    left_join(params$datafile$Sites, by = "Site ID") %>%
+    inner_join(df_sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_lobster <- if (study_lobster_check) {
   params$datafile$Lobster %>%
-    left_join(params$datafile$Sites, by = "Site ID") %>%
+    inner_join(df_sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_urchin_crab <- if (study_urchin_crab_check) {
   params$datafile$Diadema_Crab %>%
-    left_join(params$datafile$Sites, by = "Site ID") %>%
+    inner_join(df_sites, by = "Site ID") %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
     mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
     mutate(
@@ -71,9 +75,12 @@ df_urchin_crab <- if (study_urchin_crab_check) {
       `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
     )
 }
-df_biomass <- if (study_finfish_check) params$datafile$Biomass
-df_sites <- params$datafile$Sites
-df_species <- params$datafile$Species
+
+# Define study period ---------------------------
+study_start <- as.Date(min(df_sites$Date, na.rm = TRUE))
+study_end <- as.Date(max(df_sites$Date, na.rm = TRUE))
+study_year <- format(study_start, "%Y")
+study_year_month <- format(study_start, "%b %Y")
 
 # Count number of sites surveyed ---------------------------
 number_sites <- length(unique(df_sites$`Site ID`))
