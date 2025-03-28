@@ -146,40 +146,40 @@ server <- function(input, output, session) {
     })
     output$ui_upload_lamp_1per <- renderUI({
         if (input$datatype_lamp_1per == "Conch") {
-            check_datafiles_dates(df_upload_lamp_1per(), type = "year")
+            check_datafiles_dates(df_upload_lamp_1per(), type = "year", id = "lamp_1per_")
         } else {
-            check_datafiles_dates(df_upload_lamp_1per(), type = "period")
+            check_datafiles_dates(df_upload_lamp_1per(), type = "period", id = "lamp_1per_")
         }
     })
     output$ui_upload_lamp_multiper1 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper1(), type = "year")
+            check_datafiles_dates(df_upload_lamp_multiper1(), type = "year", id = "lamp_multiper1_")
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper1(), type = "period")
+            check_datafiles_dates(df_upload_lamp_multiper1(), type = "period", id = "lamp_multiper1_")
         }
     })
     output$ui_upload_lamp_multiper2 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper2(), type = "year")
+            check_datafiles_dates(df_upload_lamp_multiper2(), type = "year", id = "lamp_multiper2_")
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper2(), type = "period")
+            check_datafiles_dates(df_upload_lamp_multiper2(), type = "period", id = "lamp_multiper2_")
         }
     })
     output$ui_upload_lamp_multiper3 <- renderUI({
         if (lamp_multiper3_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper3(), type = "year")
+                check_datafiles_dates(df_upload_lamp_multiper3(), type = "year", id = "lamp_multiper3_")
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper3(), type = "period")
+                check_datafiles_dates(df_upload_lamp_multiper3(), type = "period", id = "lamp_multiper3_")
             }
         }
     })
     output$ui_upload_lamp_multiper4 <- renderUI({
         if (lamp_multiper4_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper4(), type = "year")
+                check_datafiles_dates(df_upload_lamp_multiper4(), type = "year", id = "lamp_multiper4_")
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper4(), type = "period")
+                check_datafiles_dates(df_upload_lamp_multiper4(), type = "period", id = "lamp_multiper4_")
             }
         }
     })
