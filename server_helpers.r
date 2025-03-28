@@ -108,7 +108,7 @@ check_datafiles_dates <- function(dfs, type, id) {
                 if (study_years[1] != study_years[2]) {
                     return(div(
                         show_error(paste0("Multiple years: ", study_years[1], "-", study_years[2])),
-                        div(class = "input-list-content", prettyRadioButtons(paste0("year_selection", id), label = "Please select one year.", choices = unique_study_years, inline = TRUE))
+                        div(class = "input-list-content", prettyRadioButtons(paste0(id, "year_selection"), label = "Please select one year.", choices = unique_study_years, inline = TRUE))
                     ))
                 }
                 return(div(
@@ -123,7 +123,7 @@ check_datafiles_dates <- function(dfs, type, id) {
                 }
                 return(div(
                     show_error(paste0("Multiple periods: ", study_periods[1], "-", study_periods[2])),
-                    div(class = "input-list-content", prettyRadioButtons(paste0("period_selection", id), label = "Please select one period.", choices = unique_study_periods, inline = TRUE))
+                    div(class = "input-list-content", prettyRadioButtons(paste0(id, "period_selection"), label = "Please select one period.", choices = unique_study_periods, inline = TRUE))
                 ))
             }
         }

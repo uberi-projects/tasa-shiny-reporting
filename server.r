@@ -532,7 +532,13 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$lamp_1per_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
+                params = list(
+                    user_name = input$lamp_1per_name,
+                    datafile_name = input$upload_lamp_1per$name,
+                    datafile = df_upload_lamp_1per(),
+                    lamp_1per_year_selection = if (!is.null(input[["lamp_1per_year_selection"]])) input[["lamp_1per_year_selection"]] else "None",
+                    lamp_1per_period_selection = if (!is.null(input[["lamp_1per_period_selection"]])) input[["lamp_1per_period_selection"]] else "None"
+                ),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
