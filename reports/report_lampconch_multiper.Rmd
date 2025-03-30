@@ -14,6 +14,14 @@ params:
   datafile3_name: "Not Chosen"
   datafile4: NULL
   datafile4_name: "Not Chosen"
+  lamp_multiper1_year_selection: "None"
+  lamp_multiper1_period_selection: "None"
+  lamp_multiper2_year_selection: "None"
+  lamp_multiper2_period_selection: "None"
+  lamp_multiper3_year_selection: "None"
+  lamp_multiper3_period_selection: "None"
+  lamp_multiper4_year_selection: "None"
+  lamp_multiper4_period_selection: "None"
 ---
 
 ```{r setup, include=FALSE}

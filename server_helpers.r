@@ -39,21 +39,24 @@ removeConfirmation <- function(reportType) {
 }
 
 # Define helpers to check datafile date
-check_datafile_dates <- function(df, type) {
-    show_error <- function(message) {
-        return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
-    }
+show_error <- function(message) {
+    return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
+}
+show_critical_error <- function(message) {
+    return(div(class = "file-critical-error-button", p(class = "p-black", paste0("⚠️ ", message))))
+}
+check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
     if (is.null(df)) {
         return(show_error("No valid data uploaded"))
     }
     if (!"Date" %in% names(df) || all(is.na(df$Date))) {
-        return(show_error("No valid dates detected"))
+        return(show_critical_error("No valid dates detected"))
     }
     if (!inherits(df$Date, "Date")) {
         df$Date <- suppressWarnings(as.Date(df$Date))
     }
     if (all(is.na(df$Date))) {
-        return(show_error("Could not interpret any dates"))
+        return(show_critical_error("Could not interpret any dates"))
     }
     if (type == "year") {
         study_years <- format(range(df$Date, na.rm = TRUE), "%Y")
@@ -76,37 +79,44 @@ check_datafile_dates <- function(df, type) {
         ))
     }
 }
-check_datafiles_dates <- function(dfs, type) {
-    show_error <- function(message) {
-        return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
-    }
+
+check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
+    year_flag(FALSE)
+    period_flag(FALSE)
     if (is.null(dfs) || length(dfs) == 0) {
-        disableValidate("lamp_1per")
-        return(show_error("No valid data uploaded"))
+        return(show_critical_error("No valid data uploaded"))
     }
     find_date_column <- function(df) {
-        if (!"Date" %in% names(df) || all(is.na(df$Date))) {
-            return(NULL)
+        if ("Date" %in% names(df)) {
+            return(df)
         }
-        if (!inherits(df$Date, "Date")) {
-            df$Date <- suppressWarnings(as.Date(df$Date))
-        }
-        if (all(is.na(df$Date))) {
-            return(NULL)
-        }
-        return(df)
+        return(NULL)
     }
     for (df in dfs) {
         valid_df <- find_date_column(df)
         if (!is.null(valid_df)) {
-            valid_dates <- valid_df$Date[!is.na(valid_df$Date)]
+            date_char <- as.character(valid_df$Date)
+            valid_dates <- suppressWarnings(as.Date(date_char, format = "%Y-%m-%d"))
+            valid_dates <- valid_dates[!is.na(valid_dates)]
             if (length(valid_dates) == 0) {
                 next
             }
             if (type == "year") {
                 study_years <- format(range(valid_dates), "%Y")
+                unique_study_years <- sort(unique(format(valid_dates, "%Y")))
                 if (study_years[1] != study_years[2]) {
-                    return(show_error(paste0("Multiple years: ", study_years[1], "-", study_years[2])))
+                    year_flag(TRUE)
+                    return(div(
+                        show_error(paste0("Multiple years: ", study_years[1], "-", study_years[2])),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "year_selection"),
+                                label = "Please select one year.",
+                                choices = unique_study_years,
+                                inline = TRUE
+                            )
+                        )
+                    ))
                 }
                 return(div(
                     class = "file-confirmation-button",
@@ -115,8 +125,20 @@ check_datafiles_dates <- function(dfs, type) {
             }
             if (type == "period") {
                 study_periods <- format(range(valid_dates), "%b %Y")
+                unique_study_periods <- sort(unique(format(valid_dates, "%b %Y")))
                 if (study_periods[1] != study_periods[2]) {
-                    return(show_error(paste0("Multiple periods: ", study_periods[1], "-", study_periods[2])))
+                    period_flag(TRUE)
+                    return(div(
+                        show_error(paste0("Multiple periods: ", study_periods[1], "-", study_periods[2])),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "period_selection"),
+                                label = "Please select one period.",
+                                choices = unique_study_periods,
+                                inline = TRUE
+                            )
+                        )
+                    ))
                 }
                 return(div(
                     class = "file-confirmation-button",
@@ -125,45 +147,45 @@ check_datafiles_dates <- function(dfs, type) {
             }
         }
     }
-    return(show_error("No valid dates detected"))
+    return(show_critical_error("No valid dates detected"))
 }
 
 # Create helper to read LAMP data
 read_lamp_data <- function(file_path, datatype) {
-    nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
+    nas <- c("NA", "N/A", "Unknown", "Missing", "None", "N/E")
     sheets_available <- excel_sheets(file_path)
     data_list <- list()
     if (datatype == "Conch") {
         if ("Survey Data" %in% sheets_available) {
-            data_list$Survey_Data <- read_excel(file_path, sheet = "Survey Data", na = nas)
+            data_list$Survey_Data <- read_excel(file_path, sheet = "Survey Data", na = nas, guess_max = min(1000, Inf))
         }
         if ("Sites" %in% sheets_available) {
-            data_list$Sites <- read_excel(file_path, sheet = "Sites", na = nas)
+            data_list$Sites <- read_excel(file_path, sheet = "Sites", na = nas, guess_max = min(1000, Inf))
         }
         if ("Habitat Types" %in% sheets_available) {
-            data_list$Habitat_Types <- read_excel(file_path, sheet = "Habitat Types", na = nas)
+            data_list$Habitat_Types <- read_excel(file_path, sheet = "Habitat Types", na = nas, guess_max = min(1000, Inf))
         }
     } else {
         if ("Species" %in% sheets_available) {
-            data_list$Species <- read_excel(file_path, sheet = "Species", na = nas)
+            data_list$Species <- read_excel(file_path, sheet = "Species", na = nas, guess_max = min(1000, Inf))
         }
         if ("Biomass" %in% sheets_available) {
-            data_list$Biomass <- read_excel(file_path, sheet = "Biomass", na = nas)
+            data_list$Biomass <- read_excel(file_path, sheet = "Biomass", na = nas, guess_max = min(1000, Inf))
         }
         if ("Sites" %in% sheets_available) {
-            data_list$Sites <- read_excel(file_path, sheet = "Sites", na = nas)
+            data_list$Sites <- read_excel(file_path, sheet = "Sites", na = nas, guess_max = min(1000, Inf))
         }
         if ("Finfish" %in% sheets_available) {
-            data_list$Finfish <- read_excel(file_path, sheet = "Finfish", na = nas)
+            data_list$Finfish <- read_excel(file_path, sheet = "Finfish", na = nas, guess_max = min(1000, Inf))
         }
         if ("Conch" %in% sheets_available) {
-            data_list$Conch <- read_excel(file_path, sheet = "Conch", na = nas)
+            data_list$Conch <- read_excel(file_path, sheet = "Conch", na = nas, guess_max = min(1000, Inf))
         }
         if ("Lobster" %in% sheets_available) {
-            data_list$Lobster <- read_excel(file_path, sheet = "Lobster", na = nas)
+            data_list$Lobster <- read_excel(file_path, sheet = "Lobster", na = nas, guess_max = min(1000, Inf))
         }
         if ("Diadema and Crab" %in% sheets_available) {
-            data_list$Diadema_Crab <- read_excel(file_path, sheet = "Diadema and Crab", na = nas)
+            data_list$Diadema_Crab <- read_excel(file_path, sheet = "Diadema and Crab", na = nas, guess_max = min(1000, Inf))
         }
     }
     return(data_list)
