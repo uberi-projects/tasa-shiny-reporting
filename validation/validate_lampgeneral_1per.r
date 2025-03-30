@@ -552,13 +552,13 @@ func_validate_lampgeneral_1per_sheets <- function(x) {
     sheets(x, c("Species", "Sites"), "General LAMP")
 }
 func_validate_lampgeneral_1per_completeness <- function(df_list) {
-    required_columns_sites <- c("Site ID", "Date", "Mgmt Zone", "Latitude", "Longitude", "Recorder(s)")
+    required_columns_sites <- c("Site ID", "Date", "Mgmt Zone", "Latitude", "Longitude", "Recorder(s)", "Period")
     required_columns_species <- c("Grouping", "Species", "Family", "Scientific Name")
     required_columns_biomass <- c("Family", "Scientific Name", "LWRconv", "LWRa", "LWRb")
-    required_columns_finfish <- c("Site ID", "Transect", "Species", "0-5 cm", "6-10 cm", "11-20 cm", "21-30 cm", "31-40 cm", ">40 cm")
-    required_columns_conch <- c("Site ID", "Transect", "Species", "Shell Length (mm)", "Lip Thickness (mm)", "Eggs")
-    required_columns_lobster <- c("Site ID", "Transect", "Species", "Carapace Length (mm)", "Sex", "Eggs")
-    required_columns_diadema_crab <- c("Site ID", "Transect", "Adult Diadema antillarum", "Juvenile Diadema antillarum", "Mithrax spinosissumus")
+    required_columns_finfish <- c("Site ID", "Transect", "Species", "0-5 cm", "6-10 cm", "11-20 cm", "21-30 cm", "31-40 cm", ">40 cm", "Period")
+    required_columns_conch <- c("Site ID", "Transect", "Species", "Shell Length (mm)", "Lip Thickness (mm)", "Eggs", "Period")
+    required_columns_lobster <- c("Site ID", "Transect", "Species", "Carapace Length (mm)", "Sex", "Eggs", "Period")
+    required_columns_diadema_crab <- c("Site ID", "Transect", "Adult Diadema antillarum", "Juvenile Diadema antillarum", "Mithrax spinosissumus", "Period")
     complete_sites <- completeness(df_list$Sites, required_columns_sites, "Sites")
     complete_species <- completeness(df_list$Species, required_columns_species, "Species")
     complete_biomass <- if ("Biomass" %in% names(df_list)) completeness(df_list$Biomass, required_columns_biomass, "Biomass") else ""

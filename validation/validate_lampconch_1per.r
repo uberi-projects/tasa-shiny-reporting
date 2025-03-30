@@ -292,8 +292,8 @@ func_validate_lampconch_1per_sheets_check <- function(x) {
     sheets_check(x, c("Survey_Data", "Habitat_Types", "Sites"))
 }
 func_validate_lampconch_1per_completeness_check <- function(x, y, z) {
-    required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
-    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
+    required_columns_surveydata <- c("Date", "Year", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
+    required_columns_sites <- c("Site ID", "Year", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
     required_columns_habitattypes <- c("Habitat Type")
     complete_x <- completeness_check(x, required_columns_surveydata)
     complete_y <- completeness_check(y, required_columns_sites)
@@ -325,8 +325,8 @@ func_validate_lampconch_1per_sheets <- function(x) {
     sheets(x, c("Survey_Data", "Habitat_Types", "Sites"), "Conch LAMP")
 }
 func_validate_lampconch_1per_completeness <- function(x, y, z) {
-    required_columns_surveydata <- c("Date", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
-    required_columns_sites <- c("Site ID", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
+    required_columns_surveydata <- c("Date", "Year", "Site ID", "Transect", "Conch Count", "Conch Depth (ft)", "Shell Length (in)", "Lip Thickness (mm)")
+    required_columns_sites <- c("Site ID", "Year", "Date", "Section", "Latitude", "Longitude", "Habitat", "Method", "Recorder(s)")
     required_columns_habitattypes <- c("Habitat Type")
     complete_x <- completeness(x, required_columns_surveydata, "Survey Data")
     complete_y <- completeness(y, required_columns_sites, "Sites")
