@@ -45,7 +45,7 @@ show_error <- function(message) {
 show_critical_error <- function(message) {
     return(div(class = "file-critical-error-button", p(class = "p-black", paste0("⚠️ ", message))))
 }
-check_datafile_dates <- function(df, type) {
+check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
     if (is.null(df)) {
         return(show_error("No valid data uploaded"))
     }
