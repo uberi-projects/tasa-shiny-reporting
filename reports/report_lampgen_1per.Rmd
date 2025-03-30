@@ -31,14 +31,6 @@ study_conch_check <- "Conch" %in% names(params$datafile)
 study_lobster_check <- "Lobster" %in% names(params$datafile)
 study_finfish_check <- "Finfish" %in% names(params$datafile)
 study_urchin_crab_check <- "Diadema_Crab" %in% names(params$datafile)
-study_conch <- if (study_conch_check) "queen conch (_Aliger gigas_)"
-study_conch2 <- if (study_conch_check) "milk conch (_Strombus costatus_)"
-study_lobster <- if (study_lobster_check) "Caribbean spiny lobster (_Panulirus argus_)"
-study_lobster2 <- if (study_lobster_check) "spotted spiny lobster (_Panulirus guttatus_)"
-study_finfish <- if (study_finfish_check) "finfish"
-study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
-study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithrax spinosissimus_)"
-studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
 
 # Create merged dataframes ---------------------------
 df_biomass <- if (study_finfish_check) params$datafile$Biomass
@@ -51,22 +43,22 @@ if (as.character(params$lamp_1per_period_selection) != "None") {
 df_species <- params$datafile$Species
 df_finfish <- if (study_finfish_check) {
   params$datafile$Finfish %>%
-    inner_join(df_sites, by = "Site ID") %>%
+    inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_conch <- if (study_conch_check) {
   params$datafile$Conch %>%
-    inner_join(df_sites, by = "Site ID") %>%
+    inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_lobster <- if (study_lobster_check) {
   params$datafile$Lobster %>%
-    inner_join(df_sites, by = "Site ID") %>%
+    inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
 }
 df_urchin_crab <- if (study_urchin_crab_check) {
   params$datafile$Diadema_Crab %>%
-    inner_join(df_sites, by = "Site ID") %>%
+    inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`)) %>%
     mutate(across(everything(), ~ ifelse(. %in% c("N/E", "NE"), 0, .))) %>%
     mutate(
@@ -75,6 +67,21 @@ df_urchin_crab <- if (study_urchin_crab_check) {
       `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
     )
 }
+
+# Redefine study taxa after merging ---------------------------
+study_conch_check <- nrow(df_conch) > 3
+study_lobster_check <- nrow(df_lobster) > 3
+study_finfish_check <- nrow(df_finfish) > 3
+study_urchin_crab_check <- nrow(df_urchin_crab) > 3
+study_conch <- if (study_conch_check) "queen conch (_Aliger gigas_)"
+study_conch2 <- if (study_conch_check) "milk conch (_Strombus costatus_)"
+study_lobster <- if (study_lobster_check) "Caribbean spiny lobster (_Panulirus argus_)"
+study_lobster2 <- if (study_lobster_check) "spotted spiny lobster (_Panulirus guttatus_)"
+study_finfish <- if (study_finfish_check) "finfish"
+study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
+study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithrax spinosissimus_)"
+studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
+
 
 # Define study period ---------------------------
 study_start <- as.Date(min(df_sites$Date, na.rm = TRUE))
@@ -244,7 +251,7 @@ Sample sites surveyed in `r study_year_month` are labelled on the map.\
 
 ```{r table1/2_prep, echo = FALSE, include = FALSE}
 # Create df for Table 1 ---------------------------
-empty_counts <- c("0.0", "0", "NE", "N/E", NA, "")
+empty_counts <- c("0.0", "0", "NE", "N/E", NA, "", "N/A")
 df_table1_sum_sites <- df_sites %>%
   group_by(`Mgmt Zone`) %>%
   summarise(Sites = length(unique(`Site ID`))) %>%
@@ -1385,18 +1392,18 @@ if (study_urchin_crab_check) {
   df_table1dm_overall <- df_urchin_crab %>%
     summarize(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Adult Diadema` = sum(`Adult Diadema antillarum`),
-      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
-      `Mithrax` = sum(`Mithrax spinosissumus`)
+      `Adult Diadema` = sum(`Adult Diadema antillarum`, na.rm = TRUE),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`, na.rm = TRUE),
+      `Mithrax` = sum(`Mithrax spinosissumus`, na.rm = TRUE)
     ) %>%
     mutate(`Mgmt Zone` = "Overall")
   df_table1dm_zones <- df_urchin_crab %>%
     group_by(`Mgmt Zone`) %>%
     summarize(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Adult Diadema` = sum(`Adult Diadema antillarum`),
-      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`),
-      `Mithrax` = sum(`Mithrax spinosissumus`)
+      `Adult Diadema` = sum(`Adult Diadema antillarum`, na.rm = TRUE),
+      `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`, na.rm = TRUE),
+      `Mithrax` = sum(`Mithrax spinosissumus`, na.rm = TRUE)
     )
   df_table1dm <- bind_rows(df_table1dm_zones, df_table1dm_overall)
 
@@ -1434,7 +1441,7 @@ figure1dmcaption <- if (study_urchin_crab_check) {
   paste(
     "_Figure 1DM_. Distribution of _Diadema antillarum_ and _Mithrax spinosissumus_ counts per site in",
     study_year_month,
-    "at Turneffe Atoll Marine Reserve.",
+    "at Turneffe Atoll Marine Reserve. Black Xs represent the mean for each group.",
     "\n\n"
   )
 }
@@ -1466,11 +1473,12 @@ if (study_urchin_crab_check) {
       names_to = "Species", values_to = "Count"
     ) %>%
     group_by(`Site ID`, Species) %>%
-    summarize(Count = sum(Count))
+    summarize(Count = sum(Count, na.rm = TRUE))
 
   # Define Figure 1DM
   figure1dm <- ggplot(df_figure1dm, aes(x = Species, y = Count)) +
     geom_boxplot(color = "black", fill = palette[1]) +
+  stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black") +
     theme_custom +
     theme(axis.text.x = element_text(angle = 0, size = 8))
 }
