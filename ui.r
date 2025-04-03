@@ -185,6 +185,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisheries_1yr", "Generate")
+                                            ),
+                                            div(
+                                                id = "fisheries_1yr_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "fisheries_1yr_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")

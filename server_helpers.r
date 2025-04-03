@@ -37,7 +37,14 @@ removeConfirmation <- function(reportType) {
     removeUI(selector = paste0("#ui_upload_", reportType, " > .file-error-button"))
     removeUI(selector = paste0("#ui_upload_", reportType, " > .file-confirmation-button"))
 }
-
+showLoaderBar <- function(reportType) {
+    shinyjs::show(paste0(reportType, "_loader"))
+    shinyjs::hide(paste0("report_", reportType))
+}
+hideLoaderBar <- function(reportType) {
+    shinyjs::hide(paste0(reportType, "_loader"))
+    shinyjs::show(paste0("report_", reportType))
+}
 # Define helpers to check datafile date
 check_datafile_dates <- function(df, type) {
     show_error <- function(message) {

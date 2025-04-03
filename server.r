@@ -428,6 +428,11 @@ server <- function(input, output, session) {
     output$report_fisheries_1yr <- downloadHandler(
         filename = function() "report_fisheries_1yr.docx",
         content = function(file) {
+            showLoaderBar("fisheries_1yr")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "fisheries_1yr", percentage = i))
+            }
             report_file <- "report_fisheries_1yr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -443,8 +448,10 @@ server <- function(input, output, session) {
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
+            hideLoaderBar("fisheries_1yr")
         }
     )
+
     output$report_fisheries_multiyr <- downloadHandler(
         filename = function() "report_fisheries_multiyr.docx",
         content = function(file) {
