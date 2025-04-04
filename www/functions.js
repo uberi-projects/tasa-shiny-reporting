@@ -38,3 +38,11 @@ function updateLoader(reportType, percentage) {
 Shiny.addCustomMessageHandler('updateLoader', function(message) {
     updateLoader(message.reportType, message.percentage);
 });
+// Reset Loader
+function resetLoader(reportType) {
+    let progressBar = document.getElementById(reportType+"_loader_bar")
+    progressBar.style.width = "0%"
+}
+Shiny.addCustomMessageHandler('resetLoader', function(message) {
+    resetLoader(message.reportType);
+});

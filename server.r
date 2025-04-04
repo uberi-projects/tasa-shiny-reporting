@@ -442,19 +442,24 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("fisheries_1yr")
+            session$sendCustomMessage("resetLoader", list(reportType = "fisheries_1yr"))
             out <- render(
                 report_file,
                 params = list(user_name = input$fisheries_1yr_name, datafile = df_upload_fisheries_1yr()),
                 envir = new.env(parent = globalenv())
             )
             file.rename(out, file)
-            hideLoaderBar("fisheries_1yr")
         }
     )
-
     output$report_fisheries_multiyr <- downloadHandler(
         filename = function() "report_fisheries_multiyr.docx",
         content = function(file) {
+            showLoaderBar("fisheries_multiyr")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "fisheries_multiyr", percentage = i))
+            }
             report_file <- "report_fisheries_multiyr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -464,6 +469,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("fisheries_multiyr")
+            session$sendCustomMessage("resetLoader", list(reportType = "fisheries_multiyr"))
             out <- render(
                 report_file,
                 params = list(user_name = input$fisheries_multiyr_name, datafile = df_upload_fisheries_multiyr1()),
@@ -475,6 +482,11 @@ server <- function(input, output, session) {
     output$report_fisher_1yr <- downloadHandler(
         filename = function() "report_fisher_1yr.docx",
         content = function(file) {
+            showLoaderBar("fisher_1yr")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "fisher_1yr", percentage = i))
+            }
             report_file <- "report_fisher_1yr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -484,6 +496,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("fisher_1yr")
+            session$sendCustomMessage("resetLoader", list(reportType = "fisher_1yr"))
             out <- render(
                 report_file,
                 params = list(user_name = input$fisher_1yr_name, datafile = df_upload_fisher_1yr()),
@@ -495,6 +509,11 @@ server <- function(input, output, session) {
     output$report_fisher_multiyr <- downloadHandler(
         filename = function() "report_fisher_multiyr.docx",
         content = function(file) {
+            showLoaderBar("fisher_multiyr")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "fisher_multiyr", percentage = i))
+            }
             report_file <- "report_fisher_multiyr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -504,6 +523,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("fisher_multiyr")
+            session$sendCustomMessage("resetLoader", list(reportType = "fisher_multiyr"))
             out <- render(
                 report_file,
                 params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr1()),
@@ -521,6 +542,11 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("lamp_1per")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "lamp_1per", percentage = i))
+            }
             report_file <- switch(input$datatype_lamp_1per,
                 "Conch" = "report_lampconch_1per.Rmd",
                 "General LAMP" = "report_lampgen_1per.Rmd",
@@ -537,6 +563,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
+            hideLoaderBar("lamp_1per")
+            session$sendCustomMessage("resetLoader", list(reportType = "lamp_1per"))
             out <- render(
                 report_file,
                 params = list(user_name = input$lamp_1per_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
@@ -554,6 +582,11 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("lamp_multiper")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "lamp_multiper", percentage = i))
+            }
             report_file <- switch(input$datatype_lamp_multiper,
                 "Conch" = "report_lampconch_multiper.Rmd",
                 "General LAMP" = "report_lampgen_multiper.Rmd",
@@ -585,6 +618,8 @@ server <- function(input, output, session) {
                 params_list$datafile4_name <- input$upload_lamp_multiper4$name
                 params_list$datafile4 <- df_upload_lamp_multiper4()
             }
+            hideLoaderBar("lamp_multiper")
+            session$sendCustomMessage("resetLoader", list(reportType = "lamp_multiper"))
             out <- render(
                 report_file,
                 params = params_list,
@@ -602,6 +637,11 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("spag_1per")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "spag_1per", percentage = i))
+            }
             report_file <- switch(input$datatype_spag_1per,
                 "Visual Census" = "report_spagvis_1per.Rmd",
                 "Laser" = "report_spaglaser_1per.Rmd"
@@ -614,6 +654,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("spag_1per")
+            session$sendCustomMessage("resetLoader", list(reportType = "spag_1per"))
             out <- render(
                 report_file,
                 params = list(user_name = input$spag_name, datafile = df_upload_spag_1per()),
@@ -631,6 +673,11 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("spag_multiper")
+            for (i in seq(0, 70, by = 10)) {
+                Sys.sleep(0.1)
+                session$sendCustomMessage("updateLoader", list(reportType = "spag_multiper", percentage = i))
+            }
             report_file <- switch(input$datatype_spag_multiper,
                 "Visual Census" = "report_spagvis_multiper.Rmd",
                 "Laser" = "report_spaglaser_multiper.Rmd"
@@ -643,6 +690,8 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            hideLoaderBar("spag_multiper")
+            session$sendCustomMessage("resetLoader", list(reportType = "spag_multiper"))
             out <- render(
                 report_file,
                 params = list(user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
