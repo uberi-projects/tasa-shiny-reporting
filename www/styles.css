@@ -420,8 +420,9 @@ label {
   justify-items: center;
   margin: -21px 0 15px;
 }
+
 /* Loading Bars */
-.custom-loader{
+.custom-loader {
   width: 95%;
   height: 40px;
   position: absolute;
@@ -430,11 +431,11 @@ label {
   right: 0;
   top: 40px;
   justify-self: center;
-  border: solid black 1px;
+  border: solid white 2px;
   border-radius: 10px;
   overflow: hidden;
 }
-.custom-loader-bar{
+.custom-loader-bar {
   width: 0%;
   height: inherit;
   background-color: var(--color-alert);
