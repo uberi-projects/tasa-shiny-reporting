@@ -95,8 +95,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisheries_1yr_name').prop('disabled', true);
-                        $('#validate_fisheries_1yr').prop('disabled', true);
+                        $('#fisheries_1per_name').prop('disabled', true);
+                        $('#validate_fisheries_1per').prop('disabled', true);
                     });
                     $(function () {
                         $('[data-toggle=tooltip]').tooltip({container: 'body'})
@@ -130,7 +130,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries_1yr",
+                                                    "upload_fisheries_1per",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -138,7 +138,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_1yr")
+                                                uiOutput("ui_upload_fisheries_1per")
                                             )
                                         ),
                                         hr(),
@@ -152,11 +152,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_1yr_validation_box_cover"
+                                                id = "fisheries_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisheries_1yr", "Perform Validation")
+                                                actionButton("validate_fisheries_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -165,7 +165,7 @@ ui <- navbarPage(
                                     class = "input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisheries_1yr_input_box_cover"
+                                        id = "fisheries_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -175,7 +175,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisheries_1yr_name", "Your Name: ", value = "")
+                                                textInput("fisheries_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -184,14 +184,14 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisheries_1yr", "Generate")
+                                                downloadButton("report_fisheries_1per", "Generate")
                                             ),
                                             div(
-                                                id = "fisheries_1yr_loader",
+                                                id = "fisheries_1per_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
                                                 div(
-                                                    id = "fisheries_1yr_loader_bar",
+                                                    id = "fisheries_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
                                             )
@@ -208,11 +208,11 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisheries_multiyr_name').prop('disabled', true);
-                        $('#validate_fisheries_multiyr').prop('disabled', true);
-                        $('#upload_fisheries_multiyr2').prop('disabled', true);
-                        $('#upload_fisheries_multiyr3').prop('disabled', true);
-                        $('#upload_fisheries_multiyr4').prop('disabled', true);
+                        $('#fisheries_multiper_name').prop('disabled', true);
+                        $('#validate_fisheries_multiper').prop('disabled', true);
+                        $('#upload_fisheries_multiper2').prop('disabled', true);
+                        $('#upload_fisheries_multiper3').prop('disabled', true);
+                        $('#upload_fisheries_multiper4').prop('disabled', true);
                     });
                     $(function () {
                         $('[data-toggle=tooltip]').tooltip({container: 'body'})
@@ -248,7 +248,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries_multiyr1",
+                                                    "upload_fisheries_multiper1",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -256,7 +256,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr1")
+                                                uiOutput("ui_upload_fisheries_multiper1")
                                             )
                                         ),
                                         tags$li(
@@ -265,7 +265,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries_multiyr2",
+                                                    "upload_fisheries_multiper2",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -273,11 +273,11 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr2")
+                                                uiOutput("ui_upload_fisheries_multiper2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_multiyr2_upload_box_cover"
+                                                id = "fisheries_multiper2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -286,7 +286,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries_multiyr3",
+                                                    "upload_fisheries_multiper3",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -294,17 +294,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr3"),
+                                                uiOutput("ui_upload_fisheries_multiper3"),
                                                 actionButton(
                                                     class = "remove-file-bttn",
                                                     style = "display:none;",
-                                                    "remove_fisheries_multiyr3_bttn",
+                                                    "remove_fisheries_multiper3_bttn",
                                                     "X"
                                                 )
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_multiyr3_upload_box_cover"
+                                                id = "fisheries_multiper3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -313,7 +313,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisheries_multiyr4",
+                                                    "upload_fisheries_multiper4",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -321,17 +321,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisheries_multiyr4"),
+                                                uiOutput("ui_upload_fisheries_multiper4"),
                                                 actionButton(
                                                     class = "remove-file-bttn",
                                                     style = "display:none;",
-                                                    "remove_fisheries_multiyr4_bttn",
+                                                    "remove_fisheries_multiper4_bttn",
                                                     "X"
                                                 )
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_multiyr4_upload_box_cover"
+                                                id = "fisheries_multiper4_upload_box_cover"
                                             )
                                         ),
                                         hr(),
@@ -345,11 +345,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisheries_multiyr_validation_box_cover"
+                                                id = "fisheries_multiper_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisheries_multiyr", "Perform Validation")
+                                                actionButton("validate_fisheries_multiper", "Perform Validation")
                                             )
                                         )
                                     )
@@ -358,7 +358,7 @@ ui <- navbarPage(
                                     class = "input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisheries_multiyr_input_box_cover"
+                                        id = "fisheries_multiper_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -368,7 +368,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisheries_multiyr_name", "Your Name: ", value = "")
+                                                textInput("fisheries_multiper_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -377,14 +377,14 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisheries_multiyr", "Generate")
+                                                downloadButton("report_fisheries_multiper", "Generate")
                                             ),
                                             div(
-                                                id = "fisheries_multiyr_loader",
+                                                id = "fisheries_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
                                                 div(
-                                                    id = "fisheries_multiyr_loader_bar",
+                                                    id = "fisheries_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
                                             )
@@ -434,8 +434,8 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisher_1yr_name').prop('disabled', true);
-                        $('#validate_fisher_1yr').prop('disabled', true);
+                        $('#fisher_1per_name').prop('disabled', true);
+                        $('#validate_fisher_1per').prop('disabled', true);
                     });
                     "
                         )
@@ -469,7 +469,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher_1yr",
+                                                    "upload_fisher_1per",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -477,7 +477,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_1yr")
+                                                uiOutput("ui_upload_fisher_1per")
                                             )
                                         ),
                                         hr(),
@@ -491,11 +491,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_1yr_validation_box_cover"
+                                                id = "fisher_1per_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisher_1yr", "Perform Validation")
+                                                actionButton("validate_fisher_1per", "Perform Validation")
                                             )
                                         )
                                     )
@@ -504,7 +504,7 @@ ui <- navbarPage(
                                     class = "input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisher_1yr_input_box_cover"
+                                        id = "fisher_1per_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -514,7 +514,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_1yr_name", "Your Name: ", value = "")
+                                                textInput("fisher_1per_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -523,14 +523,14 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher_1yr", "Generate"),
+                                                downloadButton("report_fisher_1per", "Generate"),
                                             ),
                                             div(
-                                                id = "fisher_1yr_loader",
+                                                id = "fisher_1per_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
                                                 div(
-                                                    id = "fisher_1yr_loader_bar",
+                                                    id = "fisher_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
                                             )
@@ -547,11 +547,11 @@ ui <- navbarPage(
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
-                        $('#fisher_multiyr_name').prop('disabled', true);
-                        $('#validate_fisher_multiyr').prop('disabled', true);
-                        $('#upload_fisher_multiyr2').prop('disabled', true);
-                        $('#upload_fisher_multiyr3').prop('disabled', true);
-                        $('#upload_fisher_multiyr4').prop('disabled', true);
+                        $('#fisher_multiper_name').prop('disabled', true);
+                        $('#validate_fisher_multiper').prop('disabled', true);
+                        $('#upload_fisher_multiper2').prop('disabled', true);
+                        $('#upload_fisher_multiper3').prop('disabled', true);
+                        $('#upload_fisher_multiper4').prop('disabled', true);
                     });
                     "
                         )
@@ -585,7 +585,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher_multiyr1",
+                                                    "upload_fisher_multiper1",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -593,7 +593,7 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr1")
+                                                uiOutput("ui_upload_fisher_multiper1")
                                             )
                                         ),
                                         tags$li(
@@ -602,7 +602,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher_multiyr2",
+                                                    "upload_fisher_multiper2",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -610,11 +610,11 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr2")
+                                                uiOutput("ui_upload_fisher_multiper2")
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_multiyr2_upload_box_cover"
+                                                id = "fisher_multiper2_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -623,7 +623,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher_multiyr3",
+                                                    "upload_fisher_multiper3",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -631,17 +631,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr3"),
+                                                uiOutput("ui_upload_fisher_multiper3"),
                                                 actionButton(
                                                     class = "remove-file-bttn",
                                                     style = "display:none;",
-                                                    "remove_fisher_multiyr3_bttn",
+                                                    "remove_fisher_multiper3_bttn",
                                                     "X"
                                                 )
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_multiyr3_upload_box_cover"
+                                                id = "fisher_multiper3_upload_box_cover"
                                             )
                                         ),
                                         tags$li(
@@ -650,7 +650,7 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 fileInput(
-                                                    "upload_fisher_multiyr4",
+                                                    "upload_fisher_multiper4",
                                                     label = NULL,
                                                     multiple = FALSE,
                                                     accept = c(
@@ -658,17 +658,17 @@ ui <- navbarPage(
                                                         ".xlsx"
                                                     )
                                                 ),
-                                                uiOutput("ui_upload_fisher_multiyr4"),
+                                                uiOutput("ui_upload_fisher_multiper4"),
                                                 actionButton(
                                                     class = "remove-file-bttn",
                                                     style = "display:none;",
-                                                    "remove_fisher_multiyr4_bttn",
+                                                    "remove_fisher_multiper4_bttn",
                                                     "X"
                                                 )
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_multiyr4_upload_box_cover"
+                                                id = "fisher_multiper4_upload_box_cover"
                                             )
                                         ),
                                         hr(),
@@ -682,11 +682,11 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "validation-box-cover",
-                                                id = "fisher_multiyr_validation_box_cover"
+                                                id = "fisher_multiper_validation_box_cover"
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("validate_fisher_multiyr", "Perform Validation")
+                                                actionButton("validate_fisher_multiper", "Perform Validation")
                                             )
                                         )
                                     )
@@ -695,7 +695,7 @@ ui <- navbarPage(
                                     class = "input-box",
                                     div(
                                         class = "input-box-cover",
-                                        id = "fisher_multiyr_input_box_cover"
+                                        id = "fisher_multiper_input_box_cover"
                                     ),
                                     h3("Customize Report"),
                                     tags$ol(
@@ -705,7 +705,7 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_multiyr_name", "Your Name: ", value = "")
+                                                textInput("fisher_multiper_name", "Your Name: ", value = "")
                                             )
                                         ),
                                         hr(),
@@ -714,14 +714,14 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher_multiyr", "Generate"),
+                                                downloadButton("report_fisher_multiper", "Generate"),
                                             ),
                                             div(
-                                                id = "fisher_multiyr_loader",
+                                                id = "fisher_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
                                                 div(
-                                                    id = "fisher_multiyr_loader_bar",
+                                                    id = "fisher_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
                                             )

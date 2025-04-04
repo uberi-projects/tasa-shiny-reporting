@@ -1,6 +1,4 @@
 ---
-title: "Fisher Catch Project Report: [Periods]"
-subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -9,6 +7,9 @@ output:
 params:
   user_name: "Unknown"
   datafile: pressure
+  datafile_name: "Unknown"
+  fisher_1per_year_selection: "None"
+  lamp_1per_period_selection: "None"
 ---
 
 ```{r setup, include=FALSE}

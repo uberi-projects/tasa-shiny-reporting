@@ -11,10 +11,10 @@ server <- function(input, output, session) {
     shinyjs::hide("feedback-content-box")
 
     # Define flags for optional files being used
-    fisheries_multiyr3_flag <- reactiveVal(FALSE)
-    fisheries_multiyr4_flag <- reactiveVal(FALSE)
-    fisher_multiyr3_flag <- reactiveVal(FALSE)
-    fisher_multiyr4_flag <- reactiveVal(FALSE)
+    fisheries_multiper3_flag <- reactiveVal(FALSE)
+    fisheries_multiper4_flag <- reactiveVal(FALSE)
+    fisher_multiper3_flag <- reactiveVal(FALSE)
+    fisher_multiper4_flag <- reactiveVal(FALSE)
     lamp_multiper3_flag <- reactiveVal(FALSE)
     lamp_multiper4_flag <- reactiveVal(FALSE)
     spag_multiper3_flag <- reactiveVal(FALSE)
@@ -35,45 +35,45 @@ server <- function(input, output, session) {
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
-    df_upload_fisheries_1yr <- reactive({
-        req(input$upload_fisheries_1yr)
-        read_excel(input$upload_fisheries_1yr$datapath, sheet = 1, na = nas)
+    df_upload_fisheries_1per <- reactive({
+        req(input$upload_fisheries_1per)
+        read_excel(input$upload_fisheries_1per$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisheries_multiyr1 <- reactive({
-        req(input$upload_fisheries_multiyr1)
-        read_excel(input$upload_fisheries_multiyr1$datapath, sheet = 1, na = nas)
+    df_upload_fisheries_multiper1 <- reactive({
+        req(input$upload_fisheries_multiper1)
+        read_excel(input$upload_fisheries_multiper1$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisheries_multiyr2 <- reactive({
-        req(input$upload_fisheries_multiyr2)
-        read_excel(input$upload_fisheries_multiyr2$datapath, sheet = 1, na = nas)
+    df_upload_fisheries_multiper2 <- reactive({
+        req(input$upload_fisheries_multiper2)
+        read_excel(input$upload_fisheries_multiper2$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisheries_multiyr3 <- reactive({
-        req(input$upload_fisheries_multiyr3)
-        read_excel(input$upload_fisheries_multiyr3$datapath, sheet = 1, na = nas)
+    df_upload_fisheries_multiper3 <- reactive({
+        req(input$upload_fisheries_multiper3)
+        read_excel(input$upload_fisheries_multiper3$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisheries_multiyr4 <- reactive({
-        req(input$upload_fisheries_multiyr4)
-        read_excel(input$upload_fisheries_multiyr4$datapath, sheet = 1, na = nas)
+    df_upload_fisheries_multiper4 <- reactive({
+        req(input$upload_fisheries_multiper4)
+        read_excel(input$upload_fisheries_multiper4$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_1yr <- reactive({
-        req(input$upload_fisher_1yr)
-        read_excel(input$upload_fisher_1yr$datapath, sheet = 1, na = nas)
+    df_upload_fisher_1per <- reactive({
+        req(input$upload_fisher_1per)
+        read_excel(input$upload_fisher_1per$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_multiyr1 <- reactive({
-        req(input$upload_fisher_multiyr1)
-        read_excel(input$upload_fisher_multiyr1$datapath, sheet = 1, na = nas)
+    df_upload_fisher_multiper1 <- reactive({
+        req(input$upload_fisher_multiper1)
+        read_excel(input$upload_fisher_multiper1$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_multiyr2 <- reactive({
-        req(input$upload_fisher_multiyr2)
-        read_excel(input$upload_fisher_multiyr2$datapath, sheet = 1, na = nas)
+    df_upload_fisher_multiper2 <- reactive({
+        req(input$upload_fisher_multiper2)
+        read_excel(input$upload_fisher_multiper2$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_multiyr3 <- reactive({
-        req(input$upload_fisher_multiyr3)
-        read_excel(input$upload_fisher_multiyr3$datapath, sheet = 1, na = nas)
+    df_upload_fisher_multiper3 <- reactive({
+        req(input$upload_fisher_multiper3)
+        read_excel(input$upload_fisher_multiper3$datapath, sheet = 1, na = nas)
     })
-    df_upload_fisher_multiyr4 <- reactive({
-        req(input$upload_fisher_multiyr4)
-        read_excel(input$upload_fisher_multiyr4$datapath, sheet = 1, na = nas)
+    df_upload_fisher_multiper4 <- reactive({
+        req(input$upload_fisher_multiper4)
+        read_excel(input$upload_fisher_multiper4$datapath, sheet = 1, na = nas)
     })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)
@@ -127,35 +127,35 @@ server <- function(input, output, session) {
     })
 
     # Read and report year of datafile
-    output$ui_upload_fisheries_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisheries_1yr(), "year", "fisheries_1per_", dud_flag, dud_flag)
+    output$ui_upload_fisheries_1per <- renderUI({
+        check_datafile_dates(df_upload_fisheries_1per(), "year", "fisheries_1per_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisheries_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr1(), "year", "fisheries_multiyr1_", dud_flag, dud_flag)
+    output$ui_upload_fisheries_multiper1 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiper1(), "year", "fisheries_multiper1_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisheries_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr2(), "year", "fisheries_multiyr2_", dud_flag, dud_flag)
+    output$ui_upload_fisheries_multiper2 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiper2(), "year", "fisheries_multiper2_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisheries_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr3(), "year", "fisheries_multiyr3_", dud_flag, dud_flag)
+    output$ui_upload_fisheries_multiper3 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiper3(), "year", "fisheries_multiper3_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisheries_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr4(), "year", "fisheries_multiyr4_", dud_flag, dud_flag)
+    output$ui_upload_fisheries_multiper4 <- renderUI({
+        check_datafile_dates(df_upload_fisheries_multiper4(), "year", "fisheries_multiper4_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisher_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisher_1yr(), "year", "fisher_1per_", dud_flag, dud_flag)
+    output$ui_upload_fisher_1per <- renderUI({
+        check_datafile_dates(df_upload_fisher_1per(), "year", "fisher_1per_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisher_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr1(), "year", "fisher_multiper1_", dud_flag, dud_flag)
+    output$ui_upload_fisher_multiper1 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiper1(), "year", "fisher_multiper1_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisher_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr2(), "year", "fisher_multiper2_", dud_flag, dud_flag)
+    output$ui_upload_fisher_multiper2 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiper2(), "year", "fisher_multiper2_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisher_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr3(), "year", "fisher_multiper3_", dud_flag, dud_flag)
+    output$ui_upload_fisher_multiper3 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiper3(), "year", "fisher_multiper3_", dud_flag, dud_flag)
     })
-    output$ui_upload_fisher_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr4(), "year", "fisher_multiper4_", dud_flag, dud_flag)
+    output$ui_upload_fisher_multiper4 <- renderUI({
+        check_datafile_dates(df_upload_fisher_multiper4(), "year", "fisher_multiper4_", dud_flag, dud_flag)
     })
     output$ui_upload_lamp_1per <- renderUI({
         if (input$datatype_lamp_1per == "Conch") {
@@ -213,16 +213,16 @@ server <- function(input, output, session) {
     })
 
     # Observe Upload
-    observeEvent(input$upload_fisheries_1yr, {
-        if (!is.null(input$upload_fisheries_1yr)) {
-            enableValidate("fisheries_1yr")
-            disableCustomization("fisheries_1yr")
+    observeEvent(input$upload_fisheries_1per, {
+        if (!is.null(input$upload_fisheries_1per)) {
+            enableValidate("fisheries_1per")
+            disableCustomization("fisheries_1per")
         }
     })
-    observeEvent(input$upload_fisher_1yr, {
-        if (!is.null(input$upload_fisher_1yr)) {
-            enableValidate("fisher_1yr")
-            disableCustomization("fisher_1yr")
+    observeEvent(input$upload_fisher_1per, {
+        if (!is.null(input$upload_fisher_1per)) {
+            enableValidate("fisher_1per")
+            disableCustomization("fisher_1per")
         }
     })
     observeEvent(input$upload_lamp_1per, {
@@ -239,47 +239,47 @@ server <- function(input, output, session) {
     })
 
     # Observe Multiyear
-    observeEvent(input$upload_fisheries_multiyr1, {
-        enableUpload("fisheries_multiyr2")
-        disableCustomization("fisheries_multiyr")
+    observeEvent(input$upload_fisheries_multiper1, {
+        enableUpload("fisheries_multiper2")
+        disableCustomization("fisheries_multiper")
     })
-    observeEvent(input$upload_fisheries_multiyr2, {
-        enableUpload("fisheries_multiyr3")
-        enableValidate("fisheries_multiyr")
-        disableCustomization("fisheries_multiyr")
+    observeEvent(input$upload_fisheries_multiper2, {
+        enableUpload("fisheries_multiper3")
+        enableValidate("fisheries_multiper")
+        disableCustomization("fisheries_multiper")
     })
-    observeEvent(input$upload_fisheries_multiyr3, {
-        enableUpload("fisheries_multiyr4")
-        enableUploadRemoveBttn("fisheries_multiyr3")
-        disableCustomization("fisheries_multiyr")
-        fisheries_multiyr3_flag(TRUE)
+    observeEvent(input$upload_fisheries_multiper3, {
+        enableUpload("fisheries_multiper4")
+        enableUploadRemoveBttn("fisheries_multiper3")
+        disableCustomization("fisheries_multiper")
+        fisheries_multiper3_flag(TRUE)
     })
-    observeEvent(input$upload_fisheries_multiyr4, {
-        disableUploadRemoveBttn("fisheries_multiyr3")
-        enableUploadRemoveBttn("fisheries_multiyr4")
-        disableCustomization("fisheries_multiyr")
-        fisheries_multiyr4_flag(TRUE)
+    observeEvent(input$upload_fisheries_multiper4, {
+        disableUploadRemoveBttn("fisheries_multiper3")
+        enableUploadRemoveBttn("fisheries_multiper4")
+        disableCustomization("fisheries_multiper")
+        fisheries_multiper4_flag(TRUE)
     })
-    observeEvent(input$upload_fisher_multiyr1, {
-        enableUpload("fisher_multiyr2")
-        disableCustomization("fisher_multiyr")
+    observeEvent(input$upload_fisher_multiper1, {
+        enableUpload("fisher_multiper2")
+        disableCustomization("fisher_multiper")
     })
-    observeEvent(input$upload_fisher_multiyr2, {
-        enableUpload("fisher_multiyr3")
-        enableValidate("fisher_multiyr")
-        disableCustomization("fisher_multiyr")
+    observeEvent(input$upload_fisher_multiper2, {
+        enableUpload("fisher_multiper3")
+        enableValidate("fisher_multiper")
+        disableCustomization("fisher_multiper")
     })
-    observeEvent(input$upload_fisher_multiyr3, {
-        enableUpload("fisher_multiyr4")
-        enableUploadRemoveBttn("fisher_multiyr3")
-        disableCustomization("fisher_multiyr")
-        fisher_multiyr3_flag(TRUE)
+    observeEvent(input$upload_fisher_multiper3, {
+        enableUpload("fisher_multiper4")
+        enableUploadRemoveBttn("fisher_multiper3")
+        disableCustomization("fisher_multiper")
+        fisher_multiper3_flag(TRUE)
     })
-    observeEvent(input$upload_fisher_multiyr4, {
-        disableUploadRemoveBttn("fisher_multiyr3")
-        enableUploadRemoveBttn("fisher_multiyr4")
-        disableCustomization("fisher_multiyr")
-        fisher_multiyr4_flag(TRUE)
+    observeEvent(input$upload_fisher_multiper4, {
+        disableUploadRemoveBttn("fisher_multiper3")
+        enableUploadRemoveBttn("fisher_multiper4")
+        disableCustomization("fisher_multiper")
+        fisher_multiper4_flag(TRUE)
     })
     observeEvent(input$upload_lamp_multiper1, {
         enableUpload("lamp_multiper2")
@@ -326,40 +326,40 @@ server <- function(input, output, session) {
 
     # Observe File Removal
     ## Fisheries
-    observeEvent(input$remove_fisheries_multiyr3_bttn, {
-        reset("upload_fisheries_multiyr3")
-        enableUpload("fisheries_multiyr3")
-        disableUpload("fisheries_multiyr4")
-        disableUploadRemoveBttn("fisheries_multiyr3")
-        enableUploadRemoveBttn("fisheries_multiyr2")
-        removeConfirmation("fisheries_multiyr3")
-        fisheries_multiyr3_flag(FALSE)
+    observeEvent(input$remove_fisheries_multiper3_bttn, {
+        reset("upload_fisheries_multiper3")
+        enableUpload("fisheries_multiper3")
+        disableUpload("fisheries_multiper4")
+        disableUploadRemoveBttn("fisheries_multiper3")
+        enableUploadRemoveBttn("fisheries_multiper2")
+        removeConfirmation("fisheries_multiper3")
+        fisheries_multiper3_flag(FALSE)
     })
-    observeEvent(input$remove_fisheries_multiyr4_bttn, {
-        reset("upload_fisheries_multiyr4")
-        enableUpload("fisheries_multiyr4")
-        disableUploadRemoveBttn("fisheries_multiyr4")
-        enableUploadRemoveBttn("fisheries_multiyr3")
-        removeConfirmation("fisheries_multiyr4")
-        fisheries_multiyr4_flag(FALSE)
+    observeEvent(input$remove_fisheries_multiper4_bttn, {
+        reset("upload_fisheries_multiper4")
+        enableUpload("fisheries_multiper4")
+        disableUploadRemoveBttn("fisheries_multiper4")
+        enableUploadRemoveBttn("fisheries_multiper3")
+        removeConfirmation("fisheries_multiper4")
+        fisheries_multiper4_flag(FALSE)
     })
     ## Fisher
-    observeEvent(input$remove_fisher_multiyr3_bttn, {
-        reset("upload_fisher_multiyr3")
-        enableUpload("fisher_multiyr3")
-        disableUpload("fisher_multiyr4")
-        disableUploadRemoveBttn("fisher_multiyr3")
-        enableUploadRemoveBttn("fisher_multiyr2")
-        removeConfirmation("fisher_multiyr3")
-        fisher_multiyr3_flag(FALSE)
+    observeEvent(input$remove_fisher_multiper3_bttn, {
+        reset("upload_fisher_multiper3")
+        enableUpload("fisher_multiper3")
+        disableUpload("fisher_multiper4")
+        disableUploadRemoveBttn("fisher_multiper3")
+        enableUploadRemoveBttn("fisher_multiper2")
+        removeConfirmation("fisher_multiper3")
+        fisher_multiper3_flag(FALSE)
     })
-    observeEvent(input$remove_fisher_multiyr4_bttn, {
-        reset("upload_fisher_multiyr4")
-        enableUpload("fisher_multiyr4")
-        disableUploadRemoveBttn("fisher_multiyr4")
-        enableUploadRemoveBttn("fisher_multiyr3")
-        removeConfirmation("fisher_multiyr4")
-        fisher_multiyr4_flag(FALSE)
+    observeEvent(input$remove_fisher_multiper4_bttn, {
+        reset("upload_fisher_multiper4")
+        enableUpload("fisher_multiper4")
+        disableUploadRemoveBttn("fisher_multiper4")
+        enableUploadRemoveBttn("fisher_multiper3")
+        removeConfirmation("fisher_multiper4")
+        fisher_multiper4_flag(FALSE)
     })
     ## LAMP
     observeEvent(input$remove_lamp_multiper3_bttn, {
@@ -398,29 +398,29 @@ server <- function(input, output, session) {
     })
 
     # Validate dataframes
-    observeEvent(input$validate_fisheries_1yr, {
+    observeEvent(input$validate_fisheries_1per, {
         shinyalert("Notice!", "Validation has not been implemented for Fisheries Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisheries_1yr")
+        enableCustomization("fisheries_1per")
     })
-    observeEvent(input$validate_fisheries_multiyr, {
+    observeEvent(input$validate_fisheries_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for Fisheries Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisheries_multiyr")
+        enableCustomization("fisheries_multiper")
     })
-    observeEvent(input$validate_fisher_1yr, {
+    observeEvent(input$validate_fisher_1per, {
         shinyalert("Notice!", "Validation has not been implemented for Fisher Project Single Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisher_1yr")
+        enableCustomization("fisher_1per")
     })
-    observeEvent(input$validate_fisher_multiyr, {
+    observeEvent(input$validate_fisher_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for Fisher Project Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
-        enableCustomization("fisher_multiyr")
+        enableCustomization("fisher_multiper")
     })
     source("validation/validation_observers/validate_lamp_observer_1per.r", local = TRUE)
     source("validation/validation_observers/validate_lamp_observer_multiper.r", local = TRUE)
@@ -438,11 +438,11 @@ server <- function(input, output, session) {
     })
 
     # Create reports
-    output$report_fisheries_1yr <- downloadHandler(
-        filename = function() "report_fisheries_1yr.docx",
+    output$report_fisheries_1per <- downloadHandler(
+        filename = function() "report_fisheries_1per.docx",
         content = function(file) {
-            showLoaderBar("fisheries_1yr", session)
-            report_file <- "report_fisheries_1yr.Rmd"
+            showLoaderBar("fisheries_1per", session)
+            report_file <- "report_fisheries_1per.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -455,21 +455,21 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisheries_1yr_name, datafile = df_upload_fisheries_1yr()),
+                        params = list(user_name = input$fisheries_1per_name, datafile = df_upload_fisheries_1per()),
                         envir = new.env(parent = globalenv())
                     )
                 },
                 error = function(e) {}
             )
-            hideLoaderBar("fisheries_1yr", session)
+            hideLoaderBar("fisheries_1per", session)
             file.rename(out, file)
         }
     )
-    output$report_fisheries_multiyr <- downloadHandler(
-        filename = function() "report_fisheries_multiyr.docx",
+    output$report_fisheries_multiper <- downloadHandler(
+        filename = function() "report_fisheries_multiper.docx",
         content = function(file) {
-            showLoaderBar("fisheries_multiyr", session)
-            report_file <- "report_fisheries_multiyr.Rmd"
+            showLoaderBar("fisheries_multiper", session)
+            report_file <- "report_fisheries_multiper.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -482,21 +482,21 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisheries_multiyr_name, datafile = df_upload_fisheries_multiyr1()),
+                        params = list(user_name = input$fisheries_multiper_name, datafile = df_upload_fisheries_multiper1()),
                         envir = new.env(parent = globalenv())
                     )
                 },
                 error = function(e) {}
             )
-            hideLoaderBar("fisheries_multiyr", session)
+            hideLoaderBar("fisheries_multiper", session)
             file.rename(out, file)
         }
     )
-    output$report_fisher_1yr <- downloadHandler(
-        filename = function() "report_fisher_1yr.docx",
+    output$report_fisher_1per <- downloadHandler(
+        filename = function() "report_fisher_1per.docx",
         content = function(file) {
-            showLoaderBar("fisher_1yr", session)
-            report_file <- "report_fisher_1yr.Rmd"
+            showLoaderBar("fisher_1per", session)
+            report_file <- "report_fisher_1per.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -509,21 +509,21 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisher_1yr_name, datafile = df_upload_fisher_1yr()),
+                        params = list(user_name = input$fisher_1per_name, datafile = df_upload_fisher_1per()),
                         envir = new.env(parent = globalenv())
                     )
                 },
                 error = function(e) {}
             )
-            hideLoaderBar("fisher_1yr", session)
+            hideLoaderBar("fisher_1per", session)
             file.rename(out, file)
         }
     )
-    output$report_fisher_multiyr <- downloadHandler(
-        filename = function() "report_fisher_multiyr.docx",
+    output$report_fisher_multiper <- downloadHandler(
+        filename = function() "report_fisher_multiper.docx",
         content = function(file) {
-            showLoaderBar("fisher_multiyr", session)
-            report_file <- "report_fisher_multiyr.Rmd"
+            showLoaderBar("fisher_multiper", session)
+            report_file <- "report_fisher_multiper.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -536,13 +536,13 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr1()),
+                        params = list(user_name = input$fisher_multiper_name, datafile = df_upload_fisher_multiper1()),
                         envir = new.env(parent = globalenv())
                     )
                 },
                 error = function(e) {}
             )
-            hideLoaderBar("fisher_multiyr", session)
+            hideLoaderBar("fisher_multiper", session)
             file.rename(out, file)
         }
     )
@@ -577,11 +577,11 @@ server <- function(input, output, session) {
                     render(
                         report_file,
                         params = list(
-                          user_name = input$lamp_1per_name,
-                          datafile_name = input$upload_lamp_1per$name,
-                          datafile = df_upload_lamp_1per(),
-                          lamp_1per_year_selection = if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None",
-                          lamp_1per_period_selection = if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
+                            user_name = input$lamp_1per_name,
+                            datafile_name = input$upload_lamp_1per$name,
+                            datafile = df_upload_lamp_1per(),
+                            lamp_1per_year_selection = if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None",
+                            lamp_1per_period_selection = if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
                         ),
                         envir = new.env(parent = globalenv())
                     )
