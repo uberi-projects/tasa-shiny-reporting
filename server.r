@@ -441,6 +441,7 @@ server <- function(input, output, session) {
     output$report_fisheries_1yr <- downloadHandler(
         filename = function() "report_fisheries_1yr.docx",
         content = function(file) {
+            showLoaderBar("fisheries_1yr", session)
             report_file <- "report_fisheries_1yr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -450,17 +451,24 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
-            out <- render(
-                report_file,
-                params = list(user_name = input$fisheries_1yr_name, datafile = df_upload_fisheries_1yr()),
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = list(user_name = input$fisheries_1yr_name, datafile = df_upload_fisheries_1yr()),
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("fisheries_1yr", session)
             file.rename(out, file)
         }
     )
     output$report_fisheries_multiyr <- downloadHandler(
         filename = function() "report_fisheries_multiyr.docx",
         content = function(file) {
+            showLoaderBar("fisheries_multiyr", session)
             report_file <- "report_fisheries_multiyr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -470,17 +478,24 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
-            out <- render(
-                report_file,
-                params = list(user_name = input$fisheries_multiyr_name, datafile = df_upload_fisheries_multiyr1()),
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = list(user_name = input$fisheries_multiyr_name, datafile = df_upload_fisheries_multiyr1()),
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("fisheries_multiyr", session)
             file.rename(out, file)
         }
     )
     output$report_fisher_1yr <- downloadHandler(
         filename = function() "report_fisher_1yr.docx",
         content = function(file) {
+            showLoaderBar("fisher_1yr", session)
             report_file <- "report_fisher_1yr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -490,17 +505,24 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
-            out <- render(
-                report_file,
-                params = list(user_name = input$fisher_1yr_name, datafile = df_upload_fisher_1yr()),
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = list(user_name = input$fisher_1yr_name, datafile = df_upload_fisher_1yr()),
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("fisher_1yr", session)
             file.rename(out, file)
         }
     )
     output$report_fisher_multiyr <- downloadHandler(
         filename = function() "report_fisher_multiyr.docx",
         content = function(file) {
+            showLoaderBar("fisher_multiyr", session)
             report_file <- "report_fisher_multiyr.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
@@ -510,11 +532,17 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
-            out <- render(
-                report_file,
-                params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr1()),
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = list(user_name = input$fisher_multiyr_name, datafile = df_upload_fisher_multiyr1()),
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("fisher_multiyr", session)
             file.rename(out, file)
         }
     )
@@ -527,6 +555,7 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("lamp_1per", session)
             report_file <- switch(input$datatype_lamp_1per,
                 "Conch" = "report_lampconch_1per.Rmd",
                 "General LAMP" = "report_lampgen_1per.Rmd",
@@ -543,17 +572,23 @@ server <- function(input, output, session) {
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
-            out <- render(
-                report_file,
-                params = list(
-                    user_name = input$lamp_1per_name,
-                    datafile_name = input$upload_lamp_1per$name,
-                    datafile = df_upload_lamp_1per(),
-                    lamp_1per_year_selection = if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None",
-                    lamp_1per_period_selection = if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
-                ),
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = list(
+                          user_name = input$lamp_1per_name,
+                          datafile_name = input$upload_lamp_1per$name,
+                          datafile = df_upload_lamp_1per(),
+                          lamp_1per_year_selection = if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None",
+                          lamp_1per_period_selection = if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
+                        ),
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("lamp_1per", session)
             file.rename(out, file)
         }
     )
@@ -566,6 +601,7 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("lamp_multiper", session)
             report_file <- switch(input$datatype_lamp_multiper,
                 "Conch" = "report_lampconch_multiper.Rmd",
                 "General LAMP" = "report_lampgen_multiper.Rmd",
@@ -605,11 +641,17 @@ server <- function(input, output, session) {
                 params_list$lamp_multiper4_year_selection <- if (lamp_multiper4_year_selection_flag()) input[["lamp_multiper4_year_selection"]] else "None"
                 params_list$lamp_multiper4_period_selection <- if (lamp_multiper4_period_selection_flag()) input[["lamp_multiper4_period_selection"]] else "None"
             }
-            out <- render(
-                report_file,
-                params = params_list,
-                envir = new.env(parent = globalenv())
+            out <- tryCatch(
+                {
+                    render(
+                        report_file,
+                        params = params_list,
+                        envir = new.env(parent = globalenv())
+                    )
+                },
+                error = function(e) {}
             )
+            hideLoaderBar("lamp_multiper", session)
             file.rename(out, file)
         }
     )
@@ -622,6 +664,7 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("spag_1per", session)
             report_file <- switch(input$datatype_spag_1per,
                 "Visual Census" = "report_spagvis_1per.Rmd",
                 "Laser" = "report_spaglaser_1per.Rmd"
@@ -639,6 +682,7 @@ server <- function(input, output, session) {
                 params = list(user_name = input$spag_name, datafile = df_upload_spag_1per()),
                 envir = new.env(parent = globalenv())
             )
+            hideLoaderBar("spag_1per", session)
             file.rename(out, file)
         }
     )
@@ -651,6 +695,7 @@ server <- function(input, output, session) {
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
+            showLoaderBar("spag_multiper", session)
             report_file <- switch(input$datatype_spag_multiper,
                 "Visual Census" = "report_spagvis_multiper.Rmd",
                 "Laser" = "report_spaglaser_multiper.Rmd"
@@ -668,6 +713,7 @@ server <- function(input, output, session) {
                 params = list(user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
                 envir = new.env(parent = globalenv())
             )
+            hideLoaderBar("spag_multiper", session)
             file.rename(out, file)
         }
     )

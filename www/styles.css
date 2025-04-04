@@ -420,3 +420,22 @@ label {
   justify-items: center;
   margin: -21px 0 15px;
 }
+/* Loading Bars */
+.custom-loader{
+  width: 95%;
+  height: 40px;
+  position: absolute;
+  background-color: var(--color-secondary);
+  left: 0;
+  right: 0;
+  top: 40px;
+  justify-self: center;
+  border: solid black 1px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.custom-loader-bar{
+  width: 0%;
+  height: inherit;
+  background-color: var(--color-alert);
+}

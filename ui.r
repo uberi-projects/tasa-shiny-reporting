@@ -185,6 +185,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisheries_1yr", "Generate")
+                                            ),
+                                            div(
+                                                id = "fisheries_1yr_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "fisheries_1yr_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
@@ -369,6 +378,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisheries_multiyr", "Generate")
+                                            ),
+                                            div(
+                                                id = "fisheries_multiyr_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "fisheries_multiyr_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
@@ -506,6 +524,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisher_1yr", "Generate"),
+                                            ),
+                                            div(
+                                                id = "fisher_1yr_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "fisher_1yr_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
@@ -688,6 +715,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_fisher_multiyr", "Generate"),
+                                            ),
+                                            div(
+                                                id = "fisher_multiyr_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "fisher_multiyr_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
@@ -833,6 +869,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_lamp_1per", "Generate")
+                                            ),
+                                            div(
+                                                id = "lamp_1per_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "lamp_1per_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-1per-img", class = "datatype-img")
@@ -1021,6 +1066,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_lamp_multiper", "Generate")
+                                            ),
+                                            div(
+                                                id = "lamp_multiper_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "lamp_multiper_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-multi-img", class = "datatype-img")
@@ -1138,6 +1192,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_spag_1per", "Generate")
+                                            ),
+                                            div(
+                                                id = "spag_1per_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "spag_1per_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-1per-img", class = "datatype-img")
@@ -1326,6 +1389,15 @@ ui <- navbarPage(
                                             div(
                                                 class = "input-list-content",
                                                 downloadButton("report_spag_multiper", "Generate")
+                                            ),
+                                            div(
+                                                id = "spag_multiper_loader",
+                                                class = "custom-loader",
+                                                style = "display:none;",
+                                                div(
+                                                    id = "spag_multiper_loader_bar",
+                                                    class = "custom-loader-bar"
+                                                )
                                             )
                                         ),
                                         img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-multi-img", class = "datatype-img")

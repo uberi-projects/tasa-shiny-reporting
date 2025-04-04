@@ -30,3 +30,19 @@ function switchSpagImage(isVisual, isMulti) {
 Shiny.addCustomMessageHandler("triggerChangeSpagImg", function(message) {
     switchSpagImage(message.isVisual, message.isMulti);
 });
+// Animate Loader Bar
+function updateLoader(reportType, percentage) {
+    let progressBar = document.getElementById(reportType+"_loader_bar")
+    progressBar.style.width = percentage+"%"
+}
+Shiny.addCustomMessageHandler('updateLoader', function(message) {
+    updateLoader(message.reportType, message.percentage);
+});
+// Reset Loader
+function resetLoader(reportType) {
+    let progressBar = document.getElementById(reportType+"_loader_bar")
+    progressBar.style.width = "0%"
+}
+Shiny.addCustomMessageHandler('resetLoader', function(message) {
+    resetLoader(message.reportType);
+});
