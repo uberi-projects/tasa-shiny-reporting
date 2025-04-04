@@ -19,6 +19,19 @@ server <- function(input, output, session) {
     lamp_multiper4_flag <- reactiveVal(FALSE)
     spag_multiper3_flag <- reactiveVal(FALSE)
     spag_multiper4_flag <- reactiveVal(FALSE)
+    dud_flag <- reactiveVal(FALSE)
+
+    # Define flags for year/period manual selection
+    lamp_1per_year_selection_flag <- reactiveVal(FALSE)
+    lamp_1per_period_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper1_year_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper1_period_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper2_year_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper2_period_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper3_year_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper3_period_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper4_year_selection_flag <- reactiveVal(FALSE)
+    lamp_multiper4_period_selection_flag <- reactiveVal(FALSE)
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
@@ -115,88 +128,88 @@ server <- function(input, output, session) {
 
     # Read and report year of datafile
     output$ui_upload_fisheries_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisheries_1yr(), type = "year")
+        check_datafile_dates(df_upload_fisheries_1yr(), "year", "fisheries_1per_", dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr1(), type = "year")
+        check_datafile_dates(df_upload_fisheries_multiyr1(), "year", "fisheries_multiyr1_", dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr2(), type = "year")
+        check_datafile_dates(df_upload_fisheries_multiyr2(), "year", "fisheries_multiyr2_", dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr3(), type = "year")
+        check_datafile_dates(df_upload_fisheries_multiyr3(), "year", "fisheries_multiyr3_", dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiyr4(), type = "year")
+        check_datafile_dates(df_upload_fisheries_multiyr4(), "year", "fisheries_multiyr4_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_1yr <- renderUI({
-        check_datafile_dates(df_upload_fisher_1yr(), type = "year")
+        check_datafile_dates(df_upload_fisher_1yr(), "year", "fisher_1per_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_multiyr1 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr1(), type = "year")
+        check_datafile_dates(df_upload_fisher_multiyr1(), "year", "fisher_multiper1_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_multiyr2 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr2(), type = "year")
+        check_datafile_dates(df_upload_fisher_multiyr2(), "year", "fisher_multiper2_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_multiyr3 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr3(), type = "year")
+        check_datafile_dates(df_upload_fisher_multiyr3(), "year", "fisher_multiper3_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_multiyr4 <- renderUI({
-        check_datafile_dates(df_upload_fisher_multiyr4(), type = "year")
+        check_datafile_dates(df_upload_fisher_multiyr4(), "year", "fisher_multiper4_", dud_flag, dud_flag)
     })
     output$ui_upload_lamp_1per <- renderUI({
         if (input$datatype_lamp_1per == "Conch") {
-            check_datafiles_dates(df_upload_lamp_1per(), type = "year")
+            check_datafiles_dates(df_upload_lamp_1per(), "year", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_1per(), type = "period")
+            check_datafiles_dates(df_upload_lamp_1per(), "period", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag)
         }
     })
     output$ui_upload_lamp_multiper1 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper1(), type = "year")
+            check_datafiles_dates(df_upload_lamp_multiper1(), "year", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper1(), type = "period")
+            check_datafiles_dates(df_upload_lamp_multiper1(), "period", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag)
         }
     })
     output$ui_upload_lamp_multiper2 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper2(), type = "year")
+            check_datafiles_dates(df_upload_lamp_multiper2(), "year", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper2(), type = "period")
+            check_datafiles_dates(df_upload_lamp_multiper2(), "period", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag)
         }
     })
     output$ui_upload_lamp_multiper3 <- renderUI({
         if (lamp_multiper3_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper3(), type = "year")
+                check_datafiles_dates(df_upload_lamp_multiper3(), "year", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag)
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper3(), type = "period")
+                check_datafiles_dates(df_upload_lamp_multiper3(), "period", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag)
             }
         }
     })
     output$ui_upload_lamp_multiper4 <- renderUI({
         if (lamp_multiper4_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper4(), type = "year")
+                check_datafiles_dates(df_upload_lamp_multiper4(), "year", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag)
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper4(), type = "period")
+                check_datafiles_dates(df_upload_lamp_multiper4(), "period", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag)
             }
         }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafile_dates(df_upload_spag_1per(), type = "period")
+        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper1(), type = "period")
+        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper2(), type = "period")
+        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper3(), type = "period")
+        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper4(), type = "period")
+        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag)
     })
 
     # Observe Upload
@@ -563,7 +576,13 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$lamp_1per_name, datafile_name = input$upload_lamp_1per$name, datafile = df_upload_lamp_1per()),
+                        params = list(
+                          user_name = input$lamp_1per_name,
+                          datafile_name = input$upload_lamp_1per$name,
+                          datafile = df_upload_lamp_1per(),
+                          lamp_1per_year_selection = if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None",
+                          lamp_1per_period_selection = if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
+                        ),
                         envir = new.env(parent = globalenv())
                     )
                 },
@@ -604,15 +623,23 @@ server <- function(input, output, session) {
                 datafile1_name = input$upload_lamp_multiper1$name,
                 datafile1 = df_upload_lamp_multiper1(),
                 datafile2_name = input$upload_lamp_multiper2$name,
-                datafile2 = df_upload_lamp_multiper2()
+                datafile2 = df_upload_lamp_multiper2(),
+                lamp_multiper1_year_selection = if (lamp_multiper1_year_selection_flag()) input[["lamp_multiper1_year_selection"]] else "None",
+                lamp_multiper1_period_selection = if (lamp_multiper1_period_selection_flag()) input[["lamp_multiper1_period_selection"]] else "None",
+                lamp_multiper2_year_selection = if (lamp_multiper2_year_selection_flag()) input[["lamp_multiper2_year_selection"]] else "None",
+                lamp_multiper2_period_selection = if (lamp_multiper2_period_selection_flag()) input[["lamp_multiper2_period_selection"]] else "None"
             )
             if (!is.null(input$upload_lamp_multiper3)) {
                 params_list$datafile3_name <- input$upload_lamp_multiper3$name
                 params_list$datafile3 <- df_upload_lamp_multiper3()
+                params_list$lamp_multiper3_year_selection <- if (lamp_multiper3_year_selection_flag()) input[["lamp_multiper3_year_selection"]] else "None"
+                params_list$lamp_multiper3_period_selection <- if (lamp_multiper3_period_selection_flag()) input[["lamp_multiper3_period_selection"]] else "None"
             }
             if (!is.null(input$upload_lamp_multiper4)) {
                 params_list$datafile4_name <- input$upload_lamp_multiper4$name
                 params_list$datafile4 <- df_upload_lamp_multiper4()
+                params_list$lamp_multiper4_year_selection <- if (lamp_multiper4_year_selection_flag()) input[["lamp_multiper4_year_selection"]] else "None"
+                params_list$lamp_multiper4_period_selection <- if (lamp_multiper4_period_selection_flag()) input[["lamp_multiper4_period_selection"]] else "None"
             }
             out <- tryCatch(
                 {
@@ -699,6 +726,8 @@ server <- function(input, output, session) {
             is_conch <- FALSE
         }
         disableCustomization("lamp_1per")
+        lamp_1per_year_selection_flag(FALSE)
+        lamp_1per_period_selection_flag(FALSE)
         session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = FALSE))
     })
     observeEvent(input$datatype_lamp_multiper, {
@@ -708,6 +737,14 @@ server <- function(input, output, session) {
             is_conch <- FALSE
         }
         disableCustomization("lamp_multiper")
+        lamp_multiper1_year_selection_flag(FALSE)
+        lamp_multiper1_period_selection_flag(FALSE)
+        lamp_multiper2_year_selection_flag(FALSE)
+        lamp_multiper2_period_selection_flag(FALSE)
+        lamp_multiper3_year_selection_flag(FALSE)
+        lamp_multiper3_period_selection_flag(FALSE)
+        lamp_multiper4_year_selection_flag(FALSE)
+        lamp_multiper4_period_selection_flag(FALSE)
         session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = TRUE))
     })
     observeEvent(input$datatype_spag_1per, {

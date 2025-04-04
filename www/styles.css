@@ -292,7 +292,7 @@ label {
   bottom: 0;
 }
 .remove-file-bttn {
-  border:none;
+  border: none;
   border-radius: 0;
   position: absolute;
   padding: 0 6px;
@@ -411,7 +411,15 @@ label {
   justify-items: center;
   margin: -21px 0 15px;
 }
-
+.file-critical-error-button {
+  width: 300px;
+  height: 30px;
+  max-width: 100%;
+  border-radius: 5px;
+  background-color: rgb(218, 91, 91);
+  justify-items: center;
+  margin: -21px 0 15px;
+}
 /* Loading Bars */
 .custom-loader{
   width: 95%;

@@ -8,6 +8,8 @@ params:
   user_name: "Unknown"
   datafile: pressure
   datafile_name: "Unknown"
+  lamp_1per_year_selection: "None"
+  lamp_1per_period_selection: "None"
 ---
 
 ```{r setup, include=FALSE}
@@ -25,14 +27,9 @@ library(ggpubr) # arranging multiple plots
 source("theme.r")
 source("map.r")
 
-# Define study period ---------------------------
-study_start <- min(params$datafile$Survey_Data$Date, na.rm = TRUE)
-study_end <- max(params$datafile$Survey_Data$Date, na.rm = TRUE)
-study_year <- format(study_start, "%Y")
-
 # Update Site ID ---------------------------
 update_site_id <- function(df) {
-  df |> mutate(`Site ID` = ifelse(is.na(`Site ID`), `Old Site ID`, `Site ID`))
+  df |> mutate(`Site ID` = ifelse(is.na(`Site ID`) | `Site ID` == "", as.character(`Old Site ID`), as.character(`Site ID`)))
 }
 df_surveys <- update_site_id(params$datafile$Survey_Data)
 df_sites <- update_site_id(params$datafile$Sites)
@@ -42,9 +39,23 @@ df_merged <- df_surveys |>
   left_join(df_sites, by = "Site ID") |>
   filter(Section != "NW") |>
   mutate(`Conch Count` = as.integer(`Conch Count`))
+if (as.character(params$lamp_1per_year_selection) != "None") {
+  df_merged <- df_merged |>
+    filter(format(Date.x, "%Y") == params$lamp_1per_year_selection) |>
+    filter(format(Date.y, "%Y") == params$lamp_1per_year_selection)
+  df_sites <- df_sites |>
+    filter(format(Date, "%Y") == params$lamp_1per_year_selection)
+  df_surveys <- df_surveys |>
+    filter(format(Date, "%Y") == params$lamp_1per_year_selection)
+}
 
 # Count number of sites surveyed ---------------------------
 number_sites <- length(unique(df_merged$`Site ID`))
+
+# Define study period ---------------------------
+study_start <- min(df_merged$Date.x, na.rm = TRUE)
+study_end <- max(df_merged$Date.x, na.rm = TRUE)
+study_year <- format(study_start, "%Y")
 
 # Define samba conch ---------------------------
 samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
@@ -146,7 +157,11 @@ This report, including text, figures, and tables, was generated using the Turnef
 df_map <- df_merged |>
   select(`Site ID`, Latitude, Longitude) |>
   distinct()
-generate_map(df_map, "Latitude", "Longitude", "Site ID")
+if (length(unique(df_merged$`Site ID`)) < 50) {
+  generate_map(df_map, "Latitude", "Longitude", "Site ID")
+} else {
+  generate_map_nolabels(df_map, "Latitude", "Longitude", "Site ID")
+}
 ```
 
 
@@ -562,35 +577,35 @@ A <- ggplot(filter(df_fig3, Section == "NE"), aes(x = `Shell Length (cm)`, fill 
   labs(title = "A", subtitle = "Northeast") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5))
 B <- ggplot(filter(df_fig3, Section == "NO"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "B", subtitle = "North") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5))
 C <- ggplot(filter(df_fig3, Section == "SE"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "C", subtitle = "Southeast") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5))
 D <- ggplot(filter(df_fig3, Section == "SW"), aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "D", subtitle = "Southwest") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5))
 E <- ggplot(df_fig3, aes(x = `Shell Length (cm)`, fill = Lipped)) +
   geom_histogram(color = "black", position = "identity", alpha = 0.5) +
   theme_custom +
   labs(title = "E", subtitle = "Overall") +
   scale_fill_manual(values = c(palette[3], palette[4])) +
   geom_vline(xintercept = 17.8, linetype = "dashed") +
-  scale_x_continuous(limits = c(0, 25), breaks = seq(0, 25, 5))
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5))
 
 # Assemble Figure 3 ---------------------------
 figure3 <- ggarrange(A, B, C, D, E, nrow = 3, ncol = 2)
