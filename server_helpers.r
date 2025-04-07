@@ -118,7 +118,7 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
             if (length(valid_dates) == 0) {
                 next
             }
-            if (type == "year" | type == "finfish_season") {
+            if (type == "year") {
                 study_years <- format(range(valid_dates), "%Y")
                 unique_study_years <- sort(unique(format(valid_dates, "%Y")))
                 if (study_years[1] != study_years[2]) {
@@ -226,6 +226,28 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
                 return(div(
                     class = "file-confirmation-button",
                     p(class = "p-black", paste0("Conch Season: ", unique_seasons[1]))
+                ))
+            }
+            if (type == "finfish_season") {
+                study_years <- format(range(valid_dates), "%Y")
+                unique_study_years <- sort(unique(format(valid_dates, "%Y")))
+                if (study_years[1] != study_years[2]) {
+                    year_flag(TRUE)
+                    return(div(
+                        show_error("Multiple Finfish Seasons"),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "year_selection"),
+                                label = "Please select one season",
+                                choices = unique_study_years,
+                                inline = TRUE
+                            )
+                        )
+                    ))
+                }
+                return(div(
+                    class = "file-confirmation-button",
+                    p(class = "p-black", paste0("Year: ", study_years[1]))
                 ))
             }
         }

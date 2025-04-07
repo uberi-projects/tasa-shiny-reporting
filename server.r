@@ -163,13 +163,15 @@ server <- function(input, output, session) {
         check_datafile_dates(df_upload_fisheries_multiper4(), "year", "fisheries_multiper4_", dud_flag, dud_flag)
     })
     output$ui_upload_fisher_1per <- renderUI({
-        if (input$timeframe_fisher_1per == "Annual" | input$datatype_fisher_1per == "Finfish") {
+        if (input$timeframe_fisher_1per == "Annual") {
             check_datafiles_dates(df_upload_fisher_1per(), "year", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
         } else {
             if (input$datatype_fisher_1per == "Lobster") {
                 check_datafiles_dates(df_upload_fisher_1per(), "lobster_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
             } else if (input$datatype_fisher_1per == "Conch") {
                 check_datafiles_dates(df_upload_fisher_1per(), "conch_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
+            } else if (input$datatype_fisher_1per == "Finfish") {
+                check_datafiles_dates(df_upload_fisher_1per(), "finfish_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
             }
         }
     })
