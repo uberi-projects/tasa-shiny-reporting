@@ -95,7 +95,7 @@ check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
     }
 }
 
-check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
+check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_season_flag, lobster_season_flag, finfish_season_flag) {
     year_flag(FALSE)
     period_flag(FALSE)
     if (is.null(dfs) || length(dfs) == 0) {
@@ -103,26 +103,28 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
     }
     find_date_column <- function(df) {
         if ("Date" %in% names(df)) {
-            return(df)
+            return("Date")
+        } else if ("Waypoint Date" %in% names(df)) {
+            return("Waypoint Date")
         }
         return(NULL)
     }
     for (df in dfs) {
-        valid_df <- find_date_column(df)
-        if (!is.null(valid_df)) {
-            date_char <- as.character(valid_df$Date)
+        date_column <- find_date_column(df)
+        if (!is.null(date_column)) {
+            date_char <- as.character(df[[date_column]])
             valid_dates <- suppressWarnings(as.Date(date_char, format = "%Y-%m-%d"))
             valid_dates <- valid_dates[!is.na(valid_dates)]
             if (length(valid_dates) == 0) {
                 next
             }
-            if (type == "year") {
+            if (type == "year" | type == "finfish_season") {
                 study_years <- format(range(valid_dates), "%Y")
                 unique_study_years <- sort(unique(format(valid_dates, "%Y")))
                 if (study_years[1] != study_years[2]) {
                     year_flag(TRUE)
                     return(div(
-                        show_error(paste0("Multiple years: ", study_years[1], "-", study_years[2])),
+                        show_error(paste0("Multiple Years: ", study_years[1], "-", study_years[2])),
                         div(
                             class = "input-list-content",
                             prettyRadioButtons(paste0(id, "year_selection"),
@@ -144,7 +146,7 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
                 if (study_periods[1] != study_periods[2]) {
                     period_flag(TRUE)
                     return(div(
-                        show_error(paste0("Multiple periods: ", study_periods[1], "-", study_periods[2])),
+                        show_error(paste0("Multiple Periods: ", study_periods[1], "-", study_periods[2])),
                         div(
                             class = "input-list-content",
                             prettyRadioButtons(paste0(id, "period_selection"),
@@ -160,10 +162,77 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
                     p(class = "p-black", paste0("Period: ", study_periods[1]))
                 ))
             }
+            if (type == "lobster_season") {
+                get_lobster_season <- function(d) {
+                    m <- as.integer(format(d, "%m"))
+                    y <- as.integer(format(d, "%Y"))
+                    if (m >= 7) {
+                        return(paste0(y, "-", y + 1))
+                    } else if (m <= 2) {
+                        return(paste0(y - 1, "-", y))
+                    } else {
+                        return(NA)
+                    }
+                }
+                lobster_seasons <- sapply(valid_dates, get_lobster_season)
+                unique_seasons <- sort(unique(lobster_seasons))
+                if (length(unique_seasons) > 1) {
+                    period_flag(TRUE)
+                    return(div(
+                        show_error("Multiple Lobster Seasons"),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "lobster_season_selection"),
+                                label = "Please select one lobster season.",
+                                choices = unique_seasons,
+                                inline = TRUE
+                            )
+                        )
+                    ))
+                }
+                return(div(
+                    class = "file-confirmation-button",
+                    p(class = "p-black", paste0("Lobster Season: ", unique_seasons[1]))
+                ))
+            }
+            if (type == "conch_season") {
+                get_conch_season <- function(d) {
+                    m <- as.integer(format(d, "%m"))
+                    y <- as.integer(format(d, "%Y"))
+                    if (m >= 10) {
+                        return(paste0(y, "-", y + 1))
+                    } else if (m <= 6) {
+                        return(paste0(y - 1, "-", y))
+                    } else {
+                        return(NA)
+                    }
+                }
+                conch_seasons <- sapply(valid_dates, get_conch_season)
+                unique_seasons <- sort(unique(conch_seasons))
+                if (length(unique_seasons) > 1) {
+                    period_flag(TRUE)
+                    return(div(
+                        show_error("Multiple Conch Seasons"),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "conch_season_selection"),
+                                label = "Please select one conch season.",
+                                choices = unique_seasons,
+                                inline = TRUE
+                            )
+                        )
+                    ))
+                }
+                return(div(
+                    class = "file-confirmation-button",
+                    p(class = "p-black", paste0("Conch Season: ", unique_seasons[1]))
+                ))
+            }
         }
     }
     return(show_critical_error("No valid dates detected"))
 }
+
 
 # Create helper to read Fisher data
 read_fisher_data <- function(file_path, datatype) {
