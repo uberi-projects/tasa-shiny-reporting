@@ -32,6 +32,16 @@ server <- function(input, output, session) {
     lamp_multiper3_period_selection_flag <- reactiveVal(FALSE)
     lamp_multiper4_year_selection_flag <- reactiveVal(FALSE)
     lamp_multiper4_period_selection_flag <- reactiveVal(FALSE)
+    fisher_1per_year_selection_flag <- reactiveVal(FALSE)
+    fisher_1per_period_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper1_year_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper1_period_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper2_year_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper2_period_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper3_year_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper3_period_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper4_year_selection_flag <- reactiveVal(FALSE)
+    fisher_multiper4_period_selection_flag <- reactiveVal(FALSE)
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
@@ -57,23 +67,33 @@ server <- function(input, output, session) {
     })
     df_upload_fisher_1per <- reactive({
         req(input$upload_fisher_1per)
-        read_excel(input$upload_fisher_1per$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisher_1per$datapath
+        datatype <- input$datatype_fisher_1per
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisher_multiper1 <- reactive({
         req(input$upload_fisher_multiper1)
-        read_excel(input$upload_fisher_multiper1$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisher_multiper1$datapath
+        datatype <- input$datatype_fisher_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisher_multiper2 <- reactive({
         req(input$upload_fisher_multiper2)
-        read_excel(input$upload_fisher_multiper2$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisher_multiper2$datapath
+        datatype <- input$datatype_fisher_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisher_multiper3 <- reactive({
         req(input$upload_fisher_multiper3)
-        read_excel(input$upload_fisher_multiper3$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisher_multiper3$datapath
+        datatype <- input$datatype_fisher_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisher_multiper4 <- reactive({
         req(input$upload_fisher_multiper4)
-        read_excel(input$upload_fisher_multiper4$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisher_multiper4$datapath
+        datatype <- input$datatype_fisher_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_lamp_1per <- reactive({
         req(input$upload_lamp_1per)

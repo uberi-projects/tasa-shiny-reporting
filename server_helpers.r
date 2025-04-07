@@ -165,6 +165,28 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag) {
     return(show_critical_error("No valid dates detected"))
 }
 
+# Create helper to read Fisher data
+read_fisher_data <- function(file_path, datatype) {
+    nas <- c("NA", "N/A", "Unknown", "Missing", "None", "N/E")
+    sheets_available <- excel_sheets(file_path)
+    data_list <- list()
+    if (datatype == "Conch") {
+        if ("Conch" %in% sheets_available) {
+            data_list$Conch <- read_excel(file_path, sheet = "Conch", na = nas, guess_max = min(1000, Inf))
+        }
+    } else if (datatype == "Lobster") {
+        if ("Lobster" %in% sheets_available) {
+            data_list$Lobster <- read_excel(file_path, sheet = "Lobster", na = nas, guess_max = min(1000, Inf))
+        }
+    } else if (datatype == "Finfish") {
+        if ("Finfish" %in% sheets_available) {
+            data_list$Finfish <- read_excel(file_path, sheet = "Finfish", na = nas, guess_max = min(1000, Inf))
+        }
+    }
+    return(data_list)
+}
+
+
 # Create helper to read LAMP data
 read_lamp_data <- function(file_path, datatype) {
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "N/E")

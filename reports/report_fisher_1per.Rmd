@@ -48,7 +48,7 @@ Survey methods\
 _Dive Surveys_
 ```{r table1, echo = FALSE}
 # show table
-head(params$datafile)
+head(params$datafile[1])
 ```
 
 
