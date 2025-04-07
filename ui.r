@@ -91,7 +91,7 @@ ui <- navbarPage(
             "Fisheries Catch",
             tabsetPanel(
                 tabPanel(
-                    "Single Year",
+                    "Single Period",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -109,7 +109,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Single Year Fisheries Catch Reports"),
+                                h2("Single Period Fisheries Catch Reports"),
                                 p(datatype_text[1])
                             ),
                             div(
@@ -119,6 +119,22 @@ ui <- navbarPage(
                                     h3("Upload Data"),
                                     tags$ol(
                                         class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_fisheries_1per", label = NULL, choices = c("Lobster", "Conch", "Finfish"), selected = "Lobster", inline = TRUE)
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Timeframe",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("timeframe_fisheries_1per", label = NULL, choices = c("Seasonal", "Annual"), selected = "Seasonal", inline = TRUE)
+                                            )
+                                        ),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
@@ -204,7 +220,7 @@ ui <- navbarPage(
                     )
                 ),
                 tabPanel(
-                    "Multiple Years",
+                    "Multiple Periods",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -225,7 +241,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multi-Year Fisheries Catch Reports"),
+                                h2("Multi-Period Fisheries Catch Reports"),
                                 p(datatype_text[1])
                             ),
                             div(
@@ -237,6 +253,22 @@ ui <- navbarPage(
                                     ),
                                     tags$ol(
                                         class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_fisheries_multiper", label = NULL, choices = c("Lobster", "Conch", "Finfish"), selected = "Lobster", inline = TRUE)
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Timeframe",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("timeframe_fisheries_multiper", label = NULL, choices = c("Seasonal", "Annual"), selected = "Seasonal", inline = TRUE)
+                                            )
+                                        ),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
@@ -395,34 +427,6 @@ ui <- navbarPage(
                             )
                         )
                     )
-                ),
-                tabPanel(
-                    "Single Season",
-                    div(
-                        class = "content-container-parent",
-                        div(
-                            class = "content-container-grid grid-report",
-                            div(
-                                class = "content-box",
-                                h2("Single Season Fisheries Catch Reports"),
-                                p(datatype_text[1])
-                            )
-                        )
-                    )
-                ),
-                tabPanel(
-                    "Multiple Seasons",
-                    div(
-                        class = "content-container-parent",
-                        div(
-                            class = "content-container-grid grid-report",
-                            div(
-                                class = "content-box",
-                                h2("Multi-Season Fisheries Catch Reports"),
-                                p(datatype_text[1])
-                            )
-                        )
-                    )
                 )
             )
         ),
@@ -430,7 +434,7 @@ ui <- navbarPage(
             "Fisher Catch",
             tabsetPanel(
                 tabPanel(
-                    "Single Year",
+                    "Single Period",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -446,7 +450,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Single Year Fisher Catch Project Reports"),
+                                h2("Single Period Fisher Catch Project Reports"),
                                 p(dummy_text[1])
                             ),
                             div(
@@ -458,6 +462,22 @@ ui <- navbarPage(
                                     ),
                                     tags$ol(
                                         class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_fisher_1per", label = NULL, choices = c("Lobster", "Conch", "Finfish"), selected = "Lobster", inline = TRUE)
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Timeframe",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("timeframe_fisher_1per", label = NULL, choices = c("Seasonal", "Annual"), selected = "Seasonal", inline = TRUE)
+                                            )
+                                        ),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
@@ -543,7 +563,7 @@ ui <- navbarPage(
                     )
                 ),
                 tabPanel(
-                    "Multiple Years",
+                    "Multiple Periods",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -562,7 +582,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multi-Year Fisher Catch Project Reports"),
+                                h2("Multi-Period Fisher Catch Project Reports"),
                                 p(dummy_text[1])
                             ),
                             div(
@@ -574,6 +594,22 @@ ui <- navbarPage(
                                     ),
                                     tags$ol(
                                         class = "content-list",
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Datatype",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("datatype_fisher_multiper", label = NULL, choices = c("Lobster", "Conch", "Finfish"), selected = "Lobster", inline = TRUE)
+                                            )
+                                        ),
+                                        tags$li(
+                                            class = "input-list input-list-topbox",
+                                            "Choose Timeframe",
+                                            div(
+                                                class = "input-list-content",
+                                                prettyRadioButtons("timeframe_fisher_multiper", label = NULL, choices = c("Seasonal", "Annual"), selected = "Seasonal", inline = TRUE)
+                                            )
+                                        ),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
@@ -729,34 +765,6 @@ ui <- navbarPage(
                                         img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
                                     )
                                 )
-                            )
-                        )
-                    )
-                ),
-                tabPanel(
-                    "Single Season",
-                    div(
-                        class = "content-container-parent",
-                        div(
-                            class = "content-container-grid grid-report",
-                            div(
-                                class = "content-box",
-                                h2("Single Season Fisher Catch Project Reports"),
-                                p(dummy_text[1])
-                            )
-                        )
-                    )
-                ),
-                tabPanel(
-                    "Multiple Seasons",
-                    div(
-                        class = "content-container-parent",
-                        div(
-                            class = "content-container-grid grid-report",
-                            div(
-                                class = "content-box",
-                                h2("Multi-Season Fisher Catch Project Reports"),
-                                p(dummy_text[1])
                             )
                         )
                     )
