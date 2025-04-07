@@ -57,14 +57,34 @@ hideLoaderBar <- function(reportType, session) {
 create_flags <- function(datatype, flag_type, env = .GlobalEnv) {
     prefixes <- c("1per", "multiper1", "multiper2", "multiper3", "multiper4")
     clean_flag <- gsub(" ", "_", flag_type)
-    flags_list <- list()
     for (prefix in prefixes) {
         flag_name <- paste0(datatype, "_", prefix, "_", clean_flag, "_selection_flag")
-        flag_val <- reactiveVal(FALSE)
-        assign(flag_name, flag_val, envir = env)
-        flags_list[[flag_name]] <- flag_val
+        assign(flag_name, reactiveVal(FALSE), envir = env)
     }
-    return(flags_list)
+}
+set_flags_1per <- function(datatype, flag_type, boolean, env = .GlobalEnv) {
+    prefixes <- c("1per")
+    clean_flag <- gsub(" ", "_", flag_type)
+    for (prefix in prefixes) {
+        flag_name <- paste0(datatype, "_", prefix, "_", clean_flag, "_selection_flag")
+        if (exists(flag_name, envir = env)) {
+            get(flag_name, envir = env)(boolean)
+        } else {
+            warning(paste("Flag", flag_name, "does not exist."))
+        }
+    }
+}
+set_flags_multiper <- function(datatype, flag_type, boolean, env = .GlobalEnv) {
+    prefixes <- c("multiper1", "multiper2", "multiper3", "multiper4")
+    clean_flag <- gsub(" ", "_", flag_type)
+    for (prefix in prefixes) {
+        flag_name <- paste0(datatype, "_", prefix, "_", clean_flag, "_selection_flag")
+        if (exists(flag_name, envir = env)) {
+            get(flag_name, envir = env)(boolean)
+        } else {
+            warning(paste("Flag", flag_name, "does not exist."))
+        }
+    }
 }
 
 # Define helpers to check datafile date
