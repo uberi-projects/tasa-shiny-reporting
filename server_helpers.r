@@ -53,6 +53,20 @@ hideLoaderBar <- function(reportType, session) {
     session$sendCustomMessage("resetLoader", list(reportType = reportType))
 }
 
+# Define flags for datafiles
+create_flags <- function(datatype, flag_type, env = .GlobalEnv) {
+    prefixes <- c("1per", "multiper1", "multiper2", "multiper3", "multiper4")
+    clean_flag <- gsub(" ", "_", flag_type)
+    flags_list <- list()
+    for (prefix in prefixes) {
+        flag_name <- paste0(datatype, "_", prefix, "_", clean_flag, "_selection_flag")
+        flag_val <- reactiveVal(FALSE)
+        assign(flag_name, flag_val, envir = env)
+        flags_list[[flag_name]] <- flag_val
+    }
+    return(flags_list)
+}
+
 # Define helpers to check datafile date
 show_error <- function(message) {
     return(div(class = "file-error-button", p(class = "p-black", paste0("⚠️ ", message))))
@@ -95,9 +109,12 @@ check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
     }
 }
 
-check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_season_flag, lobster_season_flag, finfish_season_flag) {
+check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag) {
     year_flag(FALSE)
     period_flag(FALSE)
+    conch_season_flag(FALSE)
+    lobster_season_flag(FALSE)
+    finfish_season_flag(FALSE)
     if (is.null(dfs) || length(dfs) == 0) {
         return(show_critical_error("No valid data uploaded"))
     }
@@ -177,7 +194,7 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
                 lobster_seasons <- sapply(valid_dates, get_lobster_season)
                 unique_seasons <- sort(unique(lobster_seasons))
                 if (length(unique_seasons) > 1) {
-                    period_flag(TRUE)
+                    lobster_season_flag(TRUE)
                     return(div(
                         show_error("Multiple Lobster Seasons"),
                         div(
@@ -210,7 +227,7 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
                 conch_seasons <- sapply(valid_dates, get_conch_season)
                 unique_seasons <- sort(unique(conch_seasons))
                 if (length(unique_seasons) > 1) {
-                    period_flag(TRUE)
+                    conch_season_flag(TRUE)
                     return(div(
                         show_error("Multiple Conch Seasons"),
                         div(
@@ -232,7 +249,7 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
                 study_years <- format(range(valid_dates), "%Y")
                 unique_study_years <- sort(unique(format(valid_dates, "%Y")))
                 if (study_years[1] != study_years[2]) {
-                    year_flag(TRUE)
+                    finfish_season_flag(TRUE)
                     return(div(
                         show_error("Multiple Finfish Seasons"),
                         div(
@@ -255,6 +272,36 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, conch_s
     return(show_critical_error("No valid dates detected"))
 }
 
+check_datafiles_dates_fisher_1per <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag,
+        fisher_1per_lobster_season_selection_flag, fisher_1per_conch_season_selection_flag, fisher_1per_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisher_multiper1 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisher_multiper1_", fisher_multiper1_year_selection_flag, fisher_multiper1_period_selection_flag,
+        fisher_multiper1_lobster_season_selection_flag, fisher_multiper1_conch_season_selection_flag, fisher_multiper1_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisher_multiper2 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisher_multiper2_", fisher_multiper2_year_selection_flag, fisher_multiper2_period_selection_flag,
+        fisher_multiper2_lobster_season_selection_flag, fisher_multiper2_conch_season_selection_flag, fisher_multiper2_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisher_multiper3 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisher_multiper3_", fisher_multiper3_year_selection_flag, fisher_multiper3_period_selection_flag,
+        fisher_multiper3_lobster_season_selection_flag, fisher_multiper3_conch_season_selection_flag, fisher_multiper3_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisher_multiper4 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisher_multiper4_", fisher_multiper4_year_selection_flag, fisher_multiper4_period_selection_flag,
+        fisher_multiper4_lobster_season_selection_flag, fisher_multiper4_conch_season_selection_flag, fisher_multiper4_finfish_season_selection_flag
+    )
+}
 
 # Create helper to read Fisher data
 read_fisher_data <- function(file_path, datatype) {
@@ -276,7 +323,6 @@ read_fisher_data <- function(file_path, datatype) {
     }
     return(data_list)
 }
-
 
 # Create helper to read LAMP data
 read_lamp_data <- function(file_path, datatype) {

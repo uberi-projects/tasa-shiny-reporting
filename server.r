@@ -21,27 +21,14 @@ server <- function(input, output, session) {
     spag_multiper4_flag <- reactiveVal(FALSE)
     dud_flag <- reactiveVal(FALSE)
 
-    # Define flags for year/period manual selection
-    lamp_1per_year_selection_flag <- reactiveVal(FALSE)
-    lamp_1per_period_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper1_year_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper1_period_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper2_year_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper2_period_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper3_year_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper3_period_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper4_year_selection_flag <- reactiveVal(FALSE)
-    lamp_multiper4_period_selection_flag <- reactiveVal(FALSE)
-    fisher_1per_year_selection_flag <- reactiveVal(FALSE)
-    fisher_1per_period_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper1_year_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper1_period_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper2_year_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper2_period_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper3_year_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper3_period_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper4_year_selection_flag <- reactiveVal(FALSE)
-    fisher_multiper4_period_selection_flag <- reactiveVal(FALSE)
+    # Define flags for time period manual selection
+    create_flags("lamp", "year")
+    create_flags("lamp", "period")
+    create_flags("fisher", "year")
+    create_flags("fisher", "period")
+    create_flags("fisher", "lobster_season")
+    create_flags("fisher", "conch_season")
+    create_flags("fisher", "finfish_season")
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
@@ -148,114 +135,120 @@ server <- function(input, output, session) {
 
     # Read and report year of datafile
     output$ui_upload_fisheries_1per <- renderUI({
-        check_datafile_dates(df_upload_fisheries_1per(), "year", "fisheries_1per_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_fisheries_1per(), "year", "fisheries_1per_", dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper1(), "year", "fisheries_multiper1_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_fisheries_multiper1(), "year", "fisheries_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper2(), "year", "fisheries_multiper2_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_fisheries_multiper2(), "year", "fisheries_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper3(), "year", "fisheries_multiper3_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_fisheries_multiper3(), "year", "fisheries_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_fisheries_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper4(), "year", "fisheries_multiper4_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_fisheries_multiper4(), "year", "fisheries_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag)
     })
+
     output$ui_upload_fisher_1per <- renderUI({
-        if (input$timeframe_fisher_1per == "Annual") {
-            check_datafiles_dates(df_upload_fisher_1per(), "year", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
-        } else {
-            if (input$datatype_fisher_1per == "Lobster") {
-                check_datafiles_dates(df_upload_fisher_1per(), "lobster_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
-            } else if (input$datatype_fisher_1per == "Conch") {
-                check_datafiles_dates(df_upload_fisher_1per(), "conch_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
-            } else if (input$datatype_fisher_1per == "Finfish") {
-                check_datafiles_dates(df_upload_fisher_1per(), "finfish_season", "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag)
-            }
+        season_type <- switch(input$timeframe_fisher_1per,
+            "Annual" = "year",
+            if (input$datatype_fisher_1per == "Lobster") "lobster_season" else if (input$datatype_fisher_1per == "Conch") "conch_season" else if (input$datatype_fisher_1per == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisher_1per(season_type, df_upload_fisher_1per())
         }
     })
     output$ui_upload_fisher_multiper1 <- renderUI({
-        if (input$timeframe_fisher_multiper == "Annual") {
-            check_datafiles_dates(df_upload_fisher_multiper1(), "year", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
-        } else {
-            check_datafiles_dates(df_upload_fisher_multiper1(), "period", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
+        season_type <- switch(input$timeframe_fisher_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisher_multiper == "Lobster") "lobster_season" else if (input$datatype_fisher_multiper == "Conch") "conch_season" else if (input$datatype_fisher_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisher_multiper1(season_type, df_upload_fisher_multiper1())
         }
     })
     output$ui_upload_fisher_multiper2 <- renderUI({
-        if (input$timeframe_fisher_multiper == "Annual") {
-            check_datafiles_dates(df_upload_fisher_multiper2(), "year", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
-        } else {
-            check_datafiles_dates(df_upload_fisher_multiper2(), "period", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
+        season_type <- switch(input$timeframe_fisher_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisher_multiper == "Lobster") "lobster_season" else if (input$datatype_fisher_multiper == "Conch") "conch_season" else if (input$datatype_fisher_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisher_multiper2(season_type, df_upload_fisher_multiper2())
         }
     })
     output$ui_upload_fisher_multiper3 <- renderUI({
-        if (input$timeframe_fisher_multiper == "Annual") {
-            check_datafiles_dates(df_upload_fisher_multiper3(), "year", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
-        } else {
-            check_datafiles_dates(df_upload_fisher_multiper3(), "period", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
+        season_type <- switch(input$timeframe_fisher_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisher_multiper == "Lobster") "lobster_season" else if (input$datatype_fisher_multiper == "Conch") "conch_season" else if (input$datatype_fisher_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisher_multiper3(season_type, df_upload_fisher_multiper3())
         }
     })
     output$ui_upload_fisher_multiper4 <- renderUI({
-        if (input$timeframe_fisher_multiper == "Annual") {
-            check_datafiles_dates(df_upload_fisher_multiper4(), "year", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
-        } else {
-            check_datafiles_dates(df_upload_fisher_multiper4(), "period", "fisher_multiper_", fisher_multiper_year_selection_flag, fisher_multiper_period_selection_flag)
+        season_type <- switch(input$timeframe_fisher_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisher_multiper == "Lobster") "lobster_season" else if (input$datatype_fisher_multiper == "Conch") "conch_season" else if (input$datatype_fisher_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisher_multiper4(season_type, df_upload_fisher_multiper4())
         }
     })
+
     output$ui_upload_lamp_1per <- renderUI({
         if (input$datatype_lamp_1per == "Conch") {
-            check_datafiles_dates(df_upload_lamp_1per(), "year", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_1per(), "year", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag, dud_flag, dud_flag, dud_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_1per(), "period", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_1per(), "period", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag, dud_flag, dud_flag, dud_flag)
         }
     })
     output$ui_upload_lamp_multiper1 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper1(), "year", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_multiper1(), "year", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag, dud_flag, dud_flag, dud_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper1(), "period", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_multiper1(), "period", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag, dud_flag, dud_flag, dud_flag)
         }
     })
     output$ui_upload_lamp_multiper2 <- renderUI({
         if (input$datatype_lamp_multiper == "Conch") {
-            check_datafiles_dates(df_upload_lamp_multiper2(), "year", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_multiper2(), "year", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag, dud_flag, dud_flag, dud_flag)
         } else {
-            check_datafiles_dates(df_upload_lamp_multiper2(), "period", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag)
+            check_datafiles_dates(df_upload_lamp_multiper2(), "period", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag, dud_flag, dud_flag, dud_flag)
         }
     })
     output$ui_upload_lamp_multiper3 <- renderUI({
         if (lamp_multiper3_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper3(), "year", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag)
+                check_datafiles_dates(df_upload_lamp_multiper3(), "year", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag, dud_flag, dud_flag, dud_flag)
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper3(), "period", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag)
+                check_datafiles_dates(df_upload_lamp_multiper3(), "period", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag, dud_flag, dud_flag, dud_flag)
             }
         }
     })
     output$ui_upload_lamp_multiper4 <- renderUI({
         if (lamp_multiper4_flag()) {
             if (input$datatype_lamp_multiper == "Conch") {
-                check_datafiles_dates(df_upload_lamp_multiper4(), "year", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag)
+                check_datafiles_dates(df_upload_lamp_multiper4(), "year", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag, dud_flag, dud_flag, dud_flag)
             } else {
-                check_datafiles_dates(df_upload_lamp_multiper4(), "period", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag)
+                check_datafiles_dates(df_upload_lamp_multiper4(), "period", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag, dud_flag, dud_flag, dud_flag)
             }
         }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
     })
 
     # Observe Upload
