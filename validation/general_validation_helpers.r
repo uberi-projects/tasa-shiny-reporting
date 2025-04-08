@@ -36,12 +36,12 @@ completeness <- function(df, required_columns, df_name) {
 }
 
 # Define common columns validation functions ---------------------------
-validate_date_check <- function(x) {
-    invalid_serials <- grepl("^[0-9]+$", x)
+validate_date_check <- function(date_col) {
+    invalid_serials <- grepl("^[0-9]+$", date_col)
     return(!any(invalid_serials))
 }
-validate_date <- function(x) {
-    invalid_serials <- x[grepl("^[0-9]+$", x)]
+validate_date <- function(date_col) {
+    invalid_serials <- date_col[grepl("^[0-9]+$", date_col)]
     if (length(invalid_serials) == 0) {
     } else {
         display_values <- if (length(invalid_serials) > 10) {
