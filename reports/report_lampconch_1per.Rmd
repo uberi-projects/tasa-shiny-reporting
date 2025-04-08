@@ -20,8 +20,8 @@ library(knitr)
 library(officedown)
 library(rmarkdown)
 library(tidyverse)
-library(moments) # for kurtosis/skew calculations
-library(ggpubr) # arranging multiple plots
+library(moments)
+library(ggpubr)
 
 # Source code  ---------------------------
 source("theme.r")

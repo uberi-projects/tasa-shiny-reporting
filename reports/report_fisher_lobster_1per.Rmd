@@ -8,6 +8,7 @@ params:
   user_name: "Unknown"
   datafile: pressure
   datafile_name: "Unknown"
+  fisher_1per_timeframe: "Annual"
   fisher_1per_year_selection: "None"
   fisher_1per_period_selection: "None"
   fisher_1per_lobster_season_selection: "None" 
@@ -18,12 +19,45 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Determine year or season  ---------------------------
+timeframe <- params$fisher_1per_timeframe
+
+# Filter to year or season  ---------------------------
+df <- params$datafile[[1]]
+df$`Waypoint Date` <- as.Date(df$`Waypoint Date`)
+if (timeframe == "Annual" && as.character(params$fisher_1per_year_selection) != "None") {
+  df <- df |>
+    filter(format(`Waypoint Date`, "%Y") == params$fisher_1per_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisher_1per_lobster_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisher_1per_lobster_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df <- df |>
+    filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
+}
+
+# Define study timeframe ---------------------------
+study_start <- min(df$`Waypoint Date`, na.rm = TRUE)
+study_end <- max(df$`Waypoint Date`, na.rm = TRUE)
+if (timeframe == "Annual") {
+  study_timeframe <- unique(format(df$`Waypoint Date`, "%Y"))[1]
+} else if (timeframe == "Seasonal") {
+  study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
+}
 ```
 
-# Turneffe Atoll Fisher Catch Lobster Dataset Report: 
+# Turneffe Atoll Fisher Catch Lobster `r timeframe` Dataset Report: `r study_timeframe`
 
 
 Turneffe Atoll Sustainability Association (TASA)
@@ -35,11 +69,30 @@ Turneffe Atoll Sustainability Association (TASA)
 
 ***
 
+
+The marine resources and biodiversity abundant in coral reef ecosystems support the 
+livelihoods of coastal communities, and provide economic opportunities that can be 
+sustainable given attentive management and enforcement. 
+Monitoring the activities and harvests of local fishers is important for 
+understanding ecosystem productivity, assessing stock sustainability, 
+and informing effective management decisions. 
+This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of Caribbean spiny 
+lobster (Panulirus argus) at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+Data were recorded directly by fishermen using SMART technology through a data collection 
+package designed by TASA. This report aims to summarize and visualize the Fisher 
+Lobster Catch dataset from `r study_timeframe` to facilitate data interpretation and support 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
+
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
 
 ### Fisher Catch Project
 
@@ -57,59 +110,5 @@ Survey methods\
 _Dive Surveys_
 ```{r table1, echo = FALSE}
 # show table
-head(params$datafile[1])
+head(df)
 ```
-
-
-## Results
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 1. Results figure. \ 
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 2. Results figure. \
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 3. Results figure. \
-
-
-**Table 2.** Results table.
-
-_Results Table_
-```{r table2, echo = FALSE}
-# show table
-head(params$datafile)
-```
-
-
-## Discussion
-
-Interpretation of results \ 
-
-Conclusions and recommendations \ 
-
-
-## Acknowledgments
-
-List of data collectors \
-
-Other acknowledgements \
-
-
-## Literature Cited
-
-List of citations \ 
-
-
-## Appendix
-
-Additional details/tables/figures \

@@ -8,6 +8,7 @@ params:
   user_name: "Unknown"
   datafile: pressure
   datafile_name: "Unknown"
+  fisher_1per_timeframe: "Annual"
   fisher_1per_year_selection: "None"
   fisher_1per_period_selection: "None"
   fisher_1per_lobster_season_selection: "None" 
