@@ -252,3 +252,76 @@ using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timefra
 # show table
 as.data.frame(df_table1)
 ```
+
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_table2_rows <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Waypoint ID`) %>%
+  summarize(
+    Month = first(Month),
+    Month_sort = first(Month_sort),
+    Hours = first(`Hours Fished`),
+    Catch_lb = first(`Total Lbs of Catch`),
+    Lobster = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
+    `CPUE (#/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
+  )
+df_table2_lb_overall <- df_table2_rows %>%
+  summarize(
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Q1 = round(quantile(`CPUE (lb/hr)`, 0.25, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Q3 = round(quantile(`CPUE (lb/hr)`, 0.75, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Var = round(var(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  mutate(Month = "Overall")
+df_table2_lb <- df_table2_rows %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Q1 = round(quantile(`CPUE (lb/hr)`, 0.25, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Q3 = round(quantile(`CPUE (lb/hr)`, 0.75, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Var = round(var(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table2_lb_overall)
+
+# Prepare dynamic variables for Table 2 ---------------------------
+overall_mean <- df_table2_lb_overall$Mean
+overall_median <- df_table2_lb_overall$Median
+max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
+max_cpue_mean_lb_month <- df_table2_lb$Month[which.max(df_table2_lb$Mean)]
+min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
+min_cpue_mean_lb_month <- df_table2_lb$Month[which.min(df_table2_lb$Mean)]
+```
+
+
+The CPUE of lobsters in lb/hr had a 
+mean of `r overall_mean` and median of `r overall_median`, 
+with the highest mean of `r max_cpue_mean_lb` being in `r max_cpue_mean_lb_month` 
+and the lowest mean of `r min_cpue_mean_lb` being in `r min_cpue_mean_lb_month`. 
+(Table 2; Figure 1).\
+
+
+```{r table2, echo = FALSE}
+# show table
+as.data.frame(df_table2_lb)
+```
