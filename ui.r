@@ -1428,7 +1428,9 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Manual"),
-                    p(dummy_text[4])
+                    p(tab_text[4]),
+                    hr(),
+                    p(tab_text[4])
                 ),
                 div(
                     class = "content-container",
