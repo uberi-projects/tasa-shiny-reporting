@@ -118,7 +118,7 @@ of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the 
 open season. Closed season is March 1st to June 30th for lobster (Belize Fisheries 
 Department accessed 2025-b). Tar spots on female lobsters indicate recent mating, and 
 females with eggs (‘berried’ females) indicate reproductive success. Monitoring sex ratio 
-and presence of reproductive indicators is key for this species./
+and presence of reproductive indicators is key for this species.\
 
 
 ## Methods
@@ -322,8 +322,9 @@ df_table2_num <- df_table2_rows %>%
   arrange(Month_sort) %>%
   select(-Month_sort) %>%
   bind_rows(df_table2_num_overall)
-df_table2 <- df_table2_lb %>%
-  bind_rows(df_table2_num)
+df_table2 <- df_table2_lb_overall %>%
+  bind_rows(df_table2_num_overall) %>%
+  select(CPUE, Min, Mean, Median, Max, SD)
 
 # Prepare dynamic variables for Table 2 ---------------------------
 overall_mean <- df_table2_lb_overall$Mean
@@ -340,17 +341,6 @@ mean of `r overall_mean` and median of `r overall_median`,
 with the highest mean of `r max_cpue_mean_lb` being in `r max_cpue_mean_lb_month` 
 and the lowest mean of `r min_cpue_mean_lb` being in `r min_cpue_mean_lb_month`. 
 (Table 2; Figure 2).\
-
-
-**Table 2.** Summary of catch per unit effort for each month in lb/hr and count/hr, 
-including minimum, mean, median, and maximum values, 
-along with standard deviation, 
-using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
-```{r table2, echo = FALSE}
-# show table
-as.data.frame(df_table2)
-```
-
 
 ```{r figure2_prep, echo = FALSE, include = FALSE}
 # Create dfs for Figure 2 ---------------------------
@@ -465,4 +455,83 @@ and catch per unit effort (in pounds and count per hour) (D)
 over time, collected using SMART data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
+
+**Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
+including minimum, mean, median, and maximum values, 
+along with standard deviation, 
+using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+
+```{r table2, echo = FALSE}
+# show table
+df_table2
+```
+
+
+<br>
+
+
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
+    `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+    `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+    `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(
+    df %>%
+      summarize(
+        `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
+        `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
+        `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
+        `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+        `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+        `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+      ) %>%
+      mutate(Month = "Overall")
+  ) %>%
+  # Replace NA and NaN with "-"
+  mutate(across(everything(), ~ {
+    if (is.numeric(.)) {
+      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+    } else {
+      ifelse(is.na(.), "-", .)
+    }
+  }))
+
+# Prepare dynamic variables for Table 3 ---------------------------
+total_male <- filter(df_table3, Month == "Overall")$`Male (%)`
+total_female <- filter(df_table3, Month == "Overall")$`Female (%)`
+total_carapace <- filter(df_table3, Month == "Overall")$`Mean Carapace Length (mm)`
+total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (g)`
+max_carapace <- max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (mm)`, na.rm = TRUE)
+max_carapace_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (mm)`)]
+max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`, na.rm = TRUE)
+max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`)]
+```
+
+
+Average carapace length was `r total_carapace`mm, greatest in `r max_carapace_month` with `r max_carapace`mm. 
+Average headed weight was `r total_weight`g, greatest in `r max_weight_month` with `r max_weight`. 
+Overall, there was `r total_female`% female and `r total_male`% male lobsters identified (Table 5; Figure 2).\
+
+
+**Table 3.** Summary of mean and median carapace length (mm) and weight (g), 
+as well as percent of lobsters identified as male and female, 
+using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+
+```{r table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
 
