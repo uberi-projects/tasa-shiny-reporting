@@ -500,7 +500,6 @@ df_table3 <- df %>%
       ) %>%
       mutate(Month = "Overall")
   ) %>%
-  # Replace NA and NaN with "-"
   mutate(across(everything(), ~ {
     if (is.numeric(.)) {
       ifelse(is.na(.) | is.nan(.), "-", as.character(.))
@@ -535,3 +534,113 @@ using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timefra
 as.data.frame(df_table3)
 ```
 
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 3 ---------------------------
+gear_levels <- df %>%
+  pull(`Type of Fishing Gears`) %>%
+  unique() %>%
+  sort()
+gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
+df_fig3_unsummarized <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  arrange(Month_sort)
+df_fig3 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
+    `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+    `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+    `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+  ) %>%
+  arrange(Month_sort)
+df_fig3_carapace <- df_fig3 %>%
+  filter(!is.nan(`Mean Carapace Length (mm)`))
+df_fig3_weight <- df_fig3 %>%
+  filter(!is.nan(`Mean Weight (g)`))
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
+  geom_bar(color = "black") +
+  scale_fill_manual(values = gear_colors, drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (mm)`, fill = `Type of Fishing Gears`)) +
+  geom_histogram(binwidth = 1, color = "black") +
+  scale_fill_manual(values = gear_colors, drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Carapace Length (mm)") +
+  ylab("Count") +
+  labs(title = "B") +
+  theme(legend.position = "none")
+C <- ggplot(df_fig3_unsummarized, aes(x = `Weight (G)`, fill = `Type of Fishing Gears`)) +
+  geom_histogram(binwidth = 1, color = "black") +
+  scale_fill_manual(values = gear_colors, drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Weight (g)") +
+  ylab("Count") +
+  labs(title = "C") +
+  theme(legend.position = "none")
+D <- ggplot(df_fig3_carapace, aes(x = Month_sort, y = `Mean Carapace Length (mm)`)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Mean Carapace Length (mm)") +
+  xlab("Month") +
+  labs(title = "D") +
+  theme(legend.position = "none")
+E <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Weight (g)") +
+  xlab("Month") +
+  labs(title = "E") +
+  theme(legend.position = "none")
+
+# Assemble Figure 3 ---------------------------
+figure_3_bottom <- ggarrange(
+  B, C, D, E,
+  ncol = 2, nrow = 2
+)
+figure3 <- ggarrange(
+  A, figure_3_bottom,
+  ncol = 1,
+  heights = c(1, 2)
+)
+```
+
+
+```{r figure3, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Bar plot of fishing gear types (A), 
+histogram of carapace length (mm) by gear type (B), histogram of weight (g) by gear type (C), 
+line plot of mean carapace length (mm) over time (D), and line plot of mean weight (g) over time (E), 
+collected using SMART data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
