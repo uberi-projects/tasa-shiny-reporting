@@ -792,6 +792,7 @@ if (study_finfish_check) {
 if (study_finfish_check) {
   figure2f <- ggplot(filter(df_table3f_prelim, Grouping %in% c("Commercial", "Herbivorous")), aes(x = `Mgmt Zone`, y = `Site Biomass Density (g/100m2)`, fill = Grouping)) +
     geom_boxplot(color = "black", position = "dodge") +
+    stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black") +
     theme_custom +
     xlab("Management Zone") +
     ylab("Fish Biomass (g per 100m2)") +
@@ -1478,7 +1479,7 @@ if (study_urchin_crab_check) {
   # Define Figure 1DM
   figure1dm <- ggplot(df_figure1dm, aes(x = Species, y = Count)) +
     geom_boxplot(color = "black", fill = palette[1]) +
-  stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black") +
+    stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black") +
     theme_custom +
     theme(axis.text.x = element_text(angle = 0, size = 8))
 }
