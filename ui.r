@@ -12,6 +12,7 @@ dummy_text <- paste(readLines("text/dummy.txt"))
 home_text <- paste(readLines("text/home.txt"))
 datatype_text <- paste(readLines("text/datatype.txt"))
 link_text <- paste(readLines("text/links.txt"))
+tab_text <- paste(readLines("text/tabinfo.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -1463,7 +1464,11 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Data Templates"),
-                    p(dummy_text[3])
+                    p(tab_text[1]),
+                    hr(),
+                    p(tab_text[2]),
+                    hr(),
+                    p(tab_text[3])
                 ),
                 div(
                     class = "data-template-table",
