@@ -452,7 +452,7 @@ ui <- navbarPage(
                             div(
                                 class = "content-box",
                                 h2("Single Period Fisher Catch Project Reports"),
-                                p(dummy_text[1])
+                                p(tab_text[6])
                             ),
                             div(
                                 class = "content-container grid-generator",
