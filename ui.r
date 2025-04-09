@@ -555,7 +555,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
+                                        img(src = "images/photos/photo_catch_09.jpeg", id = "datatype-fisher-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -762,7 +762,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_09.jpeg", class = "datatype-img")
+                                        img(src = "images/photos/photo_catch_09.jpeg", id = "datatype-fisher-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
