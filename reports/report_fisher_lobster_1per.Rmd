@@ -113,7 +113,7 @@ in the country. Lobsters are caught using freediving and a hook stick, trapezoid
 lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure 
 for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020). 
 Regulations for Caribbean spiny lobster from the BFD include that no person shall fish 
-moutling lobster or lobster with eggs, that fished lobster have minimum carapace length 
+molting lobster or lobster with eggs, that fished lobster have minimum carapace length 
 of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed 
 open season. Closed season is March 1st to June 30th for lobster (Belize Fisheries 
 Department accessed 2025-b). Tar spots on female lobsters indicate recent mating, and 
@@ -242,7 +242,7 @@ in pounds per hour (lb/hr) occurred in `r max_cpue_lb_month` with `r max_cpue_lb
 occurred in `r min_cpue_lb_month` with `r min_cpue_lb`. The highest CPUE in count 
 per hour (#/hr) occurred in `r max_cpue_num_month` 
 with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
-in `r min_cpue_num` (Table 1; Figure 1).\
+in `r min_cpue_num` (Table 1; Figure 2).\
 
 
 **Table 1.** Summary of fishing effort and catch for each month, 
@@ -276,33 +276,54 @@ df_table2_rows <- df %>%
   )
 df_table2_lb_overall <- df_table2_rows %>%
   summarize(
-    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Q1 = round(quantile(`CPUE (lb/hr)`, 0.25, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Q3 = round(quantile(`CPUE (lb/hr)`, 0.75, na.rm = TRUE), 1),
     Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Var = round(var(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
-  mutate(Month = "Overall")
+  mutate(Month = "Overall", CPUE = "lb/hr")
 df_table2_lb <- df_table2_rows %>%
-  group_by(Month, Month_sort) %>%
+  mutate(CPUE = "lb/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
   summarize(
-    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Q1 = round(quantile(`CPUE (lb/hr)`, 0.25, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Q3 = round(quantile(`CPUE (lb/hr)`, 0.75, na.rm = TRUE), 1),
     Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Var = round(var(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
   arrange(Month_sort) %>%
   select(-Month_sort) %>%
   bind_rows(df_table2_lb_overall)
+df_table2_num_overall <- df_table2_rows %>%
+  summarize(
+    Min = round(min(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  mutate(Month = "Overall", CPUE = "#/hr")
+df_table2_num <- df_table2_rows %>%
+  mutate(CPUE = "#/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table2_num_overall)
+df_table2 <- df_table2_lb %>%
+  bind_rows(df_table2_num)
 
 # Prepare dynamic variables for Table 2 ---------------------------
 overall_mean <- df_table2_lb_overall$Mean
@@ -318,10 +339,130 @@ The CPUE of lobsters in lb/hr had a
 mean of `r overall_mean` and median of `r overall_median`, 
 with the highest mean of `r max_cpue_mean_lb` being in `r max_cpue_mean_lb_month` 
 and the lowest mean of `r min_cpue_mean_lb` being in `r min_cpue_mean_lb_month`. 
-(Table 2; Figure 1).\
+(Table 2; Figure 2).\
 
 
+**Table 2.** Summary of catch per unit effort for each month in lb/hr and count/hr, 
+including minimum, mean, median, and maximum values, 
+along with standard deviation, 
+using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 ```{r table2, echo = FALSE}
 # show table
-as.data.frame(df_table2_lb)
+as.data.frame(df_table2)
 ```
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_A <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Fishers = n_distinct(`Fishers Name`),
+    Lobster = n(),
+    Events = n_distinct(`Waypoint ID`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
+    `CPUE (#/hr)` = round(Lobster / Hours, 1)
+  )
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_A, aes(x = Month_sort, y = Events, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Fishing Events") +
+  labs(title = "A")
+B <- ggplot(df_fig2_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "B")
+C <- ggplot(df_fig2_A, aes(x = Month_sort, y = Lobster, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Lobsters") +
+  labs(title = "C")
+D <- ggplot(df_fig2_A, aes(x = Month_sort, y = `Catch (lb)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch (lb)") +
+  labs(title = "D")
+E <- ggplot(df_fig2_A, aes(x = Month_sort, group = 1)) +
+  geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
+  geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
+  geom_line(aes(y = `CPUE (#/hr)`), size = 0.5) +
+  geom_point(aes(y = `CPUE (#/hr)`, shape = "#/hr"), size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  scale_shape_manual(
+    name = "CPUE Type",
+    values = c("lb/hr" = 4, "#/hr" = 19)
+  ) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "E")
+
+
+# Assemble Figure 2 ---------------------------
+figure_2_top <- ggarrange(
+  A, B, C, D,
+  ncol = 2, nrow = 2
+)
+figure2 <- ggarrange(
+  figure_2_top, E,
+  ncol = 1,
+  heights = c(2, 1)
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Line plots of fishing events (A), 
+active hours fished (B), lobsters caught (C), 
+and catch per unit effort (in pounds and count per hour) (D) 
+over time, collected using SMART data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
+
