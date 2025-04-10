@@ -131,7 +131,7 @@ from `r study_start` to `r study_end` at TAMR.
 Fishermen were selected [process of selecting fishermen 
 for the project]
 
-Data on _____ were entered by fishermen using SMART 
+Data on carapace length (mm) and unheaded weight (g) were entered by fishermen using SMART 
 technology through a data collection package 
 designed by TASA. They [process of entering data by 
 fishermen into SMART]
@@ -158,7 +158,7 @@ if (length(unique(df$`Waypoint ID`)) < 5) {
 Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
 Shapefiles for the base map and ecosystems come from the publicly available Spatial Data 
 Warehouse for Belize (Meerman 2013, Meerman 2017).
-Waypoints recorded in `r study_timeframe` are labelled on the map.\
+Waypoints for lobsters recorded in `r study_timeframe` are labelled on the map.\
 
  
 ## Results
@@ -184,7 +184,7 @@ df_table1_overall <- df %>%
   left_join(df_events_overall, by = "Month") %>%
   mutate(
     `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (#/hr)` = round(Lobster / Hours, 1)
+    `CPUE (num/hr)` = round(Lobster / Hours, 1)
   )
 df_events <- df %>%
   mutate(
@@ -214,7 +214,7 @@ df_table1 <- df %>%
   select(-Month_sort) %>%
   mutate(
     `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (#/hr)` = round(Lobster / Hours, 1)
+    `CPUE (num/hr)` = round(Lobster / Hours, 1)
   ) %>%
   bind_rows(df_table1_overall)
 
@@ -227,10 +227,10 @@ max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
 max_cpue_lb_month <- df_table1$Month[which.max(df_table1$`CPUE (lb/hr)`)]
 min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
 min_cpue_lb_month <- df_table1$Month[which.min(df_table1$`CPUE (lb/hr)`)]
-max_cpue_num <- max(df_table1$`CPUE (#/hr)`, na.rm = TRUE)
-max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (#/hr)`)]
-min_cpue_num <- min(df_table1$`CPUE (#/hr)`, na.rm = TRUE)
-min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (#/hr)`)]
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
 ```
 
 
@@ -240,13 +240,13 @@ fishing events, totalling `r total_hours` active fishing hours.
 The highest catch per unit effort (CPUE) 
 in pounds per hour (lb/hr) occurred in `r max_cpue_lb_month` with `r max_cpue_lb`, whereas the lowest 
 occurred in `r min_cpue_lb_month` with `r min_cpue_lb`. The highest CPUE in count 
-per hour (#/hr) occurred in `r max_cpue_num_month` 
+per hour (num/hr) occurred in `r max_cpue_num_month` 
 with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
 in `r min_cpue_num` (Table 1; Figure 2).\
 
 
 **Table 1.** Summary of fishing effort and catch for each month, 
-using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table1, echo = FALSE}
 # show table
@@ -272,7 +272,7 @@ df_table2_rows <- df %>%
   ) %>%
   mutate(
     `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
-    `CPUE (#/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
+    `CPUE (num/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
   )
 df_table2_lb_overall <- df_table2_rows %>%
   summarize(
@@ -300,23 +300,23 @@ df_table2_lb <- df_table2_rows %>%
   bind_rows(df_table2_lb_overall)
 df_table2_num_overall <- df_table2_rows %>%
   summarize(
-    Min = round(min(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
-  mutate(Month = "Overall", CPUE = "#/hr")
+  mutate(Month = "Overall", CPUE = "num/hr")
 df_table2_num <- df_table2_rows %>%
-  mutate(CPUE = "#/hr") %>%
+  mutate(CPUE = "num/hr") %>%
   group_by(CPUE, Month, Month_sort) %>%
   summarize(
-    Min = round(min(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (#/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (#/hr)`, na.rm = TRUE), 1),
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
   arrange(Month_sort) %>%
@@ -359,7 +359,7 @@ df_fig2_A <- df %>%
   arrange(Month_sort) %>%
   mutate(
     `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (#/hr)` = round(Lobster / Hours, 1)
+    `CPUE (num/hr)` = round(Lobster / Hours, 1)
   )
 
 # Create panels for Figure 2 ---------------------------
@@ -414,8 +414,8 @@ D <- ggplot(df_fig2_A, aes(x = Month_sort, y = `Catch (lb)`, group = 1)) +
 E <- ggplot(df_fig2_A, aes(x = Month_sort, group = 1)) +
   geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
   geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
-  geom_line(aes(y = `CPUE (#/hr)`), size = 0.5) +
-  geom_point(aes(y = `CPUE (#/hr)`, shape = "#/hr"), size = 2.5) +
+  geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
+  geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
   scale_x_date(
     date_breaks = "1 month",
     date_labels = "%b '%y"
@@ -423,7 +423,7 @@ E <- ggplot(df_fig2_A, aes(x = Month_sort, group = 1)) +
   expand_limits(y = 0) +
   scale_shape_manual(
     name = "CPUE Type",
-    values = c("lb/hr" = 4, "#/hr" = 19)
+    values = c("lb/hr" = 4, "num/hr" = 19)
   ) +
   theme_custom +
   xlab("Month") +
@@ -452,14 +452,14 @@ figure2
 *Figure 2.* Line plots of fishing events (A), 
 active hours fished (B), lobsters caught (C), 
 and catch per unit effort (in pounds and count per hour) (D) 
-over time, collected using SMART data from fishers at Turneffe 
+over time, collected using SMART lobster data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
 **Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
 including minimum, mean, median, and maximum values, 
 along with standard deviation, 
-using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
 ```{r table2, echo = FALSE}
 # show table
@@ -517,17 +517,23 @@ max_carapace <- max(filter(df_table3, Month != "Overall")$`Mean Carapace Length 
 max_carapace_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (mm)`)]
 max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`, na.rm = TRUE)
 max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`)]
+max_female <- max(filter(df_table3, Month != "Overall")$`Female (%)`, na.rm = TRUE)
+max_female_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Female (%)`)]
+max_male <- max(filter(df_table3, Month != "Overall")$`Male (%)`, na.rm = TRUE)
+max_male_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Male (%)`)]
 ```
 
 
 Average carapace length was `r total_carapace`mm, greatest in `r max_carapace_month` with `r max_carapace`mm. 
 Average headed weight was `r total_weight`g, greatest in `r max_weight_month` with `r max_weight`. 
-Overall, there was `r total_female`% female and `r total_male`% male lobsters identified (Table 5; Figure 2).\
+Overall, there was `r total_female`% female and `r total_male`% male lobsters identified, 
+with the highest percent female of `r max_female` found in `r max_female_month`, 
+and the highest percent male of `r max_male` found in `r max_male_month` (Table 3; Figure 3; Figure 4).\
 
 
 **Table 3.** Summary of mean and median carapace length (mm) and weight (g), 
 as well as percent of lobsters identified as male and female, 
-using SMART data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
 ```{r table3, echo = FALSE}
 # show table
@@ -569,7 +575,7 @@ df_fig3_carapace <- df_fig3 %>%
 df_fig3_weight <- df_fig3 %>%
   filter(!is.nan(`Mean Weight (g)`))
 
-# Create panels for Figure 2 ---------------------------
+# Create panels for Figure 3 ---------------------------
 A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
   geom_bar(color = "black") +
   scale_fill_manual(values = gear_colors, drop = FALSE) +
@@ -642,5 +648,44 @@ figure3
 *Figure 3.* Bar plot of fishing gear types (A), 
 histogram of carapace length (mm) by gear type (B), histogram of weight (g) by gear type (C), 
 line plot of mean carapace length (mm) over time (D), and line plot of mean weight (g) over time (E), 
+collected using SMART lobster data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 4 ---------------------------
+df_fig4 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Female = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+    Male = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+  ) %>%
+  arrange(Month_sort) %>%
+  pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
+
+# Create Figure 4 ---------------------------
+figure4 <- ggplot(df_fig4, aes(x = Month_sort, fill = Sex, y = Percent)) +
+  geom_col(color = "black") +
+  scale_fill_manual(values = palette[2:3]) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  xlab("Month") +
+  ylab("Percent")
+```
+
+
+```{r figure4, fig.width=6, fig.height=2.5, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Bar plot of sex ratio of lobsters over time, 
 collected using SMART data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
