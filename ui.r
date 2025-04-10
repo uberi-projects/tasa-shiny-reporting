@@ -12,6 +12,7 @@ dummy_text <- paste(readLines("text/dummy.txt"))
 home_text <- paste(readLines("text/home.txt"))
 datatype_text <- paste(readLines("text/datatype.txt"))
 link_text <- paste(readLines("text/links.txt"))
+tab_text <- paste(readLines("text/tabinfo.txt"))
 
 # Define ui ---------------------------
 ui <- navbarPage(
@@ -451,7 +452,7 @@ ui <- navbarPage(
                             div(
                                 class = "content-box",
                                 h2("Single Period Fisher Catch Project Reports"),
-                                p(dummy_text[1])
+                                p(tab_text[6])
                             ),
                             div(
                                 class = "content-container grid-generator",
@@ -583,7 +584,7 @@ ui <- navbarPage(
                             div(
                                 class = "content-box",
                                 h2("Multi-Period Fisher Catch Project Reports"),
-                                p(dummy_text[1])
+                                p(tab_text[6])
                             ),
                             div(
                                 class = "content-container grid-generator",
@@ -1427,7 +1428,9 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Manual"),
-                    p(dummy_text[4])
+                    p(tab_text[4]),
+                    br(),
+                    p(tab_text[5])
                 ),
                 div(
                     class = "content-container",
@@ -1463,7 +1466,11 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Data Templates"),
-                    p(dummy_text[3])
+                    p(tab_text[1]),
+                    br(),
+                    p(tab_text[2]),
+                    br(),
+                    p(tab_text[3])
                 ),
                 div(
                     class = "data-template-table",
