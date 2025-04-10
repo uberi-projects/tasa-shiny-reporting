@@ -584,7 +584,7 @@ ui <- navbarPage(
                             div(
                                 class = "content-box",
                                 h2("Multi-Period Fisher Catch Project Reports"),
-                                p(dummy_text[1])
+                                p(tab_text[6])
                             ),
                             div(
                                 class = "content-container grid-generator",
@@ -1429,8 +1429,8 @@ ui <- navbarPage(
                     class = "content-box",
                     h2("Manual"),
                     p(tab_text[4]),
-                    hr(),
-                    p(tab_text[4])
+                    br(),
+                    p(tab_text[5])
                 ),
                 div(
                     class = "content-container",
@@ -1467,9 +1467,9 @@ ui <- navbarPage(
                     class = "content-box",
                     h2("Data Templates"),
                     p(tab_text[1]),
-                    hr(),
+                    br(),
                     p(tab_text[2]),
-                    hr(),
+                    br(),
                     p(tab_text[3])
                 ),
                 div(
