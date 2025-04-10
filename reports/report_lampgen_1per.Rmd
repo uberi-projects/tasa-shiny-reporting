@@ -792,7 +792,7 @@ if (study_finfish_check) {
 if (study_finfish_check) {
   figure2f <- ggplot(filter(df_table3f_prelim, Grouping %in% c("Commercial", "Herbivorous")), aes(x = `Mgmt Zone`, y = `Site Biomass Density (g/100m2)`, fill = Grouping)) +
     geom_boxplot(color = "black", position = "dodge") +
-    stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black") +
+    stat_summary(fun = mean, geom = "point", shape = 4, size = 4, color = "black", position = position_dodge(width = 0.75)) +
     theme_custom +
     xlab("Management Zone") +
     ylab("Fish Biomass (g per 100m2)") +
