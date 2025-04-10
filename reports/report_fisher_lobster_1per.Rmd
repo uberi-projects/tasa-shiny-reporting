@@ -116,7 +116,7 @@ Regulations for Caribbean spiny lobster from the BFD include that no person shal
 molting lobster or lobster with eggs, that fished lobster have minimum carapace length 
 of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed 
 open season. Closed season is March 1st to June 30th for lobster (Belize Fisheries 
-Department accessed 2025-b). Tar spots on female lobsters indicate recent mating, and 
+Department accessed 2025). Tar spots on female lobsters indicate recent mating, and 
 females with eggs (‘berried’ females) indicate reproductive success. Monitoring sex ratio 
 and presence of reproductive indicators is key for this species.\
 
@@ -475,14 +475,15 @@ df_table2
 df_table3 <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
     `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
     `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
     `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
     `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
   ) %>%
@@ -490,11 +491,14 @@ df_table3 <- df %>%
   select(-Month_sort) %>%
   bind_rows(
     df %>%
+      mutate(
+        weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
+      ) %>%
       summarize(
         `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
         `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-        `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-        `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+        `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+        `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
         `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
         `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
       ) %>%
@@ -531,7 +535,7 @@ with the highest percent female of `r max_female` found in `r max_female_month`,
 and the highest percent male of `r max_male` found in `r max_male_month` (Table 3; Figure 3; Figure 4).\
 
 
-**Table 3.** Summary of mean and median carapace length (mm) and weight (g), 
+**Table 3.** Summary of mean and median carapace length (mm) and headed weight (g), 
 as well as percent of lobsters identified as male and female, 
 using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
@@ -552,20 +556,22 @@ gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
 df_fig3_unsummarized <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
   ) %>%
   arrange(Month_sort)
 df_fig3 <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
     `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
     `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
     `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
     `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
   ) %>%
@@ -593,7 +599,7 @@ B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (mm)`, fill = `Type o
   ylab("Count") +
   labs(title = "B") +
   theme(legend.position = "none")
-C <- ggplot(df_fig3_unsummarized, aes(x = `Weight (G)`, fill = `Type of Fishing Gears`)) +
+C <- ggplot(df_fig3_unsummarized, aes(x = weight_for_headed, fill = `Type of Fishing Gears`)) +
   geom_histogram(binwidth = 1, color = "black") +
   scale_fill_manual(values = gear_colors, drop = FALSE) +
   theme_custom +
@@ -646,8 +652,8 @@ figure3
 
 
 *Figure 3.* Bar plot of fishing gear types (A), 
-histogram of carapace length (mm) by gear type (B), histogram of weight (g) by gear type (C), 
-line plot of mean carapace length (mm) over time (D), and line plot of mean weight (g) over time (E), 
+histogram of carapace length (mm) by gear type (B), histogram of headed weight (g) by gear type (C), 
+line plot of mean carapace length (mm) over time (D), and line plot of headed mean weight (g) over time (E), 
 collected using SMART lobster data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
@@ -708,3 +714,21 @@ ecological value of the atoll.\
 
 Thank you to the fishers who contributed to this project.\
 
+
+## Literature Cited
+
+Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf

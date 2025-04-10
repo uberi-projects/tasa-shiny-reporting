@@ -58,7 +58,7 @@ study_end <- max(df_merged$Date.x, na.rm = TRUE)
 study_year <- format(study_start, "%Y")
 
 # Define samba conch ---------------------------
-samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
+samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being less than 7inches in length with a flared lip of 5mm or more."
 ```
 
 # Turneffe Atoll Queen Conch LAMP Dataset Report: `r study_year`
@@ -443,10 +443,8 @@ df_table3_percent <- df_merged %>%
     `Legal, Possibly Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
     `Legal, Probably Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
     `Sublegal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
-    `Samba (17.5-17.8cm, 4-6mm lip)` = round(100 * sum(`Conch Count`[
-      `Lip Thickness (mm)` >= 4 &
-        `Lip Thickness (mm)` <= 6 &
-        `Shell Length (in)` >= 6.89 &
+    `Samba (<17.78cm, 5mm+ lip)` = round(100 * sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 5 &
         `Shell Length (in)` <= 7
     ], na.rm = TRUE) / sum(`Conch Count`), 0)
   ) %>%
@@ -468,10 +466,8 @@ df_table3_counts <- df_merged %>%
     `Legal, Possibly Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
     `Legal, Probably Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
     `Sublegal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE), 1),
-    `Samba (17.5-17.8cm, 4-6mm lip)` = round(sum(`Conch Count`[
-      `Lip Thickness (mm)` >= 4 &
-        `Lip Thickness (mm)` <= 6 &
-        `Shell Length (in)` >= 6.89 &
+    `Samba (<17.78cm, 5mm+ lip)` = round(sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 5 &
         `Shell Length (in)` <= 7
     ], na.rm = TRUE), 1)
   ) %>%
@@ -493,10 +489,8 @@ df_table3_total_percent <- df_merged %>%
     `Legal, Possibly Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
     `Legal, Probably Mature` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE) / sum(`Conch Count`), 0),
     `Sublegal, Lipped` = round(100 * sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE) / sum(`Conch Count`), 0),
-    `Samba (17.5-17.8cm, 4-6mm lip)` = round(100 * sum(`Conch Count`[
-      `Lip Thickness (mm)` >= 4 &
-        `Lip Thickness (mm)` <= 6 &
-        `Shell Length (in)` >= 6.89 &
+    `Samba (<17.78cm, 5mm+ lip)` = round(100 * sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 5 &
         `Shell Length (in)` <= 7
     ], na.rm = TRUE) / sum(`Conch Count`), 0)
   ) %>%
@@ -518,10 +512,8 @@ df_table3_total_counts <- df_merged %>%
     `Legal, Possibly Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 4 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
     `Legal, Probably Mature` = round(sum(`Conch Count`[`Lip Thickness (mm)` >= 15 & `Shell Length (in)` >= 7], na.rm = TRUE), 1),
     `Sublegal, Lipped` = round(sum(`Conch Count`[`Lip Thickness (mm)` > 0 & `Shell Length (in)` < 7], na.rm = TRUE), 1),
-    `Samba (17.5-17.8cm, 4-6mm lip)` = round(sum(`Conch Count`[
-      `Lip Thickness (mm)` >= 4 &
-        `Lip Thickness (mm)` <= 6 &
-        `Shell Length (in)` >= 6.89 &
+    `Samba (<17.78cm, 5mm+ lip)` = round(sum(`Conch Count`[
+      `Lip Thickness (mm)` >= 5 &
         `Shell Length (in)` <= 7
     ], na.rm = TRUE), 1)
   ) %>%
