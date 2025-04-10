@@ -6,6 +6,7 @@ output:
       style: table_template
 params:
   user_name: "Unknown"
+  fisher_multiper_timeframe: "Annual"
   datafile1: pressure
   datafile1_name: "Unknown"
   datafile2: pressure

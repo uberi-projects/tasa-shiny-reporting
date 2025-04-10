@@ -591,6 +591,7 @@ server <- function(input, output, session) {
                             user_name = input$fisher_1per_name,
                             datafile_name = input$upload_fisher_1per$name,
                             datafile = df_upload_fisher_1per(),
+                            fisher_1per_timeframe = input$timeframe_fisher_1per,
                             fisher_1per_year_selection = if (fisher_1per_year_selection_flag()) input[["fisher_1per_year_selection"]] else "None",
                             fisher_1per_period_selection = if (fisher_1per_period_selection_flag()) input[["fisher_1per_period_selection"]] else "None",
                             fisher_1per_lobster_season_selection = if (fisher_1per_lobster_season_selection_flag()) input[["fisher_1per_lobster_season_selection"]] else "None",
@@ -636,6 +637,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             params_list <- list(
                 user_name = input$fisher_multiper_name,
+                fisher_multiper_timeframe = input$timeframe_fisher_multiper,
                 datafile1_name = input$upload_fisher_multiper1$name,
                 datafile1 = df_upload_fisher_multiper1(),
                 datafile2_name = input$upload_fisher_multiper2$name,

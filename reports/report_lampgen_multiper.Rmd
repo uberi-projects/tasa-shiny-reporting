@@ -410,7 +410,7 @@ text_lobster <- if (study_lobster_check) {
 Spotted spiny lobster (_Panulirus guttatus_) are smaller than Caribbean spiny lobsters, with more distinct spots and shorter antennae.
 In Belize, the lobster fishery is the most important fishery in the country.
 Lobsters are caught using freediving and a hook stick, trapezoidal-shaped lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020).
-Regulations for Caribbean spiny lobster from the BFD include that no person shall fish moutling lobster or lobster with eggs, that fished lobster have minimum carapace length of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed open season.
+Regulations for Caribbean spiny lobster from the BFD include that no person shall fish molting lobster or lobster with eggs, that fished lobster have minimum carapace length of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed open season.
 Closed season is March 1st to June 30th for lobster (Belize Fisheries Department accessed 2025-b).
 Tar spots on female lobsters indicate recent mating, and females with eggs (‘berried’ females) indicate reproductive success.
 Monitoring sex ratio and presence of reproductive indicators is key for this species."
