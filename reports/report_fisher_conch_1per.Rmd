@@ -58,9 +58,6 @@ if (timeframe == "Annual") {
 } else if (timeframe == "Seasonal") {
   study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
 }
-
-# Define samba conch ---------------------------
-samba_definition <- "Samba conch, which may be either a phenotype or subspecies of queen conch, are here defined by being 175-178 mm in length with a flared lip of approximately 5mm."
 ```
 
 # Turneffe Atoll Fisher Catch Conch `r timeframe` Dataset Report: `r study_timeframe`
@@ -111,7 +108,6 @@ Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized 
 Juvenile queen conch have a pink, pearly interior, and the shell has a recognizable dark periostracum layer. 
 Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be observed by removing the conch from its shell. 
 Reproduction occurs during warmer months (Appeldoorn and Baker 2013). 
-`r samba_definition`
 
 In Belize, the queen conch fishery is the second most important commercial fishery in the country. 
 Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats. 
@@ -604,3 +600,21 @@ ecological value of the atoll.\
 
 Thank you to the fishers who contributed to this project.\
 
+
+## Literature Cited
+
+Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
+
+Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
