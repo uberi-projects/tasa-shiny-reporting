@@ -167,6 +167,7 @@ Waypoints for conch recorded in `r study_timeframe` are labelled on the map.\
 df_events_overall <- df %>%
   select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
   distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE),
     `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
@@ -181,8 +182,8 @@ df_table1_overall <- df %>%
   mutate(Month = "Overall") %>%
   left_join(df_events_overall, by = "Month") %>%
   mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Conch / Hours, 1)
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
   )
 df_events <- df %>%
   mutate(
@@ -191,6 +192,7 @@ df_events <- df %>%
   ) %>%
   select(Month, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
   distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
   group_by(Month) %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE),
@@ -211,8 +213,8 @@ df_table1 <- df %>%
   arrange(Month_sort) %>%
   select(-Month_sort) %>%
   mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Conch / Hours, 1)
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
   ) %>%
   bind_rows(df_table1_overall)
 
@@ -243,8 +245,10 @@ with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month`
 in `r min_cpue_num` (Table 1; Figure 2).\
 
 
-**Table 1.** Summary of fishing effort and catch for each month, 
-using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+**Table 1.** Summary of fishing activity by month, including total fishers, events, and conch caught, 
+along with fishing hours, pounds of catch, and catch per unit effort (CPUE). 
+CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
+Data were collected using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table1, echo = FALSE}
 # show table
