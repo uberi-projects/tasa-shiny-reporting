@@ -250,6 +250,123 @@ as.data.frame(df_table1)
 <br>
 
 
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_table2_rows <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Waypoint ID`) %>%
+  summarize(
+    Month = first(Month),
+    Month_sort = first(Month_sort),
+    Hours = first(`Hours Fished`),
+    Catch_lb = first(`Total Lbs of Catch`),
+    Finfish = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, Finfish / Hours, NA)
+  )
+df_table2_lb_overall <- df_table2_rows %>%
+  summarize(
+    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Month = "Overall", CPUE = "lb/hr")
+df_table2_lb <- df_table2_rows %>%
+  mutate(CPUE = "lb/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table2_lb_overall)
+df_table2_num_overall <- df_table2_rows %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Month = "Overall", CPUE = "num/hr")
+df_table2_num <- df_table2_rows %>%
+  mutate(CPUE = "num/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table2_num_overall)
+df_table2 <- df_table2_lb_overall %>%
+  bind_rows(df_table2_num_overall) %>%
+  select(CPUE, Min, Mean, Median, Max, SD)
+
+
+# Prepare dynamic variables for Table 2 ---------------------------
+overall_mean <- df_table2_lb_overall$Mean
+overall_median <- df_table2_lb_overall$Median
+max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
+max_cpue_mean_lb_month <- df_table2_lb$Month[which.max(df_table2_lb$Mean)]
+min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
+min_cpue_mean_lb_month <- df_table2_lb$Month[which.min(df_table2_lb$Mean)]
+max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
+max_cpue_mean_num_month <- df_table2_num$Month[which.max(df_table2_num$Mean)]
+min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
+min_cpue_mean_num_month <- df_table2_num$Month[which.min(df_table2_num$Mean)]
+```
+
+
+The CPUE of finfish in pounds per hour had a 
+mean of `r overall_mean`lb/hr and median of `r overall_median`lb/hr, 
+with the highest mean of `r max_cpue_mean_lb`lb/hr being in `r max_cpue_mean_lb_month` 
+and the lowest mean of `r min_cpue_mean_lb`lb/hr being in `r min_cpue_mean_lb_month`. 
+The CPUE of finfish in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_lb`num/hr being in `r max_cpue_mean_lb_month` 
+and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_month`. 
+(Table 2; Figure 2).\
+
+
+**Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
+including minimum, mean, median, and maximum values, 
+along with standard deviation. 
+CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
+Data were collected using SMART finfish data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table2, echo = FALSE}
+# show table
+df_table2
+```
+
+
+
+
+
+
+
+<br>
+
+
 ## Conclusion
 
 By summarizing and visualizing the fisher catch finfish SMART data from `r study_timeframe`, 
