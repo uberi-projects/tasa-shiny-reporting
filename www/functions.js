@@ -1,3 +1,29 @@
+// FISHERIES Image Changing---------------------
+function switchFisheriesImage(dataType, isMulti) {
+    if (isMulti) {
+        elem = document.getElementById("datatype-fisheries-multi-img")
+    } else {
+        elem = document.getElementById("datatype-fisheries-1per-img")
+    }
+    switch (dataType) {
+        case "Lobster": 
+            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpg")
+        break;
+        case "Conch": 
+            elem.setAttribute("src","../images/photos/photo_lamp_conch_07.jpg")
+        break;
+        case "Finfish": 
+            elem.setAttribute("src","../images/photos/photo_catch_08.jpeg")
+        break;
+        default:
+            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpg")
+    }
+}
+Shiny.addCustomMessageHandler("triggerChangeFisheriesImg", function(message) {
+    switchFisheriesImage(message.dataType, message.isMulti);
+});
+
+
 // FISHER Image Changing---------------------
 function switchFisherImage(dataType, isMulti) {
     if (isMulti) {

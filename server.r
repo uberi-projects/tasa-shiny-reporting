@@ -856,6 +856,36 @@ server <- function(input, output, session) {
     )
 
     # Observe Datatype
+    observeEvent(input$datatype_fisheries_1per, {
+        disableCustomization("fisheries_1per")
+        session$sendCustomMessage("triggerChangeFisheriesImg", list(dataType = input$datatype_fisheries_1per, isMulti = FALSE))
+    })
+    observeEvent(input$datatype_fisheries_multiper, {
+        disableCustomization("fisheries_multiper")
+        session$sendCustomMessage("triggerChangeFisheriesImg", list(dataType = input$datatype_fisheries_multiper, isMulti = TRUE))
+    })
+    observeEvent(input$datatype_fisher_1per, {
+        disableCustomization("fisher_1per")
+        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
+        lapply(flag_types, function(ft) set_flags_1per("fisher", ft, FALSE))
+        session$sendCustomMessage("triggerChangeFisherImg", list(dataType = input$datatype_fisher_1per, isMulti = FALSE))
+    })
+    observeEvent(input$datatype_fisher_multiper, {
+        disableCustomization("fisher_multiper")
+        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
+        lapply(flag_types, function(ft) set_flags_multiper("fisher", ft, FALSE))
+        session$sendCustomMessage("triggerChangeFisherImg", list(dataType = input$datatype_fisher_multiper, isMulti = TRUE))
+    })
+    observeEvent(input$timeframe_fisher_1per, {
+        disableCustomization("fisher_1per")
+        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
+        lapply(flag_types, function(ft) set_flags_1per("fisher", ft, FALSE))
+    })
+    observeEvent(input$timeframe_fisher_multiper, {
+        disableCustomization("fisher_multiper")
+        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
+        lapply(flag_types, function(ft) set_flags_multiper("fisher", ft, FALSE))
+    })
     observeEvent(input$datatype_lamp_1per, {
         is_conch <- input$datatype_lamp_1per == "Conch"
         disableCustomization("lamp_1per")
@@ -870,29 +900,19 @@ server <- function(input, output, session) {
         set_flags_multiper("lamp", "period", FALSE)
         session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = TRUE))
     })
-    observeEvent(input$datatype_fisher_1per, {
-        disableCustomization("fisher_1per")
-        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
-        lapply(flag_types, function(ft) set_flags_1per("fisher", ft, FALSE))
-        dataType <- input$datatype_fisher_1per
-        session$sendCustomMessage("triggerChangeFisherImg", list(dataType = input$datatype_fisher_1per, isMulti = FALSE))
+    observeEvent(input$datatype_lamp_1per, {
+        is_conch <- input$datatype_lamp_1per == "Conch"
+        disableCustomization("lamp_1per")
+        set_flags_1per("lamp", "period", FALSE)
+        set_flags_1per("lamp", "year", FALSE)
+        session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = FALSE))
     })
-    observeEvent(input$datatype_fisher_multiper, {
-        disableCustomization("fisher_multiper")
-        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
-        lapply(flag_types, function(ft) set_flags_multiper("fisher", ft, FALSE))
-        dataType <- input$datatype_fisher_multiper
-        session$sendCustomMessage("triggerChangeFisherImg", list(dataType = input$datatype_fisher_multiper, isMulti = TRUE))
-    })
-    observeEvent(input$timeframe_fisher_1per, {
-        disableCustomization("fisher_1per")
-        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
-        lapply(flag_types, function(ft) set_flags_1per("fisher", ft, FALSE))
-    })
-    observeEvent(input$timeframe_fisher_multiper, {
-        disableCustomization("fisher_multiper")
-        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
-        lapply(flag_types, function(ft) set_flags_multiper("fisher", ft, FALSE))
+    observeEvent(input$datatype_lamp_multiper, {
+        is_conch <- input$datatype_lamp_multiper == "Conch"
+        disableCustomization("lamp_multiper")
+        set_flags_multiper("lamp", "year", FALSE)
+        set_flags_multiper("lamp", "period", FALSE)
+        session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = TRUE))
     })
     observeEvent(input$datatype_spag_1per, {
         is_visual <- input$datatype_spag_1per != "Laser"
