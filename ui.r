@@ -213,7 +213,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_lobster_05.jpg", id = "datatype-fisheries-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -422,7 +422,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_01.jpg", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_lobster_05.jpg", id = "datatype-fisheries-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -556,7 +556,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_09.jpeg", id = "datatype-fisher-1per-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_catch_03.jpg", id = "datatype-fisher-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -763,7 +763,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_catch_09.jpeg", id = "datatype-fisher-multi-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_catch_03.jpg", id = "datatype-fisher-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
