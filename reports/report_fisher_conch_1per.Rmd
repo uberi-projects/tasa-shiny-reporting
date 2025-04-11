@@ -129,7 +129,7 @@ from `r study_start` to `r study_end` at TAMR.
 Fishermen were selected [process of selecting fishermen 
 for the project]
 
-Data on carapace length (mm) and unheaded weight (g) were entered by fishermen using SMART 
+Data on conch weight (g) (primarily market clean weight) were entered by fishermen using SMART 
 technology through a data collection package 
 designed by TASA. They [process of entering data by 
 fishermen into SMART]

@@ -19,12 +19,38 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Determine year or season  ---------------------------
+timeframe <- "Annual"
+
+# Filter to year or season  ---------------------------
+df <- params$datafile[[1]]
+df$`Waypoint Date` <- as.Date(df$`Waypoint Date`)
+if (timeframe == "Annual" && as.character(params$fisher_1per_year_selection) != "None") {
+  df <- df |>
+    filter(format(`Waypoint Date`, "%Y") == params$fisher_1per_year_selection)
+}
+
+# Add month column  ---------------------------
+df$Month <- format(df$`Waypoint Date`, "%b %Y")
+
+# Define study timeframe ---------------------------
+study_start <- min(df$`Waypoint Date`, na.rm = TRUE)
+study_end <- max(df$`Waypoint Date`, na.rm = TRUE)
+study_timeframe <- unique(format(df$`Waypoint Date`, "%Y"))[1]
 ```
 
-# Turneffe Atoll Fisher Catch Finfish Dataset Report: 
+# Turneffe Atoll Fisher Catch Finfish `r timeframe` Dataset Report: `r study_timeframe`
 
 
 Turneffe Atoll Sustainability Association (TASA)
@@ -36,81 +62,225 @@ Turneffe Atoll Sustainability Association (TASA)
 
 ***
 
+
+The marine resources and biodiversity abundant in coral reef ecosystems support the 
+livelihoods of coastal communities, and provide economic opportunities that can be 
+sustainable given attentive management and enforcement. 
+Monitoring the activities and harvests of local fishers is important for 
+understanding ecosystem productivity, assessing stock sustainability, 
+and informing effective management decisions. 
+This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of finfish 
+at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+Data were recorded directly by fishermen using SMART technology through a data collection 
+package designed by TASA. This report aims to summarize and visualize the Fisher 
+Finfish Catch dataset from `r study_timeframe` to facilitate data interpretation and support 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
+
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
 
 ### Fisher Catch Project
 
 Background on reef monitoring dataset type \
 
-Map of study area \
+
+### Finfish
+
+Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals 
+such as shellfish or cuttlefish.
+In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as 
+Mutton Snapper (_Lutjanus analis_),
+Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being 
+listed as Vulnerable conservation status on the IUCN.
+
+Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation.
+Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily),
+long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020).
+Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD),
+with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations,
+such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b).
+To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity,
+and biodiversity of key taxa.\
+
 
 ## Methods
 
-Survey methods\ 
+Fisher catch data were collected at Turneffe Atoll 
+Marine Reserve (TAMR) (Figure 1). 
+The survey period for this report’s dataset extended 
+from `r study_start` to `r study_end` at TAMR.
+
+Fishermen were selected [process of selecting fishermen 
+for the project]
+
+Data on gutted or whole weight (g), total length (cm), and fork length (cm) were entered by fishermen using SMART 
+technology through a data collection package 
+designed by TASA. They [process of entering data by 
+fishermen into SMART]
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create map for Figure 1 ---------------------------
+df_map <- df |>
+  select(`Waypoint ID`, Y, X) |>
+  distinct()
+if (length(unique(df$`Waypoint ID`)) < 5) {
+  generate_map(df_map, "Y", "X", "Waypoint ID")
+} else {
+  generate_map_nolabels(df_map, "Y", "X", "Waypoint ID")
+}
+```
+
+
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. 
+Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
+Shapefiles for the base map and ecosystems come from the publicly available Spatial Data 
+Warehouse for Belize (Meerman 2013, Meerman 2017).
+Waypoints for finfish recorded in `r study_timeframe` are labelled on the map.\
 
  
-**Table 1.** Table of surveys/dives.
-
-_Dive Surveys_
-```{r table1, echo = FALSE}
-# show table
-head(params$datafile[1])
-```
-
-
 ## Results
 
-Explanation of results \ 
 
-![](TASA_logo_full_color.png){width=250px}
+```{r table1_prep, echo = FALSE, include = FALSE}
+df_events_overall <- df %>%
+  select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+  distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE),
+    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+  ) %>%
+  mutate(Month = "Overall")
+df_table1_overall <- df %>%
+  summarize(
+    Fishers = n_distinct(`Fishers Name`),
+    Finfish = n(),
+    Events = n_distinct(`Waypoint ID`)
+  ) %>%
+  mutate(Month = "Overall") %>%
+  left_join(df_events_overall, by = "Month") %>%
+  mutate(
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  )
+df_events <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  select(Month, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+  distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+  group_by(Month) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE),
+    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+  )
+df_table1 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Fishers = n_distinct(`Fishers Name`),
+    Finfish = n(),
+    Events = n_distinct(`Waypoint ID`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  mutate(
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  ) %>%
+  bind_rows(df_table1_overall)
 
-Figure 1. Results figure. \ 
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 2. Results figure. \
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 3. Results figure. \
-
-
-**Table 2.** Results table.
-
-_Results Table_
-```{r table2, echo = FALSE}
-# show table
-head(params$datafile)
+# Prepare dynamic variables for Table 1 ---------------------------
+total_fishers <- length(unique(df$`Fishers Name`))
+total_finfish <- df_table1_overall$Finfish
+total_events <- df_table1_overall$Events
+total_hours <- df_table1_overall$Hours
+max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+max_cpue_lb_month <- df_table1$Month[which.max(df_table1$`CPUE (lb/hr)`)]
+min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+min_cpue_lb_month <- df_table1$Month[which.min(df_table1$`CPUE (lb/hr)`)]
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
 ```
 
 
-## Discussion
+Between `r study_start` and `r study_end`, `r total_fishers` fishermen contributed data to the queen finfish SMART dataset. 
+A total of `r total_finfish` finfish were caught across `r total_events` 
+fishing events, totalling `r total_hours` active fishing hours. 
+The highest catch per unit effort (CPUE) 
+in pounds per hour (lb/hr) occurred in `r max_cpue_lb_month` with `r max_cpue_lb`, whereas the lowest 
+occurred in `r min_cpue_lb_month` with `r min_cpue_lb`. The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_month` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+in `r min_cpue_num` (Table 1; Figure 2). 
+CPUE values were calculated only using fishing events that had 
+values for Hours Fished and Total Lbs of Catch, to ensure CPUE is representative.\
 
-Interpretation of results \ 
 
-Conclusions and recommendations \ 
+**Table 1.** Summary of fishing activity by month, including total fishers, events, and finfish caught, 
+along with fishing hours, pounds of catch, and catch per unit effort (CPUE). 
+CPUE values are calculated only for events where both fishing hours and catch weight were recorded. 
+Data were collected using SMART finfish data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+```{r table1, echo = FALSE}
+# show table
+as.data.frame(df_table1)
+```
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the fisher catch finfish SMART data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Fisher Catch SMART data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
 
 
 ## Acknowledgments
 
-List of data collectors \
-
-Other acknowledgements \
+Thank you to the fishers who contributed to this project.\
 
 
 ## Literature Cited
 
-List of citations \ 
+Belize Fisheries Department. (n.d.). Fisheries Regulations. https://fisheries.gov.bz/regulations/
 
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
 
-## Appendix
+Froese, R., & Pauly, D. (2024). FishBase [World Wide Web electronic publication.]. www.fishbase.org
 
-Additional details/tables/figures \
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf
