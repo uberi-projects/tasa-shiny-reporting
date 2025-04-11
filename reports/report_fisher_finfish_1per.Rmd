@@ -346,22 +346,132 @@ and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_m
 (Table 2; Figure 2).\
 
 
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_A <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Fishers = n_distinct(`Fishers Name`),
+    Finfish = n(),
+    Events = n_distinct(`Waypoint ID`),
+    .groups = "drop"
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  )
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_A, aes(x = Month_sort, y = Events, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Fishing Events") +
+  labs(title = "A")
+B <- ggplot(df_fig2_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "B")
+C <- ggplot(df_fig2_A, aes(x = Month_sort, y = Finfish, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Finfishs") +
+  labs(title = "C")
+D <- ggplot(df_fig2_A, aes(x = Month_sort, y = `Catch (lb)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch (lb)") +
+  labs(title = "D")
+E <- ggplot(df_fig2_A, aes(x = Month_sort, group = 1)) +
+  geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
+  geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
+  geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
+  geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  scale_shape_manual(
+    name = "CPUE Type",
+    values = c("lb/hr" = 4, "num/hr" = 19)
+  ) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "E")
+
+
+# Assemble Figure 2 ---------------------------
+figure_2_top <- ggarrange(
+  A, B, C, D,
+  ncol = 2, nrow = 2
+)
+figure2 <- ggarrange(
+  figure_2_top, E,
+  ncol = 1,
+  heights = c(2, 1)
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Line plots of fishing events (A), 
+active hours fished (B), finfish caught (C), 
+and catch per unit effort (in pounds and count per hour) (D) 
+over time, collected using SMART finfish data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
+
 **Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
 including minimum, mean, median, and maximum values, 
 along with standard deviation. 
 CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
 Data were collected using SMART finfish data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
-
-
 ```{r table2, echo = FALSE}
 # show table
 df_table2
 ```
-
-
-
-
-
 
 
 <br>
