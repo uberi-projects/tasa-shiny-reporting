@@ -477,6 +477,106 @@ df_table2
 <br>
 
 
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
+    `Median Length (cm)` = round(median(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
+    `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+    `Median Fork Length (cm)` = round(median(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+    `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
+      round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
+      NA
+    ),
+    `Median Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
+      round(median(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
+      NA
+    ),
+    `Mean Weight Whole (lbs)` = ifelse(any(`Weight Type` == "Whole"),
+      round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Whole"], na.rm = TRUE), 1),
+      NA
+    ),
+    `Median Weight Whole (lbs)` = ifelse(any(`Weight Type` == "Whole"),
+      round(median(as.numeric(`Weight (lbs)`)[`Weight Type` == "Whole"], na.rm = TRUE), 1),
+      NA
+    )
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(
+    df %>%
+      summarize(
+        `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
+        `Median Length (cm)` = round(median(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
+        `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+        `Median Fork Length (cm)` = round(median(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+        `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
+          round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
+          NA
+        ),
+        `Median Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
+          round(median(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
+          NA
+        ),
+        `Mean Weight Whole (lbs)` = ifelse(any(`Weight Type` == "Whole"),
+          round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Whole"], na.rm = TRUE), 1),
+          NA
+        ),
+        `Median Weight Whole (lbs)` = ifelse(any(`Weight Type` == "Whole"),
+          round(median(as.numeric(`Weight (lbs)`)[`Weight Type` == "Whole"], na.rm = TRUE), 1),
+          NA
+        )
+      ) %>%
+      mutate(Month = "Overall")
+  ) %>%
+  mutate(across(everything(), ~ {
+    if (is.numeric(.)) {
+      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+    } else {
+      ifelse(is.na(.), "-", .)
+    }
+  }))
+
+# Prepare dynamic variables for Table 3 ---------------------------
+total_weight_gutted <- filter(df_table3, Month == "Overall")$`Mean Weight Gutted (lbs)`
+max_weight_gutted <- max(filter(df_table3, Month != "Overall")$`Mean Weight Gutted (lbs)`, na.rm = TRUE)
+max_weight_gutted_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight Gutted (lbs)`)]
+total_weight_whole <- filter(df_table3, Month == "Overall")$`Mean Weight Whole (lbs)`
+max_weight_whole <- max(filter(df_table3, Month != "Overall")$`Mean Weight Whole (lbs)`, na.rm = TRUE)
+max_weight_whole_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight Whole (lbs)`)]
+total_total_length <- filter(df_table3, Month == "Overall")$`Mean Length (cm)`
+max_total_total_length <- max(filter(df_table3, Month != "Overall")$`Mean Length (cm)`, na.rm = TRUE)
+max_total_total_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Length (cm)`)]
+total_fork_length <- filter(df_table3, Month == "Overall")$`Mean Fork Length (cm)`
+max_total_fork_length <- max(filter(df_table3, Month != "Overall")$`Mean Fork Length (cm)`, na.rm = TRUE)
+max_total_fork_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Fork Length (cm)`)]
+```
+
+Average total length was `r total_total_length`cm, greatest in `r max_total_total_length_month` with `r max_total_total_length`cm. 
+Average fork length was `r total_fork_length`cm, greatest in `r max_total_fork_length_month` with `r max_total_fork_length`cm. 
+Average gutted weight was `r total_weight_gutted`lbs, greatest in `r max_weight_gutted_month` with `r max_weight_gutted`lbs. 
+Average whole weight was `r total_weight_whole`lbs, greatest in `r max_weight_whole_month` with `r max_weight_whole`lbs 
+(Table 3; Figure 3; Figure 4).\
+
+
+**Table 3.** Summary of mean and median total length (cm), fork length (cm), gutted weight (lbs), and whole weight(lbs) of finfish, 
+using SMART finfish data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+
+```{r table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
+
+
+<br>
+
+
 ## Conclusion
 
 By summarizing and visualizing the fisher catch finfish SMART data from `r study_timeframe`, 
