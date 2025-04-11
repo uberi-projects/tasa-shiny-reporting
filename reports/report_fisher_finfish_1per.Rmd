@@ -562,7 +562,7 @@ Average total length was `r total_total_length`cm, greatest in `r max_total_tota
 Average fork length was `r total_fork_length`cm, greatest in `r max_total_fork_length_month` with `r max_total_fork_length`cm. 
 Average gutted weight was `r total_weight_gutted`lbs, greatest in `r max_weight_gutted_month` with `r max_weight_gutted`lbs. 
 Average whole weight was `r total_weight_whole`lbs, greatest in `r max_weight_whole_month` with `r max_weight_whole`lbs 
-(Table 3; Figure 3; Figure 4).\
+(Table 3; Figure 3).\
 
 
 **Table 3.** Summary of mean and median total length (cm), fork length (cm), gutted weight (lbs), and whole weight(lbs) of finfish, 
@@ -575,6 +575,163 @@ as.data.frame(df_table3)
 
 
 <br>
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 3 ---------------------------
+gear_levels <- df %>%
+  pull(`Type of Gear`) %>%
+  unique() %>%
+  sort()
+gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
+df_fig3_unsummarized <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
+    weight_for_gutted = ifelse(`Weight Type` == "Gutted", `Weight (lbs)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (lbs)`, NA_real_)
+  ) %>%
+  arrange(Month_sort)
+df_fig3 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
+    weight_for_gutted = ifelse(`Weight Type` == "Gutted", `Weight (lbs)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (lbs)`, NA_real_)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
+    `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+    `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
+      round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
+      NA
+    ),
+    `Mean Weight Whole (lbs)` = ifelse(any(`Weight Type` == "Whole"),
+      round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Whole"], na.rm = TRUE), 1),
+      NA
+    )
+  ) %>%
+  arrange(Month_sort)
+df_fig3_gutted_weight <- df_fig3 %>%
+  filter(!is.nan(`Mean Weight Gutted (lbs)`))
+df_fig3_whole_weight <- df_fig3 %>%
+  filter(!is.nan(`Mean Weight Whole (lbs)`))
+df_fig3_total_length <- df_fig3 %>%
+  filter(!is.nan(`Mean Length (cm)`))
+df_fig3_fork_length <- df_fig3 %>%
+  filter(!is.nan(`Mean Fork Length (cm)`))
+
+# Create panels for Figure 3 ---------------------------
+A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Gear`, fill = `Type of Gear`)) +
+  geom_bar(color = "black") +
+  scale_fill_manual(values = gear_colors, drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("") +
+  ylab("Count") +
+  labs(title = "A") +
+  theme(axis.text.x = element_text(angle = 0))
+B <- ggplot(df_fig3_unsummarized, aes(x = `Total Length (cm)`, fill = `Type of Gear`)) +
+  geom_histogram(binwidth = 1, color = "black") +
+  scale_fill_manual(values = gear_colors, drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Total Length (cm)") +
+  ylab("Count") +
+  labs(title = "B") +
+  theme(legend.position = "none")
+C <- ggplot() +
+  geom_line(
+    data = df_fig3_total_length,
+    aes(x = Month_sort, y = `Mean Length (cm)`, linetype = "Total Length"),
+    size = 0.5
+  ) +
+  geom_point(
+    data = df_fig3_total_length,
+    aes(x = Month_sort, y = `Mean Length (cm)`, shape = "Total Length"),
+    size = 2.5
+  ) +
+  geom_line(
+    data = df_fig3_fork_length,
+    aes(x = Month_sort, y = `Mean Fork Length (cm)`, linetype = "Fork Length"),
+    size = 0.5
+  ) +
+  geom_point(
+    data = df_fig3_fork_length,
+    aes(x = Month_sort, y = `Mean Fork Length (cm)`, shape = "Fork Length"),
+    size = 2.5
+  ) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Mean Total Length (cm)") +
+  xlab("Month") +
+  labs(
+    title = "C",
+    linetype = "",
+    shape = ""
+  ) +
+  scale_linetype_manual(
+    values = c("Total Length" = "solid", "Fork Length" = "dotted")
+  ) +
+  scale_shape_manual(
+    values = c("Total Length" = 16, "Fork Length" = 4)
+  )
+D <- ggplot(df_fig3_gutted_weight, aes(x = Month_sort, y = `Mean Weight Gutted (lbs)`)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Gutted Weight (lb)") +
+  xlab("Month") +
+  labs(title = "D")
+E <- ggplot(df_fig3_whole_weight, aes(x = Month_sort, y = `Mean Weight Whole (lbs)`)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Whole Weight (lb)") +
+  xlab("Month") +
+  labs(title = "E")
+
+# Assemble Figure 3 ---------------------------
+figure_3_bottom <- ggarrange(
+  B, C, D, E,
+  ncol = 2, nrow = 2
+)
+figure3 <- ggarrange(
+  A, figure_3_bottom,
+  ncol = 1,
+  heights = c(1, 2.4)
+)
+```
+
+
+```{r figure3, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Bar plot of fishing gear types (A), 
+histogram of fish length (cm) by gear type (B), 
+line plot of mean fish total and fork length (cm) over time (C), 
+line plot of gutted weight (lbs) over time (D), and line plot of whole weight (lbs) over time (E), 
+collected using SMART finfish data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
+
+
+<br>
+
 
 
 ## Conclusion
