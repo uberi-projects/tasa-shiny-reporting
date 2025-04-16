@@ -440,3 +440,11 @@ label {
   height: inherit;
   background-color: var(--color-alert);
 }
+
+/* Download Buttons */
+.hidden_download {
+  position: absolute;
+  left: 60px;
+  top: 40px;
+  z-index: -1;
+}

@@ -201,7 +201,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisheries_1per", "Generate")
+                                                actionButton("report_fisheries_1per", "Generate", icon = icon("download")),
+                                                downloadButton("report_fisheries_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "fisheries_1per_loader",
@@ -410,7 +411,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisheries_multiper", "Generate")
+                                                actionButton("report_fisheries_multiper", "Generate", icon = icon("download")),
+                                                downloadButton("report_fisheries_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "fisheries_multiper_loader",
@@ -544,7 +546,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher_1per", "Generate"),
+                                                actionButton("report_fisher_1per", "Generate", icon = icon("download")),
+                                                downloadButton("report_fisher_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "fisher_1per_loader",
@@ -751,7 +754,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_fisher_multiper", "Generate"),
+                                                actionButton("report_fisher_multiper", "Generate", icon = icon("download")),
+                                                downloadButton("report_fisher_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "fisher_multiper_loader",
@@ -877,7 +881,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_lamp_1per", "Generate")
+                                                actionButton("report_lamp_1per", "Generate", icon = icon("download")),
+                                                downloadButton("report_lamp_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "lamp_1per_loader",
@@ -1074,7 +1079,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_lamp_multiper", "Generate")
+                                                actionButton("report_lamp_multiper", "Generate", icon = icon("download")),
+                                                downloadButton("report_lamp_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "lamp_multiper_loader",
@@ -1200,7 +1206,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_spag_1per", "Generate")
+                                                actionButton("report_spag_1per", "Generate", icon = icon("download")),
+                                                downloadButton("report_spag_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "spag_1per_loader",
@@ -1397,7 +1404,8 @@ ui <- navbarPage(
                                             "Generate Report",
                                             div(
                                                 class = "input-list-content",
-                                                downloadButton("report_spag_multiper", "Generate")
+                                                actionButton("report_spag_multiper", "Generate", icon = icon("download")),
+                                                downloadButton("report_spag_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "spag_multiper_loader",
