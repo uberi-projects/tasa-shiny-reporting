@@ -118,6 +118,10 @@ label {
 }
 
 /* Navbar styles */
+#navbar_page {
+  display: flex;
+  margin: 0px -15px;
+}
 .navbar-default {
   background-color: var(--color-primary);
   border: 0;
