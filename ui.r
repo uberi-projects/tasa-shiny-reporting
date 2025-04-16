@@ -18,7 +18,6 @@ tab_text <- paste(readLines("text/tabinfo.txt"))
 ui <- navbarPage(
     id = "navbar_page",
     title = "Turneffe Reef-Monitoring Data Reporting Tool",
-    tags$head(tags$script(src = "functions.js")),
     header = div(
         useShinyjs(),
         includeCSS("www/modern-normalize.css"),
@@ -31,7 +30,8 @@ ui <- navbarPage(
                 div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
                 div(a(href = link_text[1], target = "_blank", img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo")))
             )
-        )
+        ),
+        tags$head(tags$script(src = "functions.js"))
     ),
     tabPanel(
         "Home",
