@@ -729,9 +729,73 @@ collected using SMART finfish data from fishers at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create df for Figure 4 ---------------------------
+df_figure4_totals <- df %>%
+  group_by(`Fish Species`) %>%
+  summarise(`Total Count` = n(), ..groups = "drop")
+df_figure4 <- df %>%
+  mutate(
+    Month = format(`Waypoint Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Fish Species`, Month, Month_sort) %>%
+  summarise(Count = n()) %>%
+  left_join(df_figure4_totals, by = "Fish Species") %>%
+  mutate(`Fish Species` = as.factor(`Fish Species`))
+
+# Create Figure 4 ---------------------------
+figure4 <- ggplot(df_figure4, aes(
+  x = fct_reorder(`Fish Species`, desc(`Total Count`)), 
+  y = Count, 
+  fill = fct_reorder(Month, Month_sort))
+  ) +
+  geom_col(color = "black") +
+  scale_fill_manual(values = palette_extended) +
+  theme_custom +
+  expand_limits(y = 0) +
+  xlab("Fish Species") +
+  ylab("Count") +
+  labs(fill = "") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+# Prepare dynamic variables for Figure 4 ---------------------------
+common_fish <- arrange(df_figure4_totals, desc(`Total Count`))$`Fish Species`
+common_fish_counts <- arrange(df_figure4_totals, desc(`Total Count`))$`Total Count`
+unique_months <- unique(arrange(df_figure4, Month_sort)$Month)
+common_fish_text <- c()
+for (month in unique_months) {
+  common_fish_text <- c(
+    common_fish_text, paste0(
+      "the most common fish in ",
+      month,
+      " was ",
+      arrange(filter(df_figure4, Month == month), desc(Count))$`Fish Species`[1]
+    )
+  )
+}
+common_fish_text <- knitr::combine_words(common_fish_text)
+```
+
+
+The most common fish caught in `r study_timeframe` were 
+`r common_fish[1]` (`r common_fish_counts[1]` individuals), 
+`r common_fish[2]` (`r common_fish_counts[2]` individuals), and 
+`r common_fish[3]` (`r common_fish_counts[3]` individuals). 
+Across months, `r common_fish_text` (Figure 4).\
+
+
+```{r figure4, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Column plot of commonly caught fish species by month in which they were caught, 
+collected using SMART finfish data from fishers at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
 
 <br>
-
 
 
 ## Conclusion
