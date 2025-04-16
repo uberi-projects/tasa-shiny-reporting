@@ -169,6 +169,7 @@ Waypoints for lobsters recorded in `r study_timeframe` are labelled on the map.\
 df_events_overall <- df %>%
   select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
   distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE),
     `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
@@ -183,8 +184,8 @@ df_table1_overall <- df %>%
   mutate(Month = "Overall") %>%
   left_join(df_events_overall, by = "Month") %>%
   mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Lobster / Hours, 1)
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
   )
 df_events <- df %>%
   mutate(
@@ -193,6 +194,7 @@ df_events <- df %>%
   ) %>%
   select(Month, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
   distinct() %>%
+  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
   group_by(Month) %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE),
@@ -213,8 +215,8 @@ df_table1 <- df %>%
   arrange(Month_sort) %>%
   select(-Month_sort) %>%
   mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Lobster / Hours, 1)
+    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
   ) %>%
   bind_rows(df_table1_overall)
 
@@ -245,13 +247,19 @@ with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month`
 in `r min_cpue_num` (Table 1; Figure 2).\
 
 
-**Table 1.** Summary of fishing effort and catch for each month, 
-using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+**Table 1.** Summary of fishing activity by month, including total fishers, events, and lobster caught, 
+along with fishing hours, pounds of catch, and catch per unit effort (CPUE). 
+CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
+Data were collected using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
 
 ```{r table1, echo = FALSE}
 # show table
 as.data.frame(df_table1)
 ```
+
+
+<br>
 
 
 ```{r table2_prep, echo = FALSE, include = FALSE}
@@ -280,8 +288,7 @@ df_table2_lb_overall <- df_table2_rows %>%
     Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    .groups = "drop"
+    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
   ) %>%
   mutate(Month = "Overall", CPUE = "lb/hr")
 df_table2_lb <- df_table2_rows %>%
@@ -304,8 +311,7 @@ df_table2_num_overall <- df_table2_rows %>%
     Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
     Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
     Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    .groups = "drop"
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
   ) %>%
   mutate(Month = "Overall", CPUE = "num/hr")
 df_table2_num <- df_table2_rows %>%
@@ -333,13 +339,21 @@ max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
 max_cpue_mean_lb_month <- df_table2_lb$Month[which.max(df_table2_lb$Mean)]
 min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
 min_cpue_mean_lb_month <- df_table2_lb$Month[which.min(df_table2_lb$Mean)]
+max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
+max_cpue_mean_num_month <- df_table2_num$Month[which.max(df_table2_num$Mean)]
+min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
+min_cpue_mean_num_month <- df_table2_num$Month[which.min(df_table2_num$Mean)]
 ```
 
 
-The CPUE of lobsters in lb/hr had a 
-mean of `r overall_mean` and median of `r overall_median`, 
-with the highest mean of `r max_cpue_mean_lb` being in `r max_cpue_mean_lb_month` 
-and the lowest mean of `r min_cpue_mean_lb` being in `r min_cpue_mean_lb_month`. 
+The CPUE of lobster in pounds per hour had a 
+mean of `r overall_mean`lb/hr and median of `r overall_median`lb/hr, 
+with the highest mean of `r max_cpue_mean_lb`lb/hr being in `r max_cpue_mean_lb_month` 
+and the lowest mean of `r min_cpue_mean_lb`lb/hr being in `r min_cpue_mean_lb_month`. 
+The CPUE of lobster in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_lb`num/hr being in `r max_cpue_mean_lb_month` 
+and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_month`. 
 (Table 2; Figure 2).\
 
 ```{r figure2_prep, echo = FALSE, include = FALSE}
@@ -458,8 +472,9 @@ Atoll Marine Reserve, `r study_timeframe`.\
 
 **Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
 including minimum, mean, median, and maximum values, 
-along with standard deviation, 
-using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
+along with standard deviation. 
+CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
+Data were collected using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table2, echo = FALSE}
 # show table
