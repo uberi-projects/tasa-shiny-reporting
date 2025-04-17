@@ -509,80 +509,80 @@ server <- function(input, output, session) {
         if (nchar(input$fisheries_1per_name) >= 2) {
             click("report_fisheries_1per_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_fisheries_multiper, {
         if (nchar(input$fisheries_multiper_name) >= 2) {
             click("report_fisheries_multiper_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_fisher_1per, {
         if (nchar(input$fisher_1per_name) >= 2) {
             click("report_fisher_1per_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_fisher_multiper, {
         if (nchar(input$fisher_multiper_name) >= 2) {
             click("report_fisher_multiper_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_lamp_1per, {
         if (nchar(input$lamp_1per_name) >= 2) {
             click("report_lamp_1per_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_lamp_multiper, {
         if (nchar(input$lamp_multiper_name) >= 2) {
             click("report_lamp_multiper_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_spag_1per, {
         if (nchar(input$spag_1per_name) >= 2) {
             click("report_spag_1per_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     observeEvent(input$report_spag_multiper, {
         if (nchar(input$spag_multiper_name) >= 2) {
             click("report_spag_multiper_hidden")
         } else {
-            shinyalert("Error!", "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "Okay!", confirmButtonCol = "#E90C0C", type = "", size = "s"
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
             )
-            return(NULL)
         }
     })
     # Create reports
