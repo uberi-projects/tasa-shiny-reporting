@@ -500,9 +500,93 @@ server <- function(input, output, session) {
         enableCustomization("spag_multiper")
     })
 
+
+
+
+
+    # Observe report generate buttons
+    observeEvent(input$report_fisheries_1per, {
+        if (nchar(input$fisheries_1per_name) >= 2) {
+            click("report_fisheries_1per_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_fisheries_multiper, {
+        if (nchar(input$fisheries_multiper_name) >= 2) {
+            click("report_fisheries_multiper_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_fisher_1per, {
+        if (nchar(input$fisher_1per_name) >= 2) {
+            click("report_fisher_1per_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_fisher_multiper, {
+        if (nchar(input$fisher_multiper_name) >= 2) {
+            click("report_fisher_multiper_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_lamp_1per, {
+        if (nchar(input$lamp_1per_name) >= 2) {
+            click("report_lamp_1per_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_lamp_multiper, {
+        if (nchar(input$lamp_multiper_name) >= 2) {
+            click("report_lamp_multiper_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_spag_1per, {
+        if (nchar(input$spag_1per_name) >= 2) {
+            click("report_spag_1per_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
+    observeEvent(input$report_spag_multiper, {
+        if (nchar(input$spag_multiper_name) >= 2) {
+            click("report_spag_multiper_hidden")
+        } else {
+            shinyalert("Alert!",
+                text = "Please enter a name containing 2 or more characters.",
+                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
+            )
+        }
+    })
     # Create reports
-    output$report_fisheries_1per <- downloadHandler(
-        filename = function() "report_fisheries_1per.docx",
+    output$report_fisheries_1per_hidden <- downloadHandler(
         content = function(file) {
             showLoaderBar("fisheries_1per", session)
             report_file <- "report_fisheries_1per.Rmd"
@@ -526,9 +610,10 @@ server <- function(input, output, session) {
             )
             hideLoaderBar("fisheries_1per", session)
             file.rename(out, file)
-        }
+        },
+        filename = function() "report_fisheries_1per.docx"
     )
-    output$report_fisheries_multiper <- downloadHandler(
+    output$report_fisheries_multiper_hidden <- downloadHandler(
         filename = function() "report_fisheries_multiper.docx",
         content = function(file) {
             showLoaderBar("fisheries_multiper", session)
@@ -555,7 +640,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_fisher_1per <- downloadHandler(
+    output$report_fisher_1per_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_fisher_1per,
                 "Conch" = "report_fisher_conch_1per.Rmd",
@@ -607,7 +692,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_fisher_multiper <- downloadHandler(
+    output$report_fisher_multiper_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_fisher_multiper,
                 "Conch" = "report_fisher_conch_multiper.Rmd",
@@ -685,7 +770,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_lamp_1per <- downloadHandler(
+    output$report_lamp_1per_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_lamp_1per,
                 "Conch" = "report_lampconch_1per.Rmd",
@@ -731,7 +816,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_lamp_multiper <- downloadHandler(
+    output$report_lamp_multiper_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_lamp_multiper,
                 "Conch" = "report_lampconch_multiper.Rmd",
@@ -794,7 +879,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_spag_1per <- downloadHandler(
+    output$report_spag_1per_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_spag_1per,
                 "Visual Census" = "report_spagvis_1per.Rmd",
@@ -825,7 +910,7 @@ server <- function(input, output, session) {
             file.rename(out, file)
         }
     )
-    output$report_spag_multiper <- downloadHandler(
+    output$report_spag_multiper_hidden <- downloadHandler(
         filename = function() {
             report_file <- switch(input$datatype_spag_multiper,
                 "Visual Census" = "report_spagvis_multiper.Rmd",
