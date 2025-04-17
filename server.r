@@ -868,13 +868,24 @@ server <- function(input, output, session) {
     })
     observeEvent(input$datatype_fisher_1per, {
         if (input$datatype_fisher_1per == "Finfish") {
-            if (input$timeframe_fisher_1per == "Seasonal") {
-                updatePrettyRadioButtons(
-                    session = session,
-                    inputId = "timeframe_fisher_1per",
-                    selected = "Annual"
-                )
-            }
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisher_1per",
+                label = NULL,
+                choices = c("Annual"),
+                selected = "Annual",
+                inline = TRUE
+            )
+        } else {
+            selected <- input$timeframe_fisher_1per
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisher_1per",
+                label = NULL,
+                choices = c("Seasonal", "Annual"),
+                selected = selected,
+                inline = TRUE
+            )
         }
         disableCustomization("fisher_1per")
         flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
@@ -883,13 +894,24 @@ server <- function(input, output, session) {
     })
     observeEvent(input$datatype_fisher_multiper, {
         if (input$datatype_fisher_multiper == "Finfish") {
-            if (input$timeframe_fisher_multiper == "Seasonal") {
-                updatePrettyRadioButtons(
-                    session = session,
-                    inputId = "timeframe_fisher_multiper",
-                    selected = "Annual"
-                )
-            }
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisher_multiper",
+                label = NULL,
+                choices = c("Annual"),
+                selected = "Annual",
+                inline = TRUE
+            )
+        } else {
+            selected <- input$timeframe_fisher_multiper
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisher_multiper",
+                label = NULL,
+                choices = c("Seasonal", "Annual"),
+                selected = selected,
+                inline = TRUE
+            )
         }
         disableCustomization("fisher_multiper")
         flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
@@ -897,35 +919,11 @@ server <- function(input, output, session) {
         session$sendCustomMessage("triggerChangeFisherImg", list(dataType = input$datatype_fisher_multiper, isMulti = TRUE))
     })
     observeEvent(input$timeframe_fisher_1per, {
-        if (input$datatype_fisher_1per == "Finfish") {
-            if (input$timeframe_fisher_1per == "Seasonal") {
-                shinyalert("Notice!", "There is no overall Finfish season! Timeframe has been set to Annual!",
-                    confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
-                )
-                updatePrettyRadioButtons(
-                    session = session,
-                    inputId = "timeframe_fisher_1per",
-                    selected = "Annual"
-                )
-            }
-        }
         disableCustomization("fisher_1per")
         flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
         lapply(flag_types, function(ft) set_flags_1per("fisher", ft, FALSE))
     })
     observeEvent(input$timeframe_fisher_multiper, {
-        if (input$datatype_fisher_multiper == "Finfish") {
-            if (input$timeframe_fisher_multiper == "Seasonal") {
-                shinyalert("Notice!", "There is no overall Finfish season! Timeframe has been set to Annual!",
-                    confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
-                )
-                updatePrettyRadioButtons(
-                    session = session,
-                    inputId = "timeframe_fisher_multiper",
-                    selected = "Annual"
-                )
-            }
-        }
         disableCustomization("fisher_multiper")
         flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
         lapply(flag_types, function(ft) set_flags_multiper("fisher", ft, FALSE))
