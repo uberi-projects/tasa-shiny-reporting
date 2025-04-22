@@ -99,8 +99,27 @@ Its reef provides coastal protection from extreme weather events (Fedler, 2011),
 
 ### Fisher Catch Project
 
-Background on reef monitoring dataset type \
+The Fisher Catch Data Program is a pilot initiative led by the Turneffe Atoll Sustainability 
+Association (TASA) and funded by the Inter-American Development Bank (IDB). The 
+program aims to evaluate the effectiveness of using digital technology for catch 
+reporting by fishers in the General Use Zone of the Turneffe Atoll Marine Reserve 
+(TAMR), specifically for Queen Conch, Caribbean Spiny Lobster, and finfish. By 
+transitioning from paper-based data sheets to a customized, simplified version of the 
+SMART Fisheries Catch Data module, the program streamlines data collection and 
+submission. Fishers were equipped with a complete kit—including a SMART-enabled 
+device, measuring tools, and training materials—and participated in a three-day training 
+session on standardized data collection and entry. This fishery-dependent monitoring 
+effort gathers key biological and spatial data such as species composition, size, gear 
+type, fishing effort, and location. The information collected will help assess fishing 
+pressure, track Catch per Unit Effort (CPUE), ultimately guiding adaptive fisheries 
+management strategies.
 
+The primary objective of the Fisher Catch Program at the Turneffe Atoll Marine Reserve 
+(TAMR) is to assess whether fishers can effectively use digital technology to report catch 
+data on Queen Conch, Caribbean Spiny Lobster, and finfish. By replacing traditional 
+paper-based methods, the program aims to simplify and standardize data collection and 
+submission, while generating accurate, fishery-dependent data to inform adaptive 
+fisheries management, track trends in fishing pressure and landings.\
 
 ### Caribbean Spiny Lobsters
 
@@ -128,13 +147,44 @@ Marine Reserve (TAMR) (Figure 1).
 The survey period for this report’s dataset extended 
 from `r study_start` to `r study_end` at TAMR.
 
-Fishermen were selected [process of selecting fishermen 
-for the project]
+The fishermen participating in the Fisher Catch Program at TAMR were selected based 
+on their active use of the General Use Zone within the Turneffe Atoll Marine Reserve 
+and their willingness to participate in a pilot program focused on digital data collection. 
+TASA prioritized individuals who represented the main fishing groups in the 
+area—sailboat fishers, skiff fishers, and camp fishers—to ensure broad coverage of 
+fishing practices and effort across different habitats. Selection also considered the 
+fishers’ availability for training and their interest in adopting technology to support 
+sustainable fisheries management.
 
 Data on carapace length (mm) and unheaded weight (g) were entered by fishermen using SMART 
 technology through a data collection package 
-designed by TASA. They [process of entering data by 
-fishermen into SMART]
+designed by TASA. 
+The process of entering data by fishermen into SMART in the Fisher Catch Program follows a 
+structured and simplified workflow designed for ease of use in the field:
+
+1. **Catch and Effort Recording**: After each fishing trip, the fisher records details of the 
+   catch, including species (Queen Conch, Caribbean Spiny Lobster, or finfish), quantity, 
+   size (measured using calipers, scales, or fishboards), gear type used, hours fished, and 
+   fishing location. 
+
+2. **Use of SMART Device**: The fisher uses the provided SMART-enabled device (typically a 
+   smartphone) to input the recorded data directly into the customized, user-friendly 
+   SMART Fisheries Catch Data module. 
+
+3. **Guided Input**: The module includes drop-down menus, visual aids, and pre-set data 
+   fields to guide fishers through the entry process, reducing errors and ensuring 
+   consistency. 
+
+4. **Spatial Data Entry**: Spatial information (coordinates) are automatically recorded 
+   showing where fishing took place. 
+
+5. **Review and Save**: Before finalizing, fishers can review their entries for accuracy. Once 
+   confirmed, the data is saved locally on the device. 
+
+6. **Data Sync**: When the device connects to the internet (either at sea if possible or upon 
+   return to shore), the data is synced with the central SMART database managed by TASA 
+   for validation, analysis, and reporting.
+
 
 This report, including text, figures, and tables, was generated using the 
 Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes 
