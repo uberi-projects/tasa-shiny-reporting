@@ -82,6 +82,27 @@ validate_hrs <- function(hrs_col) {
         return(error_message)
     }
 }
+## `Type of Fishing Gears` or `Type of Gear`
+validate_gear_check <- function(gear_col) {
+    gear_col <- as.character(gear_col)
+    valid <- gear_col %in% (c("Hook Stick", "Shade", "Snare", "Spear Guns", "Fish Traps", "Handline", "Speargun")) | gear_col == "MISSING" | is.na(gear_col)
+    return(all(valid))
+}
+validate_gear <- function(gear_col, column_name) {
+    gear_col <- as.character(gear_col)
+    valid <- gear_col %in% (c("Hook Stick", "Shade", "Snare", "Spear Guns", "Fish Traps", "Handline", "Speargun")) | gear_col == "MISSING" | is.na(gear_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(gear_col[!valid])
+        error_message <- paste0(
+            "- These ", column_name, " values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(gear_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
 
 # Define helper functions for Lobster sheet ---------------------------
 required_colum_lobster <- c(
@@ -178,13 +199,15 @@ func_validate_fisher_1per_lobster_check <- function(lobster_sheet) {
     coords_valid <- validate_coords_check(lobster_sheet$X, lobster_sheet$Y)
     lbscatch_valid <- validate_lbcatch_check(lobster_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs_check(lobster_sheet$`Hours Fished`)
-    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
+    gear_valid <- validate_gear_check(lobster_sheet$`Type of Fishing Gears`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid, gear_valid)))
 }
 func_validate_fisher_1per_lobster <- function(lobster_sheet) {
     coords_valid <- validate_coords(lobster_sheet$X, lobster_sheet$Y)
     lbscatch_valid <- validate_lbcatch(lobster_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs(lobster_sheet$`Hours Fished`)
-    return(paste(coords_valid, lbscatch_valid, hrs_valid))
+    gear_valid <- validate_gear(lobster_sheet$`Type of Fishing Gears`, "Type of Fishing Gears")
+    return(paste(coords_valid, lbscatch_valid, hrs_valid, gear_valid))
 }
 ## Perform validation for conch sheet
 func_validate_fisher_1per_conch_check <- function(conch_sheet) {
@@ -204,11 +227,13 @@ func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
     coords_valid <- validate_coords_check(finfish_sheet$X, finfish_sheet$Y)
     lbscatch_valid <- validate_lbcatch_check(finfish_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs_check(finfish_sheet$`Hours Fished`)
-    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
+    gear_valid <- validate_gear_check(finfish_sheet$`Type of Gear`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid, gear_valid)))
 }
 func_validate_fisher_1per_finfish <- function(finfish_sheet) {
     coords_valid <- validate_coords(finfish_sheet$X, finfish_sheet$Y)
     lbscatch_valid <- validate_lbcatch(finfish_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs(finfish_sheet$`Hours Fished`)
-    return(paste(coords_valid, lbscatch_valid, hrs_valid))
+    gear_valid <- validate_gear(finfish_sheet$`Type of Gear`, "Type of Gear")
+    return(paste(coords_valid, lbscatch_valid, hrs_valid, gear_valid))
 }
