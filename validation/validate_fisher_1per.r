@@ -71,9 +71,17 @@ func_validate_fisher_1per_sheets <- function(df_list, datatype) {
 }
 ## Check sheets for required columns (completeness)
 func_validate_fisher_1per_completeness_check <- function(data_sheet, datatype) {
-    required_columns_lobster <- c("Y", "X")
-    required_columns_conch <- c("Y", "X")
-    required_columns_finfish <- c("Y", "X")
+    required_columns_lobster <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Type of Fishing Gears",
+        "Weight type", "Sex", "Carapace Length (mm)", "Weight (G)"
+    )
+    required_columns_conch <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Weight Type", "Weight (G)"
+    )
+    required_columns_finfish <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Type of Gear", "Fish Species",
+        "Weight Type", "Total Length (cm)", "Fork Length (cm)", "Weight (lbs)"
+    )
     if (datatype == "Lobster") {
         required_columns <- required_columns_lobster
     } else if (datatype == "Conch") {
@@ -86,9 +94,17 @@ func_validate_fisher_1per_completeness_check <- function(data_sheet, datatype) {
     return(check)
 }
 func_validate_fisher_1per_completeness <- function(data_sheet, datatype) {
-    required_columns_lobster <- c("Y", "X")
-    required_columns_conch <- c("Y", "X")
-    required_columns_finfish <- c("Y", "X")
+    required_columns_lobster <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Type of Fishing Gears",
+        "Weight type", "Sex", "Carapace Length (mm)", "Weight (G)"
+    )
+    required_columns_conch <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Weight Type", "Weight (G)"
+    )
+    required_columns_finfish <- c(
+        "Y", "X", "Total Lbs of Catch", "Hours Fished", "Type of Gear", "Fish Species",
+        "Weight Type", "Total Length (cm)", "Fork Length (cm)", "Weight (lbs)"
+    )
     if (datatype == "Lobster") {
         required_columns <- required_columns_lobster
     } else if (datatype == "Conch") {
