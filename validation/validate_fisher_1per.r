@@ -40,7 +40,65 @@ validate_coords <- function(longitude_col, latitude_col) {
         return(error_message)
     }
 }
+## Total Lbs of Catch
+validate_lbcatch_check <- function(lbcatch_col) {
+    lbcatch_col <- as.numeric(lbcatch_col)
+    valid <- (lbcatch_col <= 100 & lbcatch_col > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+    return(all(valid))
+}
+validate_lbcatch <- function(lbcatch_col) {
+    lbcatch_col <- as.numeric(lbcatch_col)
+    valid <- (lbcatch_col <= 100 & lbcatch_col > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(lbcatch_col[!valid])
+        error_message <- paste0(
+            "- These Total Lbs of Catch values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(lbcatch_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Hours Fished
+validate_hrs_check <- function(hrs_col) {
+    hrs_col <- as.numeric(hrs_col)
+    valid <- (hrs_col <= 20 & hrs_col >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
+    return(all(valid))
+}
+validate_hrs <- function(hrs_col) {
+    hrs_col <- as.numeric(hrs_col)
+    valid <- (hrs_col <= 20 & hrs_col >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(hrs_col[!valid])
+        error_message <- paste0(
+            "- These Hours Fished values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(hrs_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
 
+# Define helper functions for Lobster sheet ---------------------------
+required_colum_lobster <- c(
+    "Type of Fishing Gears",
+    "Weight type", "Sex", "Carapace Length (mm)", "Weight (G)"
+)
+
+# Define helper functions for Conch sheet ---------------------------
+required_colum_conch <- c(
+    "Weight Type", "Weight (G)"
+)
+
+# Define helper functions for Finfish sheet ---------------------------
+required_colum_finfish <- c(
+    "Type of Gear", "Fish Species",
+    "Weight Type", "Total Length (cm)", "Fork Length (cm)", "Weight (lbs)"
+)
 
 # Define primary functions ---------------------------
 ## Check df list for required sheets
@@ -117,28 +175,40 @@ func_validate_fisher_1per_completeness <- function(data_sheet, datatype) {
 }
 ## Perform validation for lobster sheet
 func_validate_fisher_1per_lobster_check <- function(lobster_sheet) {
-    coords_lobster_valid <- validate_coords_check(lobster_sheet$X, lobster_sheet$Y)
-    return(all(c(coords_lobster_valid)))
+    coords_valid <- validate_coords_check(lobster_sheet$X, lobster_sheet$Y)
+    lbscatch_valid <- validate_lbcatch_check(lobster_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs_check(lobster_sheet$`Hours Fished`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
 }
 func_validate_fisher_1per_lobster <- function(lobster_sheet) {
-    coords_lobster_valid <- validate_coords(lobster_sheet$X, lobster_sheet$Y)
-    return(paste(coords_lobster_valid))
+    coords_valid <- validate_coords(lobster_sheet$X, lobster_sheet$Y)
+    lbscatch_valid <- validate_lbcatch(lobster_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs(lobster_sheet$`Hours Fished`)
+    return(paste(coords_valid, lbscatch_valid, hrs_valid))
 }
 ## Perform validation for conch sheet
 func_validate_fisher_1per_conch_check <- function(conch_sheet) {
-    coords_conch_valid <- validate_coords_check(conch_sheet$X, conch_sheet$Y)
-    return(all(c(coords_conch_valid)))
+    coords_valid <- validate_coords_check(conch_sheet$X, conch_sheet$Y)
+    lbscatch_valid <- validate_lbcatch_check(conch_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs_check(conch_sheet$`Hours Fished`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
 }
 func_validate_fisher_1per_conch <- function(conch_sheet) {
-    coords_conch_valid <- validate_coords(conch_sheet$X, conch_sheet$Y)
-    return(paste(coords_conch_valid))
+    coords_valid <- validate_coords(conch_sheet$X, conch_sheet$Y)
+    lbscatch_valid <- validate_lbcatch(conch_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs(conch_sheet$`Hours Fished`)
+    return(paste(coords_valid, lbscatch_valid, hrs_valid))
 }
 ## Perform validation for finfish sheet
 func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
-    coords_finfish_valid <- validate_coords_check(finfish_sheet$X, finfish_sheet$Y)
-    return(all(c(coords_finfish_valid)))
+    coords_valid <- validate_coords_check(finfish_sheet$X, finfish_sheet$Y)
+    lbscatch_valid <- validate_lbcatch_check(finfish_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs_check(finfish_sheet$`Hours Fished`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
 }
 func_validate_fisher_1per_finfish <- function(finfish_sheet) {
-    coords_finfish_valid <- validate_coords(finfish_sheet$X, finfish_sheet$Y)
-    return(paste(coords_finfish_valid))
+    coords_valid <- validate_coords(finfish_sheet$X, finfish_sheet$Y)
+    lbscatch_valid <- validate_lbcatch(finfish_sheet$`Total Lbs of Catch`)
+    hrs_valid <- validate_hrs(finfish_sheet$`Hours Fished`)
+    return(paste(coords_valid, lbscatch_valid, hrs_valid))
 }

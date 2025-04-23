@@ -38,8 +38,8 @@ observeEvent(input$validate_fisher_1per, {
                 }
             }
             if (input$datatype_fisher_1per == "Finfish") {
-                validation_passed <- func_validate_fisher_1per_finfish_check(df_list$Lobster)
-                validation_message_finfish <- func_validate_fisher_1per_finfish(df_list$Lobster)
+                validation_passed <- func_validate_fisher_1per_finfish_check(df_list$Finfish)
+                validation_message_finfish <- func_validate_fisher_1per_finfish(df_list$Finfish)
                 validation_message <- ""
                 if (length(validation_message_finfish) > 0 && validation_message_finfish != "") {
                     validation_message <- paste0("Finfish Sheet:", "<br><br>", validation_message_finfish, "<br><br>")
