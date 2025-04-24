@@ -473,12 +473,7 @@ server <- function(input, output, session) {
         )
         enableCustomization("fisheries_multiper")
     })
-    observeEvent(input$validate_fisher_1per, {
-        shinyalert("Notice!", "Validation has not been implemented for Fisher Project Single Year as of yet!",
-            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
-        )
-        enableCustomization("fisher_1per")
-    })
+    source("validation/validation_observers/validate_fisher_observer_1per.r", local = TRUE)
     observeEvent(input$validate_fisher_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for Fisher Project Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
@@ -499,10 +494,6 @@ server <- function(input, output, session) {
         )
         enableCustomization("spag_multiper")
     })
-
-
-
-
 
     # Observe report generate buttons
     observeEvent(input$report_fisheries_1per, {
