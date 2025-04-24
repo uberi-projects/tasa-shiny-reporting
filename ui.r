@@ -192,7 +192,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisheries_1per_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("fisheries_1per_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -402,7 +412,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisheries_multiper_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("fisheries_multiper_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -537,7 +557,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_1per_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("fisher_1per_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[11],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -745,7 +775,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("fisher_multiper_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("fisher_multiper_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -872,7 +912,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("lamp_1per_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("lamp_1per_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -1070,7 +1120,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("lamp_multiper_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("lamp_multiper_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -1197,7 +1257,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("spag_1per_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("spag_1per_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
@@ -1395,7 +1465,17 @@ ui <- navbarPage(
                                             "Add Inputs",
                                             div(
                                                 class = "input-list-content",
-                                                textInput("spag_multiper_name", "Your Name: ", value = "")
+                                                div(
+                                                    class = "input-block",
+                                                    style = "display:flex;",
+                                                    textInput("spag_multiper_name", "Your Name: ", value = ""),
+                                                    span(
+                                                        class = "input-tooltip",
+                                                        `data-toggle` = "tooltip", `data-placement` = "right",
+                                                        title = home_text[12],
+                                                        icon("question-circle")
+                                                    ),
+                                                )
                                             )
                                         ),
                                         hr(),
