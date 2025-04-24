@@ -42,13 +42,11 @@ validate_coords <- function(longitude_col, latitude_col) {
 }
 ## Total Lbs of Catch
 validate_lbcatch_check <- function(lbcatch_col) {
-    lbcatch_col <- as.numeric(lbcatch_col)
-    valid <- (lbcatch_col <= 100 & lbcatch_col > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+    valid <- (as.numeric(lbcatch_col) <= 100 & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
     return(all(valid))
 }
 validate_lbcatch <- function(lbcatch_col) {
-    lbcatch_col <- as.numeric(lbcatch_col)
-    valid <- (lbcatch_col <= 100 & lbcatch_col > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+    valid <- (as.numeric(lbcatch_col) <= 100 & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(lbcatch_col[!valid])
@@ -63,13 +61,11 @@ validate_lbcatch <- function(lbcatch_col) {
 }
 ## Hours Fished
 validate_hrs_check <- function(hrs_col) {
-    hrs_col <- as.numeric(hrs_col)
-    valid <- (hrs_col <= 20 & hrs_col >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
+    valid <- (as.numeric(hrs_col) <= 20 & as.numeric(hrs_col) >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
     return(all(valid))
 }
 validate_hrs <- function(hrs_col) {
-    hrs_col <- as.numeric(hrs_col)
-    valid <- (hrs_col <= 20 & hrs_col >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
+    valid <- (as.numeric(hrs_col) <= 20 & as.numeric(hrs_col) >= 0.5) | hrs_col == "MISSING" | is.na(hrs_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(hrs_col[!valid])
@@ -105,21 +101,231 @@ validate_gear <- function(gear_col, column_name) {
 }
 
 # Define helper functions for Lobster sheet ---------------------------
-required_colum_lobster <- c(
-    "Type of Fishing Gears",
-    "Weight type", "Sex", "Carapace Length (mm)", "Weight (G)"
-)
+## Weight type
+validate_weighttype_lobster_check <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("headed", "whole")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    return(all(valid))
+}
+validate_weighttype_lobster <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("headed", "whole")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weighttype_col[!valid])
+        error_message <- paste0(
+            "- These Weight type values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weighttype_col[!valid]), " times).
+            Weight type should be headed or whole. Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Sex
+validate_sex_check <- function(sex_col) {
+    sex_col <- as.character(sex_col)
+    valid <- sex_col %in% (c("Male", "Female")) | sex_col == "MISSING" | is.na(sex_col)
+    return(all(valid))
+}
+validate_sex <- function(sex_col) {
+    sex_col <- as.character(sex_col)
+    valid <- sex_col %in% (c("Male", "Female")) | sex_col == "MISSING" | is.na(sex_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(sex_col[!valid])
+        error_message <- paste0(
+            "- These Sex values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(sex_col[!valid]), " times).
+            Sex should be Male or Female. Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Weight (G)
+validate_weight_lobster_check <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 0.5 & as.numeric(weight_col) <= 40) | weight_col == "MISSING" | is.na(weight_col)
+    return(all(valid))
+}
+validate_weight_lobster <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 0.5 & as.numeric(weight_col) <= 40) | weight_col == "MISSING" | is.na(weight_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weight_col[!valid])
+        error_message <- paste0(
+            "- These Weight (G) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weight_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Carapace Length (mm)
+validate_carapace_check <- function(carapace_col) {
+    valid <- (as.numeric(carapace_col) >= 80 & as.numeric(carapace_col) <= 120) | carapace_col == "MISSING" | is.na(carapace_col)
+    return(all(valid))
+}
+validate_carapace <- function(carapace_col) {
+    valid <- (as.numeric(carapace_col) >= 80 & as.numeric(carapace_col) <= 120) | carapace_col == "MISSING" | is.na(carapace_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(carapace_col[!valid])
+        error_message <- paste0(
+            "- These Carapace Length (mm) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(carapace_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
 
 # Define helper functions for Conch sheet ---------------------------
-required_colum_conch <- c(
-    "Weight Type", "Weight (G)"
-)
+## Weight Type
+validate_weighttype_conch_check <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("Market Clean", "Fillet")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    return(all(valid))
+}
+validate_weighttype_conch <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("Market Clean", "Fillet")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weighttype_col[!valid])
+        error_message <- paste0(
+            "- These Weight Type values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weighttype_col[!valid]), " times).
+            Weight Type should be Market Clean or Fillet. Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Weight (G)
+validate_weight_conch_check <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 2 & as.numeric(weight_col) <= 15) | weight_col == "MISSING" | is.na(weight_col)
+    return(all(valid))
+}
+validate_weight_conch <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 2 & as.numeric(weight_col) <= 15) | weight_col == "MISSING" | is.na(weight_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weight_col[!valid])
+        error_message <- paste0(
+            "- These Weight (G) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weight_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
 
 # Define helper functions for Finfish sheet ---------------------------
-required_colum_finfish <- c(
-    "Type of Gear", "Fish Species",
-    "Weight Type", "Total Length (cm)", "Fork Length (cm)", "Weight (lbs)"
-)
+## Weight Type
+validate_weighttype_finfish_check <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("Gutted", "Whole")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    return(all(valid))
+}
+validate_weighttype_finfish <- function(weighttype_col) {
+    weighttype_col <- as.character(weighttype_col)
+    valid <- weighttype_col %in% (c("Gutted", "Whole")) | weighttype_col == "MISSING" | is.na(weighttype_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weighttype_col[!valid])
+        error_message <- paste0(
+            "- These Weight Type values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weighttype_col[!valid]), " times).
+            Weight Type should be Gutted or Whole. Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Weight (lbs)
+validate_weight_finfish_check <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 0.2 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
+    return(all(valid))
+}
+validate_weight_finfish <- function(weight_col) {
+    valid <- (as.numeric(weight_col) >= 0.2 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(weight_col[!valid])
+        error_message <- paste0(
+            "- These Weight (lbs) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(weight_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Fish Species
+validate_species_check <- function(species_col) {
+    valid <- is.character(species_col) | is.na(species_col)
+    return(all(valid))
+}
+validate_species <- function(species_col) {
+    valid <- is.character(species_col) | is.na(species_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(species_col[!valid])
+        error_message <- paste0(
+            "- These Fish Species values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(species_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Total Length (cm)
+validate_totallength_check <- function(totallength_col) {
+    valid <- (as.numeric(totallength_col) >= 5 & as.numeric(totallength_col) <= 40) | totallength_col == "MISSING" | is.na(totallength_col)
+    return(all(valid))
+}
+validate_totallength <- function(totallength_col) {
+    valid <- (as.numeric(totallength_col) >= 5 & as.numeric(totallength_col) <= 40) | totallength_col == "MISSING" | is.na(totallength_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(totallength_col[!valid])
+        error_message <- paste0(
+            "- These Total Length (cm) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(totallength_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
+## Fork Length (cm)
+validate_forklength_check <- function(forklength_col) {
+    valid <- (as.numeric(forklength_col) >= 4 & as.numeric(forklength_col) <= 30) | forklength_col == "MISSING" | is.na(forklength_col)
+    return(all(valid))
+}
+validate_forklength <- function(forklength_col) {
+    valid <- (as.numeric(forklength_col) >= 4 & as.numeric(forklength_col) <= 30) | forklength_col == "MISSING" | is.na(forklength_col)
+    if (all(valid)) {
+    } else {
+        invalid_values <- unique(forklength_col[!valid])
+        error_message <- paste0(
+            "- These Fork Length (cm) values are unexpected: ",
+            paste(invalid_values, collapse = ", "),
+            paste0(" (unexpected values occurred ", length(forklength_col[!valid]), " times). Please double check these values."),
+            "<br><br>"
+        )
+        return(error_message)
+    }
+}
 
 # Define primary functions ---------------------------
 ## Check df list for required sheets
@@ -200,27 +406,45 @@ func_validate_fisher_1per_lobster_check <- function(lobster_sheet) {
     lbscatch_valid <- validate_lbcatch_check(lobster_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs_check(lobster_sheet$`Hours Fished`)
     gear_valid <- validate_gear_check(lobster_sheet$`Type of Fishing Gears`)
-    return(all(c(coords_valid, lbscatch_valid, hrs_valid, gear_valid)))
+    weighttype_valid <- validate_weighttype_lobster_check(lobster_sheet$`Weight type`)
+    sex_valid <- validate_sex_check(lobster_sheet$Sex)
+    weight_valid <- validate_weight_lobster_check(lobster_sheet$`Weight (G)`)
+    carapace_valid <- validate_carapace_check(lobster_sheet$`Carapace Length (mm)`)
+    return(all(c(
+        coords_valid, lbscatch_valid, hrs_valid,
+        gear_valid, weighttype_valid, sex_valid, weight_valid, carapace_valid
+    )))
 }
 func_validate_fisher_1per_lobster <- function(lobster_sheet) {
     coords_valid <- validate_coords(lobster_sheet$X, lobster_sheet$Y)
     lbscatch_valid <- validate_lbcatch(lobster_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs(lobster_sheet$`Hours Fished`)
     gear_valid <- validate_gear(lobster_sheet$`Type of Fishing Gears`, "Type of Fishing Gears")
-    return(paste(coords_valid, lbscatch_valid, hrs_valid, gear_valid))
+    weighttype_valid <- validate_weighttype_lobster(lobster_sheet$`Weight type`)
+    sex_valid <- validate_sex(lobster_sheet$Sex)
+    weight_valid <- validate_weight_lobster(lobster_sheet$`Weight (G)`)
+    carapace_valid <- validate_carapace(lobster_sheet$`Carapace Length (mm)`)
+    return(paste(
+        coords_valid, lbscatch_valid, hrs_valid, gear_valid,
+        weighttype_valid, sex_valid, weight_valid, carapace_valid
+    ))
 }
 ## Perform validation for conch sheet
 func_validate_fisher_1per_conch_check <- function(conch_sheet) {
     coords_valid <- validate_coords_check(conch_sheet$X, conch_sheet$Y)
     lbscatch_valid <- validate_lbcatch_check(conch_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs_check(conch_sheet$`Hours Fished`)
-    return(all(c(coords_valid, lbscatch_valid, hrs_valid)))
+    weighttype_valid <- validate_weighttype_conch_check(conch_sheet$`Weight Type`)
+    weight_valid <- validate_weight_conch_check(conch_sheet$`Weight (G)`)
+    return(all(c(coords_valid, lbscatch_valid, hrs_valid, weighttype_valid, weight_valid)))
 }
 func_validate_fisher_1per_conch <- function(conch_sheet) {
     coords_valid <- validate_coords(conch_sheet$X, conch_sheet$Y)
     lbscatch_valid <- validate_lbcatch(conch_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs(conch_sheet$`Hours Fished`)
-    return(paste(coords_valid, lbscatch_valid, hrs_valid))
+    weighttype_valid <- validate_weighttype_conch(conch_sheet$`Weight Type`)
+    weight_valid <- validate_weight_conch(conch_sheet$`Weight (G)`)
+    return(paste(coords_valid, lbscatch_valid, hrs_valid, weighttype_valid, weight_valid))
 }
 ## Perform validation for finfish sheet
 func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
@@ -228,12 +452,28 @@ func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
     lbscatch_valid <- validate_lbcatch_check(finfish_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs_check(finfish_sheet$`Hours Fished`)
     gear_valid <- validate_gear_check(finfish_sheet$`Type of Gear`)
-    return(all(c(coords_valid, lbscatch_valid, hrs_valid, gear_valid)))
+    weighttype_valid <- validate_weighttype_finfish_check(finfish_sheet$`Weight Type`)
+    weight_valid <- validate_weight_finfish_check(finfish_sheet$`Weight (lbs)`)
+    species_valid <- validate_species_check(finfish_sheet$`Fish Species`)
+    totallength_valid <- validate_totallength_check(finfish_sheet$`Total Length (cm)`)
+    forklength_valid <- validate_forklength_check(finfish_sheet$`Fork Length (cm)`)
+    return(all(c(
+        coords_valid, lbscatch_valid, hrs_valid, gear_valid,
+        weighttype_valid, weight_valid, species_valid, totallength_valid, forklength_valid
+    )))
 }
 func_validate_fisher_1per_finfish <- function(finfish_sheet) {
     coords_valid <- validate_coords(finfish_sheet$X, finfish_sheet$Y)
     lbscatch_valid <- validate_lbcatch(finfish_sheet$`Total Lbs of Catch`)
     hrs_valid <- validate_hrs(finfish_sheet$`Hours Fished`)
     gear_valid <- validate_gear(finfish_sheet$`Type of Gear`, "Type of Gear")
-    return(paste(coords_valid, lbscatch_valid, hrs_valid, gear_valid))
+    weighttype_valid <- validate_weighttype_finfish(finfish_sheet$`Weight Type`)
+    weight_valid <- validate_weight_finfish(finfish_sheet$`Weight (lbs)`)
+    species_valid <- validate_species(finfish_sheet$`Fish Species`)
+    totallength_valid <- validate_totallength(finfish_sheet$`Total Length (cm)`)
+    forklength_valid <- validate_forklength(finfish_sheet$`Fork Length (cm)`)
+    return(paste(
+        coords_valid, lbscatch_valid, hrs_valid, gear_valid,
+        weighttype_valid, weight_valid, species_valid, totallength_valid, forklength_valid
+    ))
 }
