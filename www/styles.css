@@ -304,6 +304,11 @@ label {
   top: 41px;
   left: 360px;
 }
+.input-block > .input-tooltip {
+  position: absolute;
+  top: 61%;
+  left: 366px;
+}
 
 /* Images */
 .datatype-img {
