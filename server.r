@@ -10,6 +10,16 @@ source("server_helpers.r")
 server <- function(input, output, session) {
     shinyjs::hide("feedback-content-box")
 
+    # Check for pandoc
+    if (!rmarkdown::pandoc_available()) {
+        showModal(modalDialog(
+            title = "Missing Pandoc",
+            "Report generation is not available because Pandoc is not installed on this computer. Please install Pandoc or run the app in RStudio.",
+            easyClose = TRUE
+        ))
+        return()
+    }
+
     # Define flags for optional files being used
     fisheries_multiper3_flag <- reactiveVal(FALSE)
     fisheries_multiper4_flag <- reactiveVal(FALSE)
