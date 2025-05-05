@@ -911,7 +911,7 @@ ui <- navbarPage(
             "LAMP",
             tabsetPanel(
                 tabPanel(
-                    "Single Year",
+                    "Single Period",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -926,7 +926,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Single Year LAMP Reports"),
+                                h2("Single Period LAMP Reports"),
                                 p(datatype_text[2])
                             ),
                             div(
@@ -1043,7 +1043,7 @@ ui <- navbarPage(
                     )
                 ),
                 tabPanel(
-                    "Multiple Years",
+                    "Multiple Periods",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -1061,7 +1061,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multi-Year LAMP Reports"),
+                                h2("Multi-Period LAMP Reports"),
                                 p(datatype_text[2])
                             ),
                             div(
@@ -1256,7 +1256,7 @@ ui <- navbarPage(
             "SPAG",
             tabsetPanel(
                 tabPanel(
-                    "Single Year",
+                    "Single Period",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -1310,7 +1310,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Single Year SPAG Reports"),
+                                h2("Single Period SPAG Reports"),
                                 p(datatype_text[3])
                             ),
                             div(
@@ -1427,7 +1427,7 @@ ui <- navbarPage(
                     )
                 ),
                 tabPanel(
-                    "Multiple Years",
+                    "Multiple Periods",
                     tags$script(
                         HTML(
                             "$(document).ready(function(){
@@ -1484,7 +1484,7 @@ ui <- navbarPage(
                             class = "content-container-grid grid-report",
                             div(
                                 class = "content-box",
-                                h2("Multi-Year SPAG Reports"),
+                                h2("Multi-Period SPAG Reports"),
                                 p(datatype_text[3])
                             ),
                             div(
@@ -1732,6 +1732,22 @@ ui <- navbarPage(
                 div(
                     class = "data-template-table",
                     uiOutput("template_list_table")
+                ),
+                div(
+                    class = "content-box",
+                    p("For a bank of existing standardized historic data, visit the Data Bank below:"),
+                    br()
+                ),
+                div(
+                    class = "content-container",
+                    div(
+                        class = "external-link-button",
+                        a(
+                            href = link_text[10],
+                            target = "_blank",
+                            h1("Data Bank")
+                        )
+                    )
                 )
             )
         )
