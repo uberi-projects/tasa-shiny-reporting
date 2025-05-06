@@ -55,7 +55,7 @@ ui <- navbarPage(
                 div(
                     class = "content-box",
                     h2("Welcome"),
-                    p(home_text[1]), p(strong(home_text[3])),
+                    p(home_text[1]),
                     br(),
                     hr(class = "home-line"),
                     br(),
@@ -74,27 +74,6 @@ ui <- navbarPage(
                         actionButton("go_to_manual_tab", "Manual"),
                         " page. "
                     ))
-                ),
-                hr(),
-                div(
-                    actionButton("feedback_opn_bttn", "Report an Issue")
-                ),
-                div(
-                    id = "feedback-content-box",
-                    class = "feedback-content-box",
-                    div(
-                        class = "feedback-response-box",
-                        actionButton("feedback_bttn", "Send Feedback"),
-                        br(),
-                        div(
-                            class = "feedback-box",
-                            textAreaInput("feedback_text", "Describe Issue", value = ""),
-                            prettyRadioButtons("bug_severity",
-                                label = "Severity",
-                                choices = c("1", "2", "3", "4", "5"), inline = TRUE
-                            )
-                        )
-                    )
                 )
             )
         )
