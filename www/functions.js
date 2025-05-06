@@ -7,7 +7,7 @@ function switchFisheriesImage(dataType, isMulti) {
     }
     switch (dataType) {
         case "Lobster": 
-            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpg")
+            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpeg")
         break;
         case "Conch": 
             elem.setAttribute("src","../images/photos/photo_lamp_conch_07.jpg")
@@ -16,7 +16,7 @@ function switchFisheriesImage(dataType, isMulti) {
             elem.setAttribute("src","../images/photos/photo_catch_08.jpeg")
         break;
         default:
-            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpg")
+            elem.setAttribute("src","../images/photos/photo_lamp_lobster_05.jpeg")
     }
 }
 Shiny.addCustomMessageHandler("triggerChangeFisheriesImg", function(message) {
@@ -56,9 +56,9 @@ function switchLampImage(isConch,isMulti) {
         elem = document.getElementById("datatype-lamp-1per-img")
     }
     if (isConch) {
-        elem.setAttribute("src","../images/photos/photo_lamp_conch_03.jpg")
+        elem.setAttribute("src","../images/photos/photo_lamp_conch_03.jpeg")
     } else {
-        elem.setAttribute("src","../images/photos/photo_lamp_work_01.jpg")
+        elem.setAttribute("src","../images/photos/photo_lamp_work_01.jpeg")
     }
 }
 Shiny.addCustomMessageHandler("triggerChangeLampImg", function(message) {
@@ -74,7 +74,7 @@ function switchSpagImage(isVisual, isMulti) {
     if (isVisual) {
         elem.setAttribute("src","../images/photos/photo_spags_02.png")
     } else {
-        elem.setAttribute("src","../images/photos/photo_spags_06.jpg")
+        elem.setAttribute("src","../images/photos/photo_spags_06.jpeg")
     }
 }
 Shiny.addCustomMessageHandler("triggerChangeSpagImg", function(message) {

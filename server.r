@@ -274,19 +274,19 @@ server <- function(input, output, session) {
         }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag)
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag)
+        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag)
     })
 
     # Observe Upload

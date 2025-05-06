@@ -276,7 +276,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_lobster_05.jpg", id = "datatype-fisheries-1per-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_lobster_05.jpeg", id = "datatype-fisheries-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -535,7 +535,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_lobster_05.jpg", id = "datatype-fisheries-multi-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_lobster_05.jpeg", id = "datatype-fisheries-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -1035,7 +1035,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-1per-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_conch_03.jpeg", id = "datatype-lamp-1per-img", class = "datatype-img")
                                     )
                                 )
                             )
@@ -1243,7 +1243,7 @@ ui <- navbarPage(
                                                 )
                                             )
                                         ),
-                                        img(src = "images/photos/photo_lamp_conch_03.jpg", id = "datatype-lamp-multi-img", class = "datatype-img")
+                                        img(src = "images/photos/photo_lamp_conch_03.jpeg", id = "datatype-lamp-multi-img", class = "datatype-img")
                                     )
                                 )
                             )
