@@ -1,7 +1,7 @@
 ## server.R
 
 # Define release ---------------------------
-release_version <- "v0.1.0-alpha"
+release_version <- "v1.0.0-alpha"
 
 # Attach packages ---------------------------
 library(readxl)
