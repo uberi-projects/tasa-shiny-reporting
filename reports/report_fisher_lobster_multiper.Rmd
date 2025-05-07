@@ -5,6 +5,7 @@ output:
     tables:
       style: table_template
 params:
+  release: "Unknown"
   user_name: "Unknown"
   fisher_multiper_timeframe: "Annual"
   datafile1: pressure

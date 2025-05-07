@@ -5,6 +5,7 @@ output:
     tables:
       style: table_template
 params:
+  release: "Unknown"
   user_name: "Unknown"
   datafile1: pressure
   datafile1_name: "Unknown"
@@ -473,7 +474,7 @@ Since the original site selection in 2021, the aim has been to resurvey these si
 
 `r text_survey`
 
-This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
+This report, including text, figures, and tables, was generated using the Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes standardized reef monitoring data, validates the dataset, and creates a shareable output.\
 
 
 ```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}

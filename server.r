@@ -1,5 +1,8 @@
 ## server.R
 
+# Define release ---------------------------
+release_version <- "v0.1.0-alpha"
+
 # Attach packages ---------------------------
 library(readxl)
 
@@ -603,7 +606,7 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisheries_1per_name, datafile = df_upload_fisheries_1per()),
+                        params = list(user_name = input$fisheries_1per_name, datafile = df_upload_fisheries_1per(), release = release_version),
                         envir = new.env(parent = globalenv())
                     )
                 },
@@ -631,7 +634,7 @@ server <- function(input, output, session) {
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisheries_multiper_name, datafile = df_upload_fisheries_multiper1()),
+                        params = list(user_name = input$fisheries_multiper_name, datafile = df_upload_fisheries_multiper1(), release = release_version),
                         envir = new.env(parent = globalenv())
                     )
                 },
@@ -674,6 +677,7 @@ server <- function(input, output, session) {
                     render(
                         report_file,
                         params = list(
+                            release = release_version,
                             user_name = input$fisher_1per_name,
                             datafile_name = input$upload_fisher_1per$name,
                             datafile = df_upload_fisher_1per(),
@@ -722,6 +726,7 @@ server <- function(input, output, session) {
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             params_list <- list(
+                release = release_version,
                 user_name = input$fisher_multiper_name,
                 fisher_multiper_timeframe = input$timeframe_fisher_multiper,
                 datafile1_name = input$upload_fisher_multiper1$name,
@@ -802,6 +807,7 @@ server <- function(input, output, session) {
                     render(
                         report_file,
                         params = list(
+                            release = release_version,
                             user_name = input$lamp_1per_name,
                             datafile_name = input$upload_lamp_1per$name,
                             datafile = df_upload_lamp_1per(),
@@ -844,6 +850,7 @@ server <- function(input, output, session) {
             on.exit(setwd(owd))
             file.copy(src, c(report_file, "report_template.docx", "TAMR_map.jpg", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             params_list <- list(
+                release = release_version,
                 user_name = input$lamp_multiper_name,
                 datafile1_name = input$upload_lamp_multiper1$name,
                 datafile1 = df_upload_lamp_multiper1(),
@@ -904,7 +911,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$spag_name, datafile = df_upload_spag_1per()),
+                params = list(release = release_version, user_name = input$spag_name, datafile = df_upload_spag_1per()),
                 envir = new.env(parent = globalenv())
             )
             hideLoaderBar("spag_1per", session)
@@ -935,7 +942,7 @@ server <- function(input, output, session) {
             file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
+                params = list(release = release_version, user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
                 envir = new.env(parent = globalenv())
             )
             hideLoaderBar("spag_multiper", session)
