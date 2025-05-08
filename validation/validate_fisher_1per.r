@@ -41,12 +41,12 @@ validate_coords <- function(longitude_col, latitude_col) {
     }
 }
 ## Total Lbs of Catch
-validate_lbcatch_check <- function(lbcatch_col) {
-    valid <- (as.numeric(lbcatch_col) <= 100 & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+validate_lbcatch_check <- function(lbcatch_col, max) {
+    valid <- (as.numeric(lbcatch_col) <= max & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
     return(all(valid))
 }
-validate_lbcatch <- function(lbcatch_col) {
-    valid <- (as.numeric(lbcatch_col) <= 100 & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
+validate_lbcatch <- function(lbcatch_col, max) {
+    valid <- (as.numeric(lbcatch_col) <= max & as.numeric(lbcatch_col) > 0) | lbcatch_col == "MISSING" | is.na(lbcatch_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(lbcatch_col[!valid])
@@ -147,11 +147,11 @@ validate_sex <- function(sex_col) {
 }
 ## Weight (G)
 validate_weight_lobster_check <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 0.5 & as.numeric(weight_col) <= 40) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 300 & as.numeric(weight_col) <= 2500) | weight_col == "MISSING" | is.na(weight_col)
     return(all(valid))
 }
 validate_weight_lobster <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 0.5 & as.numeric(weight_col) <= 40) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 300 & as.numeric(weight_col) <= 2500) | weight_col == "MISSING" | is.na(weight_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(weight_col[!valid])
@@ -166,11 +166,11 @@ validate_weight_lobster <- function(weight_col) {
 }
 ## Carapace Length (mm)
 validate_carapace_check <- function(carapace_col) {
-    valid <- (as.numeric(carapace_col) >= 80 & as.numeric(carapace_col) <= 120) | carapace_col == "MISSING" | is.na(carapace_col)
+    valid <- (as.numeric(carapace_col) >= 70 & as.numeric(carapace_col) <= 180) | carapace_col == "MISSING" | is.na(carapace_col)
     return(all(valid))
 }
 validate_carapace <- function(carapace_col) {
-    valid <- (as.numeric(carapace_col) >= 80 & as.numeric(carapace_col) <= 120) | carapace_col == "MISSING" | is.na(carapace_col)
+    valid <- (as.numeric(carapace_col) >= 70 & as.numeric(carapace_col) <= 180) | carapace_col == "MISSING" | is.na(carapace_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(carapace_col[!valid])
@@ -209,11 +209,11 @@ validate_weighttype_conch <- function(weighttype_col) {
 }
 ## Weight (G)
 validate_weight_conch_check <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 2 & as.numeric(weight_col) <= 15) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 150 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
     return(all(valid))
 }
 validate_weight_conch <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 2 & as.numeric(weight_col) <= 15) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 150 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(weight_col[!valid])
@@ -252,11 +252,11 @@ validate_weighttype_finfish <- function(weighttype_col) {
 }
 ## Weight (lbs)
 validate_weight_finfish_check <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 0.2 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 0.25 & as.numeric(weight_col) <= 150) | weight_col == "MISSING" | is.na(weight_col)
     return(all(valid))
 }
 validate_weight_finfish <- function(weight_col) {
-    valid <- (as.numeric(weight_col) >= 0.2 & as.numeric(weight_col) <= 1000) | weight_col == "MISSING" | is.na(weight_col)
+    valid <- (as.numeric(weight_col) >= 0.25 & as.numeric(weight_col) <= 150) | weight_col == "MISSING" | is.na(weight_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(weight_col[!valid])
@@ -290,11 +290,11 @@ validate_species <- function(species_col) {
 }
 ## Total Length (cm)
 validate_totallength_check <- function(totallength_col) {
-    valid <- (as.numeric(totallength_col) >= 5 & as.numeric(totallength_col) <= 40) | totallength_col == "MISSING" | is.na(totallength_col)
+    valid <- (as.numeric(totallength_col) >= 10 & as.numeric(totallength_col) <= 150) | totallength_col == "MISSING" | is.na(totallength_col)
     return(all(valid))
 }
 validate_totallength <- function(totallength_col) {
-    valid <- (as.numeric(totallength_col) >= 5 & as.numeric(totallength_col) <= 40) | totallength_col == "MISSING" | is.na(totallength_col)
+    valid <- (as.numeric(totallength_col) >= 10 & as.numeric(totallength_col) <= 150) | totallength_col == "MISSING" | is.na(totallength_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(totallength_col[!valid])
@@ -309,11 +309,11 @@ validate_totallength <- function(totallength_col) {
 }
 ## Fork Length (cm)
 validate_forklength_check <- function(forklength_col) {
-    valid <- (as.numeric(forklength_col) >= 4 & as.numeric(forklength_col) <= 30) | forklength_col == "MISSING" | is.na(forklength_col)
+    valid <- (as.numeric(forklength_col) >= 10 & as.numeric(forklength_col) <= 140) | forklength_col == "MISSING" | is.na(forklength_col)
     return(all(valid))
 }
 validate_forklength <- function(forklength_col) {
-    valid <- (as.numeric(forklength_col) >= 4 & as.numeric(forklength_col) <= 30) | forklength_col == "MISSING" | is.na(forklength_col)
+    valid <- (as.numeric(forklength_col) >= 10 & as.numeric(forklength_col) <= 140) | forklength_col == "MISSING" | is.na(forklength_col)
     if (all(valid)) {
     } else {
         invalid_values <- unique(forklength_col[!valid])
@@ -403,7 +403,7 @@ func_validate_fisher_1per_completeness <- function(data_sheet, datatype) {
 ## Perform validation for lobster sheet
 func_validate_fisher_1per_lobster_check <- function(lobster_sheet) {
     coords_valid <- validate_coords_check(lobster_sheet$X, lobster_sheet$Y)
-    lbscatch_valid <- validate_lbcatch_check(lobster_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch_check(lobster_sheet$`Total Lbs of Catch`, 300)
     hrs_valid <- validate_hrs_check(lobster_sheet$`Hours Fished`)
     gear_valid <- validate_gear_check(lobster_sheet$`Type of Fishing Gears`)
     weighttype_valid <- validate_weighttype_lobster_check(lobster_sheet$`Weight type`)
@@ -417,7 +417,7 @@ func_validate_fisher_1per_lobster_check <- function(lobster_sheet) {
 }
 func_validate_fisher_1per_lobster <- function(lobster_sheet) {
     coords_valid <- validate_coords(lobster_sheet$X, lobster_sheet$Y)
-    lbscatch_valid <- validate_lbcatch(lobster_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch(lobster_sheet$`Total Lbs of Catch`, 300)
     hrs_valid <- validate_hrs(lobster_sheet$`Hours Fished`)
     gear_valid <- validate_gear(lobster_sheet$`Type of Fishing Gears`, "Type of Fishing Gears")
     weighttype_valid <- validate_weighttype_lobster(lobster_sheet$`Weight type`)
@@ -432,7 +432,7 @@ func_validate_fisher_1per_lobster <- function(lobster_sheet) {
 ## Perform validation for conch sheet
 func_validate_fisher_1per_conch_check <- function(conch_sheet) {
     coords_valid <- validate_coords_check(conch_sheet$X, conch_sheet$Y)
-    lbscatch_valid <- validate_lbcatch_check(conch_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch_check(conch_sheet$`Total Lbs of Catch`, 500)
     hrs_valid <- validate_hrs_check(conch_sheet$`Hours Fished`)
     weighttype_valid <- validate_weighttype_conch_check(conch_sheet$`Weight Type`)
     weight_valid <- validate_weight_conch_check(conch_sheet$`Weight (G)`)
@@ -440,7 +440,7 @@ func_validate_fisher_1per_conch_check <- function(conch_sheet) {
 }
 func_validate_fisher_1per_conch <- function(conch_sheet) {
     coords_valid <- validate_coords(conch_sheet$X, conch_sheet$Y)
-    lbscatch_valid <- validate_lbcatch(conch_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch(conch_sheet$`Total Lbs of Catch`, 500)
     hrs_valid <- validate_hrs(conch_sheet$`Hours Fished`)
     weighttype_valid <- validate_weighttype_conch(conch_sheet$`Weight Type`)
     weight_valid <- validate_weight_conch(conch_sheet$`Weight (G)`)
@@ -449,7 +449,7 @@ func_validate_fisher_1per_conch <- function(conch_sheet) {
 ## Perform validation for finfish sheet
 func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
     coords_valid <- validate_coords_check(finfish_sheet$X, finfish_sheet$Y)
-    lbscatch_valid <- validate_lbcatch_check(finfish_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch_check(finfish_sheet$`Total Lbs of Catch`, 1000)
     hrs_valid <- validate_hrs_check(finfish_sheet$`Hours Fished`)
     gear_valid <- validate_gear_check(finfish_sheet$`Type of Gear`)
     weighttype_valid <- validate_weighttype_finfish_check(finfish_sheet$`Weight Type`)
@@ -464,7 +464,7 @@ func_validate_fisher_1per_finfish_check <- function(finfish_sheet) {
 }
 func_validate_fisher_1per_finfish <- function(finfish_sheet) {
     coords_valid <- validate_coords(finfish_sheet$X, finfish_sheet$Y)
-    lbscatch_valid <- validate_lbcatch(finfish_sheet$`Total Lbs of Catch`)
+    lbscatch_valid <- validate_lbcatch(finfish_sheet$`Total Lbs of Catch`, 1000)
     hrs_valid <- validate_hrs(finfish_sheet$`Hours Fished`)
     gear_valid <- validate_gear(finfish_sheet$`Type of Gear`, "Type of Gear")
     weighttype_valid <- validate_weighttype_finfish(finfish_sheet$`Weight Type`)
