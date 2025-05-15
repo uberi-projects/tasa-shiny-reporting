@@ -36,7 +36,7 @@ function switchFisherImage(dataType, isMulti) {
             elem.setAttribute("src","../images/photos/photo_catch_03.jpg")
         break;
         case "Conch": 
-            elem.setAttribute("src","../images/photos/photo_catch_07.jpg")
+            elem.setAttribute("src","../images/photos/photo_catch_07.jpeg")
         break;
         case "Finfish": 
             elem.setAttribute("src","../images/photos/photo_catch_09.jpeg")
