@@ -199,9 +199,9 @@ df_map <- df |>
   select(`Waypoint ID`, Y, X) |>
   distinct()
 if (length(unique(df$`Waypoint ID`)) < 5) {
-  generate_map_historic(df_map, "Y", "X", "Waypoint ID")
+  generate_map(df_map, "Y", "X", "Waypoint ID")
 } else {
-  generate_map_nolabels_historic(df_map, "Y", "X", "Waypoint ID")
+  generate_map_nolabels(df_map, "Y", "X", "Waypoint ID")
 }
 ```
 
