@@ -116,6 +116,12 @@ label {
 .header-logo {
   width: 300px;
 }
+.version-header {
+  position: absolute;
+  left: 20px;
+  top: 35px;
+  color: white;
+}
 
 /* Navbar styles */
 #navbar_page {
