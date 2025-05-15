@@ -158,7 +158,7 @@ fishing practices and effort across different habitats. Selection also considere
 fishers’ availability for training and their interest in adopting technology to support 
 sustainable fisheries management.
 
-Data on carapace length (mm) and unheaded weight (g) were entered by fishermen using SMART 
+Data on carapace length (Inches) and unheaded weight (oz) were entered by fishermen using SMART 
 technology through a data collection package 
 designed by TASA. 
 The process of entering data by fishermen into SMART in the Fisher Catch Program follows a 
@@ -543,14 +543,14 @@ df_table3 <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
     Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+    `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+    `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+    `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+    `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
     `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
     `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
   ) %>%
@@ -559,13 +559,13 @@ df_table3 <- df %>%
   bind_rows(
     df %>%
       mutate(
-        weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
+        weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
       ) %>%
       summarize(
-        `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
-        `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-        `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-        `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+        `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+        `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+        `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+        `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
         `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
         `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
       ) %>%
@@ -582,12 +582,12 @@ df_table3 <- df %>%
 # Prepare dynamic variables for Table 3 ---------------------------
 total_male <- filter(df_table3, Month == "Overall")$`Male (%)`
 total_female <- filter(df_table3, Month == "Overall")$`Female (%)`
-total_carapace <- filter(df_table3, Month == "Overall")$`Mean Carapace Length (mm)`
-total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (g)`
-max_carapace <- max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (mm)`, na.rm = TRUE)
-max_carapace_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (mm)`)]
-max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`, na.rm = TRUE)
-max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`)]
+total_carapace <- filter(df_table3, Month == "Overall")$`Mean Carapace Length (In)`
+total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (oz)`
+max_carapace <- max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (In)`, na.rm = TRUE)
+max_carapace_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Carapace Length (In)`)]
+max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
+max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`)]
 max_female <- max(filter(df_table3, Month != "Overall")$`Female (%)`, na.rm = TRUE)
 max_female_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Female (%)`)]
 max_male <- max(filter(df_table3, Month != "Overall")$`Male (%)`, na.rm = TRUE)
@@ -595,14 +595,14 @@ max_male_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall"
 ```
 
 
-Average carapace length was `r total_carapace`mm, greatest in `r max_carapace_month` with `r max_carapace`mm. 
-Average headed weight was `r total_weight`g, greatest in `r max_weight_month` with `r max_weight`. 
+Average carapace length was `r total_carapace`in, greatest in `r max_carapace_month` with `r max_carapace`in. 
+Average headed weight was `r total_weight`oz, greatest in `r max_weight_month` with `r max_weight`oz. 
 Overall, there was `r total_female`% female and `r total_male`% male lobsters identified, 
 with the highest percent female of `r max_female` found in `r max_female_month`, 
 and the highest percent male of `r max_male` found in `r max_male_month` (Table 3; Figure 3; Figure 4).\
 
 
-**Table 3.** Summary of mean and median carapace length (mm) and headed weight (g), 
+**Table 3.** Summary of mean and median carapace length (In) and headed weight (oz), 
 as well as percent of lobsters identified as male and female, 
 using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
@@ -624,29 +624,29 @@ df_fig3_unsummarized <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
     Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
   ) %>%
   arrange(Month_sort)
 df_fig3 <- df %>%
   mutate(
     Month = format(`Waypoint Date`, "%b %Y"),
     Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01")),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (G)`, NA_real_)
+    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
-    `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+    `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+    `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+    `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+    `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
     `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
     `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
   ) %>%
   arrange(Month_sort)
 df_fig3_carapace <- df_fig3 %>%
-  filter(!is.nan(`Mean Carapace Length (mm)`))
+  filter(!is.nan(`Mean Carapace Length (In)`))
 df_fig3_weight <- df_fig3 %>%
-  filter(!is.nan(`Mean Weight (g)`))
+  filter(!is.nan(`Mean Weight (oz)`))
 
 # Create panels for Figure 3 ---------------------------
 A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
@@ -657,12 +657,12 @@ A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type 
   xlab("") +
   ylab("Count") +
   labs(title = "A")
-B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (mm)`, fill = `Type of Fishing Gears`)) +
+B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (Inches)`, fill = `Type of Fishing Gears`)) +
   geom_histogram(binwidth = 1, color = "black") +
   scale_fill_manual(values = gear_colors, drop = FALSE) +
   theme_custom +
   expand_limits(x = 0) +
-  xlab("Carapace Length (mm)") +
+  xlab("Carapace Length (Inches)") +
   ylab("Count") +
   labs(title = "B") +
   theme(legend.position = "none")
@@ -671,11 +671,11 @@ C <- ggplot(df_fig3_unsummarized, aes(x = weight_for_headed, fill = `Type of Fis
   scale_fill_manual(values = gear_colors, drop = FALSE) +
   theme_custom +
   expand_limits(x = 0) +
-  xlab("Weight (g)") +
+  xlab("Weight (oz)") +
   ylab("Count") +
   labs(title = "C") +
   theme(legend.position = "none")
-D <- ggplot(df_fig3_carapace, aes(x = Month_sort, y = `Mean Carapace Length (mm)`)) +
+D <- ggplot(df_fig3_carapace, aes(x = Month_sort, y = `Mean Carapace Length (In)`)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   theme_custom +
@@ -683,11 +683,11 @@ D <- ggplot(df_fig3_carapace, aes(x = Month_sort, y = `Mean Carapace Length (mm)
     date_breaks = "1 month",
     date_labels = "%b '%y"
   ) +
-  ylab("Mean Carapace Length (mm)") +
+  ylab("Mean Carapace Length (In)") +
   xlab("Month") +
   labs(title = "D") +
   theme(legend.position = "none")
-E <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
+E <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (oz)`)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   theme_custom +
@@ -695,7 +695,7 @@ E <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
     date_breaks = "1 month",
     date_labels = "%b '%y"
   ) +
-  ylab("Weight (g)") +
+  ylab("Weight (oz)") +
   xlab("Month") +
   labs(title = "E") +
   theme(legend.position = "none")
@@ -719,8 +719,8 @@ figure3
 
 
 *Figure 3.* Bar plot of fishing gear types (A), 
-histogram of carapace length (mm) by gear type (B), histogram of headed weight (g) by gear type (C), 
-line plot of mean carapace length (mm) over time (D), and line plot of headed mean weight (g) over time (E), 
+histogram of carapace length (Inches) by gear type (B), histogram of headed weight (oz) by gear type (C), 
+line plot of mean carapace length (In) over time (D), and line plot of headed mean weight (oz) over time (E), 
 collected using SMART lobster data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 

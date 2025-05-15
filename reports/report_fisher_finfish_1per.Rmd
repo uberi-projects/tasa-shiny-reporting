@@ -148,7 +148,7 @@ fishing practices and effort across different habitats. Selection also considere
 fishers’ availability for training and their interest in adopting technology to support 
 sustainable fisheries management.
 
-Data on gutted or whole weight (g), total length (cm), and fork length (cm) were entered by fishermen using SMART 
+Data on gutted or whole weight (lbs), total length (Inches), and fork length (Inches) were entered by fishermen using SMART 
 technology through a data collection package 
 designed by TASA. 
 The process of entering data by fishermen into SMART in the Fisher Catch Program follows a 
@@ -538,10 +538,10 @@ df_table3 <- df %>%
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
-    `Median Length (cm)` = round(median(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
-    `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
-    `Median Fork Length (cm)` = round(median(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+    `Mean Length (In)` = round(mean(as.numeric(`Total Length (Inches)`), na.rm = TRUE), 1),
+    `Median Length (In)` = round(median(as.numeric(`Total Length (Inches)`), na.rm = TRUE), 1),
+    `Mean Fork Length (In)` = round(mean(as.numeric(`Fork Length (Inches)`), na.rm = TRUE), 1),
+    `Median Fork Length (In)` = round(median(as.numeric(`Fork Length (Inches)`), na.rm = TRUE), 1),
     `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
       round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
       NA
@@ -564,10 +564,10 @@ df_table3 <- df %>%
   bind_rows(
     df %>%
       summarize(
-        `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
-        `Median Length (cm)` = round(median(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
-        `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
-        `Median Fork Length (cm)` = round(median(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+        `Mean Length (In)` = round(mean(as.numeric(`Total Length (Inches)`), na.rm = TRUE), 1),
+        `Median Length (In)` = round(median(as.numeric(`Total Length (Inches)`), na.rm = TRUE), 1),
+        `Mean Fork Length (In)` = round(mean(as.numeric(`Fork Length (Inches)`), na.rm = TRUE), 1),
+        `Median Fork Length (In)` = round(median(as.numeric(`Fork Length (Inches)`), na.rm = TRUE), 1),
         `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
           round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
           NA
@@ -602,22 +602,22 @@ max_weight_gutted_month <- df_table3$Month[which.max(filter(df_table3, Month != 
 total_weight_whole <- filter(df_table3, Month == "Overall")$`Mean Weight Whole (lbs)`
 max_weight_whole <- max(filter(df_table3, Month != "Overall")$`Mean Weight Whole (lbs)`, na.rm = TRUE)
 max_weight_whole_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight Whole (lbs)`)]
-total_total_length <- filter(df_table3, Month == "Overall")$`Mean Length (cm)`
-max_total_total_length <- max(filter(df_table3, Month != "Overall")$`Mean Length (cm)`, na.rm = TRUE)
-max_total_total_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Length (cm)`)]
-total_fork_length <- filter(df_table3, Month == "Overall")$`Mean Fork Length (cm)`
-max_total_fork_length <- max(filter(df_table3, Month != "Overall")$`Mean Fork Length (cm)`, na.rm = TRUE)
-max_total_fork_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Fork Length (cm)`)]
+total_total_length <- filter(df_table3, Month == "Overall")$`Mean Length (In)`
+max_total_total_length <- max(filter(df_table3, Month != "Overall")$`Mean Length (In)`, na.rm = TRUE)
+max_total_total_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Length (In)`)]
+total_fork_length <- filter(df_table3, Month == "Overall")$`Mean Fork Length (In)`
+max_total_fork_length <- max(filter(df_table3, Month != "Overall")$`Mean Fork Length (In)`, na.rm = TRUE)
+max_total_fork_length_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Fork Length (In)`)]
 ```
 
-Average total length was `r total_total_length`cm, greatest in `r max_total_total_length_month` with `r max_total_total_length`cm. 
-Average fork length was `r total_fork_length`cm, greatest in `r max_total_fork_length_month` with `r max_total_fork_length`cm. 
+Average total length was `r total_total_length`in, greatest in `r max_total_total_length_month` with `r max_total_total_length`in. 
+Average fork length was `r total_fork_length`in, greatest in `r max_total_fork_length_month` with `r max_total_fork_length`in. 
 Average gutted weight was `r total_weight_gutted`lbs, greatest in `r max_weight_gutted_month` with `r max_weight_gutted`lbs. 
 Average whole weight was `r total_weight_whole`lbs, greatest in `r max_weight_whole_month` with `r max_weight_whole`lbs 
 (Table 3; Figure 3).\
 
 
-**Table 3.** Summary of mean and median total length (cm), fork length (cm), gutted weight (lbs), and whole weight(lbs) of finfish, 
+**Table 3.** Summary of mean and median total length (Inches), fork length (Inches), gutted weight (lbs), and whole weight(lbs) of finfish, 
 using SMART finfish data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
 ```{r table3, echo = FALSE}
@@ -653,8 +653,8 @@ df_fig3 <- df %>%
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Length (cm)` = round(mean(as.numeric(`Total Length (cm)`), na.rm = TRUE), 1),
-    `Mean Fork Length (cm)` = round(mean(as.numeric(`Fork Length (cm)`), na.rm = TRUE), 1),
+    `Mean Length (In)` = round(mean(as.numeric(`Total Length (Inches)`), na.rm = TRUE), 1),
+    `Mean Fork Length (In)` = round(mean(as.numeric(`Fork Length (Inches)`), na.rm = TRUE), 1),
     `Mean Weight Gutted (lbs)` = ifelse(any(`Weight Type` == "Gutted"),
       round(mean(as.numeric(`Weight (lbs)`)[`Weight Type` == "Gutted"], na.rm = TRUE), 1),
       NA
@@ -670,9 +670,9 @@ df_fig3_gutted_weight <- df_fig3 %>%
 df_fig3_whole_weight <- df_fig3 %>%
   filter(!is.nan(`Mean Weight Whole (lbs)`))
 df_fig3_total_length <- df_fig3 %>%
-  filter(!is.nan(`Mean Length (cm)`))
+  filter(!is.nan(`Mean Length (In)`))
 df_fig3_fork_length <- df_fig3 %>%
-  filter(!is.nan(`Mean Fork Length (cm)`))
+  filter(!is.nan(`Mean Fork Length (In)`))
 
 # Create panels for Figure 3 ---------------------------
 A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Gear`, fill = `Type of Gear`)) +
@@ -684,34 +684,34 @@ A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Gear`, fill = `Type of Gear`)
   ylab("Count") +
   labs(title = "A") +
   theme(axis.text.x = element_text(angle = 0))
-B <- ggplot(df_fig3_unsummarized, aes(x = `Total Length (cm)`, fill = `Type of Gear`)) +
+B <- ggplot(df_fig3_unsummarized, aes(x = `Total Length (Inches)`, fill = `Type of Gear`)) +
   geom_histogram(binwidth = 1, color = "black") +
   scale_fill_manual(values = gear_colors, drop = FALSE) +
   theme_custom +
   expand_limits(x = 0) +
-  xlab("Total Length (cm)") +
+  xlab("Total Length (Inches)") +
   ylab("Count") +
   labs(title = "B") +
   theme(legend.position = "none")
 C <- ggplot() +
   geom_line(
     data = df_fig3_total_length,
-    aes(x = Month_sort, y = `Mean Length (cm)`, linetype = "Total Length"),
+    aes(x = Month_sort, y = `Mean Length (In)`, linetype = "Total Length"),
     size = 0.5
   ) +
   geom_point(
     data = df_fig3_total_length,
-    aes(x = Month_sort, y = `Mean Length (cm)`, shape = "Total Length"),
+    aes(x = Month_sort, y = `Mean Length (In)`, shape = "Total Length"),
     size = 2.5
   ) +
   geom_line(
     data = df_fig3_fork_length,
-    aes(x = Month_sort, y = `Mean Fork Length (cm)`, linetype = "Fork Length"),
+    aes(x = Month_sort, y = `Mean Fork Length (In)`, linetype = "Fork Length"),
     size = 0.5
   ) +
   geom_point(
     data = df_fig3_fork_length,
-    aes(x = Month_sort, y = `Mean Fork Length (cm)`, shape = "Fork Length"),
+    aes(x = Month_sort, y = `Mean Fork Length (In)`, shape = "Fork Length"),
     size = 2.5
   ) +
   theme_custom +
@@ -719,7 +719,7 @@ C <- ggplot() +
     date_breaks = "1 month",
     date_labels = "%b '%y"
   ) +
-  ylab("Mean Total Length (cm)") +
+  ylab("Mean Total Length (Inches)") +
   xlab("Month") +
   labs(
     title = "C",
@@ -774,8 +774,8 @@ figure3
 
 
 *Figure 3.* Bar plot of fishing gear types (A), 
-histogram of fish length (cm) by gear type (B), 
-line plot of mean fish total and fork length (cm) over time (C), 
+histogram of fish length (Inches) by gear type (B), 
+line plot of mean fish total and fork length (Inches) over time (C), 
 line plot of gutted weight (lbs) over time (D), and line plot of whole weight (lbs) over time (E), 
 collected using SMART finfish data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\

@@ -156,7 +156,7 @@ fishing practices and effort across different habitats. Selection also considere
 fishers’ availability for training and their interest in adopting technology to support 
 sustainable fisheries management.
 
-Data on conch weight (g) (primarily market clean weight) were entered by fishermen using SMART 
+Data on conch weight (oz) (primarily market clean weight) were entered by fishermen using SMART 
 technology through a data collection package 
 designed by TASA. 
 The process of entering data by fishermen into SMART in the Fisher Catch Program follows a 
@@ -544,16 +544,16 @@ df_table3 <- df %>%
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1),
+    `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
+    `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1),
   ) %>%
   arrange(Month_sort) %>%
   select(-Month_sort) %>%
   bind_rows(
     df %>%
       summarize(
-        `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-        `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1)
+        `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
+        `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1)
       ) %>%
       mutate(Month = "Overall")
   ) %>%
@@ -566,15 +566,15 @@ df_table3 <- df %>%
   }))
 
 # Prepare dynamic variables for Table 3 ---------------------------
-total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (g)`
-max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`, na.rm = TRUE)
-max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (g)`)]
+total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (oz)`
+max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
+max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`)]
 ```
 
-Average market clean weight was `r total_weight`g, greatest in `r max_weight_month` with `r max_weight` (Table 3; Figure 3).\
+Average market clean weight was `r total_weight`oz, greatest in `r max_weight_month` with `r max_weight`oz (Table 3; Figure 3).\
 
 
-**Table 3.** Summary of mean and median market clean weight (g),  
+**Table 3.** Summary of mean and median market clean weight (oz),  
 using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
 
 ```{r table3, echo = FALSE}
@@ -601,23 +601,23 @@ df_fig3 <- df %>%
   ) %>%
   group_by(Month, Month_sort) %>%
   summarize(
-    `Mean Weight (g)` = round(mean(`Weight (G)`, na.rm = TRUE), 1),
-    `Median Weight (g)` = round(median(`Weight (G)`, na.rm = TRUE), 1)
+    `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
+    `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1)
   ) %>%
   arrange(Month_sort)
 df_fig3_weight <- df_fig3 %>%
-  filter(!is.nan(`Mean Weight (g)`))
+  filter(!is.nan(`Mean Weight (oz)`))
 
 # Create panels for Figure 3 ---------------------------
-A <- ggplot(df_fig3_unsummarized, aes(x = `Weight (G)`)) +
+A <- ggplot(df_fig3_unsummarized, aes(x = `Weight (oz)`)) +
   geom_histogram(binwidth = 1, color = "black") +
   theme_custom +
   expand_limits(x = 0) +
-  xlab("Weight (g)") +
+  xlab("Weight (oz)") +
   ylab("Count") +
   labs(title = "A") +
   theme(legend.position = "none")
-B <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
+B <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (oz)`)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   theme_custom +
@@ -625,7 +625,7 @@ B <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
     date_breaks = "1 month",
     date_labels = "%b '%y"
   ) +
-  ylab("Weight (g)") +
+  ylab("Weight (oz)") +
   xlab("Month") +
   labs(title = "B") +
   theme(legend.position = "none")
@@ -643,8 +643,8 @@ figure3
 ```
 
 
-*Figure 3.* Histogram of market clean weight (g) (A), 
-and line plot of mean weight (g) over time (B), 
+*Figure 3.* Histogram of market clean weight (oz) (A), 
+and line plot of mean weight (oz) over time (B), 
 collected using SMART conch data from fishers at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
