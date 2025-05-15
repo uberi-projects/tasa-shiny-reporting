@@ -376,6 +376,9 @@ label {
   padding: 15px 15px;
   margin: 0;
 }
+.templates-table {
+  width: 1000px;
+}
 
 /* Input buttons */
 .progress-bar {
