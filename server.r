@@ -509,46 +509,70 @@ server <- function(input, output, session) {
     })
 
     # Observe report generate buttons
-    observeEvent(input$report_fisheries_1per, {
-        if (nchar(input$fisheries_1per_name) >= 2) {
-            click("report_fisheries_1per_hidden")
-        }
-    })
-    observeEvent(input$report_fisheries_multiper, {
-        if (nchar(input$fisheries_multiper_name) >= 2) {
-            click("report_fisheries_multiper_hidden")
-        }
-    })
-    observeEvent(input$report_fisher_1per, {
-        if (nchar(input$fisher_1per_name) >= 2) {
-            click("report_fisher_1per_hidden")
-        }
-    })
-    observeEvent(input$report_fisher_multiper, {
-        if (nchar(input$fisher_multiper_name) >= 2) {
-            click("report_fisher_multiper_hidden")
-        }
-    })
-    observeEvent(input$report_lamp_1per, {
-        if (nchar(input$lamp_1per_name) >= 2) {
-            click("report_lamp_1per_hidden")
-        }
-    })
-    observeEvent(input$report_lamp_multiper, {
-        if (nchar(input$lamp_multiper_name) >= 2) {
-            click("report_lamp_multiper_hidden")
-        }
-    })
-    observeEvent(input$report_spag_1per, {
-        if (nchar(input$spag_1per_name) >= 2) {
-            click("report_spag_1per_hidden")
-        }
-    })
-    observeEvent(input$report_spag_multiper, {
-        if (nchar(input$spag_multiper_name) >= 2) {
-            click("report_spag_multiper_hidden")
-        }
-    })
+    observeEvent(input$report_fisheries_1per,
+        {
+            if (nchar(input$fisheries_1per_name) >= 2) {
+                click("report_fisheries_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_fisheries_multiper,
+        {
+            if (nchar(input$fisheries_multiper_name) >= 2) {
+                click("report_fisheries_multiper_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_fisher_1per,
+        {
+            if (nchar(input$fisher_1per_name) >= 2) {
+                click("report_fisher_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_fisher_multiper,
+        {
+            if (nchar(input$fisher_multiper_name) >= 2) {
+                click("report_fisher_multiper_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_lamp_1per,
+        {
+            if (nchar(input$lamp_1per_name) >= 2) {
+                click("report_lamp_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_lamp_multiper,
+        {
+            if (nchar(input$lamp_multiper_name) >= 2) {
+                click("report_lamp_multiper_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_spag_1per,
+        {
+            if (nchar(input$spag_1per_name) >= 2) {
+                click("report_spag_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$report_spag_multiper,
+        {
+            if (nchar(input$spag_multiper_name) >= 2) {
+                click("report_spag_multiper_hidden")
+            }
+        },
+        ignoreInit = T
+    )
 
     # Observe Name Text Inputs
     observeEvent(input$fisheries_1per_name, {

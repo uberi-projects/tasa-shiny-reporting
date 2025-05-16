@@ -254,6 +254,10 @@ ui <- navbarPage(
                                                     id = "fisheries_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "fisheries_1per_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_lobster_05.jpeg", id = "datatype-fisheries-1per-img", class = "datatype-img")
@@ -513,6 +517,10 @@ ui <- navbarPage(
                                                     id = "fisheries_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "fisheries_multiper_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_lobster_05.jpeg", id = "datatype-fisheries-multi-img", class = "datatype-img")
@@ -658,6 +666,10 @@ ui <- navbarPage(
                                                     id = "fisher_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "fisher_1per_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_03.jpg", id = "datatype-fisher-1per-img", class = "datatype-img")
@@ -915,6 +927,10 @@ ui <- navbarPage(
                                                     id = "fisher_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "fisher_multiper_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_catch_03.jpg", id = "datatype-fisher-multi-img", class = "datatype-img")
@@ -1052,6 +1068,10 @@ ui <- navbarPage(
                                                     id = "lamp_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "lamp_1per_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_conch_03.jpeg", id = "datatype-lamp-1per-img", class = "datatype-img")
@@ -1260,6 +1280,10 @@ ui <- navbarPage(
                                                     id = "lamp_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "lamp_multiper_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_lamp_conch_03.jpeg", id = "datatype-lamp-multi-img", class = "datatype-img")
@@ -1436,6 +1460,10 @@ ui <- navbarPage(
                                                     id = "spag_1per_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "spag_1per_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-1per-img", class = "datatype-img")
@@ -1683,6 +1711,10 @@ ui <- navbarPage(
                                                     id = "spag_multiper_loader_bar",
                                                     class = "custom-loader-bar"
                                                 )
+                                            ),
+                                            div(
+                                                class = "input-box-cover",
+                                                id = "spag_multiper_generate_cover"
                                             )
                                         ),
                                         img(src = "images/photos/photo_spags_02.png", id = "datatype-spag-multi-img", class = "datatype-img")
