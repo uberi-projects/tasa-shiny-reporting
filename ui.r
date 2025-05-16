@@ -58,7 +58,6 @@ ui <- navbarPage(
                     h2("Welcome"),
                     p(home_text[1]),
                     br(),
-                    hr(class = "home-line"),
                     br(),
                     h2("Using this App"),
                     tags$ol(
