@@ -22,8 +22,6 @@ function switchFisheriesImage(dataType, isMulti) {
 Shiny.addCustomMessageHandler("triggerChangeFisheriesImg", function(message) {
     switchFisheriesImage(message.dataType, message.isMulti);
 });
-
-
 // FISHER Image Changing---------------------
 function switchFisherImage(dataType, isMulti) {
     if (isMulti) {
