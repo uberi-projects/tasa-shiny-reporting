@@ -512,83 +512,70 @@ server <- function(input, output, session) {
     observeEvent(input$report_fisheries_1per, {
         if (nchar(input$fisheries_1per_name) >= 2) {
             click("report_fisheries_1per_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_fisheries_multiper, {
         if (nchar(input$fisheries_multiper_name) >= 2) {
             click("report_fisheries_multiper_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_fisher_1per, {
         if (nchar(input$fisher_1per_name) >= 2) {
             click("report_fisher_1per_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_fisher_multiper, {
         if (nchar(input$fisher_multiper_name) >= 2) {
             click("report_fisher_multiper_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_lamp_1per, {
         if (nchar(input$lamp_1per_name) >= 2) {
             click("report_lamp_1per_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_lamp_multiper, {
         if (nchar(input$lamp_multiper_name) >= 2) {
             click("report_lamp_multiper_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_spag_1per, {
         if (nchar(input$spag_1per_name) >= 2) {
             click("report_spag_1per_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
     observeEvent(input$report_spag_multiper, {
         if (nchar(input$spag_multiper_name) >= 2) {
             click("report_spag_multiper_hidden")
-        } else {
-            shinyalert("Alert!",
-                text = "Please enter a name containing 2 or more characters.",
-                confirmButtonText = "I Understand", confirmButtonCol = "#FF747E", type = "error", size = "m", html = TRUE
-            )
         }
     })
+
+    # Observe Name Text Inputs
+    observeEvent(input$fisheries_1per_name, {
+        nameLengthCheck(input$fisheries_1per_name, "fisheries_1per")
+    })
+    observeEvent(input$fisheries_multiper_name, {
+        nameLengthCheck(input$fisheries_multiper_name, "fisheries_multiper")
+    })
+    observeEvent(input$fisher_1per_name, {
+        nameLengthCheck(input$fisher_1per_name, "fisher_1per")
+    })
+    observeEvent(input$fisher_multiper_name, {
+        nameLengthCheck(input$fisher_multiper_name, "fisher_multiper")
+    })
+    observeEvent(input$lamp_1per_name, {
+        nameLengthCheck(input$lamp_1per_name, "lamp_1per")
+    })
+    observeEvent(input$lamp_multiper_name, {
+        nameLengthCheck(input$lamp_multiper_name, "lamp_multiper")
+    })
+    observeEvent(input$spag_1per_name, {
+        nameLengthCheck(input$spag_1per_name, "spag_1per")
+    })
+    observeEvent(input$spag_multiper_name, {
+        nameLengthCheck(input$spag_multiper_name, "spag_multiper")
+    })
+
     # Create reports
     output$report_fisheries_1per_hidden <- downloadHandler(
         content = function(file) {

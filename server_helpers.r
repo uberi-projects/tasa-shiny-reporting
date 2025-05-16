@@ -8,7 +8,6 @@ disableCustomization <- function(reportType) {
 }
 enableCustomization <- function(reportType) {
     shinyjs::enable(paste0(reportType, "_name"))
-    shinyjs::enable(paste0("report_", reportType))
     shinyjs::hide(paste0(reportType, "_input_box_cover"))
 }
 enableValidate <- function(reportType) {
@@ -51,6 +50,19 @@ hideLoaderBar <- function(reportType, session) {
     shinyjs::show(paste0("report_", reportType))
     shinyjs::hide(paste0(reportType, "_loader"))
     session$sendCustomMessage("resetLoader", list(reportType = reportType))
+}
+disableDownload <- function(reportType) {
+    shinyjs::disable(paste0("report_", reportType))
+}
+enableDownload <- function(reportType) {
+    shinyjs::enable(paste0("report_", reportType))
+}
+nameLengthCheck <- function(inputName, reportType) {
+    if (nchar(inputName) >= 2) {
+        enableDownload(reportType)
+    } else {
+        disableDownload(reportType)
+    }
 }
 
 # Define flags for datafiles
