@@ -58,7 +58,6 @@ ui <- navbarPage(
                     h2("Welcome"),
                     p(home_text[1]),
                     br(),
-                    hr(class = "home-line"),
                     br(),
                     h2("Using this App"),
                     tags$ol(
@@ -1741,24 +1740,27 @@ ui <- navbarPage(
                     p(tab_text[5])
                 ),
                 div(
-                    class = "content-container",
+                    style = "display:flex;",
                     div(
-                        class = "external-link-button",
-                        a(
-                            href = link_text[8],
-                            target = "_blank",
-                            h1("Care Manual")
+                        class = "content-container",
+                        div(
+                            class = "external-link-button",
+                            a(
+                                href = link_text[8],
+                                target = "_blank",
+                                h1("Care Manual")
+                            )
                         )
-                    )
-                ),
-                div(
-                    class = "content-container",
+                    ),
                     div(
-                        class = "external-link-button",
-                        a(
-                            href = link_text[9],
-                            target = "_blank",
-                            h1("Data Validation Documentation")
+                        class = "content-container",
+                        div(
+                            class = "external-link-button",
+                            a(
+                                href = link_text[9],
+                                target = "_blank",
+                                h1("Data Validation Documentation")
+                            )
                         )
                     )
                 )
