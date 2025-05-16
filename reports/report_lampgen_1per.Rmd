@@ -46,16 +46,22 @@ df_finfish <- if (study_finfish_check) {
   params$datafile$Finfish %>%
     inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
+} else {
+  data.frame(matrix(ncol = 0, nrow = 0))
 }
 df_conch <- if (study_conch_check) {
   params$datafile$Conch %>%
     inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
+} else {
+  data.frame(matrix(ncol = 0, nrow = 0))
 }
 df_lobster <- if (study_lobster_check) {
   params$datafile$Lobster %>%
     inner_join(df_sites, by = c("Site ID", "Period")) %>%
     filter(!is.na(`Site ID`) & !is.null(`Site ID`))
+} else {
+  data.frame(matrix(ncol = 0, nrow = 0))
 }
 df_urchin_crab <- if (study_urchin_crab_check) {
   params$datafile$Diadema_Crab %>%
@@ -67,6 +73,8 @@ df_urchin_crab <- if (study_urchin_crab_check) {
       `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
       `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
     )
+} else {
+  data.frame(matrix(ncol = 0, nrow = 0))
 }
 
 # Redefine study taxa after merging ---------------------------
@@ -82,7 +90,6 @@ study_finfish <- if (study_finfish_check) "finfish"
 study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
 study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithrax spinosissimus_)"
 studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
-
 
 # Define study period ---------------------------
 study_start <- as.Date(min(df_sites$Date, na.rm = TRUE))
