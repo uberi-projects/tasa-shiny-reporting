@@ -685,6 +685,7 @@ D <- ggplot(df_fig3_carapace, aes(x = Month_sort, y = `Mean Carapace Length (In)
   ) +
   ylab("Mean Carapace Length (In)") +
   xlab("Month") +
+  scale_y_continuous(n.breaks = 4) +
   labs(title = "D") +
   theme(legend.position = "none")
 E <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (oz)`)) +
