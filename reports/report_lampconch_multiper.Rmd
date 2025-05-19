@@ -294,7 +294,8 @@ Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics
 Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize 
 (Meerman 2013, Meerman 2017). 
 Sample sites surveyed in `r study_year` are labelled on the map. 
-For sites where latitude/longitude values varied between years, the mean latitude and longitude values were used for each site.\
+For sites where latitude/longitude values varied between years, the mean latitude and longitude values were used for each site. 
+Please note that management zones are here presented using the new polygons established in 2022, as opposed to the historic ones.\
 
 
 ## Results
