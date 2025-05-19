@@ -156,13 +156,24 @@ This report, including text, figures, and tables, was generated using the Turnef
 
 ```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
 # Create map for Figure 1 ---------------------------
-df_map <- df_merged |>
-  select(`Site ID`, Latitude, Longitude) |>
-  distinct()
-if (length(unique(df_merged$`Site ID`)) < 50) {
-  generate_map(df_map, "Latitude", "Longitude", "Site ID")
+if (study_year >= 2024) {
+  df_map <- df_merged |>
+    select(`Site ID`, Latitude, Longitude) |>
+    distinct()
+  if (length(unique(df_merged$`Site ID`)) < 50) {
+    generate_map(df_map, "Latitude", "Longitude", "Site ID")
+  } else {
+    generate_map_nolabels(df_map, "Latitude", "Longitude", "Site ID")
+  }
 } else {
-  generate_map_nolabels(df_map, "Latitude", "Longitude", "Site ID")
+  df_map <- df_merged |>
+    select(`Site ID`, Latitude, Longitude) |>
+    distinct()
+  if (length(unique(df_merged$`Site ID`)) < 50) {
+    generate_map_historic(df_map, "Latitude", "Longitude", "Site ID")
+  } else {
+    generate_map_nolabels_historic(df_map, "Latitude", "Longitude", "Site ID")
+  }
 }
 ```
 

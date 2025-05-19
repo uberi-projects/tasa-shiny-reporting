@@ -483,13 +483,14 @@ This report, including text, figures, and tables, was generated using the Turnef
 df_map <- df_sites |>
   select(`Site ID`, Latitude, Longitude) |>
   distinct()
-generate_map(df_map, "Latitude", "Longitude", "Site ID")
+generate_map_nolabels(df_map, "Latitude", "Longitude", "Site ID")
 ```
 
 
 *Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
 Shapefiles for the base map and ecosystems come from the publicly available Spatial Data Warehouse for Belize (Meerman 2013, Meerman 2017).
-Sample sites surveyed in `r study_year_month` are labelled on the map.\
+Sample sites surveyed in `r study_year_month` are labelled on the map. 
+Please note that management zones are here presented using the new polygons established in 2022, as opposed to the historic ones.\
 
  
 ## Results
