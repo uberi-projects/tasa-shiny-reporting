@@ -285,7 +285,7 @@ df_map <- df_merged |>
     Longitude = mean(Longitude, na.rm = TRUE),
     .groups = "drop"
   )
-generate_map(df_map, "Latitude", "Longitude", "Site ID")
+generate_map_nolabels(df_map, "Latitude", "Longitude", "Site ID")
 ```
 
 
