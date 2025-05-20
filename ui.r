@@ -42,7 +42,7 @@ ui <- navbarPage(
                 div(class = "border-top"),
                 div(p(class = "version-header", "Version 1.2.0")),
                 div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
-                div(a(href = link_text[1], target = "_blank", img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo")))
+                span(a(href = link_text[1], target = "_blank", img(class = "header-logo", src = "images/TASA_logo_full_color.png", alt = "Logo")))
             )
         ),
         tags$head(tags$script(src = "functions.js"))
@@ -67,13 +67,7 @@ ui <- navbarPage(
                         tags$li(home_text[6]),
                         tags$li(home_text[7]),
                         tags$li(home_text[8])
-                    ),
-                    br(),
-                    p(strong(
-                        "For additional information on using and maintaining this app, please visit the ",
-                        actionButton("go_to_manual_tab", "Manual"),
-                        " page. "
-                    ))
+                    )
                 )
             )
         )
@@ -140,7 +134,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Single Period Fisheries Catch Reports"),
                                 p(datatype_text[1])
                             ),
@@ -239,10 +233,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list ",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_fisheries_1per", "Generate", icon = icon("download")),
+                                                actionButton("report_fisheries_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_fisheries_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -326,7 +320,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Multi-Period Fisheries Catch Reports"),
                                 p(datatype_text[1])
                             ),
@@ -502,10 +496,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list ",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_fisheries_multiper", "Generate", icon = icon("download")),
+                                                actionButton("report_fisheries_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_fisheries_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -550,7 +544,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Single Period Fisher Catch Project Reports"),
                                 p(tab_text[6])
                             ),
@@ -651,10 +645,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_fisher_1per", "Generate", icon = icon("download")),
+                                                actionButton("report_fisher_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_fisher_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -736,7 +730,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Multi-Period Fisher Catch Project Reports"),
                                 p(tab_text[6])
                             ),
@@ -912,10 +906,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_fisher_multiper", "Generate", icon = icon("download")),
+                                                actionButton("report_fisher_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_fisher_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -959,7 +953,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Single Period LAMP Reports"),
                                 p(datatype_text[2])
                             ),
@@ -1053,10 +1047,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_lamp_1per", "Generate", icon = icon("download")),
+                                                actionButton("report_lamp_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -1098,7 +1092,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Multi-Period LAMP Reports"),
                                 p(datatype_text[2])
                             ),
@@ -1265,10 +1259,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_lamp_multiper", "Generate", icon = icon("download")),
+                                                actionButton("report_lamp_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -1351,7 +1345,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Single Period SPAG Reports"),
                                 p(datatype_text[3])
                             ),
@@ -1445,10 +1439,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_spag_1per", "Generate", icon = icon("download")),
+                                                actionButton("report_spag_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_spag_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
@@ -1529,7 +1523,7 @@ ui <- navbarPage(
                         div(
                             class = "content-container-grid grid-report",
                             div(
-                                class = "content-box",
+                                class = "content-box report-content-box",
                                 h2("Multi-Period SPAG Reports"),
                                 p(datatype_text[3])
                             ),
@@ -1696,10 +1690,10 @@ ui <- navbarPage(
                                         hr(),
                                         tags$li(
                                             class = "input-list",
-                                            "Generate Report",
+                                            "Generate Outputs",
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("report_spag_multiper", "Generate", icon = icon("download")),
+                                                actionButton("report_spag_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_spag_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(

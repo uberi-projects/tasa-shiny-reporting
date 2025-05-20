@@ -37,15 +37,24 @@ body {
   line-height: 1.5;
   width: 70ch;
 }
+p {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
 h1 {
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+  font-size: 30px;
+  letter-spacing: 4px;
+  font-family: "Montserrat", Sans-serif;
+  font-weight: 600;
+  margin-top: 35px;
 }
 h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 30px;
+  margin-bottom: 20px;
   margin-top: 0;
-  text-align: center;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: 2px;
 }
 h3 {
   font-size: 2rem;
@@ -68,6 +77,7 @@ label {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  font-size: 17px;
 }
 .content-list li {
   counter-increment: step-counter;
@@ -78,7 +88,7 @@ label {
   border-radius: 3px;
   color: white;
   content: counter(step-counter);
-  font-size: 80%;
+  font-size: 100%;
   font-weight: bold;
   margin-right: 5px;
   padding: 3px 8px;
@@ -115,12 +125,16 @@ label {
 }
 .header-logo {
   width: 300px;
+  position: absolute;
+  left: 20px;
+  top: 18px;
 }
 .version-header {
   position: absolute;
-  left: 20px;
-  top: 35px;
+  right: 30px;
+  top: 65px;
   color: white;
+  font-weight: 600;
 }
 
 /* Navbar styles */
@@ -129,28 +143,45 @@ label {
   margin: 0px -15px;
 }
 .navbar-default {
-  background-color: var(--color-primary);
   border: 0;
   display: flex;
   justify-content: center;
   position: fixed;
-  top: 180px;
+  top: 135px;
   width: 100vw;
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0%) 5%,
+    rgb(0 160 154 / 20%) 40%,
+    rgb(0 160 154 / 20%) 60%,
+    rgb(255 255 255 / 0%) 95%
+  );
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .navbar-header {
   display: none;
 }
 .navbar-default .navbar-nav li a {
-  background-color: var(--color-primary);
+  background-color: #00a09ab8;
   color: white;
   font-size: 1.5rem;
-  padding: 15px 20px;
+  margin: 10px 25px;
+  padding: 12px 30px;
+  border: 0;
+  border-radius: 40px;
+  min-width: 150px;
+  text-align: center;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  font-size: 17px;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:focus {
   background-color: var(--color-secondary);
   color: white;
   text-decoration: none;
+  border: 0;
 }
 
 .navbar-default .navbar-nav > .active > a:hover,
@@ -161,14 +192,21 @@ label {
   background-color: var(--color-alert);
   color: white;
   text-decoration: none;
+  border: 0;
 }
 .navbar-nav > li > .dropdown-menu {
-  border-color: var(--color-primary);
   padding: 0;
+  border: 0;
+  min-width: 155px;
+  border-radius: 10px;
+}
+.dropdown-menu {
+  background-color: #ffffff00;
+  box-shadow: none;
 }
 .nav-tabs {
-  border-bottom: 0px;
-  top: 230px;
+  border: 0px;
+  top: 219px;
   position: fixed;
   width: 100vw;
   display: flex;
@@ -176,10 +214,11 @@ label {
   z-index: 100;
 }
 .nav-tabs > li > a {
-  border-radius: 0;
-  background-color: #e5e5e545;
+  border-radius: 40px;
+  background-color: #2ca0d900;
   border: 0;
-  margin-right: 0;
+  margin: 8px 10px;
+  padding: 10px 25px;
   color: black;
 }
 .nav-tabs > li.active > a,
@@ -187,7 +226,7 @@ label {
 .nav-tabs > li.active > a:hover {
   color: black;
   cursor: default;
-  background-color: #e5e5e5ad;
+  background-color: #dce2e58a;
   border: 0px;
   border-bottom-color: transparent;
 }
@@ -195,12 +234,12 @@ label {
 /* Grids */
 .content-container-parent {
   position: absolute;
-  top: 228px;
+  top: 219px;
   bottom: 0;
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
-  padding: 40px 15vw 20px 15vw;
+  padding: 30px 15vw 20px 15vw;
 }
 .content-container-grid {
   display: grid;
@@ -218,7 +257,7 @@ label {
   display: grid;
   justify-content: center;
   overflow-x: hidden;
-  width: 100%;
+  width: 80%;
   margin: 20px 0;
 }
 .grid-report {
@@ -236,16 +275,21 @@ label {
 }
 .content-box {
   background: linear-gradient(
-    rgba(255, 255, 255, 0) 2%,
+    90deg,
+    rgba(255, 255, 255, 0) 10%,
     rgba(255, 255, 255, 1) 40%,
     rgba(255, 255, 255, 1) 60%,
-    rgba(255, 255, 255, 0) 98%
+    rgba(255, 255, 255, 0) 90%
   );
   display: block;
-  margin: 15px 25px;
-  padding: 20px 10px;
+  margin: 20px 25px;
+  padding: 20px 30px;
   position: relative;
   width: 80%;
+  border-left: 4px solid var(--color-primary);
+}
+.report-content-box {
+  margin-top: 50px;
 }
 .feedback-box {
   width: 100%;
@@ -280,7 +324,7 @@ label {
   padding: 30px;
   overflow-x: hidden;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 40px;
 }
 .input-box-cover {
   z-index: 1;
@@ -382,7 +426,9 @@ label {
 .external-link-button h1 {
   width: fit-content;
   color: white;
-  font-size: 2rem;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: normal;
   padding: 15px 15px;
   margin: 0;
 }
