@@ -55,6 +55,7 @@ h2 {
   text-align: left;
   font-weight: 500;
   letter-spacing: 2px;
+  color: var(--color-primary);
 }
 h3 {
   font-size: 2rem;
@@ -124,15 +125,22 @@ label {
   color: var(--color-primary);
 }
 .header-logo {
-  width: 300px;
+  width: 80px;
   position: absolute;
   left: 20px;
-  top: 18px;
+  top: 25px;
+}
+.wave-decal {
+  transform: rotateX(180deg);
+  display: block;
+  position: fixed;
+  bottom: 0;
+  fill: #00a09a8a;
 }
 .version-header {
   position: absolute;
   right: 30px;
-  top: 65px;
+  top: 60px;
   color: white;
   font-weight: 600;
 }
@@ -147,17 +155,11 @@ label {
   display: flex;
   justify-content: center;
   position: fixed;
-  top: 135px;
+  top: 115px;
   width: 100vw;
-  background: linear-gradient(
-    90deg,
-    rgb(255 255 255 / 0%) 5%,
-    rgb(0 160 154 / 20%) 40%,
-    rgb(0 160 154 / 20%) 60%,
-    rgb(255 255 255 / 0%) 95%
-  );
   padding-top: 10px;
   padding-bottom: 10px;
+  background-color: transparent;
 }
 .navbar-header {
   display: none;
@@ -206,7 +208,7 @@ label {
 }
 .nav-tabs {
   border: 0px;
-  top: 219px;
+  top: 200px;
   position: fixed;
   width: 100vw;
   display: flex;
@@ -234,22 +236,25 @@ label {
 /* Grids */
 .content-container-parent {
   position: absolute;
-  top: 219px;
+  top: 210px;
   bottom: 0;
   width: 100%;
   margin-left: -15px;
   overflow-y: scroll;
-  padding: 30px 15vw 20px 15vw;
+  padding: 12px 15vw 20px 15vw;
 }
 .content-container-grid {
   display: grid;
   justify-content: center;
   justify-items: center;
+  align-items: center;
+  align-content: center;
   left: 0;
-  padding: 0 15vw;
+  padding: 0 10vw;
   position: absolute;
   right: 0;
   width: 100%;
+  grid-template-columns: 2fr 1fr;
 }
 .grid-generator {
   gap: 35px;
@@ -262,6 +267,7 @@ label {
 }
 .grid-report {
   grid-template-columns: 1fr;
+  padding: 0 5vw;
 }
 
 /* Content styles */
@@ -274,22 +280,21 @@ label {
   box-sizing: border-box;
 }
 .content-box {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 10%,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(255, 255, 255, 1) 60%,
-    rgba(255, 255, 255, 0) 90%
-  );
   display: block;
   margin: 20px 25px;
   padding: 20px 30px;
   position: relative;
-  width: 80%;
-  border-left: 4px solid var(--color-primary);
+  width: 95%;
+  border-left: 3px solid var(--color-primary);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(184, 79, 79, 0) 90%
+  );
 }
 .report-content-box {
   margin-top: 50px;
+  width: 80%;
 }
 .feedback-box {
   width: 100%;
@@ -372,6 +377,15 @@ label {
   margin: 0px auto;
   width: 75%;
   position: relative;
+}
+.report-home-img {
+  width: 80%;
+  mask-image: linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 0.9) 10%,
+    rgba(255, 255, 255, 0.8) 60%,
+    rgba(184, 79, 79, 0) 100%
+  );
 }
 
 /* Data template table */
