@@ -249,6 +249,11 @@ ui <- navbarPage(
                                                 downloadButton("report_fisheries_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
+                                                class = "input-list-content",
+                                                actionButton("figures_fisheries_1per", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_fisheries_1per_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
                                                 id = "fisheries_1per_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -512,6 +517,11 @@ ui <- navbarPage(
                                                 downloadButton("report_fisheries_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
+                                                class = "input-list-content",
+                                                actionButton("figures_fisheries_multiper", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_fisheries_multiper_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
                                                 id = "fisheries_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -659,6 +669,11 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 actionButton("report_fisher_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_fisher_1per_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("figures_fisher_1per", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_fisher_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "fisher_1per_loader",
@@ -922,6 +937,11 @@ ui <- navbarPage(
                                                 downloadButton("report_fisher_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
+                                                class = "input-list-content",
+                                                actionButton("figures_fisher_multiper", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_fisher_multiper_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
                                                 id = "fisher_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -1061,6 +1081,11 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 actionButton("report_lamp_1per", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_1per_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("figures_lamp_1per", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_lamp_1per_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "lamp_1per_loader",
@@ -1273,6 +1298,11 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 actionButton("report_lamp_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_multiper_hidden", "", class = "hidden_download")
+                                            ),
+                                            div(
+                                                class = "input-list-content",
+                                                actionButton("figures_lamp_multiper", "Download Figures", icon = icon("download")),
+                                                downloadButton("figures_lamp_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
                                                 id = "lamp_multiper_loader",
