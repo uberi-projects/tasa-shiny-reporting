@@ -153,7 +153,6 @@ label {
   text-decoration: none;
 }
 
-
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:focus,
@@ -208,13 +207,13 @@ label {
   justify-content: center;
   justify-items: center;
   left: 0;
-  padding: 0 20vw;
+  padding: 0 15vw;
   position: absolute;
   right: 0;
   width: 100%;
 }
 .grid-generator {
-  gap: 20px;
+  gap: 35px;
   grid-template-columns: 1fr 1fr;
   display: grid;
   justify-content: center;
@@ -246,7 +245,7 @@ label {
   margin: 15px 25px;
   padding: 20px 10px;
   position: relative;
-  width: 100%;
+  width: 80%;
 }
 .feedback-box {
   width: 100%;
@@ -278,10 +277,10 @@ label {
   position: relative;
   background-color: var(--color-primary);
   color: white;
-  padding: 10px;
-  height: fit-content;
+  padding: 30px;
   overflow-x: hidden;
   height: 100%;
+  border-radius: 10px;
 }
 .input-box-cover {
   z-index: 1;
@@ -373,7 +372,6 @@ label {
   margin: 1.5rem;
   border-radius: 40px 40px 40px 40px;
   padding: 5px 15px 5px 15px;
-
 }
 .external-link-button:hover {
   background-color: var(--color-alert);
