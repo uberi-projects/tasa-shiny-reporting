@@ -477,19 +477,24 @@ server <- function(input, output, session) {
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("fisheries_1per")
+        nameLengthCheck(input$fisheries_1per_name, "fisheries_1per")
     })
+
     observeEvent(input$validate_fisheries_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for Fisheries Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("fisheries_multiper")
+        nameLengthCheck(input$fisheries_multiper_name, "fisheries_multiper")
     })
+
     source("validation/validation_observers/validate_fisher_observer_1per.r", local = TRUE)
     observeEvent(input$validate_fisher_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for Fisher Project Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("fisher_multiper")
+        nameLengthCheck(input$fisher_multiper_name, "fisher_multiper")
     })
     source("validation/validation_observers/validate_lamp_observer_1per.r", local = TRUE)
     source("validation/validation_observers/validate_lamp_observer_multiper.r", local = TRUE)
@@ -498,12 +503,14 @@ server <- function(input, output, session) {
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("spag_1per")
+        nameLengthCheck(input$spag_1per_name, "spag_1per")
     })
     observeEvent(input$validate_spag_multiper, {
         shinyalert("Notice!", "Validation has not been implemented for SPAG Multi-Year as of yet!",
             confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
         )
         enableCustomization("spag_multiper")
+        nameLengthCheck(input$spag_multiper_name, "spag_multiper")
     })
 
     # Observe report generate buttons
