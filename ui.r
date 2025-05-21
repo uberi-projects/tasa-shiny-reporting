@@ -250,8 +250,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_fisheries_1per", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_fisheries_1per_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_fisheries_1per", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "fisheries_1per_loader",
@@ -518,8 +517,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_fisheries_multiper", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_fisheries_multiper_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_fisheries_multiper", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "fisheries_multiper_loader",
@@ -672,8 +670,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_fisher_1per", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_fisher_1per_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_fisher_1per", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "fisher_1per_loader",
@@ -938,8 +935,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_fisher_multiper", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_fisher_multiper_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_fisher_multiper", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "fisher_multiper_loader",
@@ -1084,8 +1080,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_lamp_1per", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_lamp_1per_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_lamp_1per", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "lamp_1per_loader",
@@ -1301,8 +1296,7 @@ ui <- navbarPage(
                                             ),
                                             div(
                                                 class = "input-list-content",
-                                                actionButton("figures_lamp_multiper", "Download Figures", icon = icon("download")),
-                                                downloadButton("figures_lamp_multiper_hidden", "", class = "hidden_download")
+                                                downloadButton("figures_lamp_multiper", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "lamp_multiper_loader",

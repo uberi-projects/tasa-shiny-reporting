@@ -600,6 +600,9 @@ server <- function(input, output, session) {
         nameLengthCheck(input$spag_multiper_name, "spag_multiper")
     })
 
+    # Download figures
+    source("figures/figures_fisher_1per.r", local = TRUE)
+
     # Create reports
     output$report_fisheries_1per_hidden <- downloadHandler(
         content = function(file) {
