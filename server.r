@@ -3,11 +3,9 @@
 # Define release ---------------------------
 release_version <- "v1.2.0"
 
-# Attach packages ---------------------------
-library(readxl)
-
 # Source code ---------------------------
 source("server_helpers.r")
+source("theme.r")
 
 # Define server ---------------------------
 server <- function(input, output, session) {
@@ -602,6 +600,9 @@ server <- function(input, output, session) {
 
     # Download figures
     source("figures/figures_fisher_1per.r", local = TRUE)
+    source("figures/figures_fisheries_1per.r", local = TRUE)
+    source("figures/figures_lamp_1per.r", local = TRUE)
+    source("figures/figures_spag_1per.r", local = TRUE)
 
     # Create reports
     output$report_fisheries_1per_hidden <- downloadHandler(

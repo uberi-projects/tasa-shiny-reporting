@@ -4,7 +4,7 @@
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
 required_packages <- c(
     "shiny", "shinyjs", "shinyWidgets", "shinyalert", "rmarkdown", "knitr", "moments", "tidyverse",
-    "readxl", "tidyverse", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown"
+    "readxl", "tidyverse", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown", "zip"
 )
 install_if_missing <- function(package) {
     if (!requireNamespace(package, quietly = TRUE)) {
@@ -19,6 +19,10 @@ library(shinyjs)
 library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
+library(zip)
+library(ggplot2)
+library(ggpubr)
+library(readxl)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
@@ -516,10 +520,6 @@ ui <- navbarPage(
                                                 downloadButton("report_fisheries_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisheries_multiper", "Download Figures", icon = icon("download"))
-                                            ),
-                                            div(
                                                 id = "fisheries_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -934,10 +934,6 @@ ui <- navbarPage(
                                                 downloadButton("report_fisher_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisher_multiper", "Download Figures", icon = icon("download"))
-                                            ),
-                                            div(
                                                 id = "fisher_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -1293,10 +1289,6 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 actionButton("report_lamp_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_multiper_hidden", "", class = "hidden_download")
-                                            ),
-                                            div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_lamp_multiper", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "lamp_multiper_loader",
