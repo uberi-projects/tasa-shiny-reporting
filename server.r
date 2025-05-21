@@ -3,11 +3,9 @@
 # Define release ---------------------------
 release_version <- "v1.2.0"
 
-# Attach packages ---------------------------
-library(readxl)
-
 # Source code ---------------------------
 source("server_helpers.r")
+source("theme.r")
 
 # Define server ---------------------------
 server <- function(input, output, session) {

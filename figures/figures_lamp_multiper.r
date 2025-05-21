@@ -1,8 +1,5 @@
 ## figures_lamp_multiper.r
 
-# Attach packages ---------------------------
-library(ggplot2)
-
 # Download figures ---------------------------
 output$figures_lamp_multiper <- downloadHandler(
     filename = function() {

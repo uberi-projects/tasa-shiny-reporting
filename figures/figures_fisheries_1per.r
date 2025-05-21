@@ -1,8 +1,5 @@
 ## figures_fisheries_1per.r
 
-# Attach packages ---------------------------
-library(ggplot2)
-
 # Download figures ---------------------------
 output$figures_fisheries_1per <- downloadHandler(
     filename = function() {

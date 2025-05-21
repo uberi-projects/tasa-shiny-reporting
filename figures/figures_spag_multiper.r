@@ -1,8 +1,5 @@
 ## figures_spag_multiper.r
 
-# Attach packages ---------------------------
-library(ggplot2)
-
 # Download figures ---------------------------
 output$figures_spag_multiper <- downloadHandler(
     filename = function() {

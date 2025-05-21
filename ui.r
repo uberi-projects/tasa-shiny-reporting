@@ -20,6 +20,9 @@ library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
 library(zip)
+library(ggplot2)
+library(ggpubr)
+library(readxl)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
