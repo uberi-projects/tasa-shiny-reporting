@@ -520,10 +520,6 @@ ui <- navbarPage(
                                                 downloadButton("report_fisheries_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisheries_multiper", "Download Figures", icon = icon("download"))
-                                            ),
-                                            div(
                                                 id = "fisheries_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -938,10 +934,6 @@ ui <- navbarPage(
                                                 downloadButton("report_fisher_multiper_hidden", "", class = "hidden_download")
                                             ),
                                             div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisher_multiper", "Download Figures", icon = icon("download"))
-                                            ),
-                                            div(
                                                 id = "fisher_multiper_loader",
                                                 class = "custom-loader",
                                                 style = "display:none;",
@@ -1297,10 +1289,6 @@ ui <- navbarPage(
                                                 class = "input-list-content",
                                                 actionButton("report_lamp_multiper", "Download Report", icon = icon("download")),
                                                 downloadButton("report_lamp_multiper_hidden", "", class = "hidden_download")
-                                            ),
-                                            div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_lamp_multiper", "Download Figures", icon = icon("download"))
                                             ),
                                             div(
                                                 id = "lamp_multiper_loader",
