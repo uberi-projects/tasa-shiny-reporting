@@ -3,17 +3,26 @@
 # Attach packages ---------------------------
 library(ggplot2)
 
-# Define figures ---------------------------
-figure <- ggplot(iris, aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
-    geom_point() +
-    theme_classic()
-
 # Download figures ---------------------------
 output$figures_fisher_1per <- downloadHandler(
     filename = function() {
-        paste("figure_fisher_1per_", Sys.Date(), ".png", sep = "")
+        datatype <- isolate(input$datatype_fisher_1per)
+        paste0("figure_fisher_", datatype, "_1per.png")
     },
     content = function(file) {
-        ggsave(file, plot = figure, device = "png", width = 6, height = 4)
+        datatype <- isolate(input$datatype_fisher_1per)
+        p <- switch(datatype,
+            "Conch" = ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) +
+                geom_point() +
+                theme_classic(),
+            "Lobster" = ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) +
+                geom_point() +
+                theme_dark(),
+            "Finfish" = ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) +
+                geom_point() +
+                theme_void(),
+            stop("Unknown datatype: ", datatype)
+        )
+        ggsave(file, plot = p, device = "png", width = 6, height = 4)
     }
 )
