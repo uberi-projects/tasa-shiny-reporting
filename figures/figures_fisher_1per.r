@@ -7,9 +7,9 @@ library(ggplot2)
 output$figures_fisher_1per <- downloadHandler(
     filename = function() {
         datatype <- isolate(input$datatype_fisher_1per)
-        paste0("figure_fisher_", datatype, "_1per.png")
+        paste0("figure_fisher_1per_", datatype, ".zip")
     },
-    content = function(file) {
+    content = function(zipfile) {
         datatype <- isolate(input$datatype_fisher_1per)
         p <- switch(datatype,
             "Conch" = ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) +
@@ -23,6 +23,14 @@ output$figures_fisher_1per <- downloadHandler(
                 theme_void(),
             stop("Unknown datatype: ", datatype)
         )
-        ggsave(file, plot = p, device = "png", width = 6, height = 4)
-    }
+        img_name <- paste0("figure_fisher_1per_", datatype, ".png")
+        tmp_png <- file.path(tempdir(), img_name)
+        ggsave(tmp_png, plot = p, device = "png", width = 6, height = 4)
+        zip::zipr(
+            zipfile,
+            files = tmp_png,
+            root = tempdir()
+        )
+    },
+    contentType = "application/zip"
 )
