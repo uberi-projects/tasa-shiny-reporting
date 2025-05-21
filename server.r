@@ -602,6 +602,13 @@ server <- function(input, output, session) {
 
     # Download figures
     source("figures/figures_fisher_1per.r", local = TRUE)
+    source("figures/figures_fisheries_1per.r", local = TRUE)
+    source("figures/figures_lamp_1per.r", local = TRUE)
+    source("figures/figures_spag_1per.r", local = TRUE)
+    source("figures/figures_fisher_multiper.r", local = TRUE)
+    source("figures/figures_fisheries_multiper.r", local = TRUE)
+    source("figures/figures_lamp_multiper.r", local = TRUE)
+    source("figures/figures_spag_multiper.r", local = TRUE)
 
     # Create reports
     output$report_fisheries_1per_hidden <- downloadHandler(
