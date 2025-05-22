@@ -41,6 +41,7 @@ removeConfirmation <- function(reportType) {
 showLoaderBar <- function(reportType, session) {
     shinyjs::show(paste0(reportType, "_loader"))
     shinyjs::hide(paste0("report_", reportType))
+    shinyjs::hide(paste0("figures_", reportType))
     for (i in seq(0, 70, by = 10)) {
         Sys.sleep(0.1)
         session$sendCustomMessage("updateLoader", list(reportType = reportType, percentage = i))
@@ -50,6 +51,7 @@ hideLoaderBar <- function(reportType, session) {
     session$sendCustomMessage("updateLoader", list(reportType = reportType, percentage = 100))
     Sys.sleep(0.2)
     shinyjs::show(paste0("report_", reportType))
+    shinyjs::show(paste0("figures_", reportType))
     shinyjs::hide(paste0(reportType, "_loader"))
     session$sendCustomMessage("resetLoader", list(reportType = reportType))
 }

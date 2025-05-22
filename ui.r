@@ -1754,6 +1754,56 @@ ui <- navbarPage(
             )
         )
     ),
+    navbarMenu(
+        "Data",
+        tabPanel(
+            "Templates",
+            div(
+                class = "content-container-parent",
+                div(
+                    class = "content-container-grid grid-report",
+                    div(
+                        class = "content-box",
+                        h2("Data Templates"),
+                        p(tab_text[1]),
+                        br(),
+                        p(tab_text[2]),
+                        br(),
+                        p(tab_text[3])
+                    ),
+                    div(
+                        class = "data-template-table",
+                        uiOutput("template_list_table")
+                    )
+                )
+            )
+        ),
+        tabPanel(
+            "Historical",
+            div(
+                class = "content-container-parent",
+                div(
+                    class = "content-container-grid grid-report",
+                    div(
+                        class = "content-box",
+                        p("For a bank of existing standardized historic data, visit the Data Bank below:"),
+                        br()
+                    ),
+                    div(
+                        class = "content-container",
+                        div(
+                            class = "external-link-button",
+                            a(
+                                href = link_text[10],
+                                target = "_blank",
+                                h1("Data Bank")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    ),
     tabPanel(
         "Manual",
         div(
@@ -1789,44 +1839,6 @@ ui <- navbarPage(
                                 target = "_blank",
                                 h1("Data Validation Documentation")
                             )
-                        )
-                    )
-                )
-            )
-        )
-    ),
-    tabPanel(
-        "Data Templates",
-        div(
-            class = "content-container-parent",
-            div(
-                class = "content-container-grid grid-report",
-                div(
-                    class = "content-box",
-                    h2("Data Templates"),
-                    p(tab_text[1]),
-                    br(),
-                    p(tab_text[2]),
-                    br(),
-                    p(tab_text[3])
-                ),
-                div(
-                    class = "data-template-table",
-                    uiOutput("template_list_table")
-                ),
-                div(
-                    class = "content-box",
-                    p("For a bank of existing standardized historic data, visit the Data Bank below:"),
-                    br()
-                ),
-                div(
-                    class = "content-container",
-                    div(
-                        class = "external-link-button",
-                        a(
-                            href = link_text[10],
-                            target = "_blank",
-                            h1("Data Bank")
                         )
                     )
                 )
