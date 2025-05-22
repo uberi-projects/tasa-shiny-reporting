@@ -15,6 +15,10 @@ output$figures_lamp_1per <- downloadHandler(
         lamp_1per_year_selection <- if (lamp_1per_year_selection_flag()) input[["lamp_1per_year_selection"]] else "None"
         lamp_1per_period_selection <- if (lamp_1per_period_selection_flag()) input[["lamp_1per_period_selection"]] else "None"
         if (datatype == "Conch") {
+            study_conch_check <- FALSE
+            study_lobster_check <- FALSE
+            study_finfish_check <- FALSE
+            study_urchin_crab_check <- FALSE
             update_site_id <- function(df) {
                 df |> mutate(`Site ID` = ifelse(is.na(`Site ID`) | `Site ID` == "", as.character(`Old Site ID`), as.character(`Site ID`)))
             }
