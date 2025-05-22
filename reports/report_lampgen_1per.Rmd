@@ -777,7 +777,7 @@ if (study_finfish_check) {
     summarize(
       Transects = n_distinct(Transect, na.rm = TRUE),
       `Site Biomass` = sum(Biomass, na.rm = TRUE),
-      `Site Biomass Density (g/100m2)` = `Site Biomass` / Transects # Calculate density here
+      `Site Biomass Density (g/100m2)` = `Site Biomass` / Transects
     )
   df_table3f_overall <- df_table3f_prelim %>%
     filter(Grouping %in% c("Commercial", "Herbivorous")) %>%
@@ -937,7 +937,6 @@ if (study_finfish_check) {
 ```{r table1co_prep, echo = FALSE, include = FALSE}
 if (study_conch_check) {
   # Prepare df for Table 1Co ---------------------------
-
   df_table1co_overall <- df_conch %>%
     filter(!is.na(`Site ID`)) %>%
     group_by(`Site ID`) %>%
