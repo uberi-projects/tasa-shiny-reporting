@@ -48,13 +48,15 @@ observeEvent(input$validate_fisher_1per, {
             if (validation_passed || nchar(validation_message) == 0) {
                 shinyalert("Success!", "Validation Successful!",
                     confirmButtonText = "Great!", confirmButtonCol = "#00AE46", type = "success", size = "s",
-                    enableCustomization("fisher_1per")
+                    enableCustomization("fisher_1per"),
+                    nameLengthCheck(input$fisher_1per_name, "fisher_1per")
                 )
             } else {
                 shinyalert("Attention!",
                     text = validation_message,
                     confirmButtonText = "I Understand", confirmButtonCol = "#FFA400", type = "warning", size = "m", html = TRUE,
-                    enableCustomization("fisher_1per")
+                    enableCustomization("fisher_1per"),
+                    nameLengthCheck(input$fisher_1per_name, "fisher_1per")
                 )
             }
         }
