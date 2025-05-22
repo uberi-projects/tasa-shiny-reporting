@@ -201,10 +201,19 @@ label {
   border: 0;
   min-width: 155px;
   border-radius: 10px;
+  width: 100%;
+  align-content: center;
 }
 .dropdown-menu {
   background-color: #ffffff00;
   box-shadow: none;
+}
+.dropdown-menu > li {
+  width: 90%;
+  margin: auto;
+}
+.dropdown-menu > li > a {
+  font-size: 15px !important;
 }
 .nav-tabs {
   border: 0px;
@@ -379,7 +388,8 @@ label {
   position: relative;
 }
 .report-home-img {
-  width: 80%;
+  width: 30em;
+  height: 95%;
   mask-image: linear-gradient(
     270deg,
     rgba(255, 255, 255, 0.9) 10%,
@@ -529,4 +539,14 @@ label {
   left: 60px;
   top: 40px;
   z-index: -1;
+}
+.dl-bttn-container {
+  width: 100%;
+  display: flex; 
+  flex-wrap: wrap;
+  padding: 10px 60px 0;
+}
+
+.dl-bttn-container > .input-list-content {
+  padding: 5px;
 }

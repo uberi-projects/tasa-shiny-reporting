@@ -104,7 +104,7 @@ ui <- navbarPage(
                         )
                     ),
                     div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:230px;",
+                        style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
                             style = "
@@ -248,13 +248,16 @@ ui <- navbarPage(
                                             class = "input-list ",
                                             "Generate Outputs",
                                             div(
-                                                class = "input-list-content",
-                                                actionButton("report_fisheries_1per", "Download Report", icon = icon("download")),
-                                                downloadButton("report_fisheries_1per_hidden", "", class = "hidden_download")
-                                            ),
-                                            div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisheries_1per", "Download Figures", icon = icon("download"))
+                                                class = "dl-bttn-container",
+                                                div(
+                                                    class = "input-list-content",
+                                                    actionButton("report_fisheries_1per", "Download Report", icon = icon("download")),
+                                                    downloadButton("report_fisheries_1per_hidden", "", class = "hidden_download")
+                                                ),
+                                                div(
+                                                    class = "input-list-content",
+                                                    downloadButton("figures_fisheries_1per", "Download Figures", icon = icon("download"))
+                                                )
                                             ),
                                             div(
                                                 id = "fisheries_1per_loader",
@@ -294,7 +297,7 @@ ui <- navbarPage(
                         )
                     ),
                     div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:230px;",
+                        style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
                             style = "
@@ -664,13 +667,16 @@ ui <- navbarPage(
                                             class = "input-list",
                                             "Generate Outputs",
                                             div(
-                                                class = "input-list-content",
-                                                actionButton("report_fisher_1per", "Download Report", icon = icon("download")),
-                                                downloadButton("report_fisher_1per_hidden", "", class = "hidden_download")
-                                            ),
-                                            div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_fisher_1per", "Download Figures", icon = icon("download"))
+                                                class = "dl-bttn-container",
+                                                div(
+                                                    class = "input-list-content",
+                                                    actionButton("report_fisher_1per", "Download Report", icon = icon("download")),
+                                                    downloadButton("report_fisher_1per_hidden", "", class = "hidden_download")
+                                                ),
+                                                div(
+                                                    class = "input-list-content",
+                                                    downloadButton("figures_fisher_1per", "Download Figures", icon = icon("download"))
+                                                )
                                             ),
                                             div(
                                                 id = "fisher_1per_loader",
@@ -708,7 +714,7 @@ ui <- navbarPage(
                         )
                     ),
                     div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:230px;",
+                        style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
                             style = "
@@ -1070,13 +1076,16 @@ ui <- navbarPage(
                                             class = "input-list",
                                             "Generate Outputs",
                                             div(
-                                                class = "input-list-content",
-                                                actionButton("report_lamp_1per", "Download Report", icon = icon("download")),
-                                                downloadButton("report_lamp_1per_hidden", "", class = "hidden_download")
-                                            ),
-                                            div(
-                                                class = "input-list-content",
-                                                downloadButton("figures_lamp_1per", "Download Figures", icon = icon("download"))
+                                                class = "dl-bttn-container",
+                                                div(
+                                                    class = "input-list-content",
+                                                    actionButton("report_lamp_1per", "Download Report", icon = icon("download")),
+                                                    downloadButton("report_lamp_1per_hidden", "", class = "hidden_download")
+                                                ),
+                                                div(
+                                                    class = "input-list-content",
+                                                    downloadButton("figures_lamp_1per", "Download Figures", icon = icon("download"))
+                                                )
                                             ),
                                             div(
                                                 id = "lamp_1per_loader",
@@ -1327,7 +1336,7 @@ ui <- navbarPage(
                         )
                     ),
                     div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:230px;",
+                        style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
                             style = "
@@ -1505,7 +1514,7 @@ ui <- navbarPage(
                         )
                     ),
                     div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:230px;",
+                        style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
                             style = "
