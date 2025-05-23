@@ -316,7 +316,7 @@ server <- function(input, output, session) {
         }
     })
 
-    # Observe Multiyear Upload
+    # Observe Multiper Upload
     observeEvent(input$upload_fisheries_multiper1, {
         enableUpload("fisheries_multiper2")
         disableCustomization("fisheries_multiper")
@@ -443,7 +443,6 @@ server <- function(input, output, session) {
         disableUpload("lamp_multiper4")
         disableUploadRemoveBttn("lamp_multiper3")
         removeConfirmation("lamp_multiper3")
-        lamp_multiper3_flag(FALSE)
     })
     observeEvent(input$remove_lamp_multiper4_bttn, {
         reset("upload_lamp_multiper4")
@@ -451,7 +450,6 @@ server <- function(input, output, session) {
         disableUploadRemoveBttn("lamp_multiper4")
         enableUploadRemoveBttn("lamp_multiper3")
         removeConfirmation("lamp_multiper4")
-        lamp_multiper4_flag(FALSE)
     })
     observeEvent(input$remove_spag_multiper3_bttn, {
         reset("upload_spag_multiper3")

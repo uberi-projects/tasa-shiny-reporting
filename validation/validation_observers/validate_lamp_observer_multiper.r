@@ -188,6 +188,7 @@ observeEvent(input$validate_lamp_multiper, {
 
         if (all(validation_status)) {
             enableCustomization("lamp_multiper")
+            nameLengthCheck(input$lamp_multiper_name, "lamp_multiper")
         }
 
         # Validate LAMP General multiper
