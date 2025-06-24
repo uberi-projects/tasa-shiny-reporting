@@ -4,7 +4,7 @@
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
 required_packages <- c(
     "shiny", "shinyjs", "shinyWidgets", "shinyalert", "rmarkdown", "knitr", "moments", "tidyverse",
-    "readxl", "tidyverse", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown", "zip"
+    "readxl", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown", "zip"
 )
 install_if_missing <- function(package) {
     if (!requireNamespace(package, quietly = TRUE)) {
@@ -19,10 +19,17 @@ library(shinyjs)
 library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
-library(zip)
-library(ggplot2)
-library(ggpubr)
+library(knitr)
+library(moments)
+library(tidyverse)
 library(readxl)
+library(ggpubr)
+library(sf)
+library(ggspatial)
+library(ggnewscale)
+library(officedown)
+library(markdown)
+library(zip)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
