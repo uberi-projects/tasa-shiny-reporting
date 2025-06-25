@@ -12,9 +12,9 @@ params:
   datafile1_name: "Unknown"
   datafile2: pressure
   datafile2_name: "Unknown"
-  datafile3: pressure
+  datafile3: NULL
   datafile3_name: "Unknown"
-  datafile4: pressure
+  datafile4: NULL
   datafile4_name: "Unknown"
   fisher_multiper1_year_selection: "None"
   fisher_multiper1_period_selection: "None"
@@ -52,31 +52,100 @@ library(ggpubr)
 source("theme.r")
 source("map.r")
 
+# Define datafiles ---------------------------
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
+
 # Determine year or season  ---------------------------
 timeframe <- params$fisher_multiper_timeframe
 
 # Filter to year or season  ---------------------------
-df <- params$datafile1[[1]]
-df$`Waypoint Date` <- as.Date(df$`Waypoint Date`)
+df_1 <- params$datafile1[[1]]
+df_1$`Waypoint Date` <- as.Date(df_1$`Waypoint Date`)
 if (timeframe == "Annual" && as.character(params$fisher_multiper1_year_selection) != "None") {
-  df <- df |>
+  df_1 <- df_1 |>
     filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper1_year_selection)
 } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper1_conch_season_selection) != "None") {
   season_years <- unlist(strsplit(params$fisher_multiper1_conch_season_selection, "-"))
   start_date <- as.Date(paste0(season_years[1], "-07-01"))
   end_date <- as.Date(paste0(season_years[2], "-02-28"))
-  df <- df |>
+  df_1 <- df_1 |>
     filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
+}
+df_2 <- params$datafile2[[1]]
+df_2$`Waypoint Date` <- as.Date(df_2$`Waypoint Date`)
+if (timeframe == "Annual" && as.character(params$fisher_multiper2_year_selection) != "None") {
+  df_2 <- df_2 |>
+    filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper2_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisher_multiper2_conch_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisher_multiper2_conch_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df_2 <- df_2 |>
+    filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
+}
+if (!is.null(params$datafile3)) {
+  df_3 <- params$datafile3[[1]]
+  df_3$`Waypoint Date` <- as.Date(df_3$`Waypoint Date`)
+  if (timeframe == "Annual" && as.character(params$fisher_multiper3_year_selection) != "None") {
+    df_3 <- df_3 |>
+      filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper3_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper3_conch_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisher_multiper3_conch_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_3 <- df_3 |>
+      filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
+  }
+}
+if (!is.null(params$datafile4)) {
+  df_4 <- params$datafile4[[1]]
+  df_4$`Waypoint Date` <- as.Date(df_4$`Waypoint Date`)
+  if (timeframe == "Annual" && as.character(params$fisher_multiper4_year_selection) != "None") {
+    df_4 <- df_4 |>
+      filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper4_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper4_conch_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisher_multiper4_conch_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_4 <- df_4 |>
+      filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
+  }
 }
 
 # Add month column  ---------------------------
-df$Month <- format(df$`Waypoint Date`, "%b %Y")
+df_1$Month <- format(df_1$`Waypoint Date`, "%b %Y")
+df_2$Month <- format(df_2$`Waypoint Date`, "%b %Y")
+if (!is.null(params$datafile3)) {
+  df_3$Month <- format(df_3$`Waypoint Date`, "%b %Y")
+}
+if (!is.null(params$datafile4)) {
+  df_4$Month <- format(df_4$`Waypoint Date`, "%b %Y")
+}
+
+# Merge dfs  ---------------------------
+df <- df_1 %>%
+  bind_rows(df_2)
+if (!is.null(params$datafile3)) {
+  df <- df %>%
+    bind_rows(df_3)
+}
+if (!is.null(params$datafile4)) {
+  df <- df %>%
+    bind_rows(df_4)
+}
 
 # Define study timeframe ---------------------------
 study_start <- min(df$`Waypoint Date`, na.rm = TRUE)
 study_end <- max(df$`Waypoint Date`, na.rm = TRUE)
 if (timeframe == "Annual") {
-  study_timeframe <- unique(format(df$`Waypoint Date`, "%Y"))[1]
+  study_timeframe <- combine_words(unique(format(df$`Waypoint Date`, "%Y")))
 } else if (timeframe == "Seasonal") {
   study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
 }
