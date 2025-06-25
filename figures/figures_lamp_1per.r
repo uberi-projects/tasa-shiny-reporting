@@ -1,12 +1,13 @@
 ## figures_lamp_1per.r
 
 # Download figures ---------------------------
-output$figures_lamp_1per <- downloadHandler(
+output$figures_lamp_1per_hidden <- downloadHandler(
     filename = function() {
         datatype <- isolate(input$datatype_lamp_1per)
         paste0("figure_lamp_1per_", tolower(datatype), ".zip")
     },
     content = function(zipfile) {
+        showLoaderBar("lamp_1per", session)
         # Define datatype
         datatype <- isolate(input$datatype_lamp_1per)
 
@@ -614,6 +615,7 @@ output$figures_lamp_1per <- downloadHandler(
             ggsave(filename = tmp, plot = item$plot, device = "png", width = item$width, height = item$height, units = "in", dpi = 300)
             tmp
         })
+        hideLoaderBar("lamp_1per", session)
         zip::zipr(zipfile, files = unlist(tmp_files), root = tempdir())
     },
     contentType = "application/zip"

@@ -256,7 +256,8 @@ ui <- navbarPage(
                                                 ),
                                                 div(
                                                     class = "input-list-content",
-                                                    downloadButton("figures_fisheries_1per", "Download Figures", icon = icon("download"))
+                                                    actionButton("figures_fisheries_1per", "Download Figures", icon = icon("download")),
+                                                    downloadButton("figures_fisheries_1per_hidden", "", class = "hidden_download")
                                                 )
                                             ),
                                             div(
@@ -675,7 +676,8 @@ ui <- navbarPage(
                                                 ),
                                                 div(
                                                     class = "input-list-content",
-                                                    downloadButton("figures_fisher_1per", "Download Figures", icon = icon("download"))
+                                                    actionButton("figures_fisher_1per", "Download Figures", icon = icon("download")),
+                                                    downloadButton("figures_fisher_1per_hidden", "", class = "hidden_download")
                                                 )
                                             ),
                                             div(
@@ -1084,7 +1086,8 @@ ui <- navbarPage(
                                                 ),
                                                 div(
                                                     class = "input-list-content",
-                                                    downloadButton("figures_lamp_1per", "Download Figures", icon = icon("download"))
+                                                    actionButton("figures_lamp_1per", "Download Figures", icon = icon("download")),
+                                                    downloadButton("figures_lamp_1per_hidden", "", class = "hidden_download")
                                                 )
                                             ),
                                             div(
