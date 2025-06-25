@@ -144,10 +144,30 @@ if (!is.null(params$datafile4)) {
 # Define study timeframe ---------------------------
 study_start <- min(df$`Waypoint Date`, na.rm = TRUE)
 study_end <- max(df$`Waypoint Date`, na.rm = TRUE)
+study_start_1 <- min(df_1$`Waypoint Date`, na.rm = TRUE)
+study_end_1 <- max(df_1$`Waypoint Date`, na.rm = TRUE)
+study_start_2 <- min(df_2$`Waypoint Date`, na.rm = TRUE)
+study_end_2 <- max(df_2$`Waypoint Date`, na.rm = TRUE)
+if (!is.null(params$datafile3)) {
+  study_start_3 <- min(df_3$`Waypoint Date`, na.rm = TRUE)
+  study_end_3 <- max(df_3$`Waypoint Date`, na.rm = TRUE)
+}
+if (!is.null(params$datafile4)) {
+  study_start_4 <- min(df_4$`Waypoint Date`, na.rm = TRUE)
+  study_end_4 <- max(df_4$`Waypoint Date`, na.rm = TRUE)
+}
+
 if (timeframe == "Annual") {
   study_timeframe <- combine_words(unique(format(df$`Waypoint Date`, "%Y")))
 } else if (timeframe == "Seasonal") {
-  study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
+  study_timeframe <- c(paste0(format(study_start_1, "%Y"), "-", format(study_end_1, "%Y")), paste0(format(study_start_2, "%Y"), "-", format(study_end_2, "%Y")))
+  if (!is.null(params$datafile3)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_3, "%Y"), "-", format(study_end_3, "%Y")))
+  }
+  if (!is.null(params$datafile4)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_4, "%Y"), "-", format(study_end_4, "%Y")))
+  }
+  study_timeframe <- combine_words(study_timeframe)
 }
 ```
 
