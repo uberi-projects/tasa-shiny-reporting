@@ -326,59 +326,57 @@ Waypoints for conch recorded in `r study_timeframe` are labelled on the map.\
 
 ```{r table1_prep, echo = FALSE, include = FALSE}
 # Create df for Table 1 ---------------------------
-df_events_overall <- df %>%
-  select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
-  distinct() %>%
-  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
-  summarize(
-    Hours = sum(`Hours Fished`, na.rm = TRUE),
-    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
-  ) %>%
-  mutate(Month = "Overall")
-df_table1_overall <- df %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Conch = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  mutate(Month = "Overall") %>%
-  left_join(df_events_overall, by = "Month") %>%
-  mutate(
-    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
-    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
-  )
-df_events <- df %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  select(Month, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
-  distinct() %>%
-  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
-  group_by(Month) %>%
-  summarize(
-    Hours = sum(`Hours Fished`, na.rm = TRUE),
-    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
-  )
-df_table1 <- df %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  group_by(Month, Month_sort) %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Conch = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  left_join(df_events, by = "Month") %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
-  mutate(
-    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
-    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
-  ) %>%
-  bind_rows(df_table1_overall)
+if (timeframe == "Annual") {
+  df_events_overall <- df %>%
+    select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    ) %>%
+    mutate(Year = "Overall")
+  df_table1_overall <- df %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Conch = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    mutate(Year = "Overall") %>%
+    left_join(df_events_overall, by = "Year") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+    )
+  df_events <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    select(Year, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    group_by(Year) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    )
+  df_table1 <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Conch = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    left_join(df_events, by = "Year") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+    ) %>%
+    bind_rows(df_table1_overall)
+}
 
 # Prepare dynamic variables for Table 1 ---------------------------
 total_fishers <- length(unique(df$`Fishers Name`))
@@ -386,13 +384,13 @@ total_conch <- df_table1_overall$Conch
 total_events <- df_table1_overall$Events
 total_hours <- df_table1_overall$Hours
 max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
-max_cpue_lb_month <- df_table1$Month[which.max(df_table1$`CPUE (lb/hr)`)]
+max_cpue_lb_year <- df_table1$Year[which.max(df_table1$`CPUE (lb/hr)`)]
 min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
-min_cpue_lb_month <- df_table1$Month[which.min(df_table1$`CPUE (lb/hr)`)]
+min_cpue_lb_year <- df_table1$Year[which.min(df_table1$`CPUE (lb/hr)`)]
 max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+max_cpue_num_year <- df_table1$Year[which.max(df_table1$`CPUE (num/hr)`)]
 min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
+min_cpue_num_year <- df_table1$Year[which.min(df_table1$`CPUE (num/hr)`)]
 ```
 
 
@@ -400,10 +398,10 @@ Between `r study_start` and `r study_end`, `r total_fishers` fishermen contribut
 A total of `r total_conch` conch were caught across `r total_events` 
 fishing events, totalling `r total_hours` active fishing hours. 
 The highest catch per unit effort (CPUE) 
-in pounds per hour (lb/hr) occurred in `r max_cpue_lb_month` with `r max_cpue_lb`, whereas the lowest 
-occurred in `r min_cpue_lb_month` with `r min_cpue_lb`. The highest CPUE in count 
-per hour (num/hr) occurred in `r max_cpue_num_month` 
-with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+in pounds per hour (lb/hr) occurred in `r max_cpue_lb_year` with `r max_cpue_lb`, whereas the lowest 
+occurred in `r min_cpue_lb_year` with `r min_cpue_lb`. The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_year` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_year` 
 in `r min_cpue_num` (Table 1; Figure 2).\
 
 
@@ -425,13 +423,11 @@ as.data.frame(df_table1)
 # Create df for Table 2 ---------------------------
 df_table2_rows <- df %>%
   mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
+    Year = format(df$`Waypoint Date`, "%Y")
   ) %>%
   group_by(`Waypoint ID`) %>%
   summarize(
-    Month = first(Month),
-    Month_sort = first(Month_sort),
+    Year = first(Year),
     Hours = first(`Hours Fished`),
     Catch_lb = first(`Total Lbs of Catch`),
     Conch = n(),
@@ -449,10 +445,10 @@ df_table2_lb_overall <- df_table2_rows %>%
     Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
   ) %>%
-  mutate(Month = "Overall", CPUE = "lb/hr")
+  mutate(Year = "Overall", CPUE = "lb/hr")
 df_table2_lb <- df_table2_rows %>%
   mutate(CPUE = "lb/hr") %>%
-  group_by(CPUE, Month, Month_sort) %>%
+  group_by(CPUE, Year) %>%
   summarize(
     Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
@@ -461,8 +457,6 @@ df_table2_lb <- df_table2_rows %>%
     SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
   bind_rows(df_table2_lb_overall)
 df_table2_num_overall <- df_table2_rows %>%
   summarize(
@@ -472,10 +466,10 @@ df_table2_num_overall <- df_table2_rows %>%
     Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
     SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
   ) %>%
-  mutate(Month = "Overall", CPUE = "num/hr")
+  mutate(Year = "Overall", CPUE = "num/hr")
 df_table2_num <- df_table2_rows %>%
   mutate(CPUE = "num/hr") %>%
-  group_by(CPUE, Month, Month_sort) %>%
+  group_by(CPUE, Year) %>%
   summarize(
     Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
     Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
@@ -484,8 +478,6 @@ df_table2_num <- df_table2_rows %>%
     SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
   bind_rows(df_table2_num_overall)
 df_table2 <- df_table2_lb_overall %>%
   bind_rows(df_table2_num_overall) %>%
@@ -495,302 +487,29 @@ df_table2 <- df_table2_lb_overall %>%
 overall_mean <- df_table2_lb_overall$Mean
 overall_median <- df_table2_lb_overall$Median
 max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
-max_cpue_mean_lb_month <- df_table2_lb$Month[which.max(df_table2_lb$Mean)]
+max_cpue_mean_lb_year <- df_table2_lb$Year[which.max(df_table2_lb$Mean)]
 min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
-min_cpue_mean_lb_month <- df_table2_lb$Month[which.min(df_table2_lb$Mean)]
+min_cpue_mean_lb_year <- df_table2_lb$Year[which.min(df_table2_lb$Mean)]
 max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
-max_cpue_mean_num_month <- df_table2_num$Month[which.max(df_table2_num$Mean)]
+max_cpue_mean_num_year <- df_table2_num$Year[which.max(df_table2_num$Mean)]
 min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
-min_cpue_mean_num_month <- df_table2_num$Month[which.min(df_table2_num$Mean)]
+min_cpue_mean_num_year <- df_table2_num$Year[which.min(df_table2_num$Mean)]
 ```
 
 
 The CPUE of conch in pounds per hour had a 
 mean of `r overall_mean`lb/hr and median of `r overall_median`lb/hr, 
-with the highest mean of `r max_cpue_mean_lb`lb/hr being in `r max_cpue_mean_lb_month` 
-and the lowest mean of `r min_cpue_mean_lb`lb/hr being in `r min_cpue_mean_lb_month`. 
+with the highest mean of `r max_cpue_mean_lb`lb/hr being in `r max_cpue_mean_lb_year` 
+and the lowest mean of `r min_cpue_mean_lb`lb/hr being in `r min_cpue_mean_lb_year`. 
 The CPUE of conch in count per hour had a 
 mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
-with the highest mean of `r max_cpue_mean_lb`num/hr being in `r max_cpue_mean_lb_month` 
-and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_month`. 
+with the highest mean of `r max_cpue_mean_lb`num/hr being in `r max_cpue_mean_lb_year` 
+and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_year`. 
 (Table 2; Figure 2).\
 
-```{r figure2_prep, echo = FALSE, include = FALSE}
-# Create dfs for Figure 2 ---------------------------
-df_fig2_A <- df %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  group_by(Month, Month_sort) %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Conch = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  left_join(df_events, by = "Month") %>%
-  arrange(Month_sort) %>%
-  mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Conch / Hours, 1)
-  )
-
-# Create panels for Figure 2 ---------------------------
-A <- ggplot(df_fig2_A, aes(x = Month_sort, y = Events, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Fishing Events") +
-  labs(title = "A")
-B <- ggplot(df_fig2_A, aes(x = Month_sort, y = Hours, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Hours Fished") +
-  labs(title = "B")
-C <- ggplot(df_fig2_A, aes(x = Month_sort, y = Conch, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Number Conchs") +
-  labs(title = "C")
-D <- ggplot(df_fig2_A, aes(x = Month_sort, y = `Catch (lb)`, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Catch (lb)") +
-  labs(title = "D")
-E <- ggplot(df_fig2_A, aes(x = Month_sort, group = 1)) +
-  geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
-  geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
-  geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
-  geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  scale_shape_manual(
-    name = "CPUE Type",
-    values = c("lb/hr" = 4, "num/hr" = 19)
-  ) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Catch per Unit Effort") +
-  labs(title = "E")
-
-
-# Assemble Figure 2 ---------------------------
-figure_2_top <- ggarrange(
-  A, B, C, D,
-  ncol = 2, nrow = 2
-)
-figure2 <- ggarrange(
-  figure_2_top, E,
-  ncol = 1,
-  heights = c(2, 1)
-)
-```
-
-
-```{r figure2, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
-figure2
-```
-
-
-*Figure 2.* Line plots of fishing events (A), 
-active hours fished (B), conch caught (C), 
-and catch per unit effort (in pounds and count per hour) (D) 
-over time, collected using SMART conch data from fishers at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`.\
-
-
-**Table 2.** Summary statistics for catch per unit effort in lb/hr and count/hr, 
-including minimum, mean, median, and maximum values, 
-along with standard deviation. 
-CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
-Data were collected using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table2, echo = FALSE}
 # show table
-df_table2
+as.data.frame(df_table2)
 ```
 
-
-<br>
-
-
-```{r table3_prep, echo = FALSE, include = FALSE}
-# Create df for Table 3 ---------------------------
-df_table3 <- df %>%
-  filter(`Weight Type` == "Market Clean") %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  group_by(Month, Month_sort) %>%
-  summarize(
-    `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
-    `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1),
-  ) %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
-  bind_rows(
-    df %>%
-      summarize(
-        `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
-        `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1)
-      ) %>%
-      mutate(Month = "Overall")
-  ) %>%
-  mutate(across(everything(), ~ {
-    if (is.numeric(.)) {
-      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
-    } else {
-      ifelse(is.na(.), "-", .)
-    }
-  }))
-
-# Prepare dynamic variables for Table 3 ---------------------------
-total_weight <- filter(df_table3, Month == "Overall")$`Mean Weight (oz)`
-max_weight <- max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
-max_weight_month <- df_table3$Month[which.max(filter(df_table3, Month != "Overall")$`Mean Weight (oz)`)]
-```
-
-Average market clean weight was `r total_weight`oz, greatest in `r max_weight_month` with `r max_weight`oz (Table 3; Figure 3).\
-
-
-**Table 3.** Summary of mean and median market clean weight (oz),  
-using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.
-
-```{r table3, echo = FALSE}
-# show table
-as.data.frame(df_table3)
-```
-
-
-
-```{r figure3_prep, echo = FALSE, include = FALSE}
-# Create dfs for Figure 3 ---------------------------
-df_fig3_unsummarized <- df %>%
-  filter(`Weight Type` == "Market Clean") %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  arrange(Month_sort)
-df_fig3 <- df %>%
-  filter(`Weight Type` == "Market Clean") %>%
-  mutate(
-    Month = format(`Waypoint Date`, "%b %Y"),
-    Month_sort = as.Date(format(`Waypoint Date`, "%Y-%m-01"))
-  ) %>%
-  group_by(Month, Month_sort) %>%
-  summarize(
-    `Mean Weight (oz)` = round(mean(`Weight (oz)`, na.rm = TRUE), 1),
-    `Median Weight (oz)` = round(median(`Weight (oz)`, na.rm = TRUE), 1)
-  ) %>%
-  arrange(Month_sort)
-df_fig3_weight <- df_fig3 %>%
-  filter(!is.nan(`Mean Weight (oz)`))
-
-# Create panels for Figure 3 ---------------------------
-A <- ggplot(df_fig3_unsummarized, aes(x = `Weight (oz)`)) +
-  geom_histogram(binwidth = 1, color = "black") +
-  theme_custom +
-  expand_limits(x = 0) +
-  xlab("Weight (oz)") +
-  ylab("Count") +
-  labs(title = "A") +
-  theme(legend.position = "none")
-B <- ggplot(df_fig3_weight, aes(x = Month_sort, y = `Mean Weight (oz)`)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  theme_custom +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  ylab("Weight (oz)") +
-  xlab("Month") +
-  labs(title = "B") +
-  theme(legend.position = "none")
-
-# Assemble Figure 3 ---------------------------
-figure3 <- ggarrange(
-  A, B,
-  ncol = 1, nrow = 2
-)
-```
-
-
-```{r figure3, fig.width=6, fig.height=5, fig.align = 'left', echo = FALSE}
-figure3
-```
-
-
-*Figure 3.* Histogram of market clean weight (oz) (A), 
-and line plot of mean weight (oz) over time (B), 
-collected using SMART conch data from fishers at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`.\
-
-
-<br>
-
-
-## Conclusion
-
-By summarizing and visualizing the fisher catch conch SMART data from `r study_timeframe`, 
-researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
-This report supports the aims of the Fisher Catch SMART data collection by offering a more understandable view 
-of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
-education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
-ecological value of the atoll.\
-
-
-## Acknowledgments
-
-Thank you to the fishers who contributed to this project.\
-
-
-## Literature Cited
-
-Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
-
-Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
-
-Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
-
-Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
-
-Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
-
-NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
-
-Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
-
-Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
