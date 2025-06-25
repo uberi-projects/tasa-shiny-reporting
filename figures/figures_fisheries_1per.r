@@ -1,12 +1,13 @@
 ## figures_fisheries_1per.r
 
 # Download figures ---------------------------
-output$figures_fisheries_1per <- downloadHandler(
+output$figures_fisheries_1per_hidden <- downloadHandler(
     filename = function() {
         datatype <- isolate(input$datatype_fisheries_1per)
         paste0("figure_fisheries_1per_", tolower(datatype), ".zip")
     },
     content = function(zipfile) {
+        showLoaderBar("fisheries_1per", session)
         datatype <- isolate(input$datatype_fisheries_1per)
         plot_list <- list()
         p1 <- switch(datatype,
@@ -39,6 +40,7 @@ output$figures_fisheries_1per <- downloadHandler(
             ggsave(tmp, plot = item$plot, device = "png", width = 6, height = 4)
             tmp
         })
+        hideLoaderBar("fisheries_1per", session)
         zip::zipr(zipfile, files = unlist(tmp_files), root = tempdir())
     },
     contentType = "application/zip"

@@ -576,6 +576,31 @@ server <- function(input, output, session) {
         },
         ignoreInit = T
     )
+    # Observe report figures buttons
+    observeEvent(input$figures_fisheries_1per,
+        {
+            if (nchar(input$fisheries_1per_name) >= 2) {
+                click("figures_fisheries_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$figures_fisher_1per,
+        {
+            if (nchar(input$fisher_1per_name) >= 2) {
+                click("figures_fisher_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
+    observeEvent(input$figures_lamp_1per,
+        {
+            if (nchar(input$lamp_1per_name) >= 2) {
+                click("figures_lamp_1per_hidden")
+            }
+        },
+        ignoreInit = T
+    )
 
     # Observe Name Text Inputs
     observeEvent(input$fisheries_1per_name, {

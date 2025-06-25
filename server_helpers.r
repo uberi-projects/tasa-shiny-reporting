@@ -57,10 +57,16 @@ hideLoaderBar <- function(reportType, session) {
 }
 disableDownload <- function(reportType) {
     shinyjs::disable(paste0("report_", reportType))
+    if (!grepl("multi", reportType)) {
+        shinyjs::disable(paste0("figures_", reportType))
+    }
     shinyjs::show(paste0(reportType, "_generate_cover"))
 }
 enableDownload <- function(reportType) {
     shinyjs::enable(paste0("report_", reportType))
+    if (!grepl("multi", reportType)) {
+        shinyjs::enable(paste0("figures_", reportType))
+    }
     shinyjs::hide(paste0(reportType, "_generate_cover"))
 }
 nameLengthCheck <- function(inputName, reportType) {
