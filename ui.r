@@ -4,7 +4,7 @@
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
 required_packages <- c(
     "shiny", "shinyjs", "shinyWidgets", "shinyalert", "rmarkdown", "knitr", "moments", "tidyverse",
-    "readxl", "tidyverse", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown", "zip"
+    "readxl", "ggpubr", "sf", "ggspatial", "ggnewscale", "officedown", "markdown", "zip"
 )
 install_if_missing <- function(package) {
     if (!requireNamespace(package, quietly = TRUE)) {
@@ -19,10 +19,17 @@ library(shinyjs)
 library(shinyWidgets)
 library(shinyalert)
 library(rmarkdown)
-library(zip)
-library(ggplot2)
-library(ggpubr)
+library(knitr)
+library(moments)
+library(tidyverse)
 library(readxl)
+library(ggpubr)
+library(sf)
+library(ggspatial)
+library(ggnewscale)
+library(officedown)
+library(markdown)
+library(zip)
 
 # Source Objects ---------------------------
 dummy_text <- paste(readLines("text/dummy.txt"))
@@ -103,7 +110,7 @@ ui <- navbarPage(
                     })"
                         )
                     ),
-                    div( # Temporary cover for LAMP and SPAG reports.
+                    div( # Temporary cover
                         style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
@@ -297,7 +304,7 @@ ui <- navbarPage(
                     })"
                         )
                     ),
-                    div( # Temporary cover for LAMP and SPAG reports.
+                    div( # Temporary cover
                         style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
@@ -714,45 +721,6 @@ ui <- navbarPage(
                     });
                     "
                         )
-                    ),
-                    div( # Temporary cover for LAMP and SPAG reports.
-                        style = "position: relative; left: -15px; top:195px;",
-                        div(
-                            class = "temporary-cover",
-                            style = "
-                                position: fixed;
-                                height: 100vh;
-                                width: 100vw;
-                                background-color: rgba(200, 200, 200, 0.5);
-                                z-index: 3;
-                                margin-left: 0px;
-                            ",
-                            div(
-                                style = "
-                                    position: relative;
-                                    width: 25%;
-                                    height: 25%;
-                                    background-color: rgba(255,255,255,0.6);
-                                    margin: auto;
-                                    top: 160px;
-                                    border-radius: 10px;
-                                    ",
-                                h1(
-                                    "Coming Soon!",
-                                    style = "
-                                    position: absolute;
-                                    text-align: center;
-                                    top: 50%;
-                                    left: 50%;
-                                    margin: 0;
-                                    transform: translate(-50%, -50%);
-                                    font-size: 2em;
-                                    font-weight: 800;
-                                    color: black;
-                                    "
-                                )
-                            )
-                        ),
                     ),
                     div(
                         class = "content-container-parent",
@@ -1338,7 +1306,7 @@ ui <- navbarPage(
                     });"
                         )
                     ),
-                    div( # Temporary cover for LAMP and SPAG reports.
+                    div( # Temporary cover
                         style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
@@ -1516,7 +1484,7 @@ ui <- navbarPage(
                     });"
                         )
                     ),
-                    div( # Temporary cover for LAMP and SPAG reports.
+                    div( # Temporary cover
                         style = "position: relative; left: -15px; top:195px;",
                         div(
                             class = "temporary-cover",
