@@ -479,7 +479,7 @@ with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_year`
 in `r min_cpue_num` (Table 1; Figure 2).\
 
 
-**Table 1.** Summary of fishing activity by month, including total fishers, events, and conch caught, 
+**Table 1.** Summary of fishing activity by period, including total fishers, events, and conch caught, 
 along with fishing hours, pounds of catch, and catch per unit effort (CPUE). 
 CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
 Data were collected using SMART conch data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
