@@ -340,70 +340,133 @@ Waypoints for lobsters recorded in `r study_timeframe` are labelled on the map.\
 
 
 ```{r table1_prep, echo = FALSE, include = FALSE}
-# Create df for Table 1 ---------------------------
-df_events_overall <- df %>%
-  select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
-  distinct() %>%
-  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
-  summarize(
-    Hours = sum(`Hours Fished`, na.rm = TRUE),
-    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
-  ) %>%
-  mutate(Year = "Overall")
-df_table1_overall <- df %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Lobster = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  mutate(Year = "Overall") %>%
-  left_join(df_events_overall, by = "Year") %>%
-  mutate(
-    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
-    `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
-  )
-df_events <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y")
-  ) %>%
-  select(Year, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
-  distinct() %>%
-  filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
-  group_by(Year) %>%
-  summarize(
-    Hours = sum(`Hours Fished`, na.rm = TRUE),
-    `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
-  )
-df_table1 <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y")
-  ) %>%
-  group_by(Year) %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Lobster = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  left_join(df_events, by = "Year") %>%
-  mutate(
-    `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
-    `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
-  ) %>%
-  bind_rows(df_table1_overall)
+if (timeframe == "Annual") {
+  # Create annual df for Table 1 ---------------------------
+  df_events_overall <- df %>%
+    select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    ) %>%
+    mutate(Year = "Overall")
+  df_table1_overall <- df %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    mutate(Year = "Overall") %>%
+    left_join(df_events_overall, by = "Year") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
+    )
+  df_events <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    select(Year, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    group_by(Year) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    )
+  df_table1 <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    left_join(df_events, by = "Year") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
+    ) %>%
+    bind_rows(df_table1_overall)
 
-# Prepare dynamic variables for Table 1 ---------------------------
-total_fishers <- length(unique(df$`Fishers Name`))
-total_lobsters <- df_table1_overall$Lobster
-total_events <- df_table1_overall$Events
-total_hours <- df_table1_overall$Hours
-max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
-max_cpue_lb_year <- df_table1$Year[which.max(df_table1$`CPUE (lb/hr)`)]
-min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
-min_cpue_lb_year <- df_table1$Year[which.min(df_table1$`CPUE (lb/hr)`)]
-max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-max_cpue_num_year <- df_table1$Year[which.max(df_table1$`CPUE (num/hr)`)]
-min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-min_cpue_num_year <- df_table1$Year[which.min(df_table1$`CPUE (num/hr)`)]
+  # Prepare dynamic variables for Table 1 ---------------------------
+  total_fishers <- length(unique(df$`Fishers Name`))
+  total_lobsters <- df_table1_overall$Lobster
+  total_events <- df_table1_overall$Events
+  total_hours <- df_table1_overall$Hours
+  max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+  max_cpue_lb_year <- df_table1$Year[which.max(df_table1$`CPUE (lb/hr)`)]
+  min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+  min_cpue_lb_year <- df_table1$Year[which.min(df_table1$`CPUE (lb/hr)`)]
+  max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+  max_cpue_num_year <- df_table1$Year[which.max(df_table1$`CPUE (num/hr)`)]
+  min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+  min_cpue_num_year <- df_table1$Year[which.min(df_table1$`CPUE (num/hr)`)]
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal df for Table 1 ---------------------------
+  df_events_overall <- df %>%
+    select(`Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    ) %>%
+    mutate(Season = "Overall")
+  df_table1_overall <- df %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    mutate(Season = "Overall") %>%
+    left_join(df_events_overall, by = "Season") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
+    )
+  df_events <- df %>%
+    select(Season, `Waypoint ID`, `Hours Fished`, `Total Lbs of Catch`) %>%
+    distinct() %>%
+    filter(!is.na(`Hours Fished`), !is.na(`Total Lbs of Catch`), `Hours Fished` > 0) %>%
+    group_by(Season) %>%
+    summarize(
+      Hours = sum(`Hours Fished`, na.rm = TRUE),
+      `Catch (lb)` = sum(`Total Lbs of Catch`, na.rm = TRUE)
+    )
+  df_table1 <- df %>%
+    group_by(Season) %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    left_join(df_events, by = "Season") %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, round(`Catch (lb)` / Hours, 1), NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, round(Lobster / Hours, 1), NA)
+    ) %>%
+    bind_rows(df_table1_overall)
+
+  # Prepare dynamic variables for Table 1 ---------------------------
+  total_fishers <- length(unique(df$`Fishers Name`))
+  total_lobsters <- df_table1_overall$Lobster
+  total_events <- df_table1_overall$Events
+  total_hours <- df_table1_overall$Hours
+  max_cpue_lb <- max(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+  max_cpue_lb_year <- df_table1$Season[which.max(df_table1$`CPUE (lb/hr)`)]
+  min_cpue_lb <- min(df_table1$`CPUE (lb/hr)`, na.rm = TRUE)
+  min_cpue_lb_year <- df_table1$Season[which.min(df_table1$`CPUE (lb/hr)`)]
+  max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+  max_cpue_num_year <- df_table1$Season[which.max(df_table1$`CPUE (num/hr)`)]
+  min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+  min_cpue_num_year <- df_table1$Season[which.min(df_table1$`CPUE (num/hr)`)]
+}
 ```
 
 
@@ -434,80 +497,156 @@ as.data.frame(df_table1)
 
 
 ```{r table2_prep, echo = FALSE, include = FALSE}
-# Create df for Table 2 ---------------------------
-df_table2_rows <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y")
-  ) %>%
-  group_by(`Waypoint ID`) %>%
-  summarize(
-    Year = first(Year),
-    Hours = first(`Hours Fished`),
-    Catch_lb = first(`Total Lbs of Catch`),
-    Lobster = n(),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
-    `CPUE (num/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
-  )
-df_table2_lb_overall <- df_table2_rows %>%
-  summarize(
-    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
-  ) %>%
-  mutate(Year = "Overall", CPUE = "lb/hr")
-df_table2_lb <- df_table2_rows %>%
-  mutate(CPUE = "lb/hr") %>%
-  group_by(CPUE, Year) %>%
-  summarize(
-    Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
-    .groups = "drop"
-  ) %>%
-  bind_rows(df_table2_lb_overall)
-df_table2_num_overall <- df_table2_rows %>%
-  summarize(
-    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
-  ) %>%
-  mutate(Year = "Overall", CPUE = "num/hr")
-df_table2_num <- df_table2_rows %>%
-  mutate(CPUE = "num/hr") %>%
-  group_by(CPUE, Year) %>%
-  summarize(
-    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
-    .groups = "drop"
-  ) %>%
-  bind_rows(df_table2_num_overall)
-df_table2 <- df_table2_lb_overall %>%
-  bind_rows(df_table2_num_overall) %>%
-  select(CPUE, Min, Mean, Median, Max, SD)
+if (timeframe == "Annual") {
+  # Create annual df for Table 2 ---------------------------
+  df_table2_rows <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    group_by(`Waypoint ID`) %>%
+    summarize(
+      Year = first(Year),
+      Hours = first(`Hours Fished`),
+      Catch_lb = first(`Total Lbs of Catch`),
+      Lobster = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
+    )
+  df_table2_lb_overall <- df_table2_rows %>%
+    summarize(
+      Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
+    ) %>%
+    mutate(Year = "Overall", CPUE = "lb/hr")
+  df_table2_lb <- df_table2_rows %>%
+    mutate(CPUE = "lb/hr") %>%
+    group_by(CPUE, Year) %>%
+    summarize(
+      Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      .groups = "drop"
+    ) %>%
+    bind_rows(df_table2_lb_overall)
+  df_table2_num_overall <- df_table2_rows %>%
+    summarize(
+      Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+    ) %>%
+    mutate(Year = "Overall", CPUE = "num/hr")
+  df_table2_num <- df_table2_rows %>%
+    mutate(CPUE = "num/hr") %>%
+    group_by(CPUE, Year) %>%
+    summarize(
+      Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      .groups = "drop"
+    ) %>%
+    bind_rows(df_table2_num_overall)
+  df_table2 <- df_table2_lb_overall %>%
+    bind_rows(df_table2_num_overall) %>%
+    select(CPUE, Min, Mean, Median, Max, SD)
 
-# Prepare dynamic variables for Table 2 ---------------------------
-overall_mean <- df_table2_lb_overall$Mean
-overall_median <- df_table2_lb_overall$Median
-max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
-max_cpue_mean_lb_year <- df_table2_lb$Year[which.max(df_table2_lb$Mean)]
-min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
-min_cpue_mean_lb_year <- df_table2_lb$Year[which.min(df_table2_lb$Mean)]
-max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
-max_cpue_mean_num_year <- df_table2_num$Year[which.max(df_table2_num$Mean)]
-min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
-min_cpue_mean_num_year <- df_table2_num$Year[which.min(df_table2_num$Mean)]
+  # Prepare dynamic variables for Table 2 ---------------------------
+  overall_mean <- df_table2_lb_overall$Mean
+  overall_median <- df_table2_lb_overall$Median
+  max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
+  max_cpue_mean_lb_year <- df_table2_lb$Year[which.max(df_table2_lb$Mean)]
+  min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
+  min_cpue_mean_lb_year <- df_table2_lb$Year[which.min(df_table2_lb$Mean)]
+  max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
+  max_cpue_mean_num_year <- df_table2_num$Year[which.max(df_table2_num$Mean)]
+  min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
+  min_cpue_mean_num_year <- df_table2_num$Year[which.min(df_table2_num$Mean)]
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal df for Table 2 ---------------------------
+  df_table2_rows <- df %>%
+    group_by(`Waypoint ID`) %>%
+    summarize(
+      Season = first(Season),
+      Hours = first(`Hours Fished`),
+      Catch_lb = first(`Total Lbs of Catch`),
+      Lobster = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      `CPUE (lb/hr)` = ifelse(Hours > 0, Catch_lb / Hours, NA),
+      `CPUE (num/hr)` = ifelse(Hours > 0, Lobster / Hours, NA)
+    )
+  df_table2_lb_overall <- df_table2_rows %>%
+    summarize(
+      Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1)
+    ) %>%
+    mutate(Season = "Overall", CPUE = "lb/hr")
+  df_table2_lb <- df_table2_rows %>%
+    mutate(CPUE = "lb/hr") %>%
+    group_by(CPUE, Season) %>%
+    summarize(
+      Min = round(min(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (lb/hr)`, na.rm = TRUE), 1),
+      .groups = "drop"
+    ) %>%
+    bind_rows(df_table2_lb_overall)
+  df_table2_num_overall <- df_table2_rows %>%
+    summarize(
+      Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+    ) %>%
+    mutate(Season = "Overall", CPUE = "num/hr")
+  df_table2_num <- df_table2_rows %>%
+    mutate(CPUE = "num/hr") %>%
+    group_by(CPUE, Season) %>%
+    summarize(
+      Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+      .groups = "drop"
+    ) %>%
+    bind_rows(df_table2_num_overall)
+  df_table2 <- df_table2_lb_overall %>%
+    bind_rows(df_table2_num_overall) %>%
+    select(CPUE, Min, Mean, Median, Max, SD)
+
+  # Prepare dynamic variables for Table 2 ---------------------------
+  overall_mean <- df_table2_lb_overall$Mean
+  overall_median <- df_table2_lb_overall$Median
+  max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
+  max_cpue_mean_lb_year <- df_table2_lb$Season[which.max(df_table2_lb$Mean)]
+  min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
+  min_cpue_mean_lb_year <- df_table2_lb$Season[which.min(df_table2_lb$Mean)]
+  max_cpue_mean_num <- max(df_table2_num$Mean, na.rm = TRUE)
+  max_cpue_mean_num_year <- df_table2_num$Season[which.max(df_table2_num$Mean)]
+  min_cpue_mean_num <- min(df_table2_num$Mean, na.rm = TRUE)
+  min_cpue_mean_num_year <- df_table2_num$Season[which.min(df_table2_num$Mean)]
+}
 ```
 
 
@@ -522,65 +661,122 @@ and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_y
 (Table 2; Figure 2).\
 
 ```{r figure2_prep, echo = FALSE, include = FALSE}
-# Create dfs for Figure 2 ---------------------------
-df_fig2_A <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y")
-  ) %>%
-  group_by(Year) %>%
-  summarize(
-    Fishers = n_distinct(`Fishers Name`),
-    Lobster = n(),
-    Events = n_distinct(`Waypoint ID`)
-  ) %>%
-  left_join(df_events, by = "Year") %>%
-  mutate(
-    `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
-    `CPUE (num/hr)` = round(Lobster / Hours, 1)
-  )
+if (timeframe == "Annual") {
+  # Create annual dfs for Figure 2 ---------------------------
+  df_fig2_A <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    left_join(df_events, by = "Year") %>%
+    mutate(
+      `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
+      `CPUE (num/hr)` = round(Lobster / Hours, 1)
+    )
 
-# Create panels for Figure 2 ---------------------------
-A <- ggplot(df_fig2_A, aes(x = Year, y = Events, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  expand_limits(y = 0) +
-  theme_custom +
-  ylab("Fishing Events") +
-  labs(title = "A")
-B <- ggplot(df_fig2_A, aes(x = Year, y = Hours, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  expand_limits(y = 0) +
-  theme_custom +
-  ylab("Hours Fished") +
-  labs(title = "B")
-C <- ggplot(df_fig2_A, aes(x = Year, y = Lobster, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  expand_limits(y = 0) +
-  theme_custom +
-  ylab("Number Lobsters") +
-  labs(title = "C")
-D <- ggplot(df_fig2_A, aes(x = Year, y = `Catch (lb)`, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  expand_limits(y = 0) +
-  theme_custom +
-  ylab("Catch (lb)") +
-  labs(title = "D")
-E <- ggplot(df_fig2_A, aes(x = Year, group = 1)) +
-  geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
-  geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
-  geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
-  geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
-  expand_limits(y = 0) +
-  scale_shape_manual(
-    name = "CPUE Type",
-    values = c("lb/hr" = 4, "num/hr" = 19)
-  ) +
-  theme_custom +
-  ylab("Catch per Unit Effort") +
-  labs(title = "E")
+  # Create panels for Figure 2 ---------------------------
+  A <- ggplot(df_fig2_A, aes(x = Year, y = Events, group = 1)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Fishing Events") +
+    labs(title = "A")
+  B <- ggplot(df_fig2_A, aes(x = Year, y = Hours, group = 1)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Hours Fished") +
+    labs(title = "B")
+  C <- ggplot(df_fig2_A, aes(x = Year, y = Lobster, group = 1)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Number Lobsters") +
+    labs(title = "C")
+  D <- ggplot(df_fig2_A, aes(x = Year, y = `Catch (lb)`, group = 1)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Catch (lb)") +
+    labs(title = "D")
+  E <- ggplot(df_fig2_A, aes(x = Year, group = 1)) +
+    geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
+    geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
+    geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
+    geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
+    expand_limits(y = 0) +
+    scale_shape_manual(
+      name = "CPUE Type",
+      values = c("lb/hr" = 4, "num/hr" = 19)
+    ) +
+    theme_custom +
+    ylab("Catch per Unit Effort") +
+    labs(title = "E")
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal dfs for Figure 2 ---------------------------
+  df_fig2_A <- df %>%
+    group_by(Season) %>%
+    summarize(
+      Fishers = n_distinct(`Fishers Name`),
+      Lobster = n(),
+      Events = n_distinct(`Waypoint ID`)
+    ) %>%
+    left_join(df_events, by = "Season") %>%
+    mutate(
+      `CPUE (lb/hr)` = round(`Catch (lb)` / Hours, 1),
+      `CPUE (num/hr)` = round(Lobster / Hours, 1)
+    )
+
+  # Create panels for Figure 2 ---------------------------
+  A <- ggplot(df_fig2_A, aes(x = Season, y = Events, group = 1)) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Fishing Events") +
+    labs(title = "A")
+  B <- ggplot(df_fig2_A, aes(x = Season, y = Hours, group = 1)) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Hours Fished") +
+    labs(title = "B")
+  C <- ggplot(df_fig2_A, aes(x = Season, y = Lobster, group = 1)) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Number Lobsters") +
+    labs(title = "C")
+  D <- ggplot(df_fig2_A, aes(x = Season, y = `Catch (lb)`, group = 1)) +
+    geom_point(size = 2.5) +
+    expand_limits(y = 0) +
+    theme_custom +
+    ylab("Catch (lb)") +
+    labs(title = "D")
+  E <- ggplot(df_fig2_A, aes(x = Season, group = 1)) +
+    geom_line(aes(y = `CPUE (lb/hr)`), size = 0.5) +
+    geom_point(aes(y = `CPUE (lb/hr)`, shape = "lb/hr"), size = 2.5) +
+    geom_line(aes(y = `CPUE (num/hr)`), size = 0.5) +
+    geom_point(aes(y = `CPUE (num/hr)`, shape = "num/hr"), size = 2.5) +
+    expand_limits(y = 0) +
+    scale_shape_manual(
+      name = "CPUE Type",
+      values = c("lb/hr" = 4, "num/hr" = 19)
+    ) +
+    theme_custom +
+    ylab("Catch per Unit Effort") +
+    labs(title = "E")
+}
 
 # Assemble Figure 2 ---------------------------
 figure_2_top <- ggarrange(
@@ -623,57 +819,112 @@ df_table2
 
 
 ```{r table3_prep, echo = FALSE, include = FALSE}
-# Create df for Table 3 ---------------------------
-df_table3 <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y"),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
-  ) %>%
-  group_by(Year) %>%
-  summarize(
-    `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-    `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-    `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-    `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
-    `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
-    `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
-  ) %>%
-  bind_rows(
-    df %>%
-      mutate(
-        weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
-      ) %>%
-      summarize(
-        `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-        `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-        `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-        `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
-        `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
-        `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
-      ) %>%
-      mutate(Year = "Overall")
-  ) %>%
-  mutate(across(everything(), ~ {
-    if (is.numeric(.)) {
-      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
-    } else {
-      ifelse(is.na(.), "-", .)
-    }
-  }))
+if (timeframe == "Annual") {
+  # Create annual df for Table 3 ---------------------------
+  df_table3 <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y"),
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+      `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+      `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    ) %>%
+    bind_rows(
+      df %>%
+        mutate(
+          weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+        ) %>%
+        summarize(
+          `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+          `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+          `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+          `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+          `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+          `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+        ) %>%
+        mutate(Year = "Overall")
+    ) %>%
+    mutate(across(everything(), ~ {
+      if (is.numeric(.)) {
+        ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+      } else {
+        ifelse(is.na(.), "-", .)
+      }
+    }))
 
-# Prepare dynamic variables for Table 3 ---------------------------
-total_male <- filter(df_table3, Year == "Overall")$`Male (%)`
-total_female <- filter(df_table3, Year == "Overall")$`Female (%)`
-total_carapace <- filter(df_table3, Year == "Overall")$`Mean Carapace Length (In)`
-total_weight <- filter(df_table3, Year == "Overall")$`Mean Weight (oz)`
-max_carapace <- max(filter(df_table3, Year != "Overall")$`Mean Carapace Length (In)`, na.rm = TRUE)
-max_carapace_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Mean Carapace Length (In)`)]
-max_weight <- max(filter(df_table3, Year != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
-max_weight_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Mean Weight (oz)`)]
-max_female <- max(filter(df_table3, Year != "Overall")$`Female (%)`, na.rm = TRUE)
-max_female_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Female (%)`)]
-max_male <- max(filter(df_table3, Year != "Overall")$`Male (%)`, na.rm = TRUE)
-max_male_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Male (%)`)]
+  # Prepare dynamic variables for Table 3 ---------------------------
+  total_male <- filter(df_table3, Year == "Overall")$`Male (%)`
+  total_female <- filter(df_table3, Year == "Overall")$`Female (%)`
+  total_carapace <- filter(df_table3, Year == "Overall")$`Mean Carapace Length (In)`
+  total_weight <- filter(df_table3, Year == "Overall")$`Mean Weight (oz)`
+  max_carapace <- max(filter(df_table3, Year != "Overall")$`Mean Carapace Length (In)`, na.rm = TRUE)
+  max_carapace_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Mean Carapace Length (In)`)]
+  max_weight <- max(filter(df_table3, Year != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
+  max_weight_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Mean Weight (oz)`)]
+  max_female <- max(filter(df_table3, Year != "Overall")$`Female (%)`, na.rm = TRUE)
+  max_female_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Female (%)`)]
+  max_male <- max(filter(df_table3, Year != "Overall")$`Male (%)`, na.rm = TRUE)
+  max_male_year <- df_table3$Year[which.max(filter(df_table3, Year != "Overall")$`Male (%)`)]
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal df for Table 3 ---------------------------
+  df_table3 <- df %>%
+    mutate(
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    ) %>%
+    group_by(Season) %>%
+    summarize(
+      `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+      `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+      `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    ) %>%
+    bind_rows(
+      df %>%
+        mutate(
+          weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+        ) %>%
+        summarize(
+          `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+          `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+          `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+          `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+          `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+          `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+        ) %>%
+        mutate(Season = "Overall")
+    ) %>%
+    mutate(across(everything(), ~ {
+      if (is.numeric(.)) {
+        ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+      } else {
+        ifelse(is.na(.), "-", .)
+      }
+    }))
+
+  # Prepare dynamic variables for Table 3 ---------------------------
+  total_male <- filter(df_table3, Season == "Overall")$`Male (%)`
+  total_female <- filter(df_table3, Season == "Overall")$`Female (%)`
+  total_carapace <- filter(df_table3, Season == "Overall")$`Mean Carapace Length (In)`
+  total_weight <- filter(df_table3, Season == "Overall")$`Mean Weight (oz)`
+  max_carapace <- max(filter(df_table3, Season != "Overall")$`Mean Carapace Length (In)`, na.rm = TRUE)
+  max_carapace_year <- df_table3$Season[which.max(filter(df_table3, Season != "Overall")$`Mean Carapace Length (In)`)]
+  max_weight <- max(filter(df_table3, Season != "Overall")$`Mean Weight (oz)`, na.rm = TRUE)
+  max_weight_year <- df_table3$Season[which.max(filter(df_table3, Season != "Overall")$`Mean Weight (oz)`)]
+  max_female <- max(filter(df_table3, Season != "Overall")$`Female (%)`, na.rm = TRUE)
+  max_female_year <- df_table3$Season[which.max(filter(df_table3, Season != "Overall")$`Female (%)`)]
+  max_male <- max(filter(df_table3, Season != "Overall")$`Male (%)`, na.rm = TRUE)
+  max_male_year <- df_table3$Season[which.max(filter(df_table3, Season != "Overall")$`Male (%)`)]
+}
 ```
 
 
@@ -694,78 +945,153 @@ as.data.frame(df_table3)
 
 
 ```{r figure3_prep, echo = FALSE, include = FALSE}
-# Create dfs for Figure 3 ---------------------------
-gear_levels <- df %>%
-  pull(`Type of Fishing Gears`) %>%
-  unique() %>%
-  sort()
-gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
-df_fig3_unsummarized <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y"),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
-  )
-df_fig3 <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y"),
-    weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
-  ) %>%
-  group_by(Year) %>%
-  summarize(
-    `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-    `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
-    `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
-    `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
-    `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
-    `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
-  )
-df_fig3_carapace <- df_fig3 %>%
-  filter(!is.nan(`Mean Carapace Length (In)`))
-df_fig3_weight <- df_fig3 %>%
-  filter(!is.nan(`Mean Weight (oz)`))
+if (timeframe == "Annual") {
+  # Create annual dfs for Figure 3 ---------------------------
+  gear_levels <- df %>%
+    pull(`Type of Fishing Gears`) %>%
+    unique() %>%
+    sort()
+  gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
+  df_fig3_unsummarized <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y"),
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    )
+  df_fig3 <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y"),
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+      `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+      `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    )
+  df_fig3_carapace <- df_fig3 %>%
+    filter(!is.nan(`Mean Carapace Length (In)`))
+  df_fig3_weight <- df_fig3 %>%
+    filter(!is.nan(`Mean Weight (oz)`))
 
-# Create panels for Figure 3 ---------------------------
-A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
-  geom_bar(color = "black") +
-  scale_fill_manual(values = gear_colors, drop = FALSE) +
-  theme_custom +
-  expand_limits(x = 0) +
-  xlab("") +
-  ylab("Count") +
-  labs(title = "A")
-B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (Inches)`, fill = `Type of Fishing Gears`)) +
-  geom_histogram(binwidth = 1, color = "black") +
-  scale_fill_manual(values = gear_colors, drop = FALSE) +
-  theme_custom +
-  expand_limits(x = 0) +
-  xlab("Carapace Length (Inches)") +
-  ylab("Count") +
-  labs(title = "B") +
-  theme(legend.position = "none")
-C <- ggplot(df_fig3_unsummarized, aes(x = weight_for_headed, fill = `Type of Fishing Gears`)) +
-  geom_histogram(binwidth = 1, color = "black") +
-  scale_fill_manual(values = gear_colors, drop = FALSE) +
-  theme_custom +
-  expand_limits(x = 0) +
-  xlab("Weight (oz)") +
-  ylab("Count") +
-  labs(title = "C") +
-  theme(legend.position = "none")
-D <- ggplot(df_fig3_carapace, aes(x = Year, y = `Mean Carapace Length (In)`)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  theme_custom +
-  ylab("Mean Carapace Length (In)") +
-  scale_y_continuous(n.breaks = 4) +
-  labs(title = "D") +
-  theme(legend.position = "none")
-E <- ggplot(df_fig3_weight, aes(x = Year, y = `Mean Weight (oz)`)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  theme_custom +
-  ylab("Weight (oz)") +
-  labs(title = "E") +
-  theme(legend.position = "none")
+  # Create panels for Figure 3 ---------------------------
+  A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
+    geom_bar(color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("") +
+    ylab("Count") +
+    labs(title = "A")
+  B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (Inches)`, fill = `Type of Fishing Gears`)) +
+    geom_histogram(binwidth = 1, color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("Carapace Length (Inches)") +
+    ylab("Count") +
+    labs(title = "B") +
+    theme(legend.position = "none")
+  C <- ggplot(df_fig3_unsummarized, aes(x = weight_for_headed, fill = `Type of Fishing Gears`)) +
+    geom_histogram(binwidth = 1, color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("Weight (oz)") +
+    ylab("Count") +
+    labs(title = "C") +
+    theme(legend.position = "none")
+  D <- ggplot(df_fig3_carapace, aes(x = Year, y = `Mean Carapace Length (In)`)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    theme_custom +
+    ylab("Mean Carapace Length (In)") +
+    scale_y_continuous(n.breaks = 4) +
+    labs(title = "D") +
+    theme(legend.position = "none")
+  E <- ggplot(df_fig3_weight, aes(x = Year, y = `Mean Weight (oz)`)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    theme_custom +
+    ylab("Weight (oz)") +
+    labs(title = "E") +
+    theme(legend.position = "none")
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal dfs for Figure 3 ---------------------------
+  gear_levels <- df %>%
+    pull(`Type of Fishing Gears`) %>%
+    unique() %>%
+    sort()
+  gear_colors <- setNames(palette[2:(1 + length(gear_levels))], gear_levels)
+  df_fig3_unsummarized <- df %>%
+    mutate(
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    )
+  df_fig3 <- df %>%
+    mutate(
+      weight_for_headed = ifelse(`Weight type` == "headed", `Weight (oz)`, NA_real_)
+    ) %>%
+    group_by(Season) %>%
+    summarize(
+      `Mean Carapace Length (In)` = round(mean(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Median Carapace Length (In)` = round(median(`Carapace Length (Inches)`, na.rm = TRUE), 1),
+      `Mean Weight (oz)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+      `Median Weight (oz)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+      `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    )
+  df_fig3_carapace <- df_fig3 %>%
+    filter(!is.nan(`Mean Carapace Length (In)`))
+  df_fig3_weight <- df_fig3 %>%
+    filter(!is.nan(`Mean Weight (oz)`))
+
+  # Create panels for Figure 3 ---------------------------
+  A <- ggplot(df_fig3_unsummarized, aes(x = `Type of Fishing Gears`, fill = `Type of Fishing Gears`)) +
+    geom_bar(color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("") +
+    ylab("Count") +
+    labs(title = "A")
+  B <- ggplot(df_fig3_unsummarized, aes(x = `Carapace Length (Inches)`, fill = `Type of Fishing Gears`)) +
+    geom_histogram(binwidth = 1, color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("Carapace Length (Inches)") +
+    ylab("Count") +
+    labs(title = "B") +
+    theme(legend.position = "none")
+  C <- ggplot(df_fig3_unsummarized, aes(x = weight_for_headed, fill = `Type of Fishing Gears`)) +
+    geom_histogram(binwidth = 1, color = "black") +
+    scale_fill_manual(values = gear_colors, drop = FALSE) +
+    theme_custom +
+    expand_limits(x = 0) +
+    xlab("Weight (oz)") +
+    ylab("Count") +
+    labs(title = "C") +
+    theme(legend.position = "none")
+  D <- ggplot(df_fig3_carapace, aes(x = Season, y = `Mean Carapace Length (In)`)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    theme_custom +
+    ylab("Mean Carapace Length (In)") +
+    scale_y_continuous(n.breaks = 4) +
+    labs(title = "D") +
+    theme(legend.position = "none")
+  E <- ggplot(df_fig3_weight, aes(x = Season, y = `Mean Weight (oz)`)) +
+    geom_line(size = 0.5) +
+    geom_point(size = 2.5) +
+    theme_custom +
+    ylab("Weight (oz)") +
+    labs(title = "E") +
+    theme(legend.position = "none")
+}
 
 # Assemble Figure 3 ---------------------------
 figure_3_bottom <- ggarrange(
@@ -793,24 +1119,44 @@ Atoll Marine Reserve, `r study_timeframe`.\
 
 
 ```{r figure4_prep, echo = FALSE, include = FALSE}
-# Create dfs for Figure 4 ---------------------------
-df_fig4 <- df %>%
-  mutate(
-    Year = format(df$`Waypoint Date`, "%Y")
-  ) %>%
-  group_by(Year) %>%
-  summarize(
-    Female = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
-    Male = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
-  ) %>%
-  pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
+if (timeframe == "Annual") {
+  # Create annual dfs for Figure 4 ---------------------------
+  df_fig4 <- df %>%
+    mutate(
+      Year = format(df$`Waypoint Date`, "%Y")
+    ) %>%
+    group_by(Year) %>%
+    summarize(
+      Female = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      Male = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    ) %>%
+    pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
 
-# Create Figure 4 ---------------------------
-figure4 <- ggplot(df_fig4, aes(x = Year, fill = Sex, y = Percent)) +
-  geom_col(color = "black") +
-  scale_fill_manual(values = palette[2:3]) +
-  theme_custom +
-  ylab("Percent")
+  # Create Figure 4 ---------------------------
+  figure4 <- ggplot(df_fig4, aes(x = Year, fill = Sex, y = Percent)) +
+    geom_col(color = "black") +
+    scale_fill_manual(values = palette[2:3]) +
+    theme_custom +
+    ylab("Percent")
+}
+
+if (timeframe == "Seasonal") {
+  # Create seasonal dfs for Figure 4 ---------------------------
+  df_fig4 <- df %>%
+    group_by(Season) %>%
+    summarize(
+      Female = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+      Male = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+    ) %>%
+    pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
+
+  # Create Figure 4 ---------------------------
+  figure4 <- ggplot(df_fig4, aes(x = Season, fill = Sex, y = Percent)) +
+    geom_col(color = "black") +
+    scale_fill_manual(values = palette[2:3]) +
+    theme_custom +
+    ylab("Percent")
+}
 ```
 
 
