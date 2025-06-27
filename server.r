@@ -443,6 +443,7 @@ server <- function(input, output, session) {
         disableUpload("lamp_multiper4")
         disableUploadRemoveBttn("lamp_multiper3")
         removeConfirmation("lamp_multiper3")
+        lamp_multiper3_flag(FALSE)
     })
     observeEvent(input$remove_lamp_multiper4_bttn, {
         reset("upload_lamp_multiper4")
@@ -450,6 +451,7 @@ server <- function(input, output, session) {
         disableUploadRemoveBttn("lamp_multiper4")
         enableUploadRemoveBttn("lamp_multiper3")
         removeConfirmation("lamp_multiper4")
+        lamp_multiper4_flag(FALSE)
     })
     observeEvent(input$remove_spag_multiper3_bttn, {
         reset("upload_spag_multiper3")
@@ -781,7 +783,7 @@ server <- function(input, output, session) {
                 fisher_multiper2_conch_season_selection = if (fisher_multiper2_conch_season_selection_flag()) input[["fisher_multiper2_conch_season_selection"]] else "None",
                 fisher_multiper2_finfish_season_selection = if (fisher_multiper2_finfish_season_selection_flag()) input[["fisher_multiper2_finfish_season_selection"]] else "None"
             )
-            if (!is.null(input$upload_fisher_multiper3)) {
+            if (!is.null(input$upload_fisher_multiper3) && fisher_multiper3_flag() == TRUE) {
                 params_list$datafile3_name <- input$upload_fisher_multiper3$name
                 params_list$datafile3 <- df_upload_fisher_multiper3()
                 params_list$fisher_multiper3_year_selection <- if (fisher_multiper3_year_selection_flag()) input[["fisher_multiper3_year_selection"]] else "None"
@@ -790,7 +792,7 @@ server <- function(input, output, session) {
                 params_list$fisher_multiper3_conch_season_selection <- if (fisher_multiper3_conch_season_selection_flag()) input[["fisher_multiper3_conch_season_selection"]] else "None"
                 params_list$fisher_multiper3_finfish_season_selection <- if (fisher_multiper3_finfish_season_selection_flag()) input[["fisher_multiper3_finfish_season_selection"]] else "None"
             }
-            if (!is.null(input$upload_fisher_multiper4)) {
+            if (!is.null(input$upload_fisher_multiper4) && fisher_multiper4_flag() == TRUE) {
                 params_list$datafile4_name <- input$upload_fisher_multiper4$name
                 params_list$datafile4 <- df_upload_fisher_multiper4()
                 params_list$fisher_multiper4_year_selection <- if (fisher_multiper4_year_selection_flag()) input[["fisher_multiper4_year_selection"]] else "None"
@@ -898,13 +900,13 @@ server <- function(input, output, session) {
                 lamp_multiper2_year_selection = if (lamp_multiper2_year_selection_flag()) input[["lamp_multiper2_year_selection"]] else "None",
                 lamp_multiper2_period_selection = if (lamp_multiper2_period_selection_flag()) input[["lamp_multiper2_period_selection"]] else "None"
             )
-            if (!is.null(input$upload_lamp_multiper3)) {
+            if (!is.null(input$upload_lamp_multiper3) && lamp_multiper3_flag() == TRUE) {
                 params_list$datafile3_name <- input$upload_lamp_multiper3$name
                 params_list$datafile3 <- df_upload_lamp_multiper3()
                 params_list$lamp_multiper3_year_selection <- if (lamp_multiper3_year_selection_flag()) input[["lamp_multiper3_year_selection"]] else "None"
                 params_list$lamp_multiper3_period_selection <- if (lamp_multiper3_period_selection_flag()) input[["lamp_multiper3_period_selection"]] else "None"
             }
-            if (!is.null(input$upload_lamp_multiper4)) {
+            if (!is.null(input$upload_lamp_multiper4) && lamp_multiper4_flag() == TRUE) {
                 params_list$datafile4_name <- input$upload_lamp_multiper4$name
                 params_list$datafile4 <- df_upload_lamp_multiper4()
                 params_list$lamp_multiper4_year_selection <- if (lamp_multiper4_year_selection_flag()) input[["lamp_multiper4_year_selection"]] else "None"
