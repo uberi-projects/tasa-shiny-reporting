@@ -152,7 +152,6 @@ check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
         ))
     }
 }
-
 check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag) {
     year_flag(FALSE)
     period_flag(FALSE)
@@ -167,6 +166,8 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster
             return("Date")
         } else if ("Waypoint Date" %in% names(df)) {
             return("Waypoint Date")
+        } else if ("Date of Encounter" %in% names(df)) {
+            return("Date of Encounter")
         }
         return(NULL)
     }
@@ -315,7 +316,36 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster
     }
     return(show_critical_error("No valid dates detected"))
 }
-
+check_datafiles_dates_fisheries_1per <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisheries_1per_", fisheries_1per_year_selection_flag, fisheries_1per_period_selection_flag,
+        fisheries_1per_lobster_season_selection_flag, fisheries_1per_conch_season_selection_flag, fisheries_1per_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisheries_multiper1 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisheries_multiper1_", fisheries_multiper1_year_selection_flag, fisheries_multiper1_period_selection_flag,
+        fisheries_multiper1_lobster_season_selection_flag, fisheries_multiper1_conch_season_selection_flag, fisheries_multiper1_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisheries_multiper2 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisheries_multiper2_", fisheries_multiper2_year_selection_flag, fisheries_multiper2_period_selection_flag,
+        fisheries_multiper2_lobster_season_selection_flag, fisheries_multiper2_conch_season_selection_flag, fisheries_multiper2_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisheries_multiper3 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisheries_multiper3_", fisheries_multiper3_year_selection_flag, fisheries_multiper3_period_selection_flag,
+        fisheries_multiper3_lobster_season_selection_flag, fisheries_multiper3_conch_season_selection_flag, fisheries_multiper3_finfish_season_selection_flag
+    )
+}
+check_datafiles_dates_fisheries_multiper4 <- function(type, df) {
+    check_datafiles_dates(
+        df, type, "fisheries_multiper4_", fisheries_multiper4_year_selection_flag, fisheries_multiper4_period_selection_flag,
+        fisheries_multiper4_lobster_season_selection_flag, fisheries_multiper4_conch_season_selection_flag, fisheries_multiper4_finfish_season_selection_flag
+    )
+}
 check_datafiles_dates_fisher_1per <- function(type, df) {
     check_datafiles_dates(
         df, type, "fisher_1per_", fisher_1per_year_selection_flag, fisher_1per_period_selection_flag,

@@ -40,28 +40,43 @@ server <- function(input, output, session) {
     create_flags("fisher", "lobster_season")
     create_flags("fisher", "conch_season")
     create_flags("fisher", "finfish_season")
+    create_flags("fisheries", "year")
+    create_flags("fisheries", "period")
+    create_flags("fisheries", "lobster_season")
+    create_flags("fisheries", "conch_season")
+    create_flags("fisheries", "finfish_season")
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
     df_upload_fisheries_1per <- reactive({
         req(input$upload_fisheries_1per)
-        read_excel(input$upload_fisheries_1per$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisheries_1per$datapath
+        datatype <- input$datatype_fisheries_1per
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisheries_multiper1 <- reactive({
         req(input$upload_fisheries_multiper1)
-        read_excel(input$upload_fisheries_multiper1$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisheries_multiper1$datapath
+        datatype <- input$datatype_fisheries_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisheries_multiper2 <- reactive({
         req(input$upload_fisheries_multiper2)
-        read_excel(input$upload_fisheries_multiper2$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisheries_multiper2$datapath
+        datatype <- input$datatype_fisheries_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisheries_multiper3 <- reactive({
         req(input$upload_fisheries_multiper3)
-        read_excel(input$upload_fisheries_multiper3$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisheries_multiper3$datapath
+        datatype <- input$datatype_fisheries_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisheries_multiper4 <- reactive({
         req(input$upload_fisheries_multiper4)
-        read_excel(input$upload_fisheries_multiper4$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_fisheries_multiper4$datapath
+        datatype <- input$datatype_fisheries_multiper
+        read_fisher_data(file_path, datatype)
     })
     df_upload_fisher_1per <- reactive({
         req(input$upload_fisher_1per)
@@ -146,19 +161,49 @@ server <- function(input, output, session) {
 
     # Read and report year of datafile
     output$ui_upload_fisheries_1per <- renderUI({
-        check_datafile_dates(df_upload_fisheries_1per(), "year", "fisheries_1per_", dud_flag, dud_flag)
+        season_type <- switch(input$timeframe_fisheries_1per,
+            "Annual" = "year",
+            if (input$datatype_fisheries_1per == "Lobster") "lobster_season" else if (input$datatype_fisheries_1per == "Conch") "conch_season" else if (input$datatype_fisheries_1per == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisheries_1per(season_type, df_upload_fisheries_1per())
+        }
     })
     output$ui_upload_fisheries_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper1(), "year", "fisheries_multiper1_", dud_flag, dud_flag)
+        season_type <- switch(input$timeframe_fisheries_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisheries_multiper == "Lobster") "lobster_season" else if (input$datatype_fisheries_multiper == "Conch") "conch_season" else if (input$datatype_fisheries_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisheries_multiper1(season_type, df_upload_fisheries_multiper1())
+        }
     })
     output$ui_upload_fisheries_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper2(), "year", "fisheries_multiper2_", dud_flag, dud_flag)
+        season_type <- switch(input$timeframe_fisheries_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisheries_multiper == "Lobster") "lobster_season" else if (input$datatype_fisheries_multiper == "Conch") "conch_season" else if (input$datatype_fisheries_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisheries_multiper2(season_type, df_upload_fisheries_multiper2())
+        }
     })
     output$ui_upload_fisheries_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper3(), "year", "fisheries_multiper3_", dud_flag, dud_flag)
+        season_type <- switch(input$timeframe_fisheries_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisheries_multiper == "Lobster") "lobster_season" else if (input$datatype_fisheries_multiper == "Conch") "conch_season" else if (input$datatype_fisheries_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisheries_multiper3(season_type, df_upload_fisheries_multiper3())
+        }
     })
     output$ui_upload_fisheries_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_fisheries_multiper4(), "year", "fisheries_multiper4_", dud_flag, dud_flag)
+        season_type <- switch(input$timeframe_fisheries_multiper,
+            "Annual" = "year",
+            if (input$datatype_fisheries_multiper == "Lobster") "lobster_season" else if (input$datatype_fisheries_multiper == "Conch") "conch_season" else if (input$datatype_fisheries_multiper == "Finfish") "finfish_season" else NULL
+        )
+        if (!is.null(season_type)) {
+            check_datafiles_dates_fisheries_multiper4(season_type, df_upload_fisheries_multiper4())
+        }
     })
     output$ui_upload_fisher_1per <- renderUI({
         season_type <- switch(input$timeframe_fisher_1per,
@@ -630,22 +675,49 @@ server <- function(input, output, session) {
 
     # Create reports
     output$report_fisheries_1per_hidden <- downloadHandler(
+        filename = function() {
+            report_file <- switch(input$datatype_fisheries_1per,
+                "Conch" = "report_fisheries_conch_1per.Rmd",
+                "Lobster" = "report_fisheries_lobster_1per.Rmd",
+                "Finfish" = "report_fisheries_finfish_1per.Rmd"
+            )
+            gsub(".Rmd", ".docx", report_file)
+        },
         content = function(file) {
             showLoaderBar("fisheries_1per", session)
-            report_file <- "report_fisheries_1per.Rmd"
+            report_file <- switch(input$datatype_fisheries_1per,
+                "Conch" = "report_fisheries_conch_1per.Rmd",
+                "Lobster" = "report_fisheries_lobster_1per.Rmd",
+                "Finfish" = "report_fisheries_finfish_1per.Rmd"
+            )
+            shapefiles <- list.files("shapefiles", full.names = TRUE)
+            normalized_shapefiles <- normalizePath(shapefiles)
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
-                "www/images/TASA_logo_full_color.png"
+                "www/images/TASA_logo_full_color.png",
+                "theme.r", "map.r",
+                normalized_shapefiles
             ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- tryCatch(
                 {
                     render(
                         report_file,
-                        params = list(user_name = input$fisheries_1per_name, datafile = df_upload_fisheries_1per(), release = release_version),
+                        params = list(
+                            release = release_version,
+                            user_name = input$fisheries_1per_name,
+                            datafile_name = input$upload_fisheries_1per$name,
+                            datafile = df_upload_fisheries_1per(),
+                            fisheries_1per_timeframe = input$timeframe_fisheries_1per,
+                            fisheries_1per_year_selection = if (fisheries_1per_year_selection_flag()) input[["fisheries_1per_year_selection"]] else "None",
+                            fisheries_1per_period_selection = if (fisheries_1per_period_selection_flag()) input[["fisheries_1per_period_selection"]] else "None",
+                            fisheries_1per_lobster_season_selection = if (fisheries_1per_lobster_season_selection_flag()) input[["fisheries_1per_lobster_season_selection"]] else "None",
+                            fisheries_1per_conch_season_selection = if (fisheries_1per_conch_season_selection_flag()) input[["fisheries_1per_conch_season_selection"]] else "None",
+                            fisheries_1per_finfish_season_selection = if (fisheries_1per_finfish_season_selection_flag()) input[["fisheries_1per_finfish_season_selection"]] else "None"
+                        ),
                         envir = new.env(parent = globalenv())
                     )
                 },
@@ -653,8 +725,7 @@ server <- function(input, output, session) {
             )
             hideLoaderBar("fisheries_1per", session)
             file.rename(out, file)
-        },
-        filename = function() "report_fisheries_1per.docx"
+        }
     )
     output$report_fisheries_multiper_hidden <- downloadHandler(
         filename = function() "report_fisheries_multiper.docx",
@@ -991,7 +1062,29 @@ server <- function(input, output, session) {
 
     # Observe Datatype
     observeEvent(input$datatype_fisheries_1per, {
+        if (input$datatype_fisheries_1per == "Finfish") {
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisheries_1per",
+                label = NULL,
+                choices = c("Annual"),
+                selected = "Annual",
+                inline = TRUE
+            )
+        } else {
+            selected <- input$timeframe_fisheries_1per
+            updatePrettyRadioButtons(
+                session = session,
+                inputId = "timeframe_fisheries_1per",
+                label = NULL,
+                choices = c("Seasonal", "Annual"),
+                selected = selected,
+                inline = TRUE
+            )
+        }
         disableCustomization("fisheries_1per")
+        flag_types <- c("year", "period", "lobster_season", "conch_season", "finfish_season")
+        lapply(flag_types, function(ft) set_flags_1per("fisheries", ft, FALSE))
         session$sendCustomMessage("triggerChangeFisheriesImg", list(dataType = input$datatype_fisheries_1per, isMulti = FALSE))
     })
     observeEvent(input$datatype_fisheries_multiper, {
