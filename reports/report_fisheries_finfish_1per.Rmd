@@ -97,3 +97,33 @@ It features an inner lagoon as well as an outer reef that encircles the atoll.
 The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
 TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
 Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
+### Fisheries Catch Project
+
+### Finfish
+
+Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals 
+such as shellfish or cuttlefish.
+In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as 
+Mutton Snapper (_Lutjanus analis_),
+Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being 
+listed as Vulnerable conservation status on the IUCN.
+
+Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation.
+Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily),
+long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020).
+Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD),
+with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations,
+such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b).
+To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity,
+and biodiversity of key taxa.\
+
+
+## Methods
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+ 
+## Results

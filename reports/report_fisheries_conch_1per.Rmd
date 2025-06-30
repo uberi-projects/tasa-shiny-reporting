@@ -97,3 +97,31 @@ It features an inner lagoon as well as an outer reef that encircles the atoll.
 The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
 TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
 Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
+### Fisheries Catch Project
+
+### Queen Conch
+
+Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex. 
+Juvenile queen conch have a pink, pearly interior, and the shell has a recognizable dark periostracum layer. 
+Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be observed by removing the conch from its shell. 
+Reproduction occurs during warmer months (Appeldoorn and Baker 2013). 
+
+In Belize, the queen conch fishery is the second most important commercial fishery in the country. 
+Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats. 
+The fishery is regulated by the Belize Fisheries Department (BFD). 
+National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first. 
+The use of SCUBA for commercial conch harvesting is strictly prohibited. 
+Additionally, commercial fishing activities in Belize require a fishing license (Belize Fisheries Department accessed 2025).
+
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025).\
+
+
+## Methods
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+## Results

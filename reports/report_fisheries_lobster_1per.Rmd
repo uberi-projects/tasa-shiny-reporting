@@ -97,3 +97,34 @@ It features an inner lagoon as well as an outer reef that encircles the atoll.
 The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
 TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
 Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
+### Fisheries Catch Project
+
+
+### Caribbean Spiny Lobsters
+
+Caribbean spiny lobsters (Panulirus argus) are brown-grey striped malacostracans, 
+which can grow to around 60cm long, and have spines covering their shells instead of the 
+large pinching claws of other lobsters (Holthuis, 1991). Spotted spiny lobster 
+(Panulirus guttatus) are smaller than Caribbean spiny lobsters, with more distinct 
+spots and shorter antennae. In Belize, the lobster fishery is the most important fishery 
+in the country. Lobsters are caught using freediving and a hook stick, trapezoidal-shaped 
+lobster traps placed in shallow sandy areas, or casitas (shade cloths) that act as a lure 
+for lobsters which are then caught with a hook stick, snare, or a net bag (UNCTAD 2020). 
+Regulations for Caribbean spiny lobster from the BFD include that no person shall fish 
+molting lobster or lobster with eggs, that fished lobster have minimum carapace length 
+of 3-inches and minimum tail weight of 4-ounces, and that fishers adhere to the prescribed 
+open season. Closed season is March 1st to June 30th for lobster (Belize Fisheries 
+Department accessed 2025). Tar spots on female lobsters indicate recent mating, and 
+females with eggs (‘berried’ females) indicate reproductive success. Monitoring sex ratio 
+and presence of reproductive indicators is key for this species.\
+
+
+## Methods
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+## Results
