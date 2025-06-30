@@ -82,7 +82,7 @@ Monitoring the activities and harvests of local fishers is important for
 understanding ecosystem productivity, assessing stock sustainability, 
 and informing effective management decisions. 
 This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of Caribbean spiny 
-lobster (Panulirus argus) at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+lobster (*Panulirus argus*) at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
 Data were recorded directly by fishermen using SMART technology through a data collection 
 package designed by TASA. This report aims to summarize and visualize the Fisher 
 Lobster Catch dataset from `r study_timeframe` to facilitate data interpretation and support 

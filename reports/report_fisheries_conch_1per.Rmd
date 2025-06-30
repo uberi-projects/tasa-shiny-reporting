@@ -73,3 +73,27 @@ Turneffe Atoll Sustainability Association (TASA)
 **App Version:** `r params$release`\
 
 ***
+
+Coral reef ecosystems, like those of Turneffe Atoll Marine Reserve (TAMR), provide key ecological and economic value to coastal families. 
+With proper management and monitoring, 
+these ecosystems can continue to support people sustainably in the long-term. 
+Directly tracking the activities and harvests of local fishers is a key method for monitoring coral reefs, 
+as it offers insights into ecosystem dynamics and possible pressures. 
+This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of queen conch (_Aliger gigas_) 
+at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+Data were recorded by TASA patrolling officers in direct communication with TAMR fishers during their fishing trips. 
+Data were collected on key economic species. 
+This report aims to summarize and visualize the Fisheries 
+Conch Catch dataset from `r study_timeframe` to facilitate data interpretation and strengthen the scientific basis for 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
+
+## Background
+
+### Turneffe Atoll Marine Reserve
+
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
