@@ -307,19 +307,7 @@ df_fig1_A <- df %>%
   )
 
 # Create panels for Figure 2 ---------------------------
-A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Events, group = 1)) +
-  geom_line(size = 0.5) +
-  geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
-  expand_limits(y = 0) +
-  theme_custom +
-  xlab("Month") +
-  ylab("Fishing Events") +
-  labs(title = "A")
-B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   scale_x_date(
@@ -330,8 +318,8 @@ B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
   theme_custom +
   xlab("Month") +
   ylab("Hours Fished") +
-  labs(title = "B")
-C <- ggplot(df_fig1_A, aes(x = Month_sort, y = Lobster, group = 1)) +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Lobster, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   scale_x_date(
@@ -342,8 +330,8 @@ C <- ggplot(df_fig1_A, aes(x = Month_sort, y = Lobster, group = 1)) +
   theme_custom +
   xlab("Month") +
   ylab("Number Lobsters") +
-  labs(title = "C")
-D <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
   scale_x_date(
@@ -354,13 +342,13 @@ D <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
   theme_custom +
   xlab("Month") +
   ylab("Catch per Unit Effort") +
-  labs(title = "D")
+  labs(title = "C")
 
 
-# Assemble Figure 2 ---------------------------
+# Assemble Figure 1 ---------------------------
 figure1 <- ggarrange(
-  A, B, C, D,
-  nrow = 4, ncol = 1
+  A, B, C,
+  nrow = 3, ncol = 1
 )
 ```
 
@@ -370,9 +358,9 @@ figure1
 ```
 
 
-*Figure 1.* Line plots of fishing events (A), 
-active hours fished (B), lobsters caught (C), 
-and catch per unit effort (in count per active hour fished) (D) 
+*Figure 1.* Line plots of 
+active hours fished (A), lobsters caught (B), 
+and catch per unit effort (in count per active hour fished) (C) 
 over time. 
 Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
