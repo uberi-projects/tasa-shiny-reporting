@@ -285,7 +285,7 @@ in pounds per hour (lb/hr) occurred in `r max_cpue_lb_month` with `r max_cpue_lb
 occurred in `r min_cpue_lb_month` with `r min_cpue_lb`. The highest CPUE in count 
 per hour (num/hr) occurred in `r max_cpue_num_month` 
 with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
-in `r min_cpue_num` (Table 1; Figure 2).\
+with `r min_cpue_num` (Table 1; Figure 2).\
 
 
 **Table 1.** Summary of fishing activity by month, including total fishers, events, and finfish caught, 
@@ -376,6 +376,8 @@ df_table2 <- df_table2_lb_overall %>%
 # Prepare dynamic variables for Table 2 ---------------------------
 overall_mean <- df_table2_lb_overall$Mean
 overall_median <- df_table2_lb_overall$Median
+overall_mean_num <- df_table2_num_overall$Mean
+overall_median_num <- df_table2_num_overall$Median
 max_cpue_mean_lb <- max(df_table2_lb$Mean, na.rm = TRUE)
 max_cpue_mean_lb_month <- df_table2_lb$Month[which.max(df_table2_lb$Mean)]
 min_cpue_mean_lb <- min(df_table2_lb$Mean, na.rm = TRUE)
@@ -392,9 +394,9 @@ mean of `r overall_mean`lb/hr and median of `r overall_median`lb/hr,
 with the highest mean of `r max_cpue_mean_lb`lb/hr being in `r max_cpue_mean_lb_month` 
 and the lowest mean of `r min_cpue_mean_lb`lb/hr being in `r min_cpue_mean_lb_month`. 
 The CPUE of finfish in count per hour had a 
-mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
-with the highest mean of `r max_cpue_mean_lb`num/hr being in `r max_cpue_mean_lb_month` 
-and the lowest mean of `r min_cpue_mean_lb`num/hr being in `r min_cpue_mean_lb_month`. 
+mean of `r overall_mean_num`num/hr and median of `r overall_median_num`num/hr, 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
 (Table 2; Figure 2).\
 
 
