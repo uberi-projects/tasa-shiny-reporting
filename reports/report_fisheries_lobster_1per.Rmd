@@ -40,8 +40,8 @@ df$`Date of Encounter` <- as.Date(df$`Date of Encounter`)
 if (timeframe == "Annual" && as.character(params$fisheries_1per_year_selection) != "None") {
   df <- df |>
     filter(format(`Date of Encounter`, "%Y") == params$fisheries_1per_year_selection)
-} else if (timeframe == "Seasonal" && as.character(params$fisheries_1per_conch_season_selection) != "None") {
-  season_years <- unlist(strsplit(params$fisheries_1per_conch_season_selection, "-"))
+} else if (timeframe == "Seasonal" && as.character(params$fisheries_1per_lobster_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisheries_1per_lobster_season_selection, "-"))
   start_date <- as.Date(paste0(season_years[1], "-07-01"))
   end_date <- as.Date(paste0(season_years[2], "-02-28"))
   df <- df |>
@@ -569,7 +569,7 @@ df_fig3 <- df %>%
   pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
 
 # Create Figure 3 ---------------------------
-figure3 <- ggplot(df_fig3, aes(x = Month_sort, fill = Sex, y = Percent)) +
+A <- ggplot(df_fig3, aes(x = Month_sort, fill = Sex, y = Percent)) +
   geom_col(color = "black") +
   scale_fill_manual(values = palette[2:3]) +
   theme_custom +
@@ -595,7 +595,7 @@ figure3
 ```
 
 
-*Figure 3.* Bar plot of sex ratio of lobsters (A) and bar plot of female pleopod stage (B). 
+*Figure 3.* Bar plot of sex ratio of lobsters over time (A) and bar plot of female pleopod stage (B). 
 Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
