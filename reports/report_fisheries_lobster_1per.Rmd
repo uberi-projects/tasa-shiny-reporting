@@ -204,13 +204,13 @@ totalling `r total_hours` active fishing hours.
 The highest CPUE in count 
 per hour (num/hr) occurred in `r max_cpue_num_month` 
 with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
-in `r min_cpue_num` (Table 1; Figure 2).\
+in `r min_cpue_num` (Table 1; Figure 1).\
 
 **Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
 events, and lobster caught, along with fishing hours, pounds of catch, 
 and catch per unit effort (CPUE). 
 CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
-Data were collected using SMART lobster data from fishers at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
 ```{r table1, echo = FALSE}
@@ -284,4 +284,96 @@ with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_n
 and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
 Minimum CPUE recorded across all events was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
 and standard deviation was `r overall_sd`num/hr 
-(Table 1; Figure 2).\
+(Table 1; Figure 1).\
+
+
+```{r figure1_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 1 ---------------------------
+df_fig1_A <- df %>%
+  mutate(
+    Month = format(`Mission Date`, "%b %Y"),
+    Month_sort = as.Date(format(`Mission Date`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Lobster = n(),
+    Events = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = round(Lobster / Hours, 1)
+  )
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Events, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Fishing Events") +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Month_sort, y = Lobster, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Lobsters") +
+  labs(title = "C")
+D <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "D")
+
+
+# Assemble Figure 2 ---------------------------
+figure1 <- ggarrange(
+  A, B, C, D,
+  nrow = 4, ncol = 1
+)
+```
+
+
+```{r figure1, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure1
+```
+
+
+*Figure 1.* Line plots of fishing events (A), 
+active hours fished (B), lobsters caught (C), 
+and catch per unit effort (in count per active hour fished) (D) 
+over time. 
+Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
