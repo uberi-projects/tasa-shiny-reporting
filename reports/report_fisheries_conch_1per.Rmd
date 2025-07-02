@@ -284,3 +284,80 @@ Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was
 and standard deviation was `r overall_sd`num/hr 
 (Table 1; Figure 1).\
 
+
+```{r figure1_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 1 ---------------------------
+df_fig1_A <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = round(Conch / Hours, 1)
+  )
+
+# Create panels for Figure 1 ---------------------------
+A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Conch, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Conch") +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "C")
+
+
+# Assemble Figure 1 ---------------------------
+figure1 <- ggarrange(
+  A, B, C,
+  nrow = 3, ncol = 1
+)
+```
+
+
+```{r figure1, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure1
+```
+
+
+*Figure 1.* Line plots of 
+active hours fished (A), conch caught (B), 
+and catch per unit effort (in count per active hour fished) (C) 
+over time. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
