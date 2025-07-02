@@ -306,7 +306,7 @@ df_fig1_A <- df %>%
     `CPUE (num/hr)` = round(Lobster / Hours, 1)
   )
 
-# Create panels for Figure 2 ---------------------------
+# Create panels for Figure 1 ---------------------------
 A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
