@@ -125,3 +125,162 @@ standardized reef monitoring data, validates the dataset, and creates a shareabl
 
 
 ## Results
+
+
+
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+df_events_overall <- df %>%
+  select(`Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  ) %>%
+  mutate(Month = "Overall")
+df_table1_overall <- df %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  mutate(Month = "Overall") %>%
+  left_join(df_events_overall, by = "Month") %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+  )
+df_events <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  select(Month, `Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  group_by(Month) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  )
+df_table1 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+  ) %>%
+  bind_rows(df_table1_overall)
+
+# Prepare dynamic variables for Table 1 ---------------------------
+total_vessels <- length(unique(df$`Name of Vessel`))
+total_conch <- df_table1_overall$Conch
+total_events <- df_table1_overall$Missions
+total_hours <- df_table1_overall$Hours
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
+```
+
+
+Between `r study_start` and `r study_end`, `r total_conch` conch were 
+caught and recorded as part of the TAMR 
+Fisheries Catch dataset. These conch were caught across `r total_events` missions, 
+between `r total_vessels` surveyed vessels, 
+totalling `r total_hours` active fishing hours.
+The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_month` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+in `r min_cpue_num` (Table 1; Figure 1).\
+
+**Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
+missions, and conch caught, along with fishing hours, pounds of catch, 
+and catch per unit effort (CPUE). 
+CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE}
+# show table
+as.data.frame(df_table1)
+```
+
+
+<br>
+
+
+```{r table1_expanded_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 Expanded ---------------------------
+df_table1_expanded_rows <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Mission Id`) %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  summarize(
+    Month = first(Month),
+    Month_sort = first(Month_sort),
+    Hours = first(`Hours Fished`),
+    Conch = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, Conch / Hours, NA)
+  )
+df_table1_expanded_num_overall <- df_table1_expanded_rows %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Month = "Overall", CPUE = "num/hr")
+df_table1expanded <- df_table1_expanded_rows %>%
+  mutate(CPUE = "num/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table1_expanded_num_overall)
+
+# Prepare dynamic variables for Table 1 Expanded ---------------------------
+overall_mean <- df_table1_expanded_num_overall$Mean
+overall_median <- df_table1_expanded_num_overall$Median
+overall_min <- df_table1_expanded_num_overall$Min
+overall_max <- df_table1_expanded_num_overall$Max
+overall_sd <- df_table1_expanded_num_overall$SD
+max_cpue_mean_num <- max(df_table1expanded$Mean, na.rm = TRUE)
+max_cpue_mean_num_month <- df_table1expanded$Month[which.max(df_table1expanded$Mean)]
+min_cpue_mean_num <- min(df_table1expanded$Mean, na.rm = TRUE)
+min_cpue_mean_num_month <- df_table1expanded$Month[which.min(df_table1expanded$Mean)]
+```
+
+
+The CPUE of conch in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
+Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
+and standard deviation was `r overall_sd`num/hr 
+(Table 1; Figure 1).\
+
