@@ -361,3 +361,105 @@ active hours fished (A), conch caught (B),
 and catch per unit effort (in count per active hour fished) (C) 
 over time. 
 Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_table2 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+  ) %>%
+  mutate(
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Shell Length (mm)` = round(mean(`Shell Length (mm)`, na.rm = TRUE), 1),
+    `Mean Lip Thickness (mm)` = round(mean(`Lip Thickness (mm)`, na.rm = TRUE), 1),
+    `Mean Market Clean Weight (g)` = round(mean(weight_for_mk, na.rm = TRUE), 1),
+    `Mean Whole Weight (g)` = round(mean(weight_for_whole, na.rm = TRUE), 1),
+    `Mean Unprocessed Weight (g)` = round(mean(weight_for_up, na.rm = TRUE), 1)
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(
+    df %>%
+      mutate(
+        weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+        weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+        weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+      ) %>%
+      mutate(
+        `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+        `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+        weight_for_mk = as.numeric(weight_for_mk),
+        weight_for_whole = as.numeric(weight_for_whole),
+        weight_for_up = as.numeric(weight_for_up)
+      ) %>%
+      summarize(
+        `Mean Shell Length (mm)` = round(mean(`Shell Length (mm)`, na.rm = TRUE), 1),
+        `Mean Lip Thickness (mm)` = round(mean(`Lip Thickness (mm)`, na.rm = TRUE), 1),
+        `Mean Market Clean Weight (g)` = round(mean(weight_for_mk, na.rm = TRUE), 1),
+        `Mean Whole Weight (g)` = round(mean(weight_for_whole, na.rm = TRUE), 1),
+        `Mean Unprocessed Weight (g)` = round(mean(weight_for_up, na.rm = TRUE), 1)
+      ) %>%
+      mutate(Month = "Overall")
+  ) %>%
+  mutate(across(everything(), ~ {
+    if (is.numeric(.)) {
+      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+    } else {
+      ifelse(is.na(.), "-", .)
+    }
+  }))
+
+# Prepare dynamic variables for Table 2 ---------------------------
+total_shell <- filter(df_table2, Month == "Overall")$`Mean Shell Length (mm)`
+max_shell <- max(filter(df_table2, Month != "Overall")$`Mean Shell Length (mm)`, na.rm = TRUE)
+max_shell_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Shell Length (mm)`)]
+total_lip <- filter(df_table2, Month == "Overall")$`Mean Lip Thickness (mm)`
+max_lip <- max(filter(df_table2, Month != "Overall")$`Mean Lip Thickness (mm)`, na.rm = TRUE)
+max_lip_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Lip Thickness (mm)`)]
+total_weight_mk <- filter(df_table2, Month == "Overall")$`Mean Market Clean Weight (g)`
+max_weight_mk <- max(filter(df_table2, Month != "Overall")$`Mean Market Clean Weight (g)`, na.rm = TRUE)
+max_weight_mk_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Market Clean Weight (g)`)]
+total_weight_whole <- filter(df_table2, Month == "Overall")$`Mean Whole Weight (g)`
+max_weight_whole <- max(filter(df_table2, Month != "Overall")$`Mean Whole Weight (g)`, na.rm = TRUE)
+max_weight_whole_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Whole Weight (g)`)]
+total_weight_up <- filter(df_table2, Month == "Overall")$`Mean Unprocessed Weight (g)`
+max_weight_up <- max(filter(df_table2, Month != "Overall")$`Mean Unprocessed Weight (g)`, na.rm = TRUE)
+max_weight_up_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Unprocessed Weight (g)`)]
+```
+
+Average shell length was `r total_shell`oz, 
+greatest in `r max_shell_month` with `r max_shell`oz. 
+Average lip thickness was `r total_lip`oz, 
+greatest in `r max_lip_month` with `r max_lip`oz. 
+Average market clean weight was `r total_weight_mk`oz, 
+greatest in `r max_weight_mk_month` with `r max_weight_mk`oz. 
+Average whole weight was `r total_weight_whole`oz, 
+greatest in `r max_weight_whole_month` with `r max_weight_whole`oz. 
+Average unprocessed weight was `r total_weight_up`oz, 
+greatest in `r max_weight_up_month` with `r max_weight_up`oz (Table 2; Figure 2).\
+
+
+**Table 2.** Summary of mean shell length (mm), lip thickness (mm), market clean weight (oz), whole weight (oz), 
+and unprocessed weight (oz) for fished conch. Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, 
+`r study_timeframe`.\
+
+
+```{r table2, echo = FALSE}
+# show table
+as.data.frame(df_table2)
+```
+
