@@ -145,7 +145,7 @@ df_table1_overall <- df %>%
   summarize(
     Vessels = n_distinct(`Name of Vessel`),
     Lobster = n(),
-    Events = n_distinct(`Mission Id`)
+    Missions = n_distinct(`Mission Id`)
   ) %>%
   mutate(Month = "Overall") %>%
   left_join(df_events_overall, by = "Month") %>%
@@ -174,7 +174,7 @@ df_table1 <- df %>%
   summarize(
     Vessels = n_distinct(`Name of Vessel`),
     Lobster = n(),
-    Events = n_distinct(`Mission Id`)
+    Missions = n_distinct(`Mission Id`)
   ) %>%
   left_join(df_events, by = "Month") %>%
   arrange(Month_sort) %>%
@@ -187,7 +187,7 @@ df_table1 <- df %>%
 # Prepare dynamic variables for Table 1 ---------------------------
 total_vessels <- length(unique(df$`Name of Vessel`))
 total_lobsters <- df_table1_overall$Lobster
-total_events <- df_table1_overall$Events
+total_events <- df_table1_overall$Missions
 total_hours <- df_table1_overall$Hours
 max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
 max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
@@ -198,7 +198,7 @@ min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
 
 Between `r study_start` and `r study_end`, `r total_lobsters` Caribbean spiny lobsters were 
 caught and recorded as part of the TAMR 
-Fisheries Catch dataset. These lobsters were caught across `r total_events` fishing events, 
+Fisheries Catch dataset. These lobsters were caught across `r total_events` missions, 
 between `r total_vessels` surveyed vessels, 
 totalling `r total_hours` active fishing hours.
 The highest CPUE in count 
@@ -207,9 +207,9 @@ with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month`
 in `r min_cpue_num` (Table 1; Figure 1).\
 
 **Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
-events, and lobster caught, along with fishing hours, pounds of catch, 
+missions, and lobster caught, along with fishing hours, pounds of catch, 
 and catch per unit effort (CPUE). 
-CPUE values are calculated only for events where fishing hours and catch weight were recorded. 
+CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
 Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
@@ -265,7 +265,7 @@ df_table1expanded <- df_table1expanded_rows %>%
   select(-Month_sort) %>%
   bind_rows(df_table1expanded_num_overall)
 
-# Prepare dynamic variables for Table 2 ---------------------------
+# Prepare dynamic variables for Table 1 Expanded ---------------------------
 overall_mean <- df_table1expanded_num_overall$Mean
 overall_median <- df_table1expanded_num_overall$Median
 overall_min <- df_table1expanded_num_overall$Min
@@ -282,7 +282,7 @@ The CPUE of lobster in count per hour had a
 mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
 with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
 and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
-Minimum CPUE recorded across all events was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
+Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
 and standard deviation was `r overall_sd`num/hr 
 (Table 1; Figure 1).\
 
@@ -298,7 +298,7 @@ df_fig1_A <- df %>%
   summarize(
     Vessels = n_distinct(`Name of Vessel`),
     Lobster = n(),
-    Events = n_distinct(`Mission Id`)
+    Missions = n_distinct(`Mission Id`)
   ) %>%
   left_join(df_events, by = "Month") %>%
   arrange(Month_sort) %>%
@@ -306,7 +306,7 @@ df_fig1_A <- df %>%
     `CPUE (num/hr)` = round(Lobster / Hours, 1)
   )
 
-# Create panels for Figure 2 ---------------------------
+# Create panels for Figure 1 ---------------------------
 A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
@@ -614,7 +614,7 @@ ecological value of the atoll.\
 
 ## Acknowledgments
 
-Thank you to the fishers who contributed to this project.\
+Thank you to the data collectors and fishers who contributed to this project.\
 
 
 ## Literature Cited
