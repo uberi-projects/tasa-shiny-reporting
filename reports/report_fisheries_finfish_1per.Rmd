@@ -219,3 +219,147 @@ as.data.frame(df_table1)
 
 
 <br>
+
+
+```{r table1_expanded, echo = FALSE, include = FALSE}
+# Create df for Table 1 expanded details ---------------------------
+df_table1expanded_rows <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Mission Id`) %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  summarize(
+    Month = first(Month),
+    Month_sort = first(Month_sort),
+    Hours = first(`Hours Fished`),
+    Finfish = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, Finfish / Hours, NA)
+  )
+df_table1expanded_num_overall <- df_table1expanded_rows %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Month = "Overall", CPUE = "num/hr")
+df_table1expanded <- df_table1expanded_rows %>%
+  mutate(CPUE = "num/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table1expanded_num_overall)
+
+# Prepare dynamic variables for Table 1 Expanded ---------------------------
+overall_mean <- df_table1expanded_num_overall$Mean
+overall_median <- df_table1expanded_num_overall$Median
+overall_min <- df_table1expanded_num_overall$Min
+overall_max <- df_table1expanded_num_overall$Max
+overall_sd <- df_table1expanded_num_overall$SD
+max_cpue_mean_num <- max(df_table1expanded$Mean, na.rm = TRUE)
+max_cpue_mean_num_month <- df_table1expanded$Month[which.max(df_table1expanded$Mean)]
+min_cpue_mean_num <- min(df_table1expanded$Mean, na.rm = TRUE)
+min_cpue_mean_num_month <- df_table1expanded$Month[which.min(df_table1expanded$Mean)]
+```
+
+
+The CPUE of finfish in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
+Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
+and standard deviation was `r overall_sd`num/hr 
+(Table 1; Figure 1).\
+
+
+```{r figure1_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 1 ---------------------------
+df_fig1_A <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = round(Finfish / Hours, 1)
+  )
+
+# Create panels for Figure 1 ---------------------------
+A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Finfish, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Finfish") +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "C")
+
+
+# Assemble Figure 1 ---------------------------
+figure1 <- ggarrange(
+  A, B, C,
+  nrow = 3, ncol = 1
+)
+```
+
+
+```{r figure1, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure1
+```
+
+
+*Figure 1.* Line plots of 
+active hours fished (A), finfish caught (B), 
+and catch per unit effort (in count per active hour fished) (C) 
+over time. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
