@@ -463,3 +463,126 @@ and unprocessed weight (oz) for fished conch. Data were collected using Fisherie
 as.data.frame(df_table2)
 ```
 
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_unsummarized <- df %>%
+  mutate(
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+  ) %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  arrange(Month_sort)
+df_fig2 <- df %>%
+  mutate(
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_),
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`)
+  ) %>%
+  mutate(
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    weight_for_mk = round(mean(weight_for_mk, na.rm = TRUE), 1),
+    weight_for_whole = round(mean(weight_for_whole, na.rm = TRUE), 1),
+    weight_for_up = round(mean(weight_for_up, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort)
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = weight_for_mk)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  scale_fill_manual(values = palette[2:3], drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Market Clean Weight (g)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig2_unsummarized, aes(x = weight_for_whole)) +
+  geom_histogram(binwidth = 100, color = "black") +
+  scale_fill_manual(values = palette[2:3], drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Whole Weight (g)") +
+  ylab("Count") +
+  labs(title = "B")
+C <- ggplot(df_fig2, aes(x = Month_sort)) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Weight (g)") +
+  xlab("Month") +
+  scale_shape_manual(
+    name = "Weight Type",
+    values = c("Market Clean" = 4, "Whole" = 19, "Unprocessed" = 6)
+  ) +
+  scale_color_manual(
+    name = "Weight Type",
+    values = c("Market Clean" = "black", "Whole" = "black", "Unprocessed" = "black")
+  ) +
+  expand_limits(y = 0) +
+  labs(title = "C") +
+  theme(legend.position = "bottom")
+
+# Add points and lines per weight type ------------------------------
+if (sum(!is.na(df_fig2$weight_for_mk)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_mk, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_mk)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_mk, shape = "Market Clean"), size = 2.5)
+}
+if (sum(!is.na(df_fig2$weight_for_whole)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_whole, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_whole)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_whole, shape = "Whole"), size = 2.5)
+}
+if (sum(!is.na(df_fig2$weight_for_up)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_up, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_up)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_up, shape = "Unprocessed"), size = 2.5)
+}
+
+
+# Assemble Figure 2 ---------------------------
+figure_3_top <- ggarrange(
+  A, B,
+  ncol = 2, nrow = 1
+)
+figure2 <- ggarrange(
+  figure_3_top, C,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Histogram of market clean weight (g) (A), histogram of whole weight (g) (B), and 
+line plot of different average weight types recorded over time (C).
+Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
