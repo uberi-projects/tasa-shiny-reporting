@@ -127,3 +127,95 @@ standardized reef monitoring data, validates the dataset, and creates a shareabl
 
  
 ## Results
+
+
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+df_events_overall <- df %>%
+  select(`Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  ) %>%
+  mutate(Month = "Overall")
+df_table1_overall <- df %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  mutate(Month = "Overall") %>%
+  left_join(df_events_overall, by = "Month") %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  )
+df_events <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  select(Month, `Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  group_by(Month) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  )
+df_table1 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  ) %>%
+  bind_rows(df_table1_overall)
+
+# Prepare dynamic variables for Table 1 ---------------------------
+total_vessels <- length(unique(df$`Name of vessel used`))
+total_finfish <- df_table1_overall$Finfish
+total_events <- df_table1_overall$Missions
+total_hours <- df_table1_overall$Hours
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
+```
+
+
+Between `r study_start` and `r study_end`, `r total_finfish` Caribbean spiny finfish were 
+caught and recorded as part of the TAMR 
+Fisheries Catch dataset. These finfish were caught across `r total_events` missions, 
+between `r total_vessels` surveyed vessels, 
+totalling `r total_hours` active fishing hours.
+The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_month` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+in `r min_cpue_num` (Table 1; Figure 1).\
+
+**Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
+missions, and finfish caught, along with fishing hours, pounds of catch, 
+and catch per unit effort (CPUE). 
+CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE}
+# show table
+as.data.frame(df_table1)
+```
+
+
+<br>
