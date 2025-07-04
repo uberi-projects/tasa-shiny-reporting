@@ -450,7 +450,7 @@ greatest in `r max_weight_mk_month` with `r max_weight_mk`oz.
 Average whole weight was `r total_weight_whole`oz, 
 greatest in `r max_weight_whole_month` with `r max_weight_whole`oz. 
 Average unprocessed weight was `r total_weight_up`oz, 
-greatest in `r max_weight_up_month` with `r max_weight_up`oz (Table 2; Figure 2).\
+greatest in `r max_weight_up_month` with `r max_weight_up`oz (Table 2; Figure 2; Figure 3).\
 
 
 **Table 2.** Summary of mean shell length (mm), lip thickness (mm), market clean weight (oz), whole weight (oz), 
@@ -586,3 +586,93 @@ figure2
 line plot of different average weight types recorded over time (C).
 Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create df for Figure 3 ---------------------------
+df_fig3 <- df %>%
+  mutate(
+    `Shell Length (cm)` = as.numeric(`Shell Length (mm)`) / 10,
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`)
+  )
+
+# Create Figure 3 ---------------------------
+A <- ggplot(filter(df_fig3, is.na(`Lip Thickness (mm)`)), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "A", subtitle = "No Data for Lip Thickness")
+B <- ggplot(filter(df_fig3, `Lip Thickness (mm)` <= 5 & `Lip Thickness (mm)` >= 0), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "B", subtitle = "Lip Thickness 0-5mm")
+C <- ggplot(filter(df_fig3, `Lip Thickness (mm)` > 5), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "C", subtitle = "Lip Thickness >5mm")
+D <- ggplot(df_fig3, aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "D", subtitle = "Overall")
+
+# Assemble Figure 3 ---------------------------
+figure3 <- ggarrange(A, B, C, D, nrow = 2, ncol = 2)
+```
+
+
+```{r figure3, fig.width=6, fig.height=5, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) at Turneffe Atoll Marine Reserve,
+for conch with no lip thickness data (A), conch with a lip from 0-5mm (B), conch with a lip >5mm (C), and all recordered conch (D).  
+The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest. Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, 
+`r study_timeframe`.\
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the fisheries catch conch data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Fisheries Catch data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
+
+
+## Acknowledgments
+
+Thank you to the data collectors and fishers who contributed to this project.\
+
+
+## Literature Cited
+
+Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
+
+Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
