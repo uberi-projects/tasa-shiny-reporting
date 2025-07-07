@@ -526,3 +526,92 @@ figure2
 line plot of mean total length (cm) and fork length (cm) over time (C).
 Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 3 ---------------------------
+df_fig3_long <- df_fig2 %>%
+  pivot_longer(
+    cols = c(`Mean Weight (g)`, `Median Weight (g)`),
+    names_to = "Metric",
+    values_to = "Weight"
+  )
+
+# Create panels for Figure 3 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = `Weight (g)`)) +
+  geom_histogram(binwidth = 100, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Mean Weight (g)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig3_long, aes(x = Month_sort, group = Metric)) +
+  geom_line(aes(y = Weight), size = 0.5) +
+  geom_point(aes(y = Weight, shape = Metric), size = 2.5) +
+  scale_shape_manual(name = "Metric", values = c("Mean Weight (g)" = 4, "Median Weight (g)" = 19)) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Weight (g)") +
+  xlab("Month") +
+  labs(title = "C") +
+  scale_y_continuous(n.breaks = 4)
+
+# Assemble Figure 3 ---------------------------
+figure3 <- ggarrange(
+  A, B,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure3, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Histogram of fish weight (g) (A), and 
+line plot of mean weight (g) and median weight (g) over time (B).
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+# Next, species 
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the fisheries catch lobster data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Fisheries Catch data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
+
+
+## Acknowledgments
+
+Thank you to the data collectors and fishers who contributed to this project.\
+
+
+## Literature Cited
+
+Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf
