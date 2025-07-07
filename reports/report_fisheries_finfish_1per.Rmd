@@ -439,3 +439,90 @@ Data were collected using Fisheries catch finfish data from Turneffe Atoll Marin
 as.data.frame(df_table2)
 ```
 
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_unsummarized <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+    `Weight (g)` = as.numeric(`Weight (g)`)
+  ) %>%
+  arrange(Month_sort)
+df_fig2 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+    `Weight (g)` = as.numeric(`Weight (g)`)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Mean Fork Length (cm)` = round(mean(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Median Fork Length (cm)` = round(median(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
+  ) %>%
+  arrange(Month_sort)
+df_fig2_long <- df_fig2 %>%
+  pivot_longer(
+    cols = c(`Mean Total Length (cm)`, `Mean Fork Length (cm)`),
+    names_to = "Metric",
+    values_to = "Length"
+  )
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = `Total Length (cm)`)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Total Length (cm)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig2_unsummarized, aes(x = `Fork Length (cm)`)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Fork Length (cm)") +
+  ylab("Count") +
+  labs(title = "B")
+C <- ggplot(df_fig2_long, aes(x = Month_sort, group = Metric)) +
+  geom_line(aes(y = Length), size = 0.5) +
+  geom_point(aes(y = Length, shape = Metric), size = 2.5) +
+  scale_shape_manual(name = "Metric", values = c("Mean Total Length (cm)" = 4, "Mean Fork Length (cm)" = 19)) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Length (cm)") +
+  xlab("Month") +
+  labs(title = "C") +
+  scale_y_continuous(n.breaks = 4)
+
+# Assemble Figure 2 ---------------------------
+figure_2_top <- ggarrange(
+  A, B,
+  ncol = 2, nrow = 1
+)
+figure2 <- ggarrange(
+  figure_2_top, C,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Histogram of total length (cm) (A), histogram of fork length (cm) (B), 
+line plot of mean total length (cm) and fork length (cm) over time (C).
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
