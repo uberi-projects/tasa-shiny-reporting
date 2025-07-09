@@ -577,7 +577,85 @@ line plot of mean weight (g) and median weight (g) over time (B).
 Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
-# Next, species 
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create Figure 4 ---------------------------
+figure4 <- ggplot(df, aes(x = fct_infreq(`Fish Species`))) +
+  geom_bar() +
+  theme_custom +
+  xlab("Fish Species") +
+  ylab("Count")
+```
+
+
+
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3_overall <- df %>%
+  group_by(`Fish Species`) %>%
+  summarize(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  slice_head(n = 5)
+df_table3_summarized <- df %>%
+  mutate(
+    Month = "Overall"
+  ) %>%
+  group_by(Month, `Fish Species`) %>%
+  summarize(Count = n()) %>%
+  filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
+  pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0)
+df_table3 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort, `Fish Species`) %>%
+  summarize(Count = n()) %>%
+  filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
+  pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0) %>%
+  arrange(Month_sort) %>%
+  bind_rows(df_table3_summarized) %>%
+  ungroup() %>%
+  select(-Month_sort)
+
+
+# Prepare dynamic variables for Table 3 ---------------------------
+num_species <- length(unique(df$`Fish Species`))
+common_species <- combine_words(df_table3_overall$`Fish Species`)
+months <- unique(filter(df_table3, Month != "Overall")$Month)
+months_top <- c()
+for (month in months) {
+  df_month <- filter(df_table3, Month == month)
+  species_max <- names(df_month)[which.max(df_month[1, -1])]
+  months_top <- c(months_top, paste0(species_max, " in ", month))
+}
+months_top_words <- combine_words(months_top)
+```
+
+
+In total, `r num_species` unique species of finfish were observed throughout the surveyed period, with the most common being `r common_species`. 
+The most common species observed in each month include `r months_top_words`.
+(Figure 4; Table 3).
+
+
+```{r figure4, fig.width=6, fig.height=3, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Bar plot of counts of observed fish species. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+**Table 3.** Count of observed finfish species in the surveyed months, including only the top five most 
+commonly observed species across the entire sampling period. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
+
 
 
 <br>
