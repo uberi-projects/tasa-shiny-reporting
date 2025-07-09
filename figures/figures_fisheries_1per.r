@@ -174,7 +174,75 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 8
             )
         } else if (datatype == "Finfish") {
-            figure1 <- ggplot()
+            df_events <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+                ) %>%
+                select(Month, `Mission Id`, `Hours Fished`) %>%
+                distinct() %>%
+                mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+                filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+                group_by(Month) %>%
+                summarize(
+                    Hours = sum(`Hours Fished`, na.rm = TRUE)
+                )
+            df_fig1_A <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+                ) %>%
+                group_by(Month, Month_sort) %>%
+                summarize(
+                    Vessels = n_distinct(`Name of vessel used`),
+                    Finfish = n(),
+                    Missions = n_distinct(`Mission Id`)
+                ) %>%
+                left_join(df_events, by = "Month") %>%
+                arrange(Month_sort) %>%
+                mutate(
+                    `CPUE (num/hr)` = round(Finfish / Hours, 1)
+                )
+            A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Hours Fished") +
+                labs(title = "A")
+            B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Finfish, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Number Finfish") +
+                labs(title = "B")
+            C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Catch per Unit Effort") +
+                labs(title = "C")
+            figure1 <- ggarrange(
+                A, B, C,
+                nrow = 3, ncol = 1
+            )
             p1 <- figure1
             plot_list[[1]] <- list(
                 plot = p1,
@@ -386,7 +454,74 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 8
             )
         } else if (datatype == "Finfish") {
-            figure2 <- ggplot()
+            df_fig2_unsummarized <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+                    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+                    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+                    `Weight (g)` = as.numeric(`Weight (g)`)
+                ) %>%
+                arrange(Month_sort)
+            df_fig2 <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+                    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+                    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+                    `Weight (g)` = as.numeric(`Weight (g)`)
+                ) %>%
+                group_by(Month, Month_sort) %>%
+                summarize(
+                    `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
+                    `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
+                    `Mean Fork Length (cm)` = round(mean(`Fork Length (cm)`, na.rm = TRUE), 1),
+                    `Median Fork Length (cm)` = round(median(`Fork Length (cm)`, na.rm = TRUE), 1),
+                    `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
+                    `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
+                ) %>%
+                arrange(Month_sort)
+            df_fig2_long <- df_fig2 %>%
+                pivot_longer(
+                    cols = c(`Mean Total Length (cm)`, `Mean Fork Length (cm)`),
+                    names_to = "Metric",
+                    values_to = "Length"
+                )
+            A <- ggplot(df_fig2_unsummarized, aes(x = `Total Length (cm)`)) +
+                geom_histogram(binwidth = 10, color = "black") +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Total Length (cm)") +
+                ylab("Count") +
+                labs(title = "A")
+            B <- ggplot(df_fig2_unsummarized, aes(x = `Fork Length (cm)`)) +
+                geom_histogram(binwidth = 10, color = "black") +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Fork Length (cm)") +
+                ylab("Count") +
+                labs(title = "B")
+            C <- ggplot(df_fig2_long, aes(x = Month_sort, group = Metric)) +
+                geom_line(aes(y = Length), size = 0.5) +
+                geom_point(aes(y = Length, shape = Metric), size = 2.5) +
+                scale_shape_manual(name = "Metric", values = c("Mean Total Length (cm)" = 4, "Mean Fork Length (cm)" = 19)) +
+                theme_custom +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                ylab("Length (cm)") +
+                xlab("Month") +
+                labs(title = "C") +
+                scale_y_continuous(n.breaks = 4)
+            figure_2_top <- ggarrange(
+                A, B,
+                ncol = 2, nrow = 1
+            )
+            figure2 <- ggarrange(
+                figure_2_top, C,
+                ncol = 1, nrow = 2
+            )
             p2 <- figure2
             plot_list[[2]] <- list(
                 plot = p2,
@@ -478,25 +613,58 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 8
             )
         } else if (datatype == "Finfish") {
-            figure3 <- ggplot()
+            df_fig3_long <- df_fig2 %>%
+                pivot_longer(
+                    cols = c(`Mean Weight (g)`, `Median Weight (g)`),
+                    names_to = "Metric",
+                    values_to = "Weight"
+                )
+            A <- ggplot(df_fig2_unsummarized, aes(x = `Weight (g)`)) +
+                geom_histogram(binwidth = 100, color = "black") +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Mean Weight (g)") +
+                ylab("Count") +
+                labs(title = "A")
+            B <- ggplot(df_fig3_long, aes(x = Month_sort, group = Metric)) +
+                geom_line(aes(y = Weight), size = 0.5) +
+                geom_point(aes(y = Weight, shape = Metric), size = 2.5) +
+                scale_shape_manual(name = "Metric", values = c("Mean Weight (g)" = 4, "Median Weight (g)" = 19)) +
+                theme_custom +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                ylab("Weight (g)") +
+                xlab("Month") +
+                labs(title = "C") +
+                scale_y_continuous(n.breaks = 4)
+            figure3 <- ggarrange(
+                A, B,
+                ncol = 1, nrow = 2
+            )
             p3 <- figure3
             plot_list[[3]] <- list(
                 plot = p3,
                 name = paste0("figure_fisheries_1per_", tolower(datatype), "_fig3.png"),
                 width = 6,
-                height = 2.5
+                height = 6
             )
         }
 
         # Add p4 plots to plotlist
         if (datatype == "Finfish") {
-            figure4 <- ggplot()
+            figure4 <- ggplot(df, aes(x = fct_infreq(`Fish Species`))) +
+                geom_bar() +
+                theme_custom +
+                xlab("Fish Species") +
+                ylab("Count")
             p4 <- figure4
             plot_list[[4]] <- list(
                 plot = p4,
                 name = paste0("figure_fisheries_1per_", tolower(datatype), "_fig4.png"),
                 width = 6,
-                height = 8
+                height = 2.5
             )
         }
 
