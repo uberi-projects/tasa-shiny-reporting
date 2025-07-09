@@ -506,8 +506,7 @@ figure_2_top <- ggarrange(
 )
 figure2 <- ggarrange(
   figure_2_top, E,
-  ncol = 1,
-  heights = c(2, 1)
+  ncol = 1
 )
 ```
 
