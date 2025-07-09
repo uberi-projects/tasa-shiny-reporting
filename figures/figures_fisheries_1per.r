@@ -97,7 +97,75 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 8
             )
         } else if (datatype == "Lobster") {
-            figure1 <- ggplot()
+            df_events <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+                ) %>%
+                select(Month, `Mission Id`, `Hours Fished`) %>%
+                distinct() %>%
+                mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+                filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+                group_by(Month) %>%
+                summarize(
+                    Hours = sum(`Hours Fished`, na.rm = TRUE)
+                )
+            df_fig1_A <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+                ) %>%
+                group_by(Month, Month_sort) %>%
+                summarize(
+                    Vessels = n_distinct(`Name of Vessel`),
+                    Lobster = n(),
+                    Missions = n_distinct(`Mission Id`)
+                ) %>%
+                left_join(df_events, by = "Month") %>%
+                arrange(Month_sort) %>%
+                mutate(
+                    `CPUE (num/hr)` = round(Lobster / Hours, 1)
+                )
+            A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Hours Fished") +
+                labs(title = "A")
+            B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Lobster, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Number Lobsters") +
+                labs(title = "B")
+            C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                expand_limits(y = 0) +
+                theme_custom +
+                xlab("Month") +
+                ylab("Catch per Unit Effort") +
+                labs(title = "C")
+            figure1 <- ggarrange(
+                A, B, C,
+                nrow = 3, ncol = 1
+            )
             p1 <- figure1
             plot_list[[1]] <- list(
                 plot = p1,
@@ -226,7 +294,90 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 8
             )
         } else if (datatype == "Lobster") {
-            figure2 <- ggplot()
+            df_fig2_unsummarized <- df %>%
+                filter(!is.na(Sex)) %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+                    weight_for_headed = ifelse(`Weight Type` == "headed", `Total Weight (g)`, NA_real_),
+                    `Pleopod Stage` = as.character(`Pleopod Stage`),
+                    `Carapace Length (mm)` = as.numeric(`Carapace Length (mm)`),
+                    weight_for_headed = as.numeric(weight_for_headed)
+                ) %>%
+                arrange(Month_sort)
+            df_fig2 <- df %>%
+                filter(!is.na(Sex)) %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+                    weight_for_headed = ifelse(`Weight Type` == "headed", `Total Weight (g)`, NA_real_),
+                    `Pleopod Stage` = as.character(`Pleopod Stage`),
+                    `Carapace Length (mm)` = as.numeric(`Carapace Length (mm)`),
+                    weight_for_headed = as.numeric(weight_for_headed)
+                ) %>%
+                group_by(Month, Month_sort) %>%
+                summarize(
+                    `Mean Carapace Length (mm)` = round(mean(`Carapace Length (mm)`, na.rm = TRUE), 1),
+                    `Median Carapace Length (mm)` = round(median(`Carapace Length (mm)`, na.rm = TRUE), 1),
+                    `Mean Weight (g)` = round(mean(weight_for_headed, na.rm = TRUE), 1),
+                    `Median Weight (g)` = round(median(weight_for_headed, na.rm = TRUE), 1),
+                    `Female (%)` = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+                    `Male (%)` = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+                ) %>%
+                arrange(Month_sort)
+            df_fig2_carapace <- df_fig2 %>%
+                filter(!is.nan(`Mean Carapace Length (mm)`))
+            df_fig2_weight <- df_fig2 %>%
+                filter(!is.nan(`Mean Weight (g)`))
+            A <- ggplot(df_fig2_unsummarized, aes(x = `Carapace Length (mm)`, fill = `Sex`)) +
+                geom_histogram(binwidth = 10, color = "black") +
+                scale_fill_manual(values = palette[2:3], drop = FALSE) +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Carapace Length (mm)") +
+                ylab("Count") +
+                labs(title = "A")
+            B <- ggplot(df_fig2_unsummarized, aes(x = weight_for_headed, fill = `Sex`)) +
+                geom_histogram(binwidth = 50, color = "black") +
+                scale_fill_manual(values = palette[2:3], drop = FALSE) +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Weight (g)") +
+                ylab("Count") +
+                labs(title = "B")
+            C <- ggplot(df_fig2_carapace, aes(x = Month_sort, y = `Mean Carapace Length (mm)`)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                theme_custom +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                ylab("Mean Carapace Length (mm)") +
+                xlab("Month") +
+                scale_y_continuous(n.breaks = 4) +
+                labs(title = "C") +
+                theme(legend.position = "none")
+            D <- ggplot(df_fig2_weight, aes(x = Month_sort, y = `Mean Weight (g)`)) +
+                geom_line(size = 0.5) +
+                geom_point(size = 2.5) +
+                theme_custom +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                ylab("Weight (g)") +
+                xlab("Month") +
+                labs(title = "D") +
+                theme(legend.position = "none")
+            figure_3_top <- ggarrange(
+                A, B,
+                ncol = 2, nrow = 1
+            )
+            figure2 <- ggarrange(
+                figure_3_top, C, D,
+                ncol = 1, nrow = 3
+            )
             p2 <- figure2
             plot_list[[2]] <- list(
                 plot = p2,
@@ -289,7 +440,36 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 height = 5
             )
         } else if (datatype == "Lobster") {
-            figure3 <- ggplot()
+            df_fig3 <- df %>%
+                mutate(
+                    Month = format(`Date of Encounter`, "%b %Y"),
+                    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+                ) %>%
+                group_by(Month, Month_sort) %>%
+                summarize(
+                    Female = round(100 * sum(Sex == "Female", na.rm = TRUE) / n(), 1),
+                    Male = round(100 * sum(Sex == "Male", na.rm = TRUE) / n(), 1)
+                ) %>%
+                arrange(Month_sort) %>%
+                pivot_longer(cols = c(Female, Male), names_to = "Sex", values_to = "Percent")
+            A <- ggplot(df_fig3, aes(x = Month_sort, fill = Sex, y = Percent)) +
+                geom_col(color = "black") +
+                scale_fill_manual(values = palette[2:3]) +
+                theme_custom +
+                scale_x_date(
+                    date_breaks = "1 month",
+                    date_labels = "%b '%y"
+                ) +
+                xlab("Month") +
+                ylab("Percent")
+            B <- ggplot(filter(df_fig2_unsummarized, !is.na(`Pleopod Stage`)), aes(x = `Pleopod Stage`)) +
+                geom_bar(color = "black", fill = palette[2]) +
+                theme_custom +
+                expand_limits(x = 0) +
+                xlab("Pleopod Stage") +
+                ylab("Count") +
+                labs(title = "B")
+            figure3 <- ggarrange(A, B, nrow = 1, ncol = 2)
             p3 <- figure3
             plot_list[[3]] <- list(
                 plot = p3,
@@ -304,21 +484,12 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 plot = p3,
                 name = paste0("figure_fisheries_1per_", tolower(datatype), "_fig3.png"),
                 width = 6,
-                height = 8
+                height = 2.5
             )
         }
 
         # Add p4 plots to plotlist
-        if (datatype == "Lobster") {
-            figure4 <- ggplot()
-            p4 <- figure4
-            plot_list[[4]] <- list(
-                plot = p4,
-                name = paste0("figure_fisheries_1per_", tolower(datatype), "_fig4.png"),
-                width = 6,
-                height = 8
-            )
-        } else if (datatype == "Finfish") {
+        if (datatype == "Finfish") {
             figure4 <- ggplot()
             p4 <- figure4
             plot_list[[4]] <- list(
