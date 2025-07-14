@@ -262,45 +262,41 @@ df_events_overall <- df %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE)
   ) %>%
-  mutate(Month = "Overall")
+  mutate(Year = "Overall")
 df_table1_overall <- df %>%
   summarize(
     Vessels = n_distinct(`Name of vessel used`),
     Finfish = n(),
     Missions = n_distinct(`Mission Id`)
   ) %>%
-  mutate(Month = "Overall") %>%
-  left_join(df_events_overall, by = "Month") %>%
+  mutate(Year = "Overall") %>%
+  left_join(df_events_overall, by = "Year") %>%
   mutate(
     `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
   )
 df_events <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
-  select(Month, `Mission Id`, `Hours Fished`) %>%
+  select(Year, `Mission Id`, `Hours Fished`) %>%
   distinct() %>%
   mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
   filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
-  group_by(Month) %>%
+  group_by(Year) %>%
   summarize(
     Hours = sum(`Hours Fished`, na.rm = TRUE)
   )
 df_table1 <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
-  group_by(Month, Month_sort) %>%
+  group_by(Year) %>%
   summarize(
     Vessels = n_distinct(`Name of vessel used`),
     Finfish = n(),
     Missions = n_distinct(`Mission Id`)
   ) %>%
-  left_join(df_events, by = "Month") %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
+  left_join(df_events, by = "Year") %>%
   mutate(
     `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
   ) %>%
@@ -312,9 +308,9 @@ total_finfish <- df_table1_overall$Finfish
 total_events <- df_table1_overall$Missions
 total_hours <- df_table1_overall$Hours
 max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+max_cpue_num_year <- df_table1$Year[which.max(df_table1$`CPUE (num/hr)`)]
 min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
-min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
+min_cpue_num_year <- df_table1$Year[which.min(df_table1$`CPUE (num/hr)`)]
 ```
 
 
@@ -324,11 +320,11 @@ Fisheries Catch dataset. These finfish were caught across `r total_events` missi
 between `r total_vessels` surveyed vessels, 
 totalling `r total_hours` active fishing hours.
 The highest CPUE in count 
-per hour (num/hr) occurred in `r max_cpue_num_month` 
-with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+per hour (num/hr) occurred in `r max_cpue_num_year` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_year` 
 in `r min_cpue_num` (Table 1; Figure 1).\
 
-**Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
+**Table 1.** Summary of fishing activity by year, including number of surveyed vessels, 
 missions, and finfish caught, along with fishing hours, pounds of catch, 
 and catch per unit effort (CPUE). 
 CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
@@ -348,14 +344,12 @@ as.data.frame(df_table1)
 # Create df for Table 1 expanded details ---------------------------
 df_table1expanded_rows <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
   group_by(`Mission Id`) %>%
   mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
   summarize(
-    Month = first(Month),
-    Month_sort = first(Month_sort),
+    Year = first(Year),
     Hours = first(`Hours Fished`),
     Finfish = n(),
     .groups = "drop"
@@ -371,10 +365,10 @@ df_table1expanded_num_overall <- df_table1expanded_rows %>%
     Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
     SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
   ) %>%
-  mutate(Month = "Overall", CPUE = "num/hr")
+  mutate(Year = "Overall", CPUE = "num/hr")
 df_table1expanded <- df_table1expanded_rows %>%
   mutate(CPUE = "num/hr") %>%
-  group_by(CPUE, Month, Month_sort) %>%
+  group_by(CPUE, Year) %>%
   summarize(
     Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
     Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
@@ -383,8 +377,6 @@ df_table1expanded <- df_table1expanded_rows %>%
     SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
     .groups = "drop"
   ) %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
   bind_rows(df_table1expanded_num_overall)
 
 # Prepare dynamic variables for Table 1 Expanded ---------------------------
@@ -394,16 +386,16 @@ overall_min <- df_table1expanded_num_overall$Min
 overall_max <- df_table1expanded_num_overall$Max
 overall_sd <- df_table1expanded_num_overall$SD
 max_cpue_mean_num <- max(df_table1expanded$Mean, na.rm = TRUE)
-max_cpue_mean_num_month <- df_table1expanded$Month[which.max(df_table1expanded$Mean)]
+max_cpue_mean_num_year <- df_table1expanded$Year[which.max(df_table1expanded$Mean)]
 min_cpue_mean_num <- min(df_table1expanded$Mean, na.rm = TRUE)
-min_cpue_mean_num_month <- df_table1expanded$Month[which.min(df_table1expanded$Mean)]
+min_cpue_mean_num_year <- df_table1expanded$Year[which.min(df_table1expanded$Mean)]
 ```
 
 
 The CPUE of finfish in count per hour had a 
 mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
-with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
-and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_year` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_year`. 
 Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
 and standard deviation was `r overall_sd`num/hr 
 (Table 1; Figure 1).\
@@ -413,56 +405,43 @@ and standard deviation was `r overall_sd`num/hr
 # Create dfs for Figure 1 ---------------------------
 df_fig1_A <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
-  group_by(Month, Month_sort) %>%
+  group_by(Year) %>%
   summarize(
     Vessels = n_distinct(`Name of vessel used`),
     Finfish = n(),
     Missions = n_distinct(`Mission Id`)
   ) %>%
-  left_join(df_events, by = "Month") %>%
-  arrange(Month_sort) %>%
+  left_join(df_events, by = "Year") %>%
+  arrange(Year) %>%
   mutate(
     `CPUE (num/hr)` = round(Finfish / Hours, 1)
   )
 
 # Create panels for Figure 1 ---------------------------
-A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+A <- ggplot(df_fig1_A, aes(x = Year, y = Hours, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
   expand_limits(y = 0) +
   theme_custom +
-  xlab("Month") +
+  xlab("Year") +
   ylab("Hours Fished") +
   labs(title = "A")
-B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Finfish, group = 1)) +
+B <- ggplot(df_fig1_A, aes(x = Year, y = Finfish, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
   expand_limits(y = 0) +
   theme_custom +
-  xlab("Month") +
+  xlab("Year") +
   ylab("Number Finfish") +
   labs(title = "B")
-C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+C <- ggplot(df_fig1_A, aes(x = Year, y = `CPUE (num/hr)`, group = 1)) +
   geom_line(size = 0.5) +
   geom_point(size = 2.5) +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
   expand_limits(y = 0) +
   theme_custom +
-  xlab("Month") +
+  xlab("Year") +
   ylab("Catch per Unit Effort") +
   labs(title = "C")
 
@@ -491,15 +470,14 @@ Data were collected using Fisheries catch finfish data from Turneffe Atoll Marin
 # Create df for Table 2 ---------------------------
 df_table2 <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
   mutate(
     `Total Length (cm)` = as.numeric(`Total Length (cm)`),
     `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
     `Weight (g)` = as.numeric(`Weight (g)`)
   ) %>%
-  group_by(Month, Month_sort) %>%
+  group_by(Year) %>%
   summarize(
     `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
     `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
@@ -508,8 +486,6 @@ df_table2 <- df %>%
     `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
     `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
   ) %>%
-  arrange(Month_sort) %>%
-  select(-Month_sort) %>%
   bind_rows(
     df %>%
       mutate(
@@ -525,7 +501,7 @@ df_table2 <- df %>%
         `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
         `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
       ) %>%
-      mutate(Month = "Overall")
+      mutate(Year = "Overall")
   ) %>%
   mutate(across(everything(), ~ {
     if (is.numeric(.)) {
@@ -536,21 +512,21 @@ df_table2 <- df %>%
   }))
 
 # Prepare dynamic variables for Table 2 ---------------------------
-total_length <- filter(df_table2, Month == "Overall")$`Mean Total Length (cm)`
-total_fork <- filter(df_table2, Month == "Overall")$`Mean Fork Length (cm)`
-total_weight <- filter(df_table2, Month == "Overall")$`Weight (g)`
-max_length <- max(filter(df_table2, Month != "Overall")$`Mean Total Length (cm)`, na.rm = TRUE)
-max_length_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Total Length (cm)`)]
-max_fork <- max(filter(df_table2, Month != "Overall")$`Mean Fork Length (cm)`, na.rm = TRUE)
-max_fork_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Fork Length (cm)`)]
-max_weight <- max(filter(df_table2, Month != "Overall")$`Weight (g)`, na.rm = TRUE)
-max_weight_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Weight (g)`)]
+total_length <- filter(df_table2, Year == "Overall")$`Mean Total Length (cm)`
+total_fork <- filter(df_table2, Year == "Overall")$`Mean Fork Length (cm)`
+total_weight <- filter(df_table2, Year == "Overall")$`Weight (g)`
+max_length <- max(filter(df_table2, Year != "Overall")$`Mean Total Length (cm)`, na.rm = TRUE)
+max_length_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Mean Total Length (cm)`)]
+max_fork <- max(filter(df_table2, Year != "Overall")$`Mean Fork Length (cm)`, na.rm = TRUE)
+max_fork_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Mean Fork Length (cm)`)]
+max_weight <- max(filter(df_table2, Year != "Overall")$`Weight (g)`, na.rm = TRUE)
+max_weight_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Weight (g)`)]
 ```
 
 
-Average total length was `r total_length`in, greatest in `r max_length_month` with `r max_length`in. 
-Average fork length was `r total_fork`in, greatest in `r max_fork_month` with `r max_fork`in. 
-Average weight was `r total_weight`g, greatest in `r max_weight_month` with `r max_weight`g (Table 2; Figure 2; Figure 3).\
+Average total length was `r total_length`in, greatest in `r max_length_year` with `r max_length`in. 
+Average fork length was `r total_fork`in, greatest in `r max_fork_year` with `r max_fork`in. 
+Average weight was `r total_weight`g, greatest in `r max_weight_year` with `r max_weight`g (Table 2; Figure 2; Figure 3).\
 
 
 **Table 2.** Summary of mean and median total and fork length (cm) and weight (g) of finfish. 
@@ -566,23 +542,21 @@ as.data.frame(df_table2)
 ```{r figure2_prep, echo = FALSE, include = FALSE}
 # Create dfs for Figure 2 ---------------------------
 df_fig2_unsummarized <- df %>%
+  mutate(Year = format(df$`Date of Encounter`, "%Y")) %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
     `Total Length (cm)` = as.numeric(`Total Length (cm)`),
     `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
     `Weight (g)` = as.numeric(`Weight (g)`)
   ) %>%
-  arrange(Month_sort)
+  arrange(Year)
 df_fig2 <- df %>%
+  mutate(Year = format(df$`Date of Encounter`, "%Y")) %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
     `Total Length (cm)` = as.numeric(`Total Length (cm)`),
     `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
     `Weight (g)` = as.numeric(`Weight (g)`)
   ) %>%
-  group_by(Month, Month_sort) %>%
+  group_by(Year) %>%
   summarize(
     `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
     `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
@@ -591,7 +565,7 @@ df_fig2 <- df %>%
     `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
     `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
   ) %>%
-  arrange(Month_sort)
+  arrange(Year)
 df_fig2_long <- df_fig2 %>%
   pivot_longer(
     cols = c(`Mean Total Length (cm)`, `Mean Fork Length (cm)`),
@@ -614,17 +588,13 @@ B <- ggplot(df_fig2_unsummarized, aes(x = `Fork Length (cm)`)) +
   xlab("Fork Length (cm)") +
   ylab("Count") +
   labs(title = "B")
-C <- ggplot(df_fig2_long, aes(x = Month_sort, group = Metric)) +
+C <- ggplot(df_fig2_long, aes(x = Year, group = Metric)) +
   geom_line(aes(y = Length), size = 0.5) +
   geom_point(aes(y = Length, shape = Metric), size = 2.5) +
   scale_shape_manual(name = "Metric", values = c("Mean Total Length (cm)" = 4, "Mean Fork Length (cm)" = 19)) +
   theme_custom +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
   ylab("Length (cm)") +
-  xlab("Month") +
+  xlab("Year") +
   labs(title = "C") +
   scale_y_continuous(n.breaks = 4)
 
@@ -668,17 +638,13 @@ A <- ggplot(df_fig2_unsummarized, aes(x = `Weight (g)`)) +
   xlab("Mean Weight (g)") +
   ylab("Count") +
   labs(title = "A")
-B <- ggplot(df_fig3_long, aes(x = Month_sort, group = Metric)) +
+B <- ggplot(df_fig3_long, aes(x = Year, group = Metric)) +
   geom_line(aes(y = Weight), size = 0.5) +
   geom_point(aes(y = Weight, shape = Metric), size = 2.5) +
   scale_shape_manual(name = "Metric", values = c("Mean Weight (g)" = 4, "Median Weight (g)" = 19)) +
   theme_custom +
-  scale_x_date(
-    date_breaks = "1 month",
-    date_labels = "%b '%y"
-  ) +
   ylab("Weight (g)") +
-  xlab("Month") +
+  xlab("Year") +
   labs(title = "C") +
   scale_y_continuous(n.breaks = 4)
 
@@ -720,43 +686,40 @@ df_table3_overall <- df %>%
   slice_head(n = 5)
 df_table3_summarized <- df %>%
   mutate(
-    Month = "Overall"
+    Year = "Overall"
   ) %>%
-  group_by(Month, `Fish Species`) %>%
+  group_by(Year, `Fish Species`) %>%
   summarize(Count = n()) %>%
   filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
   pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0)
 df_table3 <- df %>%
   mutate(
-    Month = format(`Date of Encounter`, "%b %Y"),
-    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+    Year = format(df$`Date of Encounter`, "%Y")
   ) %>%
-  group_by(Month, Month_sort, `Fish Species`) %>%
+  group_by(Year, `Fish Species`) %>%
   summarize(Count = n()) %>%
   filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
   pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0) %>%
-  arrange(Month_sort) %>%
+  arrange(Year) %>%
   bind_rows(df_table3_summarized) %>%
-  ungroup() %>%
-  select(-Month_sort)
-
+  ungroup()
 
 # Prepare dynamic variables for Table 3 ---------------------------
 num_species <- length(unique(df$`Fish Species`))
 common_species <- combine_words(df_table3_overall$`Fish Species`)
-months <- unique(filter(df_table3, Month != "Overall")$Month)
-months_top <- c()
-for (month in months) {
-  df_month <- filter(df_table3, Month == month)
-  species_max <- names(df_month)[which.max(df_month[1, -1])]
-  months_top <- c(months_top, paste0(species_max, " in ", month))
+years <- unique(filter(df_table3, Year != "Overall")$Year)
+years_top <- c()
+for (year in years) {
+  df_year <- filter(df_table3, Year == year)
+  species_max <- names(df_year)[which.max(df_year[1, -1])]
+  years_top <- c(years_top, paste0(species_max, " in ", year))
 }
-months_top_words <- combine_words(months_top)
+years_top_words <- combine_words(years_top)
 ```
 
 
 In total, `r num_species` unique species of finfish were observed throughout the surveyed period, with the most common being `r common_species`. 
-The most common species observed in each month include `r months_top_words`.
+The most common species observed in each year include `r years_top_words`.
 (Figure 4; Table 3).
 
 
@@ -769,7 +732,7 @@ figure4
 Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
-**Table 3.** Count of observed finfish species in the surveyed months, including only the top five most 
+**Table 3.** Count of observed finfish species in the surveyed years, including only the top five most 
 commonly observed species across the entire sampling period. 
 Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
