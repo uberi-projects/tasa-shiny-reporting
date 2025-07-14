@@ -1,0 +1,801 @@
+---
+output:
+  officedown::rdocx_document:
+    reference_docx: report_template.docx
+    tables:
+      style: table_template
+params:
+  release: "Unknown"
+  user_name: "Unknown"
+  fisheries_multiper_timeframe: "Annual"
+  datafile1: pressure
+  datafile1_name: "Unknown"
+  datafile2: pressure
+  datafile2_name: "Unknown"
+  datafile3: NULL
+  datafile3_name: "Unknown"
+  datafile4: NULL
+  datafile4_name: "Unknown"
+  fisheries_multiper1_year_selection: "None"
+  fisheries_multiper1_period_selection: "None"
+  fisheries_multiper1_lobster_season_selection: "None" 
+  fisheries_multiper1_conch_season_selection: "None" 
+  fisheries_multiper1_finfish_season_selection: "None"
+  fisheries_multiper2_year_selection: "None"
+  fisheries_multiper2_period_selection: "None"
+  fisheries_multiper2_lobster_season_selection: "None" 
+  fisheries_multiper2_conch_season_selection: "None" 
+  fisheries_multiper2_finfish_season_selection: "None"
+  fisheries_multiper3_year_selection: "None"
+  fisheries_multiper3_period_selection: "None"
+  fisheries_multiper3_lobster_season_selection: "None" 
+  fisheries_multiper3_conch_season_selection: "None" 
+  fisheries_multiper3_finfish_season_selection: "None"
+  fisheries_multiper4_year_selection: "None"
+  fisheries_multiper4_period_selection: "None"
+  fisheries_multiper4_lobster_season_selection: "None" 
+  fisheries_multiper4_conch_season_selection: "None" 
+  fisheries_multiper4_finfish_season_selection: "None"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+# Load packages ---------------------------
+library(knitr)
+library(officedown)
+library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Define datafiles ---------------------------
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
+
+# Determine year or season  ---------------------------
+timeframe <- params$fisheries_multiper_timeframe
+
+# Filter to year or season  ---------------------------
+df_1 <- params$datafile1[[1]]
+df_1$`Date of Encounter` <- as.Date(df_1$`Date of Encounter`)
+if (timeframe == "Annual" && as.character(params$fisheries_multiper1_year_selection) != "None") {
+  df_1 <- df_1 |>
+    filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper1_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper1_conch_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisheries_multiper1_conch_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df_1 <- df_1 |>
+    filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+}
+df_2 <- params$datafile2[[1]]
+df_2$`Date of Encounter` <- as.Date(df_2$`Date of Encounter`)
+if (timeframe == "Annual" && as.character(params$fisheries_multiper2_year_selection) != "None") {
+  df_2 <- df_2 |>
+    filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper2_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper2_conch_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisheries_multiper2_conch_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df_2 <- df_2 |>
+    filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+}
+if (!is.null(params$datafile3)) {
+  df_3 <- params$datafile3[[1]]
+  df_3$`Date of Encounter` <- as.Date(df_3$`Date of Encounter`)
+  if (timeframe == "Annual" && as.character(params$fisheries_multiper3_year_selection) != "None") {
+    df_3 <- df_3 |>
+      filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper3_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper3_conch_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisheries_multiper3_conch_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_3 <- df_3 |>
+      filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+  }
+}
+if (!is.null(params$datafile4)) {
+  df_4 <- params$datafile4[[1]]
+  df_4$`Date of Encounter` <- as.Date(df_4$`Date of Encounter`)
+  if (timeframe == "Annual" && as.character(params$fisheries_multiper4_year_selection) != "None") {
+    df_4 <- df_4 |>
+      filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper4_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper4_conch_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisheries_multiper4_conch_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_4 <- df_4 |>
+      filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+  }
+}
+
+# Add month column  ---------------------------
+df_1$Month <- format(df_1$`Date of Encounter`, "%b %Y")
+df_2$Month <- format(df_2$`Date of Encounter`, "%b %Y")
+if (!is.null(params$datafile3)) {
+  df_3$Month <- format(df_3$`Date of Encounter`, "%b %Y")
+}
+if (!is.null(params$datafile4)) {
+  df_4$Month <- format(df_4$`Date of Encounter`, "%b %Y")
+}
+
+# Define individual study timeframes ---------------------------
+study_start_1 <- min(df_1$`Date of Encounter`, na.rm = TRUE)
+study_end_1 <- max(df_1$`Date of Encounter`, na.rm = TRUE)
+study_start_2 <- min(df_2$`Date of Encounter`, na.rm = TRUE)
+study_end_2 <- max(df_2$`Date of Encounter`, na.rm = TRUE)
+if (!is.null(params$datafile3)) {
+  study_start_3 <- min(df_3$`Date of Encounter`, na.rm = TRUE)
+  study_end_3 <- max(df_3$`Date of Encounter`, na.rm = TRUE)
+}
+if (!is.null(params$datafile4)) {
+  study_start_4 <- min(df_4$`Date of Encounter`, na.rm = TRUE)
+  study_end_4 <- max(df_4$`Date of Encounter`, na.rm = TRUE)
+}
+
+# Assign Season if Relevant ---------------------------
+if (timeframe == "Seasonal") {
+  df_1 <- mutate(df_1, Season = paste0(format(study_start_1, "%Y"), "-", format(study_end_1, "%Y")))
+  df_2 <- mutate(df_2, Season = paste0(format(study_start_2, "%Y"), "-", format(study_end_2, "%Y")))
+  if (!is.null(params$datafile3)) {
+    df_3 <- mutate(df_3, Season = paste0(format(study_start_3, "%Y"), "-", format(study_end_3, "%Y")))
+  }
+  if (!is.null(params$datafile4)) {
+    df_4 <- mutate(df_4, Season = paste0(format(study_start_4, "%Y"), "-", format(study_end_4, "%Y")))
+  }
+}
+
+# Merge dfs  ---------------------------
+df <- df_1 %>%
+  bind_rows(df_2)
+if (!is.null(params$datafile3)) {
+  df <- df %>%
+    bind_rows(df_3)
+}
+if (!is.null(params$datafile4)) {
+  df <- df %>%
+    bind_rows(df_4)
+}
+
+# Define study timeframe ---------------------------
+study_start <- min(df$`Date of Encounter`, na.rm = TRUE)
+study_end <- max(df$`Date of Encounter`, na.rm = TRUE)
+if (timeframe == "Annual") {
+  study_timeframe <- combine_words(unique(format(df$`Date of Encounter`, "%Y")))
+} else if (timeframe == "Seasonal") {
+  study_timeframe <- c(paste0(format(study_start_1, "%Y"), "-", format(study_end_1, "%Y")), paste0(format(study_start_2, "%Y"), "-", format(study_end_2, "%Y")))
+  if (!is.null(params$datafile3)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_3, "%Y"), "-", format(study_end_3, "%Y")))
+  }
+  if (!is.null(params$datafile4)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_4, "%Y"), "-", format(study_end_4, "%Y")))
+  }
+  study_timeframe <- combine_words(study_timeframe)
+}
+```
+
+# Turneffe Atoll Fisheries Catch Conch `r timeframe` Dataset Report: `r study_timeframe`
+
+
+Turneffe Atoll Sustainability Association (TASA)
+
+
+**Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
+**Source Data:** `r datafile_names` \
+**Generated by:** `r params$user_name`\
+**App Version:** `r params$release`\
+
+***
+
+Coral reef ecosystems, like those of Turneffe Atoll Marine Reserve (TAMR), provide key ecological and economic value to coastal families. 
+With proper management and monitoring, 
+these ecosystems can continue to support people sustainably in the long-term. 
+Directly tracking the activities and harvests of local fishers is a key method for monitoring coral reefs, 
+as it offers insights into ecosystem dynamics and possible pressures. 
+This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of queen conch (_Aliger gigas_) 
+at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+Data were recorded by TASA patrolling officers in direct communication with TAMR fishers during their fishing trips. 
+Data were collected on key economic species. 
+This report aims to summarize and visualize the Fisheries 
+Conch Catch dataset from `r study_timeframe` to facilitate data interpretation and strengthen the scientific basis for 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
+
+## Background
+
+### Turneffe Atoll Marine Reserve
+
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
+### Fisheries Catch Project
+
+### Queen Conch
+
+Queen conch (_Aliger gigas_) are large-sized Caribbean gastropods characterized by their distinctive whorl-shaped shell with a set of thick spines at the apex. 
+Juvenile queen conch have a pink, pearly interior, and the shell has a recognizable dark periostracum layer. 
+Sex is determined by the presence of either a verge or egg groove inside the shell, which can only be observed by removing the conch from its shell. 
+Reproduction occurs during warmer months (Appeldoorn and Baker 2013). 
+
+In Belize, the queen conch fishery is the second most important commercial fishery in the country. 
+Conch are harvested by free diving depths of 5-60ft in seagrass beds and coral reef habitats. 
+The fishery is regulated by the Belize Fisheries Department (BFD). 
+National regulations mandate that conch may only be harvested if they exceed a shell length of 7 inches, and only during the open season, which extends from October 1st until June 30th of the following year, or until the national conch quota is reached, whichever occurs first. 
+The use of SCUBA for commercial conch harvesting is strictly prohibited. 
+Additionally, commercial fishing activities in Belize require a fishing license (Belize Fisheries Department accessed 2025).
+
+According to NOAA, queen conch density needs to be at least 100 conch per hectare to facilitate proper mating (NOAA Fisheries 2025).\
+
+
+## Methods
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+
+## Results
+
+
+
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+df_events_overall <- df %>%
+  select(`Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  ) %>%
+  mutate(Month = "Overall")
+df_table1_overall <- df %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  mutate(Month = "Overall") %>%
+  left_join(df_events_overall, by = "Month") %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+  )
+df_events <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  select(Month, `Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  group_by(Month) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  )
+df_table1 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Conch / Hours, 1), NA)
+  ) %>%
+  bind_rows(df_table1_overall)
+
+# Prepare dynamic variables for Table 1 ---------------------------
+total_vessels <- length(unique(df$`Name of Vessel`))
+total_conch <- df_table1_overall$Conch
+total_events <- df_table1_overall$Missions
+total_hours <- df_table1_overall$Hours
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_month <- df_table1$Month[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_month <- df_table1$Month[which.min(df_table1$`CPUE (num/hr)`)]
+```
+
+
+Between `r study_start` and `r study_end`, `r total_conch` conch were 
+caught and recorded as part of the TAMR 
+Fisheries Catch dataset. These conch were caught across `r total_events` missions, 
+between `r total_vessels` surveyed vessels, 
+totalling `r total_hours` active fishing hours.
+The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_month` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_month` 
+in `r min_cpue_num` (Table 1; Figure 1).\
+
+**Table 1.** Summary of fishing activity by month, including number of surveyed vessels, 
+missions, and conch caught, along with fishing hours, pounds of catch, 
+and catch per unit effort (CPUE). 
+CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE}
+# show table
+as.data.frame(df_table1)
+```
+
+
+<br>
+
+
+```{r table1_expanded_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 Expanded ---------------------------
+df_table1_expanded_rows <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(`Mission Id`) %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  summarize(
+    Month = first(Month),
+    Month_sort = first(Month_sort),
+    Hours = first(`Hours Fished`),
+    Conch = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, Conch / Hours, NA)
+  )
+df_table1_expanded_num_overall <- df_table1_expanded_rows %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Month = "Overall", CPUE = "num/hr")
+df_table1expanded <- df_table1_expanded_rows %>%
+  mutate(CPUE = "num/hr") %>%
+  group_by(CPUE, Month, Month_sort) %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(df_table1_expanded_num_overall)
+
+# Prepare dynamic variables for Table 1 Expanded ---------------------------
+overall_mean <- df_table1_expanded_num_overall$Mean
+overall_median <- df_table1_expanded_num_overall$Median
+overall_min <- df_table1_expanded_num_overall$Min
+overall_max <- df_table1_expanded_num_overall$Max
+overall_sd <- df_table1_expanded_num_overall$SD
+max_cpue_mean_num <- max(df_table1expanded$Mean, na.rm = TRUE)
+max_cpue_mean_num_month <- df_table1expanded$Month[which.max(df_table1expanded$Mean)]
+min_cpue_mean_num <- min(df_table1expanded$Mean, na.rm = TRUE)
+min_cpue_mean_num_month <- df_table1expanded$Month[which.min(df_table1expanded$Mean)]
+```
+
+
+The CPUE of conch in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_month` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_month`. 
+Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
+and standard deviation was `r overall_sd`num/hr 
+(Table 1; Figure 1).\
+
+
+```{r figure1_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 1 ---------------------------
+df_fig1_A <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    Vessels = n_distinct(`Name of Vessel`),
+    Conch = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Month") %>%
+  arrange(Month_sort) %>%
+  mutate(
+    `CPUE (num/hr)` = round(Conch / Hours, 1)
+  )
+
+# Create panels for Figure 1 ---------------------------
+A <- ggplot(df_fig1_A, aes(x = Month_sort, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Hours Fished") +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Month_sort, y = Conch, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Number Conch") +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Month_sort, y = `CPUE (num/hr)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Month") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "C")
+
+
+# Assemble Figure 1 ---------------------------
+figure1 <- ggarrange(
+  A, B, C,
+  nrow = 3, ncol = 1
+)
+```
+
+
+```{r figure1, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure1
+```
+
+
+*Figure 1.* Line plots of 
+active hours fished (A), conch caught (B), 
+and catch per unit effort (in count per active hour fished) (C) 
+over time. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_table2 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+  ) %>%
+  mutate(
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    `Mean Shell Length (mm)` = round(mean(`Shell Length (mm)`, na.rm = TRUE), 1),
+    `Mean Lip Thickness (mm)` = round(mean(`Lip Thickness (mm)`, na.rm = TRUE), 1),
+    `Mean Market Clean Weight (g)` = round(mean(weight_for_mk, na.rm = TRUE), 1),
+    `Mean Whole Weight (g)` = round(mean(weight_for_whole, na.rm = TRUE), 1),
+    `Mean Unprocessed Weight (g)` = round(mean(weight_for_up, na.rm = TRUE), 1)
+  ) %>%
+  arrange(Month_sort) %>%
+  select(-Month_sort) %>%
+  bind_rows(
+    df %>%
+      mutate(
+        weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+        weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+        weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+      ) %>%
+      mutate(
+        `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+        `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+        weight_for_mk = as.numeric(weight_for_mk),
+        weight_for_whole = as.numeric(weight_for_whole),
+        weight_for_up = as.numeric(weight_for_up)
+      ) %>%
+      summarize(
+        `Mean Shell Length (mm)` = round(mean(`Shell Length (mm)`, na.rm = TRUE), 1),
+        `Mean Lip Thickness (mm)` = round(mean(`Lip Thickness (mm)`, na.rm = TRUE), 1),
+        `Mean Market Clean Weight (g)` = round(mean(weight_for_mk, na.rm = TRUE), 1),
+        `Mean Whole Weight (g)` = round(mean(weight_for_whole, na.rm = TRUE), 1),
+        `Mean Unprocessed Weight (g)` = round(mean(weight_for_up, na.rm = TRUE), 1)
+      ) %>%
+      mutate(Month = "Overall")
+  ) %>%
+  mutate(across(everything(), ~ {
+    if (is.numeric(.)) {
+      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+    } else {
+      ifelse(is.na(.), "-", .)
+    }
+  }))
+
+# Prepare dynamic variables for Table 2 ---------------------------
+total_shell <- filter(df_table2, Month == "Overall")$`Mean Shell Length (mm)`
+max_shell <- max(filter(df_table2, Month != "Overall")$`Mean Shell Length (mm)`, na.rm = TRUE)
+max_shell_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Shell Length (mm)`)]
+total_lip <- filter(df_table2, Month == "Overall")$`Mean Lip Thickness (mm)`
+max_lip <- max(filter(df_table2, Month != "Overall")$`Mean Lip Thickness (mm)`, na.rm = TRUE)
+max_lip_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Lip Thickness (mm)`)]
+total_weight_mk <- filter(df_table2, Month == "Overall")$`Mean Market Clean Weight (g)`
+max_weight_mk <- max(filter(df_table2, Month != "Overall")$`Mean Market Clean Weight (g)`, na.rm = TRUE)
+max_weight_mk_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Market Clean Weight (g)`)]
+total_weight_whole <- filter(df_table2, Month == "Overall")$`Mean Whole Weight (g)`
+max_weight_whole <- max(filter(df_table2, Month != "Overall")$`Mean Whole Weight (g)`, na.rm = TRUE)
+max_weight_whole_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Whole Weight (g)`)]
+total_weight_up <- filter(df_table2, Month == "Overall")$`Mean Unprocessed Weight (g)`
+max_weight_up <- max(filter(df_table2, Month != "Overall")$`Mean Unprocessed Weight (g)`, na.rm = TRUE)
+max_weight_up_month <- df_table2$Month[which.max(filter(df_table2, Month != "Overall")$`Mean Unprocessed Weight (g)`)]
+```
+
+Average shell length was `r total_shell`oz, 
+greatest in `r max_shell_month` with `r max_shell`oz. 
+Average lip thickness was `r total_lip`oz, 
+greatest in `r max_lip_month` with `r max_lip`oz. 
+Average market clean weight was `r total_weight_mk`oz, 
+greatest in `r max_weight_mk_month` with `r max_weight_mk`oz. 
+Average whole weight was `r total_weight_whole`oz, 
+greatest in `r max_weight_whole_month` with `r max_weight_whole`oz. 
+Average unprocessed weight was `r total_weight_up`oz, 
+greatest in `r max_weight_up_month` with `r max_weight_up`oz (Table 2; Figure 2; Figure 3).\
+
+
+**Table 2.** Summary of mean shell length (mm), lip thickness (mm), market clean weight (oz), whole weight (oz), 
+and unprocessed weight (oz) for fished conch. Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, 
+`r study_timeframe`.\
+
+
+```{r table2, echo = FALSE}
+# show table
+as.data.frame(df_table2)
+```
+
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_unsummarized <- df %>%
+  mutate(
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_)
+  ) %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`),
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  arrange(Month_sort)
+df_fig2 <- df %>%
+  mutate(
+    weight_for_mk = ifelse(`Weight Type` == "Market Clean", `Weight (g)`, NA_real_),
+    weight_for_whole = ifelse(`Weight Type` == "Whole", `Weight (g)`, NA_real_),
+    weight_for_up = ifelse(`Weight Type` == "Unprocessed", `Weight (g)`, NA_real_),
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01")),
+    `Shell Length (mm)` = as.numeric(`Shell Length (mm)`),
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`)
+  ) %>%
+  mutate(
+    weight_for_mk = as.numeric(weight_for_mk),
+    weight_for_whole = as.numeric(weight_for_whole),
+    weight_for_up = as.numeric(weight_for_up)
+  ) %>%
+  group_by(Month, Month_sort) %>%
+  summarize(
+    weight_for_mk = round(mean(weight_for_mk, na.rm = TRUE), 1),
+    weight_for_whole = round(mean(weight_for_whole, na.rm = TRUE), 1),
+    weight_for_up = round(mean(weight_for_up, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  arrange(Month_sort)
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = weight_for_mk)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  scale_fill_manual(values = palette[2:3], drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Market Clean Weight (g)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig2_unsummarized, aes(x = weight_for_whole)) +
+  geom_histogram(binwidth = 100, color = "black") +
+  scale_fill_manual(values = palette[2:3], drop = FALSE) +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Whole Weight (g)") +
+  ylab("Count") +
+  labs(title = "B")
+C <- ggplot(df_fig2, aes(x = Month_sort)) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  ylab("Weight (g)") +
+  xlab("Month") +
+  scale_shape_manual(
+    name = "Weight Type",
+    values = c("Market Clean" = 4, "Whole" = 19, "Unprocessed" = 6)
+  ) +
+  scale_color_manual(
+    name = "Weight Type",
+    values = c("Market Clean" = "black", "Whole" = "black", "Unprocessed" = "black")
+  ) +
+  expand_limits(y = 0) +
+  labs(title = "C") +
+  theme(legend.position = "bottom")
+
+# Add points and lines per weight type ------------------------------
+if (sum(!is.na(df_fig2$weight_for_mk)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_mk, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_mk)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_mk, shape = "Market Clean"), size = 2.5)
+}
+if (sum(!is.na(df_fig2$weight_for_whole)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_whole, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_whole)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_whole, shape = "Whole"), size = 2.5)
+}
+if (sum(!is.na(df_fig2$weight_for_up)) >= 2) {
+  C <- C + geom_line(aes(y = weight_for_up, group = 1), size = 0.5)
+}
+if (sum(!is.na(df_fig2$weight_for_up)) >= 1) {
+  C <- C + geom_point(aes(y = weight_for_up, shape = "Unprocessed"), size = 2.5)
+}
+
+
+# Assemble Figure 2 ---------------------------
+figure_3_top <- ggarrange(
+  A, B,
+  ncol = 2, nrow = 1
+)
+figure2 <- ggarrange(
+  figure_3_top, C,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Histogram of market clean weight (g) (A), histogram of whole weight (g) (B), and 
+line plot of different average weight types recorded over time (C).
+Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create df for Figure 3 ---------------------------
+df_fig3 <- df %>%
+  mutate(
+    `Shell Length (cm)` = as.numeric(`Shell Length (mm)`) / 10,
+    `Lip Thickness (mm)` = as.numeric(`Lip Thickness (mm)`)
+  )
+
+# Create Figure 3 ---------------------------
+A <- ggplot(filter(df_fig3, is.na(`Lip Thickness (mm)`)), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "A", subtitle = "No Data for Lip Thickness")
+B <- ggplot(filter(df_fig3, `Lip Thickness (mm)` <= 5 & `Lip Thickness (mm)` >= 0), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "B", subtitle = "Lip Thickness 0-5mm")
+C <- ggplot(filter(df_fig3, `Lip Thickness (mm)` > 5), aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "C", subtitle = "Lip Thickness >5mm")
+D <- ggplot(df_fig3, aes(x = `Shell Length (cm)`)) +
+  geom_histogram(color = "black", position = "identity", alpha = 0.5) +
+  theme_custom +
+  scale_fill_manual(values = c(palette[3], palette[4])) +
+  geom_vline(xintercept = 17.8, linetype = "dashed") +
+  scale_x_continuous(limits = c(0, 30), breaks = seq(0, 30, 5)) +
+  labs(title = "D", subtitle = "Overall")
+
+# Assemble Figure 3 ---------------------------
+figure3 <- ggarrange(A, B, C, D, nrow = 2, ncol = 2)
+```
+
+
+```{r figure3, fig.width=6, fig.height=5, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Length-frequency distribution of lipped and non-lipped queen conch shell length (cm) at Turneffe Atoll Marine Reserve,
+for conch with no lip thickness data (A), conch with a lip from 0-5mm (B), conch with a lip >5mm (C), and all recordered conch (D).  
+The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest. Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, 
+`r study_timeframe`.\
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the fisheries catch conch data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Fisheries Catch data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
+
+
+## Acknowledgments
+
+Thank you to the data collectors and fishers who contributed to this project.\
+
+
+## Literature Cited
+
+Appeldoorn, R. S., & Baker, N. (2013). A Literature Review of the Queen Conch, Strombus gigas [Technical Report]. University of Puerto Rico.
+
+Belize Fisheries Department. (n.d.). Capture Fisheries Unit. https://fisheries.gov.bz/units/cfu/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+NOAA Fisheries. (2025). Queen Conch: Science. https://www.fisheries.noaa.gov/species/queen-conch/science
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
