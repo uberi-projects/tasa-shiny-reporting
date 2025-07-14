@@ -1,0 +1,781 @@
+---
+output:
+  officedown::rdocx_document:
+    reference_docx: report_template.docx
+    tables:
+      style: table_template
+params:
+  release: "Unknown"
+  user_name: "Unknown"
+  fisheries_multiper_timeframe: "Annual"
+  datafile1: pressure
+  datafile1_name: "Unknown"
+  datafile2: pressure
+  datafile2_name: "Unknown"
+  datafile3: NULL
+  datafile3_name: "Unknown"
+  datafile4: NULL
+  datafile4_name: "Unknown"
+  fisheries_multiper1_year_selection: "None"
+  fisheries_multiper1_period_selection: "None"
+  fisheries_multiper1_lobster_season_selection: "None" 
+  fisheries_multiper1_conch_season_selection: "None" 
+  fisheries_multiper1_finfish_season_selection: "None"
+  fisheries_multiper2_year_selection: "None"
+  fisheries_multiper2_period_selection: "None"
+  fisheries_multiper2_lobster_season_selection: "None" 
+  fisheries_multiper2_conch_season_selection: "None" 
+  fisheries_multiper2_finfish_season_selection: "None"
+  fisheries_multiper3_year_selection: "None"
+  fisheries_multiper3_period_selection: "None"
+  fisheries_multiper3_lobster_season_selection: "None" 
+  fisheries_multiper3_conch_season_selection: "None" 
+  fisheries_multiper3_finfish_season_selection: "None"
+  fisheries_multiper4_year_selection: "None"
+  fisheries_multiper4_period_selection: "None"
+  fisheries_multiper4_lobster_season_selection: "None" 
+  fisheries_multiper4_conch_season_selection: "None" 
+  fisheries_multiper4_finfish_season_selection: "None"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+# Load packages ---------------------------
+library(knitr)
+library(officedown)
+library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
+
+# Define datafiles ---------------------------
+datafile_names <- c(params$datafile1_name, params$datafile2_name)
+if (!is.null(params$datafile3)) {
+  datafile_names <- c(datafile_names, params$datafile3_name)
+}
+if (!is.null(params$datafile4)) {
+  datafile_names <- c(datafile_names, params$datafile4_name)
+}
+datafiles <- knitr::combine_words(datafile_names)
+
+# Determine year or season  ---------------------------
+timeframe <- params$fisheries_multiper_timeframe
+
+# Filter to year or season  ---------------------------
+df_1 <- params$datafile1[[1]]
+df_1$`Date of Encounter` <- as.Date(df_1$`Date of Encounter`)
+if (timeframe == "Annual" && as.character(params$fisheries_multiper1_year_selection) != "None") {
+  df_1 <- df_1 |>
+    filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper1_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper1_finfish_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisheries_multiper1_finfish_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df_1 <- df_1 |>
+    filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+}
+df_2 <- params$datafile2[[1]]
+df_2$`Date of Encounter` <- as.Date(df_2$`Date of Encounter`)
+if (timeframe == "Annual" && as.character(params$fisheries_multiper2_year_selection) != "None") {
+  df_2 <- df_2 |>
+    filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper2_year_selection)
+} else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper2_finfish_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$fisheries_multiper2_finfish_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-07-01"))
+  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  df_2 <- df_2 |>
+    filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+}
+if (!is.null(params$datafile3)) {
+  df_3 <- params$datafile3[[1]]
+  df_3$`Date of Encounter` <- as.Date(df_3$`Date of Encounter`)
+  if (timeframe == "Annual" && as.character(params$fisheries_multiper3_year_selection) != "None") {
+    df_3 <- df_3 |>
+      filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper3_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper3_finfish_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisheries_multiper3_finfish_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_3 <- df_3 |>
+      filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+  }
+}
+if (!is.null(params$datafile4)) {
+  df_4 <- params$datafile4[[1]]
+  df_4$`Date of Encounter` <- as.Date(df_4$`Date of Encounter`)
+  if (timeframe == "Annual" && as.character(params$fisheries_multiper4_year_selection) != "None") {
+    df_4 <- df_4 |>
+      filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper4_year_selection)
+  } else if (timeframe == "Seasonal" && as.character(params$fisheries_multiper4_finfish_season_selection) != "None") {
+    season_years <- unlist(strsplit(params$fisheries_multiper4_finfish_season_selection, "-"))
+    start_date <- as.Date(paste0(season_years[1], "-07-01"))
+    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    df_4 <- df_4 |>
+      filter(`Date of Encounter` >= start_date, `Date of Encounter` <= end_date)
+  }
+}
+
+# Add month column  ---------------------------
+df_1$Month <- format(df_1$`Date of Encounter`, "%b %Y")
+df_2$Month <- format(df_2$`Date of Encounter`, "%b %Y")
+if (!is.null(params$datafile3)) {
+  df_3$Month <- format(df_3$`Date of Encounter`, "%b %Y")
+}
+if (!is.null(params$datafile4)) {
+  df_4$Month <- format(df_4$`Date of Encounter`, "%b %Y")
+}
+
+# Define individual study timeframes ---------------------------
+study_start_1 <- min(df_1$`Date of Encounter`, na.rm = TRUE)
+study_end_1 <- max(df_1$`Date of Encounter`, na.rm = TRUE)
+study_start_2 <- min(df_2$`Date of Encounter`, na.rm = TRUE)
+study_end_2 <- max(df_2$`Date of Encounter`, na.rm = TRUE)
+if (!is.null(params$datafile3)) {
+  study_start_3 <- min(df_3$`Date of Encounter`, na.rm = TRUE)
+  study_end_3 <- max(df_3$`Date of Encounter`, na.rm = TRUE)
+}
+if (!is.null(params$datafile4)) {
+  study_start_4 <- min(df_4$`Date of Encounter`, na.rm = TRUE)
+  study_end_4 <- max(df_4$`Date of Encounter`, na.rm = TRUE)
+}
+
+# Assign Season if Relevant ---------------------------
+if (timeframe == "Seasonal") {
+  df_1 <- mutate(df_1, Season = paste0(format(study_start_1, "%Y"), "-", format(study_end_1, "%Y")))
+  df_2 <- mutate(df_2, Season = paste0(format(study_start_2, "%Y"), "-", format(study_end_2, "%Y")))
+  if (!is.null(params$datafile3)) {
+    df_3 <- mutate(df_3, Season = paste0(format(study_start_3, "%Y"), "-", format(study_end_3, "%Y")))
+  }
+  if (!is.null(params$datafile4)) {
+    df_4 <- mutate(df_4, Season = paste0(format(study_start_4, "%Y"), "-", format(study_end_4, "%Y")))
+  }
+}
+
+# Merge dfs  ---------------------------
+df <- df_1 %>%
+  bind_rows(df_2)
+if (!is.null(params$datafile3)) {
+  df <- df %>%
+    bind_rows(df_3)
+}
+if (!is.null(params$datafile4)) {
+  df <- df %>%
+    bind_rows(df_4)
+}
+
+# Define study timeframe ---------------------------
+study_start <- min(df$`Date of Encounter`, na.rm = TRUE)
+study_end <- max(df$`Date of Encounter`, na.rm = TRUE)
+if (timeframe == "Annual") {
+  study_timeframe <- combine_words(unique(format(df$`Date of Encounter`, "%Y")))
+} else if (timeframe == "Seasonal") {
+  study_timeframe <- c(paste0(format(study_start_1, "%Y"), "-", format(study_end_1, "%Y")), paste0(format(study_start_2, "%Y"), "-", format(study_end_2, "%Y")))
+  if (!is.null(params$datafile3)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_3, "%Y"), "-", format(study_end_3, "%Y")))
+  }
+  if (!is.null(params$datafile4)) {
+    study_timeframe <- c(study_timeframe, paste0(format(study_start_4, "%Y"), "-", format(study_end_4, "%Y")))
+  }
+  study_timeframe <- combine_words(study_timeframe)
+}
+```
+
+# Turneffe Atoll Fisheries Catch Finfish `r timeframe` Dataset Report: `r study_timeframe`
+
+
+Turneffe Atoll Sustainability Association (TASA)
+
+
+**Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \
+**Source Data:** `r datafiles` \
+**Generated by:** `r params$user_name`\
+**App Version:** `r params$release`\
+
+***
+
+Coral reef ecosystems, like those of Turneffe Atoll Marine Reserve (TAMR), provide key ecological and economic value to coastal families. 
+With proper management and monitoring, 
+these ecosystems can continue to support people sustainably in the long-term. 
+Directly tracking the activities and harvests of local fishers is a key method for monitoring coral reefs, 
+as it offers insights into ecosystem dynamics and possible pressures. 
+This report presents `r tolower(timeframe)` findings from fishery-dependent monitoring of finfish 
+at Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+Data were recorded by TASA patrolling officers in direct communication with TAMR fishers during their fishing trips. 
+Data were collected on key economic species. 
+This report aims to summarize and visualize the Fisheries 
+Finfish Catch dataset from `r study_timeframe` to facilitate data interpretation and strengthen the scientific basis for 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
+
+## Background
+
+### Turneffe Atoll Marine Reserve
+
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
+
+### Fisheries Catch Project
+
+### Finfish
+
+Finfish refer to all fish species that can be classified as ‘true fish,’ in contrast to other aquatic animals 
+such as shellfish or cuttlefish.
+In Belize, over 650 species of finfish may be found (FishBase 2024), with many of these, such as 
+Mutton Snapper (_Lutjanus analis_),
+Nassau Grouper (_Epinephelus striatus_), and Queen Triggerfish (_Balistes vetula_) being 
+listed as Vulnerable conservation status on the IUCN.
+
+Finfish provide a variety of services to coral reefs, including grazing of macroalgae and predation.
+Fishing for finfish may be done using handline fishing or winch (targeting snappers, jacks, groupers, and grunts primarily),
+long lines (targeting pelagic species and sharks), or gillnets (targeting sharks) in Belize (UNCTAD 2020).
+Finfish fishing in Belize is regulated by the Belize Fisheries Department (BFD),
+with both general regulations such as fishers requiring fishing licenses and color-coded vessels, and specific regulations,
+such as forbidding the fishing of parrotfish and tangs (Scaridae) (Belize Fisheries Department accessed 2025-b).
+To maintain healthy stocks and ecological services of finfish, it is important to maintain the size, reproductive capacity,
+and biodiversity of key taxa.\
+
+
+## Methods
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+ 
+## Results
+
+
+```{r table1_prep, echo = FALSE, include = FALSE}
+# Create df for Table 1 ---------------------------
+df_events_overall <- df %>%
+  select(`Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  ) %>%
+  mutate(Year = "Overall")
+df_table1_overall <- df %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  mutate(Year = "Overall") %>%
+  left_join(df_events_overall, by = "Year") %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  )
+df_events <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  select(Year, `Mission Id`, `Hours Fished`) %>%
+  distinct() %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  filter(!is.na(`Hours Fished`), `Hours Fished` > 0) %>%
+  group_by(Year) %>%
+  summarize(
+    Hours = sum(`Hours Fished`, na.rm = TRUE)
+  )
+df_table1 <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  group_by(Year) %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Year") %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, round(Finfish / Hours, 1), NA)
+  ) %>%
+  bind_rows(df_table1_overall)
+
+# Prepare dynamic variables for Table 1 ---------------------------
+total_vessels <- length(unique(df$`Name of vessel used`))
+total_finfish <- df_table1_overall$Finfish
+total_events <- df_table1_overall$Missions
+total_hours <- df_table1_overall$Hours
+max_cpue_num <- max(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+max_cpue_num_year <- df_table1$Year[which.max(df_table1$`CPUE (num/hr)`)]
+min_cpue_num <- min(df_table1$`CPUE (num/hr)`, na.rm = TRUE)
+min_cpue_num_year <- df_table1$Year[which.min(df_table1$`CPUE (num/hr)`)]
+```
+
+
+Between `r study_start` and `r study_end`, `r total_finfish` Caribbean spiny finfish were 
+caught and recorded as part of the TAMR 
+Fisheries Catch dataset. These finfish were caught across `r total_events` missions, 
+between `r total_vessels` surveyed vessels, 
+totalling `r total_hours` active fishing hours.
+The highest CPUE in count 
+per hour (num/hr) occurred in `r max_cpue_num_year` 
+with `r max_cpue_num`, whereas the lowest was `r min_cpue_num_year` 
+in `r min_cpue_num` (Table 1; Figure 1).\
+
+**Table 1.** Summary of fishing activity by year, including number of surveyed vessels, 
+missions, and finfish caught, along with fishing hours, pounds of catch, 
+and catch per unit effort (CPUE). 
+CPUE values are calculated only for missions where fishing hours and catch weight were recorded. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE}
+# show table
+as.data.frame(df_table1)
+```
+
+
+<br>
+
+
+```{r table1_expanded, echo = FALSE, include = FALSE}
+# Create df for Table 1 expanded details ---------------------------
+df_table1expanded_rows <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  group_by(`Mission Id`) %>%
+  mutate(`Hours Fished` = as.numeric(`Hours Fished`)) %>%
+  summarize(
+    Year = first(Year),
+    Hours = first(`Hours Fished`),
+    Finfish = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `CPUE (num/hr)` = ifelse(Hours > 0, Finfish / Hours, NA)
+  )
+df_table1expanded_num_overall <- df_table1expanded_rows %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1)
+  ) %>%
+  mutate(Year = "Overall", CPUE = "num/hr")
+df_table1expanded <- df_table1expanded_rows %>%
+  mutate(CPUE = "num/hr") %>%
+  group_by(CPUE, Year) %>%
+  summarize(
+    Min = round(min(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Mean = round(mean(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Median = round(median(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    Max = round(max(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    SD = round(sd(`CPUE (num/hr)`, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>%
+  bind_rows(df_table1expanded_num_overall)
+
+# Prepare dynamic variables for Table 1 Expanded ---------------------------
+overall_mean <- df_table1expanded_num_overall$Mean
+overall_median <- df_table1expanded_num_overall$Median
+overall_min <- df_table1expanded_num_overall$Min
+overall_max <- df_table1expanded_num_overall$Max
+overall_sd <- df_table1expanded_num_overall$SD
+max_cpue_mean_num <- max(df_table1expanded$Mean, na.rm = TRUE)
+max_cpue_mean_num_year <- df_table1expanded$Year[which.max(df_table1expanded$Mean)]
+min_cpue_mean_num <- min(df_table1expanded$Mean, na.rm = TRUE)
+min_cpue_mean_num_year <- df_table1expanded$Year[which.min(df_table1expanded$Mean)]
+```
+
+
+The CPUE of finfish in count per hour had a 
+mean of `r overall_mean`num/hr and median of `r overall_median`num/hr, 
+with the highest mean of `r max_cpue_mean_num`num/hr being in `r max_cpue_mean_num_year` 
+and the lowest mean of `r min_cpue_mean_num`num/hr being in `r min_cpue_mean_num_year`. 
+Minimum CPUE recorded across all missions was `r overall_min`num/hr, maximum was `r overall_max`num/hr, 
+and standard deviation was `r overall_sd`num/hr 
+(Table 1; Figure 1).\
+
+
+```{r figure1_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 1 ---------------------------
+df_fig1_A <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  group_by(Year) %>%
+  summarize(
+    Vessels = n_distinct(`Name of vessel used`),
+    Finfish = n(),
+    Missions = n_distinct(`Mission Id`)
+  ) %>%
+  left_join(df_events, by = "Year") %>%
+  arrange(Year) %>%
+  mutate(
+    `CPUE (num/hr)` = round(Finfish / Hours, 1)
+  )
+
+# Create panels for Figure 1 ---------------------------
+A <- ggplot(df_fig1_A, aes(x = Year, y = Hours, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Year") +
+  ylab("Hours Fished") +
+  labs(title = "A")
+B <- ggplot(df_fig1_A, aes(x = Year, y = Finfish, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Year") +
+  ylab("Number Finfish") +
+  labs(title = "B")
+C <- ggplot(df_fig1_A, aes(x = Year, y = `CPUE (num/hr)`, group = 1)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2.5) +
+  expand_limits(y = 0) +
+  theme_custom +
+  xlab("Year") +
+  ylab("Catch per Unit Effort") +
+  labs(title = "C")
+
+
+# Assemble Figure 1 ---------------------------
+figure1 <- ggarrange(
+  A, B, C,
+  nrow = 3, ncol = 1
+)
+```
+
+
+```{r figure1, fig.width=6, fig.height=8, fig.align = 'left', echo = FALSE}
+figure1
+```
+
+
+*Figure 1.* Line plots of 
+active hours fished (A), finfish caught (B), 
+and catch per unit effort (in count per active hour fished) (C) 
+over time. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table2_prep, echo = FALSE, include = FALSE}
+# Create df for Table 2 ---------------------------
+df_table2 <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  mutate(
+    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+    `Weight (g)` = as.numeric(`Weight (g)`)
+  ) %>%
+  group_by(Year) %>%
+  summarize(
+    `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Mean Fork Length (cm)` = round(mean(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Median Fork Length (cm)` = round(median(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
+  ) %>%
+  bind_rows(
+    df %>%
+      mutate(
+        `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+        `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+        `Weight (g)` = as.numeric(`Weight (g)`)
+      ) %>%
+      summarize(
+        `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
+        `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
+        `Mean Fork Length (cm)` = round(mean(`Fork Length (cm)`, na.rm = TRUE), 1),
+        `Median Fork Length (cm)` = round(median(`Fork Length (cm)`, na.rm = TRUE), 1),
+        `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
+        `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
+      ) %>%
+      mutate(Year = "Overall")
+  ) %>%
+  mutate(across(everything(), ~ {
+    if (is.numeric(.)) {
+      ifelse(is.na(.) | is.nan(.), "-", as.character(.))
+    } else {
+      ifelse(is.na(.), "-", .)
+    }
+  }))
+
+# Prepare dynamic variables for Table 2 ---------------------------
+total_length <- filter(df_table2, Year == "Overall")$`Mean Total Length (cm)`
+total_fork <- filter(df_table2, Year == "Overall")$`Mean Fork Length (cm)`
+total_weight <- filter(df_table2, Year == "Overall")$`Weight (g)`
+max_length <- max(filter(df_table2, Year != "Overall")$`Mean Total Length (cm)`, na.rm = TRUE)
+max_length_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Mean Total Length (cm)`)]
+max_fork <- max(filter(df_table2, Year != "Overall")$`Mean Fork Length (cm)`, na.rm = TRUE)
+max_fork_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Mean Fork Length (cm)`)]
+max_weight <- max(filter(df_table2, Year != "Overall")$`Weight (g)`, na.rm = TRUE)
+max_weight_year <- df_table2$Year[which.max(filter(df_table2, Year != "Overall")$`Weight (g)`)]
+```
+
+
+Average total length was `r total_length`in, greatest in `r max_length_year` with `r max_length`in. 
+Average fork length was `r total_fork`in, greatest in `r max_fork_year` with `r max_fork`in. 
+Average weight was `r total_weight`g, greatest in `r max_weight_year` with `r max_weight`g (Table 2; Figure 2; Figure 3).\
+
+
+**Table 2.** Summary of mean and median total and fork length (cm) and weight (g) of finfish. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table2, echo = FALSE}
+# show table
+as.data.frame(df_table2)
+```
+
+
+```{r figure2_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 2 ---------------------------
+df_fig2_unsummarized <- df %>%
+  mutate(Year = format(df$`Date of Encounter`, "%Y")) %>%
+  mutate(
+    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+    `Weight (g)` = as.numeric(`Weight (g)`)
+  ) %>%
+  arrange(Year)
+df_fig2 <- df %>%
+  mutate(Year = format(df$`Date of Encounter`, "%Y")) %>%
+  mutate(
+    `Total Length (cm)` = as.numeric(`Total Length (cm)`),
+    `Fork Length (cm)` = as.numeric(`Fork Length (cm)`),
+    `Weight (g)` = as.numeric(`Weight (g)`)
+  ) %>%
+  group_by(Year) %>%
+  summarize(
+    `Mean Total Length (cm)` = round(mean(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Median Total Length (cm)` = round(median(`Total Length (cm)`, na.rm = TRUE), 1),
+    `Mean Fork Length (cm)` = round(mean(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Median Fork Length (cm)` = round(median(`Fork Length (cm)`, na.rm = TRUE), 1),
+    `Mean Weight (g)` = round(mean(`Weight (g)`, na.rm = TRUE), 1),
+    `Median Weight (g)` = round(median(`Weight (g)`, na.rm = TRUE), 1)
+  ) %>%
+  arrange(Year)
+df_fig2_long <- df_fig2 %>%
+  pivot_longer(
+    cols = c(`Mean Total Length (cm)`, `Mean Fork Length (cm)`),
+    names_to = "Metric",
+    values_to = "Length"
+  )
+
+# Create panels for Figure 2 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = `Total Length (cm)`)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Total Length (cm)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig2_unsummarized, aes(x = `Fork Length (cm)`)) +
+  geom_histogram(binwidth = 10, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Fork Length (cm)") +
+  ylab("Count") +
+  labs(title = "B")
+C <- ggplot(df_fig2_long, aes(x = Year, group = Metric)) +
+  geom_line(aes(y = Length), size = 0.5) +
+  geom_point(aes(y = Length, shape = Metric), size = 2.5) +
+  scale_shape_manual(name = "Metric", values = c("Mean Total Length (cm)" = 4, "Mean Fork Length (cm)" = 19)) +
+  theme_custom +
+  ylab("Length (cm)") +
+  xlab("Year") +
+  labs(title = "C") +
+  scale_y_continuous(n.breaks = 4)
+
+# Assemble Figure 2 ---------------------------
+figure_2_top <- ggarrange(
+  A, B,
+  ncol = 2, nrow = 1
+)
+figure2 <- ggarrange(
+  figure_2_top, C,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure2, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure2
+```
+
+
+*Figure 2.* Histogram of total length (cm) (A), histogram of fork length (cm) (B), 
+line plot of mean total length (cm) and fork length (cm) over time (C).
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+
+```{r figure3_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 3 ---------------------------
+df_fig3_long <- df_fig2 %>%
+  pivot_longer(
+    cols = c(`Mean Weight (g)`, `Median Weight (g)`),
+    names_to = "Metric",
+    values_to = "Weight"
+  )
+
+# Create panels for Figure 3 ---------------------------
+A <- ggplot(df_fig2_unsummarized, aes(x = `Weight (g)`)) +
+  geom_histogram(binwidth = 100, color = "black") +
+  theme_custom +
+  expand_limits(x = 0) +
+  xlab("Mean Weight (g)") +
+  ylab("Count") +
+  labs(title = "A")
+B <- ggplot(df_fig3_long, aes(x = Year, group = Metric)) +
+  geom_line(aes(y = Weight), size = 0.5) +
+  geom_point(aes(y = Weight, shape = Metric), size = 2.5) +
+  scale_shape_manual(name = "Metric", values = c("Mean Weight (g)" = 4, "Median Weight (g)" = 19)) +
+  theme_custom +
+  ylab("Weight (g)") +
+  xlab("Year") +
+  labs(title = "C") +
+  scale_y_continuous(n.breaks = 4)
+
+# Assemble Figure 3 ---------------------------
+figure3 <- ggarrange(
+  A, B,
+  ncol = 1, nrow = 2
+)
+```
+
+
+```{r figure3, fig.width=6, fig.height=6, fig.align = 'left', echo = FALSE}
+figure3
+```
+
+
+*Figure 3.* Histogram of fish weight (g) (A), and 
+line plot of mean weight (g) and median weight (g) over time (B).
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create Figure 4 ---------------------------
+figure4 <- ggplot(df, aes(x = fct_infreq(`Fish Species`))) +
+  geom_bar() +
+  theme_custom +
+  xlab("Fish Species") +
+  ylab("Count")
+```
+
+
+
+```{r table3_prep, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3_overall <- df %>%
+  group_by(`Fish Species`) %>%
+  summarize(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  slice_head(n = 5)
+df_table3_summarized <- df %>%
+  mutate(
+    Year = "Overall"
+  ) %>%
+  group_by(Year, `Fish Species`) %>%
+  summarize(Count = n()) %>%
+  filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
+  pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0)
+df_table3 <- df %>%
+  mutate(
+    Year = format(df$`Date of Encounter`, "%Y")
+  ) %>%
+  group_by(Year, `Fish Species`) %>%
+  summarize(Count = n()) %>%
+  filter(`Fish Species` %in% df_table3_overall$`Fish Species`) %>%
+  pivot_wider(names_from = `Fish Species`, values_from = Count, values_fill = 0) %>%
+  arrange(Year) %>%
+  bind_rows(df_table3_summarized) %>%
+  ungroup()
+
+# Prepare dynamic variables for Table 3 ---------------------------
+num_species <- length(unique(df$`Fish Species`))
+common_species <- combine_words(df_table3_overall$`Fish Species`)
+years <- unique(filter(df_table3, Year != "Overall")$Year)
+years_top <- c()
+for (year in years) {
+  df_year <- filter(df_table3, Year == year)
+  species_max <- names(df_year)[which.max(df_year[1, -1])]
+  years_top <- c(years_top, paste0(species_max, " in ", year))
+}
+years_top_words <- combine_words(years_top)
+```
+
+
+In total, `r num_species` unique species of finfish were observed throughout the surveyed period, with the most common being `r common_species`. 
+The most common species observed in each year include `r years_top_words`.
+(Figure 4; Table 3).
+
+
+```{r figure4, fig.width=6, fig.height=3, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Bar plot of counts of observed fish species. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+**Table 3.** Count of observed finfish species in the surveyed years, including only the top five most 
+commonly observed species across the entire sampling period. 
+Data were collected using Fisheries catch finfish data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
+
+
+
+<br>
+
+
+## Conclusion
+
+By summarizing and visualizing the fisheries catch lobster data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the Fisheries Catch data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
+
+
+## Acknowledgments
+
+Thank you to the data collectors and fishers who contributed to this project.\
+
+
+## Literature Cited
+
+Belize Fisheries Department. (n.d.-b). Fisheries Regulations. https://fisheries.gov.bz/regulations/
+
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
+Holthuis, L. B. (Ed.). (1991). FAO species catalogue. 13: Marine lobsters of the world: an annotated and illustrated catalogueof species of interest to fisheries known to date / prep. by L. B. Holthuis
+
+Meerman, J. C. (2013). Belize Basemap [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Meerman, J. C. (2017). Belize_Ecosystems_2017 [Dataset]. Biodiversity and Environmental Resource Data System of Belize. http://www.biodiversity.bz/
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Turneffe Atoll Sustainability Association. (2025). Turneffe Reef-Monitoring Data Reporting Tool (Version 1.0) [Computer software].
+
+United Nations Conference (UNCTAD) & on Trade and Development. (2020). Oceans Economy and Trade Strategy: Belize Marine Fisheries and Seafood Processing (UNCTAD/DITC/TED/INF/2020/5). https://unctad.org/system/files/official-document/ditctedinf2020d5_en.pdf
