@@ -518,13 +518,7 @@ server <- function(input, output, session) {
 
     # Validate dataframes
     source("validation/validation_observers/validate_fisheries_observer_1per.r", local = TRUE)
-    observeEvent(input$validate_fisheries_multiper, {
-        shinyalert("Notice!", "Validation has not been implemented for Fisheries Multi-Year as of yet!",
-            confirmButtonText = "I Understand", confirmButtonCol = "#cde9f0", type = "info", size = "s"
-        )
-        enableCustomization("fisheries_multiper")
-        nameLengthCheck(input$fisheries_multiper_name, "fisheries_multiper")
-    })
+    source("validation/validation_observers/validate_fisheries_observer_multiper.r", local = TRUE)
     source("validation/validation_observers/validate_fisher_observer_1per.r", local = TRUE)
     source("validation/validation_observers/validate_fisher_observer_multiper.r", local = TRUE)
     source("validation/validation_observers/validate_lamp_observer_1per.r", local = TRUE)
