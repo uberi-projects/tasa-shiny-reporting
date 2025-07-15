@@ -610,7 +610,7 @@ output$figures_fisheries_1per_hidden <- downloadHandler(
                 plot = p3,
                 name = paste0("figure_fisheries_1per_", tolower(datatype), "_fig3.png"),
                 width = 6,
-                height = 8
+                height = 2.5
             )
         } else if (datatype == "Finfish") {
             df_fig3_long <- df_fig2 %>%
