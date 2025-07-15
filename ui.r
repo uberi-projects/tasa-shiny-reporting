@@ -1679,7 +1679,7 @@ ui <- navbarPage(
                     class = "content-container-grid grid-report",
                     div(
                         class = "content-box",
-                        p("For a bank of existing standardized historic data, visit the Data Bank below:"),
+                        p(tab_text[7]),
                         br()
                     ),
                     div(
