@@ -65,7 +65,7 @@ generate_map <- function(df, lat, long, site_id) {
             point.padding = 0.5, force = 5, max.overlaps = 50,
             segment.color = "#555555", segment.size = 0.5
         ) +
-        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305)) +
+        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305), clip = "on") +
         annotation_scale(location = "br", width_hint = 0.2, style = "ticks") +
         annotation_north_arrow(
             location = "tl", which_north = "true",
@@ -107,7 +107,7 @@ generate_map_historic <- function(df, lat, long, site_id) {
             point.padding = 0.5, force = 5, max.overlaps = 50,
             segment.color = "#555555", segment.size = 0.5
         ) +
-        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305)) +
+        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305, clip = "on")) +
         annotation_scale(location = "br", width_hint = 0.2, style = "ticks") +
         annotation_north_arrow(
             location = "tl", which_north = "true",
