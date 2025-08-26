@@ -60,10 +60,16 @@ generate_map <- function(df, lat, long, site_id) {
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         geom_text_repel(
-            data = df, aes(x = Long, y = Lat, label = !!sym(site_id)),
-            size = 2.5, color = "black", fontface = "bold", box.padding = 0.5,
-            point.padding = 0.5, force = 5, max.overlaps = 50,
-            segment.color = "#555555", segment.size = 0.5
+            data = df_sf,
+            stat = "sf_coordinates",
+            aes(label = !!rlang::sym(site_id), geometry = geometry),
+            size = 2.5, color = "black", fontface = "bold",
+            box.padding = 0.5, point.padding = 0.5,
+            force = 0.8, max.overlaps = 200,
+            segment.color = "#555555", segment.size = 0.4,
+            xlim = c(-88.05, -87.66),
+            ylim = c(17.117024, 17.664305),
+            min.segment.length = 0
         ) +
         coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305), clip = "on") +
         annotation_scale(location = "br", width_hint = 0.2, style = "ticks") +
@@ -102,10 +108,16 @@ generate_map_historic <- function(df, lat, long, site_id) {
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         geom_text_repel(
-            data = df, aes(x = Long, y = Lat, label = !!sym(site_id)),
-            size = 2.5, color = "black", fontface = "bold", box.padding = 0.5,
-            point.padding = 0.5, force = 5, max.overlaps = 50,
-            segment.color = "#555555", segment.size = 0.5
+            data = df_sf,
+            stat = "sf_coordinates",
+            aes(label = !!rlang::sym(site_id), geometry = geometry),
+            size = 2.5, color = "black", fontface = "bold",
+            box.padding = 0.5, point.padding = 0.5,
+            force = 0.8, max.overlaps = 200,
+            segment.color = "#555555", segment.size = 0.4,
+            xlim = c(-88.05, -87.66),
+            ylim = c(17.117024, 17.664305),
+            min.segment.length = 0
         ) +
         coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305, clip = "on")) +
         annotation_scale(location = "br", width_hint = 0.2, style = "ticks") +
