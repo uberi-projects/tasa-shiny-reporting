@@ -10,14 +10,34 @@ params:
   release: "Unknown"
   user_name: "Unknown"
   datafile: pressure
+  datafile1_name: "None" 
+  datafile1: "None"
+  datafile2_name : "None"
+  datafile2: pressure
+  datafile3_name : "None"
+  datafile3: NULL
+  datafile4_name : "None"
+  datafile4: NULL
+  spag_multiper1_spag_season_selection: "None"
+  spag_multiper2_spag_season_selection: "None"
+  spag_multiper3_spag_season_selection: "None"
+  spag_multiper4_spag_season_selection: "None"
+  
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
+# Load packages ---------------------------
 library(knitr)
 library(officedown)
 library(rmarkdown)
+library(tidyverse)
+library(ggpubr)
+
+# Source code  ---------------------------
+source("theme.r")
+source("map.r")
 ```
 
 **Date Generated:** `r format(Sys.time(), '%Y-%m-%d')` \

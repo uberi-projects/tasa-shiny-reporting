@@ -45,7 +45,7 @@ server <- function(input, output, session) {
     create_flags("fisheries", "lobster_season")
     create_flags("fisheries", "conch_season")
     create_flags("fisheries", "finfish_season")
-    create_flags("spag", "finfish_season")
+    create_flags("spag", "spag_season")
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
@@ -326,19 +326,19 @@ server <- function(input, output, session) {
         }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafiles_dates(df_upload_spag_1per(), "spag_season", "spag_1per_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_1per_finfish_season_selection_flag)
+        check_datafiles_dates(df_upload_spag_1per(), "spag_season", "spag_1per_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_1per_spag_season_selection_flag)
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafiles_dates(df_upload_spag_multiper1(), "spag_season", "spag_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper1_finfish_season_selection_flag)
+        check_datafiles_dates(df_upload_spag_multiper1(), "spag_season", "spag_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper1_spag_season_selection_flag)
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafiles_dates(df_upload_spag_multiper2(), "spag_season", "spag_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper2_finfish_season_selection_flag)
+        check_datafiles_dates(df_upload_spag_multiper2(), "spag_season", "spag_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper2_spag_season_selection_flag)
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafiles_dates(df_upload_spag_multiper3(), "spag_season", "spag_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper3_finfish_season_selection_flag)
+        check_datafiles_dates(df_upload_spag_multiper3(), "spag_season", "spag_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper3_spag_season_selection_flag)
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafiles_dates(df_upload_spag_multiper4(), "spag_season", "spag_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper4_finfish_season_selection_flag)
+        check_datafiles_dates(df_upload_spag_multiper4(), "spag_season", "spag_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper4_spag_season_selection_flag)
     })
 
     # Observe Upload
@@ -1051,17 +1051,27 @@ server <- function(input, output, session) {
         content = function(file) {
             showLoaderBar("spag_1per", session)
             report_file <- "report_spag_1per.Rmd"
+            shapefiles <- list.files("shapefiles", full.names = TRUE)
+            normalized_shapefiles <- normalizePath(shapefiles)
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
-                "www/images/TASA_logo_full_color.png"
+                "www/images/TASA_logo_full_color.png",
+                "theme.r", "map.r",
+                normalized_shapefiles
             ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
             out <- render(
                 report_file,
-                params = list(release = release_version, user_name = input$spag_name, datafile = df_upload_spag_1per()),
+                params = list(
+                    release = release_version,
+                    user_name = input$spag_name,
+                    datafile_name = input$upload_spag_1per$name,
+                    datafile = df_upload_spag_1per(),
+                    spag_1per_spag_season_selection = if (spag_1per_spag_season_selection_flag()) input[["spag_1per_spag_season_selection"]] else "None"
+                ),
                 envir = new.env(parent = globalenv())
             )
             hideLoaderBar("spag_1per", session)
@@ -1076,17 +1086,41 @@ server <- function(input, output, session) {
         content = function(file) {
             showLoaderBar("spag_multiper", session)
             report_file <- "report_spag_multiper.Rmd"
+            shapefiles <- list.files("shapefiles", full.names = TRUE)
+            normalized_shapefiles <- normalizePath(shapefiles)
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
-                "www/images/TASA_logo_full_color.png"
+                "www/images/TASA_logo_full_color.png",
+                "theme.r", "map.r",
+                normalized_shapefiles
             ))
             owd <- setwd(tempdir())
             on.exit(setwd(owd))
-            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png"), overwrite = TRUE)
+            file.copy(src, c(report_file, "report_template.docx", "TASA_logo_full_color.png", "theme.r", "map.r", basename(shapefiles)), overwrite = TRUE)
+            params_list <- list(
+                release = release_version,
+                user_name = input$spag_multiper_name,
+                datafile1_name = input$upload_spag_multiper1$name,
+                datafile1 = df_upload_spag_multiper1(),
+                datafile2_name = input$upload_spag_multiper2$name,
+                datafile2 = df_upload_spag_multiper2(),
+                spag_multiper1_spag_season_selection = if (spag_multiper1_spag_season_selection_flag()) input[["spag_multiper1_spag_season_selection"]] else "None",
+                spag_multiper2_spag_season_selection = if (spag_multiper2_spag_season_selection_flag()) input[["spag_multiper2_spag_season_selection"]] else "None"
+            )
+            if (!is.null(input$upload_spag_multiper3) && spag_multiper3_flag() == TRUE) {
+                params_list$datafile3_name <- input$upload_spag_multiper3$name
+                params_list$datafile3 <- df_upload_spag_multiper3()
+                params_list$spag_multiper3_spag_season_selection <- if (spag_multiper3_spag_season_selection_flag()) input[["spag_multiper3_spag_season_selection"]] else "None"
+            }
+            if (!is.null(input$upload_spag_multiper4) && spag_multiper4_flag() == TRUE) {
+                params_list$datafile4_name <- input$upload_spag_multiper4$name
+                params_list$datafile4 <- df_upload_spag_multiper4()
+                params_list$spag_multiper4_spag_season_selection <- if (spag_multiper4_spag_season_selection_flag()) input[["spag_multiper4_spag_season_selection"]] else "None"
+            }
             out <- render(
                 report_file,
-                params = list(release = release_version, user_name = input$spag_name, datafile = df_upload_spag_multiper1()),
+                params = params_list,
                 envir = new.env(parent = globalenv())
             )
             hideLoaderBar("spag_multiper", session)
