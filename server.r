@@ -1039,18 +1039,12 @@ server <- function(input, output, session) {
     )
     output$report_spag_1per_hidden <- downloadHandler(
         filename = function() {
-            report_file <- switch(input$datatype_spag_1per,
-                "Visual Census" = "report_spagvis_1per.Rmd",
-                "Laser" = "report_spaglaser_1per.Rmd"
-            )
+            report_file <- "report_spag_1per.Rmd"
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
             showLoaderBar("spag_1per", session)
-            report_file <- switch(input$datatype_spag_1per,
-                "Visual Census" = "report_spagvis_1per.Rmd",
-                "Laser" = "report_spaglaser_1per.Rmd"
-            )
+            report_file <- "report_spag_1per.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -1070,18 +1064,12 @@ server <- function(input, output, session) {
     )
     output$report_spag_multiper_hidden <- downloadHandler(
         filename = function() {
-            report_file <- switch(input$datatype_spag_multiper,
-                "Visual Census" = "report_spagvis_multiper.Rmd",
-                "Laser" = "report_spaglaser_multiper.Rmd"
-            )
+            report_file <- "report_spag_multiper.Rmd"
             gsub(".Rmd", ".docx", report_file)
         },
         content = function(file) {
             showLoaderBar("spag_multiper", session)
-            report_file <- switch(input$datatype_spag_multiper,
-                "Visual Census" = "report_spagvis_multiper.Rmd",
-                "Laser" = "report_spaglaser_multiper.Rmd"
-            )
+            report_file <- "report_spag_multiper.Rmd"
             src <- normalizePath(c(
                 paste0("reports/", report_file),
                 "reports/report_template.docx",
@@ -1245,16 +1233,6 @@ server <- function(input, output, session) {
         set_flags_1per("lamp", "period", FALSE)
         set_flags_1per("lamp", "year", FALSE)
         session$sendCustomMessage("triggerChangeLampImg", list(isConch = is_conch, isMulti = FALSE))
-    })
-    observeEvent(input$datatype_spag_1per, {
-        is_visual <- input$datatype_spag_1per != "Laser"
-        disableCustomization("spag_1per")
-        session$sendCustomMessage("triggerChangeSpagImg", list(isVisual = is_visual, isMulti = FALSE))
-    })
-    observeEvent(input$datatype_spag_multiper, {
-        is_visual <- input$datatype_spag_multiper != "Laser"
-        disableCustomization("spag_multiper")
-        session$sendCustomMessage("triggerChangeSpagImg", list(isVisual = is_visual, isMulti = TRUE))
     })
 
     # Observe Feedback

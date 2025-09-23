@@ -62,22 +62,6 @@ function switchLampImage(isConch,isMulti) {
 Shiny.addCustomMessageHandler("triggerChangeLampImg", function(message) {
     switchLampImage(message.isConch, message.isMulti);
 });
-// SPAG Image Changing---------------------
-function switchSpagImage(isVisual, isMulti) {
-    if (isMulti) {
-        elem = document.getElementById("datatype-spag-multi-img")
-    } else {
-        elem = document.getElementById("datatype-spag-1per-img")
-    }
-    if (isVisual) {
-        elem.setAttribute("src","../images/photos/photo_spags_02.png")
-    } else {
-        elem.setAttribute("src","../images/photos/photo_spags_06.jpeg")
-    }
-}
-Shiny.addCustomMessageHandler("triggerChangeSpagImg", function(message) {
-    switchSpagImage(message.isVisual, message.isMulti);
-});
 // Animate Loader Bar
 function updateLoader(reportType, percentage) {
     let progressBar = document.getElementById(reportType+"_loader_bar")
