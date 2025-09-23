@@ -1,6 +1,4 @@
 ---
-title: "Spawning Aggregations (SPAG) Visual Census Report: [Period]"
-subtitle: "Turneffe Atoll Sustainability Association"
 output:
   officedown::rdocx_document:
     reference_docx: report_template.docx
@@ -10,6 +8,8 @@ params:
   release: "Unknown"
   user_name: "Unknown"
   datafile: pressure
+  datafile_name: "Unknown"
+  spag_1per_finfish_season_selection: "None"
 ---
 
 ```{r setup, include=FALSE}

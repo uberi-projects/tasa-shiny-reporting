@@ -45,6 +45,7 @@ server <- function(input, output, session) {
     create_flags("fisheries", "lobster_season")
     create_flags("fisheries", "conch_season")
     create_flags("fisheries", "finfish_season")
+    create_flags("spag", "finfish_season")
 
     # Define dataframes from uploads
     nas <- c("NA", "N/A", "Unknown", "Missing", "None", "")
@@ -140,23 +141,28 @@ server <- function(input, output, session) {
     })
     df_upload_spag_1per <- reactive({
         req(input$upload_spag_1per)
-        read_excel(input$upload_spag_1per$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_spag_1per$datapath
+        read_spag_data(file_path)
     })
     df_upload_spag_multiper1 <- reactive({
         req(input$upload_spag_multiper1)
-        read_excel(input$upload_spag_multiper1$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_spag_multiper1$datapath
+        read_spag_data(file_path)
     })
     df_upload_spag_multiper2 <- reactive({
         req(input$upload_spag_multiper2)
-        read_excel(input$upload_spag_multiper2$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_spag_multiper2$datapath
+        read_spag_data(file_path)
     })
     df_upload_spag_multiper3 <- reactive({
         req(input$upload_spag_multiper3)
-        read_excel(input$upload_spag_multiper3$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_spag_multiper3$datapath
+        read_spag_data(file_path)
     })
     df_upload_spag_multiper4 <- reactive({
         req(input$upload_spag_multiper4)
-        read_excel(input$upload_spag_multiper4$datapath, sheet = 1, na = nas)
+        file_path <- input$upload_spag_multiper4$datapath
+        read_spag_data(file_path)
     })
 
     # Read and report year of datafile
@@ -320,19 +326,19 @@ server <- function(input, output, session) {
         }
     })
     output$ui_upload_spag_1per <- renderUI({
-        check_datafile_dates(df_upload_spag_1per(), "period", "spag_1per_", dud_flag, dud_flag)
+        check_datafiles_dates(df_upload_spag_1per(), "spag_season", "spag_1per_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_1per_finfish_season_selection_flag)
     })
     output$ui_upload_spag_multiper1 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper1(), "period", "spag_multiper1_", dud_flag, dud_flag)
+        check_datafiles_dates(df_upload_spag_multiper1(), "spag_season", "spag_multiper1_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper1_finfish_season_selection_flag)
     })
     output$ui_upload_spag_multiper2 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper2(), "period", "spag_multiper2_", dud_flag, dud_flag)
+        check_datafiles_dates(df_upload_spag_multiper2(), "spag_season", "spag_multiper2_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper2_finfish_season_selection_flag)
     })
     output$ui_upload_spag_multiper3 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper3(), "period", "spag_multiper3_", dud_flag, dud_flag)
+        check_datafiles_dates(df_upload_spag_multiper3(), "spag_season", "spag_multiper3_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper3_finfish_season_selection_flag)
     })
     output$ui_upload_spag_multiper4 <- renderUI({
-        check_datafile_dates(df_upload_spag_multiper4(), "period", "spag_multiper4_", dud_flag, dud_flag)
+        check_datafiles_dates(df_upload_spag_multiper4(), "spag_season", "spag_multiper4_", dud_flag, dud_flag, dud_flag, dud_flag, dud_flag, spag_multiper4_finfish_season_selection_flag)
     })
 
     # Observe Upload

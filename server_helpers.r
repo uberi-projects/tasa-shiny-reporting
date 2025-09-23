@@ -152,12 +152,13 @@ check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
         ))
     }
 }
-check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag) {
+check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag, spag_season_flag) {
     year_flag(FALSE)
     period_flag(FALSE)
     conch_season_flag(FALSE)
     lobster_season_flag(FALSE)
     finfish_season_flag(FALSE)
+    spag_season_flag(FALSE)
     if (is.null(dfs) || length(dfs) == 0) {
         return(show_critical_error("No valid data uploaded"))
     }
@@ -312,6 +313,39 @@ check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster
                     p(class = "p-black", paste0("Year: ", study_years[1]))
                 ))
             }
+            if (type == "spag_season") {
+                get_spag_season <- function(d) {
+                    m <- as.integer(format(d, "%m"))
+                    y <- as.integer(format(d, "%Y"))
+                    if (m >= 12) {
+                        return(paste0(y, "-", y + 1))
+                    } else if (m <= 5) {
+                        return(paste0(y - 1, "-", y))
+                    } else {
+                        return(NA)
+                    }
+                }
+                spag_seasons <- sapply(valid_dates, get_spag_season)
+                unique_seasons <- sort(unique(spag_seasons))
+                if (length(unique_seasons) > 1) {
+                    spag_season_flag(TRUE)
+                    return(div(
+                        show_error("Multiple SPAG Seasons"),
+                        div(
+                            class = "input-list-content",
+                            prettyRadioButtons(paste0(id, "spag_season_selection"),
+                                label = "Please select one spag season.",
+                                choices = unique_seasons,
+                                inline = TRUE
+                            )
+                        )
+                    ))
+                }
+                return(div(
+                    class = "file-confirmation-button",
+                    p(class = "p-black", paste0("SPAG Season: ", unique_seasons[1]))
+                ))
+            }
         }
     }
     return(show_critical_error("No valid dates detected"))
@@ -436,5 +470,16 @@ read_lamp_data <- function(file_path, datatype) {
             data_list$Diadema_Crab <- read_excel(file_path, sheet = "Diadema and Crab", na = nas, guess_max = min(1000, Inf))
         }
     }
+    return(data_list)
+}
+
+# Create helper to read SPAG data
+read_spag_data <- function(file_path, datatype) {
+    nas <- c("NA", "N/A", "Unknown", "Missing", "None", "N/E")
+    sheets_available <- excel_sheets(file_path)
+    data_list <- list()
+    data_list$Conditions <- read_excel(file_path, sheet = "Surface_Underwater_Conditions", na = nas, guess_max = min(1000, Inf))
+    data_list$Visual <- read_excel(file_path, sheet = "Species_Findings", na = nas, guess_max = min(1000, Inf))
+    data_list$Laser <- read_excel(file_path, sheet = "Laser", na = nas, guess_max = min(1000, Inf))
     return(data_list)
 }
