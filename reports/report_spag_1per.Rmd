@@ -26,9 +26,23 @@ library(ggpubr)
 source("theme.r")
 source("map.r")
 
-# Determine year or season  ---------------------------
-study_timeframe <- params$spag_1per_spag_season_selection
+# Filter to season
+df <- params$datafile[[1]]
+df$Date <- as.Date(df$Date)
+if (as.character(params$spag_1per_spag_season_selection) != "None") {
+  season_years <- unlist(strsplit(params$spag_1per_spag_season_selection, "-"))
+  start_date <- as.Date(paste0(season_years[1], "-12-01"))
+  end_date <- as.Date(paste0(season_years[2], "-05-31"))
+  df <- df |>
+    filter(Date >= start_date, Date <= end_date)
+}
+# Add month column  ---------------------------
+df$Month <- format(df$Date, "%b %Y")
 
+# Define study timeframe ---------------------------
+study_start <- min(df$Date, na.rm = TRUE)
+study_end <- max(df$Date, na.rm = TRUE)
+study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
 ```
 
 # Turneffe Atoll Spawning Aggregations Dataset Report: `r study_timeframe`
@@ -44,81 +58,68 @@ Turneffe Atoll Sustainability Association (TASA)
 
 ***
 
+SUMMARY GOES HERE
+
 ## Background
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, spanning mangrove and littoral forest cayes, seagrass beds, and coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon as well as an outer reef that encircles the atoll. 
+The Turneffe Atoll Marine Reserve (TAMR), which encompasses the entire atoll, covers 1,471 km² and includes multiple management zones, such as general use, conservation, preservation, and spawning aggregation zones, as well as special management areas. 
+TAMR plays a valuable role in supporting biodiversity and sustaining the communities that depend on its resources. 
+Its reef provides coastal protection from extreme weather events (Fedler, 2011), serves as a habitat for diverse marine species, and supports economic activities such as commercial and recreational fishing, guided diving, and tourism.\
 
-### Spawning Aggregations Reef Monitoring Program
+### Spawning Aggregations Monitoring
 
-Background on reef monitoring dataset type \
+INFO HERE
 
-Map of study area \
 
 ## Methods
 
-Survey methods\ 
+SPAGs data were collected at Turneffe Atoll 
+Marine Reserve (TAMR) (Figure 1). 
+The survey period for this report’s dataset extended 
+from `r study_start` to `r study_end` at TAMR.
+
+INFO HERE
+
+
+This report, including text, figures, and tables, was generated using the 
+Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
+standardized reef monitoring data, validates the dataset, and creates a shareable output. \
+
+```{r figure1, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create map for Figure 1 ---------------------------
+df_map <- df |>
+  select(Site, Latitude, Longitude) |>
+  distinct() |>
+  na.omit()
+if (study_year >= 2024) {
+generate_map(df_map, "Latitude", "Longitude", "Site")
+} else{
+  generate_map_historic(df_map, "Latitude", "Longitude", "Site")
+}
+```
+
+
+*Figure 1.* Map of Turneffe Atoll Marine Reserve zones and ecosystems. 
+Shapefiles for zones belong to the Belize Fisheries Department (Belize Geomatics 2022). 
+Shapefiles for the base map and ecosystems come from the publicly available Spatial Data 
+Warehouse for Belize (Meerman 2013, Meerman 2017).
+Waypoints for SPAG dives recorded in `r study_timeframe` are labelled on the map.\
 
  
-**Table 1.** Table of surveys/dives.
-
-_Dive Surveys_
-```{r table1, echo = FALSE}
-# show table
-head(params$datafile)
-```
-
-
 ## Results
 
-Explanation of results \ 
 
-![](TASA_logo_full_color.png){width=250px}
+## Conclusion
 
-Figure 1. Results figure. \ 
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 2. Results figure. \
-
-Explanation of results \ 
-
-![](TASA_logo_full_color.png){width=250px}
-
-Figure 3. Results figure. \
-
-
-**Table 2.** Results table.
-
-_Results Table_
-```{r table2, echo = FALSE}
-# show table
-head(params$datafile)
-```
-
-
-## Discussion
-
-Interpretation of results \ 
-
-Conclusions and recommendations \ 
+CONCLUSION
 
 
 ## Acknowledgments
 
-List of data collectors \
-
-Other acknowledgements \
 
 
 ## Literature Cited
-
-List of citations \ 
-
-
-## Appendix
-
-Additional details/tables/figures \

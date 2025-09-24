@@ -1067,7 +1067,7 @@ server <- function(input, output, session) {
                 report_file,
                 params = list(
                     release = release_version,
-                    user_name = input$spag_name,
+                    user_name = input$spag_1per_name,
                     datafile_name = input$upload_spag_1per$name,
                     datafile = df_upload_spag_1per(),
                     spag_1per_spag_season_selection = if (spag_1per_spag_season_selection_flag()) input[["spag_1per_spag_season_selection"]] else "None"
