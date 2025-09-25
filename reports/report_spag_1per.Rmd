@@ -41,8 +41,16 @@ df$Month <- format(df$Date, "%b %Y")
 
 # Define study timeframe ---------------------------
 study_start <- min(df$Date, na.rm = TRUE)
-study_end <- max(df$Date, na.rm = TRUE)
-study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
+study_end   <- max(df$Date, na.rm = TRUE)
+start_year <- as.integer(format(study_start, "%Y"))
+end_year   <- as.integer(format(study_end, "%Y"))
+if (format(study_start, "%m") %in% sprintf("%02d", 1:5) &&
+    !any(format(df$Date, "%m") == "12")) {
+  start_year <- start_year - 1
+}
+study_timeframe <- paste0(start_year, "-", end_year)
+study_start <- min(df$Date, na.rm = TRUE)
+study_year <- format(study_start, "%Y")
 ```
 
 # Turneffe Atoll Spawning Aggregations Dataset Report: `r study_timeframe`
@@ -133,6 +141,28 @@ Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$relea
 standardized reef monitoring data, validates the dataset, and creates a shareable output. \
 
 ## Results
+
+```{r df, echo = FALSE, fig.width = 7, fig.height = 7}
+# Create merged df for results ---------------------------
+df_spec <- params$datafile[[2]]
+df_laser <- params$datafile[[3]]
+df_spec_merged <- df |>
+  right_join(df_spec, by = c("Season", "Dive")) |>
+  filter(Site != "" & !is.na(Site))
+df_spec_merged
+
+```
+
+
+fig 2: species counts, colored or faceted by site
+
+fig 3: fish family counts, colored or faceted by site
+
+fig 4: Fish Size Classes from Visual Surveys violin plots
+
+fig 5: Length-frequency distribution of Nassau Grouper and other key species
+
+fig 6. tile plot of spawning behaviors
 
 
 ## Conclusion
