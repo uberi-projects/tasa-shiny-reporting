@@ -146,15 +146,35 @@ standardized reef monitoring data, validates the dataset, and creates a shareabl
 # Create merged df for results ---------------------------
 df_spec <- params$datafile[[2]]
 df_laser <- params$datafile[[3]]
-df_spec_merged <- df |>
-  right_join(df_spec, by = c("Season", "Dive")) |>
-  filter(Site != "" & !is.na(Site))
-df_spec_merged
+df_fish <- params$datafile[[4]]
+df_spec_merged <- df_spec |>
+  left_join(df, by = c("Season", "Dive")) |>
+  filter(Site != "" & !is.na(Site)) |>
+  left_join(df_fish, by = c("Species English Name" = "Common Name")) |>
+  left_join(df_fish,   by = c("Species English Name" = "Alternative Common Name")) |>
+  filter((`Scientific Name.x` != "" & !is.na(`Scientific Name.x`)) | (`Scientific Name.y` != "" & !is.na(`Scientific Name.y`)))
+
 
 ```
 
 
-fig 2: species counts, colored or faceted by site
+```{r figure2, echo = FALSE, fig.width = 7, fig.height = 5}
+df_fig2 <- df_spec_merged %>%
+  group_by(Site, `Species English Name`) %>%
+  summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
+ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
+  geom_col()+
+  theme_custom +
+  theme(axis.text.x = element_text(angle = 90)) +
+  xlab("Species") +
+    scale_fill_manual(values = palette[2:8])
+
+```
+
+*Figure 2.* Bar plot of observed fish species counts, colored by study site,  
+and recorded during spawning aggregations at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
 
 fig 3: fish family counts, colored or faceted by site
 

@@ -481,5 +481,6 @@ read_spag_data <- function(file_path, datatype) {
     data_list$Conditions <- read_excel(file_path, sheet = "Surface_Underwater_Conditions", na = nas, guess_max = min(1000, Inf))
     data_list$Visual <- read_excel(file_path, sheet = "Species_Findings", na = nas, guess_max = min(1000, Inf))
     data_list$Laser <- read_excel(file_path, sheet = "Laser", na = nas, guess_max = min(1000, Inf))
+    data_list$Species <- read_excel(file_path, sheet = "Species", na = nas, guess_max = min(1000, Inf))
     return(data_list)
 }
