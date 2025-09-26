@@ -153,12 +153,14 @@ df_spec_merged <- df_spec |>
   left_join(df_fish, by = c("Species English Name" = "Common Name")) |>
   left_join(df_fish,   by = c("Species English Name" = "Alternative Common Name")) |>
   filter((`Scientific Name.x` != "" & !is.na(`Scientific Name.x`)) | (`Scientific Name.y` != "" & !is.na(`Scientific Name.y`)))
-
+df_laser_merged <- df_laser |>
+  left_join(df, by = c("Season", "Dive"))  |>
+  filter(`Team Leader` != "" & !is.na(`Team Leader`)) 
 
 ```
 
 
-```{r figure2, echo = FALSE, fig.width = 7, fig.height = 5}
+```{r figure2, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig2 <- df_spec_merged %>%
   group_by(Site, `Species English Name`) %>%
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
@@ -176,7 +178,7 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-```{r figure3, echo = FALSE, fig.width = 7, fig.height = 6}
+```{r figure3, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig3 <- df_spec_merged %>%
   group_by(Site, Family.x) %>%
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
@@ -189,12 +191,12 @@ ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Site)) +
 
 ```
 
-*Figure 3.* Bar plot of observed fish family counts, colored by study site,  
+*Figure 3.* Bar plot of observed fish family counts, colored by study site, 
 and recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-```{r figure4, echo = FALSE, fig.width = 7, fig.height = 6}
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig4 <- df_spec_merged %>%
   select(
   `Species English Name`, `10-20 cm`,	`21-30 cm`,	`31-40 cm`,	`41-50 cm`,	
@@ -247,16 +249,80 @@ ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
 ```
 
 
-*Figure 4.* Violin plot of recorded size classes for fish,   
- recorded during spawning aggregations visual surveys at Turneffe 
+*Figure 4.* Violin plot of recorded size classes for fish, 
+recorded during spawning aggregations visual surveys at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 
 observations of size class were excluded, and kernel densities were 
 calculated using the midpoints of size classes.\
 
 
-fig 5: Length-frequency distribution of Nassau Grouper and other key species
+```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+df_fig5 <- df_laser_merged %>%
+  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
+top_species <- df_fig5 %>%
+  count(Species) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 6) %>%
+  pull(Species)
+df_fig5 <- df_fig5 %>%
+  filter(Species %in% top_species)
+fig5A <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
+  geom_histogram(binwidth = 1, color = "black", position = "identity") +
+  theme_custom +
+  ylab("Count") +
+  labs(title = "A") +
+  scale_x_continuous(breaks = seq(0, 120, by = 5)) +
+  scale_fill_manual(values = palette) 
+fig5B <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
+  geom_density(aes(y = ..count.., color = Species), size = 1, fill = "transparent") +
+  theme_custom +
+  ylab("Count") +
+ labs(title = "B") +
+  scale_x_continuous(breaks = seq(0, 120, by = 5)) +
+  scale_color_manual(values = palette) +
+  theme(legend.position = "none")
+ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
 
-fig 6. tile plot of spawning behaviors
+```
+
+*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
+and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Only the six fish species with the 
+most laser sizing data are shown. \
+
+
+```{r figure6, echo = FALSE, fig.width = 7, fig.height = 4.5}
+df_fig6 <- df_spec_merged %>%
+  select(
+    `Species English Name`, Site,
+    `Grouping (1=yes)`, `Fighting (1=yes)`, `Color Changes (1=yes)`,
+    `Bite Wounds (1=yes)`, `Gravid (1=yes)`, `Courtship (1=yes)`, `Spawning (1=yes)`
+  ) %>%
+  mutate(across(
+    c(`Grouping (1=yes)`, `Fighting (1=yes)`, `Color Changes (1=yes)`,
+      `Bite Wounds (1=yes)`, `Gravid (1=yes)`, `Courtship (1=yes)`, `Spawning (1=yes)`),
+    as.numeric
+  )) %>%
+  pivot_longer(
+    cols = c(`Grouping (1=yes)`, `Fighting (1=yes)`, `Color Changes (1=yes)`,
+             `Bite Wounds (1=yes)`, `Gravid (1=yes)`, `Courtship (1=yes)`,
+             `Spawning (1=yes)`),
+    names_to = "Behavior", values_to = "Number"
+  ) %>%
+  group_by(Site, Behavior) %>%
+  summarise(Count = sum(Number, na.rm = TRUE), .groups = "drop")%>%
+  mutate(Behavior = str_remove(Behavior, " \\(1=yes\\)"))
+
+ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
+  geom_tile() +
+    scale_fill_gradient(low = "white", high = palette[2]) +
+  theme_custom
+
+```
+
+*Figure 6.* Tile plot of observed fish spawning behaviors, recorded during spawning aggregations 
+visual surveys at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
 
 
 ## Conclusion
