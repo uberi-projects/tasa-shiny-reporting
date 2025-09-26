@@ -165,7 +165,7 @@ df_fig2 <- df_spec_merged %>%
 ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
   geom_col()+
   theme_custom +
-  theme(axis.text.x = element_text(angle = 90)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
   xlab("Species") +
     scale_fill_manual(values = palette[2:8])
 
@@ -176,7 +176,23 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-fig 3: fish family counts, colored or faceted by site
+```{r figure3, echo = FALSE, fig.width = 7, fig.height = 6}
+df_fig3 <- df_spec_merged %>%
+  group_by(Site, Family.x) %>%
+  summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
+ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Site)) +
+  geom_col()+
+  theme_custom +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  xlab("Fish Family") +
+    scale_fill_manual(values = palette[2:8])
+
+```
+
+*Figure 3.* Bar plot of observed fish family counts, colored by study site,  
+and recorded during spawning aggregations at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`.\
+
 
 fig 4: Fish Size Classes from Visual Surveys violin plots
 
