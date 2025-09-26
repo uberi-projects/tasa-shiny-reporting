@@ -194,7 +194,65 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-fig 4: Fish Size Classes from Visual Surveys violin plots
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 6}
+df_fig4 <- df_spec_merged %>%
+  select(
+  `Species English Name`, `10-20 cm`,	`21-30 cm`,	`31-40 cm`,	`41-50 cm`,	
+  `51-60 cm`,	`61-70 cm`,	`71-80 cm`, `81-90 cm`,	`91-100 cm`,	`101-110 cm`,	
+  `111-120 cm`,	`121-130 cm`,	`> 130 cm`
+  ) %>%
+  mutate(across(-`Species English Name`, as.numeric)) %>%
+  pivot_longer(
+    cols = c(`10-20 cm`,	`21-30 cm`,	`31-40 cm`,	`41-50 cm`,	
+  `51-60 cm`,	`61-70 cm`,	`71-80 cm`, `81-90 cm`,	`91-100 cm`,	`101-110 cm`,	
+  `111-120 cm`,	`121-130 cm`,	`> 130 cm`),
+  names_to = "Class", values_to = "Number"
+  ) %>%
+  filter(!is.na(Number) & Number > 0)%>%
+  uncount(Number)  %>%
+  mutate(
+    Class = case_when(
+      Class == "10-20 cm"  ~ 15,
+      Class == "21-30 cm"  ~ 25,
+      Class == "31-40 cm"  ~ 35,
+      Class == "41-50 cm"  ~ 45,
+      Class == "51-60 cm"  ~ 55,
+      Class == "61-70 cm"  ~ 65,
+      Class == "71-80 cm"  ~ 75,
+      Class == "81-90 cm"  ~ 85,
+      Class == "91-100 cm" ~ 95,
+      Class == "101-110 cm"~ 105,
+      Class == "111-120 cm"~ 115,
+      Class == "121-130 cm"~ 125,
+      Class == "> 130 cm"  ~ 135
+    )
+  ) %>%
+  add_count(`Species English Name`, name = "Total") %>%
+  filter(Total >= 10)  
+
+ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
+  geom_violin()+
+  theme_custom +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
+  xlab("Species") +
+  ylab("Size Class") +
+  scale_y_continuous(
+    breaks = c(15, 25, 35, 45, 55, 65, 75, 85, 95, 105, 115, 125, 135),
+    labels = c("10-20 cm", "21-30 cm", "31-40 cm", "41-50 cm",
+               "51-60 cm", "61-70 cm", "71-80 cm", "81-90 cm",
+               "91-100 cm", "101-110 cm", "111-120 cm", "121-130 cm",
+               "> 130 cm")
+  )
+
+```
+
+
+*Figure 4.* Violin plot of recorded size classes for fish,   
+ recorded during spawning aggregations visual surveys at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 
+observations of size class were excluded, and kernel densities were 
+calculated using the midpoints of size classes.\
+
 
 fig 5: Length-frequency distribution of Nassau Grouper and other key species
 
