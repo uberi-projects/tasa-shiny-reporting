@@ -203,15 +203,44 @@ table1_overall <- df_spec_merged |>
     )
 table1 <- bind_rows(table1_separate, table1_overall)
 total_fish <- format(table1_overall$Fish, big.mark = ",", scientific = FALSE)
+total_fish_num <- sum(as.numeric(table1_overall$Fish), na.rm = TRUE)
 total_species <- table1_overall$Species
 total_sites <- nrow(table1_separate)
 total_dives <- table1_overall$Dives
 ```
 
+```{r table2_prep, echo = FALSE, fig.width = 7, fig.height = 7}
+table2 <- df_spec_merged |>
+  group_by(`Species English Name`) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Count = sum(`Total Count`, na.omit = TRUE),
+    Proportion = round(Count/total_fish_num, 2),
+    `Dives Found On` = length(unique(Dive))
+  ) |>
+  arrange(desc(Count)) |>
+  slice_head(n = 10)
+species_1 <- table2$`Species English Name`[1]
+count_1 <- table2$Count[1]
+prop_1 <- table2$Proportion[1]*100
+species_2 <- table2$`Species English Name`[2]
+count_2 <- table2$Count[2]
+prop_2 <- table2$Proportion[2]*100
+species_3 <- table2$`Species English Name`[3]
+count_3 <- table2$Count[3]
+prop_3 <- table2$Proportion[3]*100
+most_dives <- table2$`Species English Name`[which.max(table2$`Dives Found On`)]
+most_dives_num <- table2$`Dives Found On`[which.max(table2$`Dives Found On`)]
+
+```
+
+
 In total, `r total_fish` fish of `r total_species` unique species were observed in 
 `r study_timeframe` across `r total_sites` sites and `r total_dives` dives (Table 1; Figure 2). 
-The most observed fish species were ______ (_____ individuals), 
-_______ (______ individuals), and _____ (_____ individuals) (Table 2; Figure 2).
+The most observed fish species were `r species_1` (`r count_1` individuals; `r prop_1`%), 
+`r species_2` (`r count_2` individuals; `r prop_2`%), 
+and `r species_3` (`r count_3` individuals; `r prop_3`%). 
+The fish species found on the most unique dives was `r most_dives` (`r most_dives_num` dives) (Table 2; Figure 2).
 
 
 **Table 1.** Summary of SPAG monitoring by site and overall, including total fish observed, 
@@ -224,12 +253,6 @@ Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study
 table1
 ```
 
-
-
-
-Table 2:
-species total count proportion `number of dives found on`
-top 10 only shown
 
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig2 <- df_spec_merged %>%
@@ -247,6 +270,17 @@ ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
 *Figure 2.* Bar plot of observed fish species counts, colored by study site,  
 and recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
+
+
+**Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed, 
+the proportion of overall fish that were that species, 
+and the number of unique dives that the fish species was found on. 
+Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+```{r table2, echo = FALSE, fig.width = 7, fig.height = 7}
+table2
+```
+
 
 
 ```{r figure3, echo = FALSE, fig.width = 7, fig.height = 4.5}
