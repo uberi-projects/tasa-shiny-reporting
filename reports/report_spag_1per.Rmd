@@ -66,7 +66,18 @@ Turneffe Atoll Sustainability Association (TASA)
 
 ***
 
-SUMMARY GOES HERE
+The health and stability of fisheries is a key metric for ecological and 
+economic well-being of a marine ecosystem. In Belize, 
+commercially important reef fish reproduce in spawning aggregations (SPAGs), 
+which indicate the success of the fisheries and provide opportunities for fishers 
+to exploit the aggregations for high yields. This can cause depletions in 
+SPAGs which harm the viability of commerically and ecologically important fish populations. 
+This report presents findings from SPAGs monitoring at 
+Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+his report aims to summarize and visualize the SPAG dataset from `r study_timeframe` 
+to facilitate data interpretation and support sustainable fisheries and evidence-based 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
 
 ## Background
 
