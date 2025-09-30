@@ -346,7 +346,6 @@ ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
 visual surveys at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
-
 ## Conclusion
 
 By summarizing and visualizing the SPAG data from `r study_timeframe`, 
@@ -359,6 +358,7 @@ ecological value of the atoll.\
 
 ## Acknowledgments
 
+Thank you to all team leaders, data collectors, and captains who participated in this project.\
 
 
 ## Literature Cited
