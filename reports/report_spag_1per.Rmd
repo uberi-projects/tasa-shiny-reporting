@@ -91,7 +91,18 @@ Its reef provides coastal protection from extreme weather events (Fedler, 2011),
 
 ### Spawning Aggregations Monitoring
 
-INFO HERE
+SPAGs monitoring has been ongoing at TAMR since the 2022-2023 spawning season, 
+with the aim of advancing sustainable fisheries management by showing how 
+monitoring SPAGs can strengthen Belize's adaptive multispecies finfish management plan. 
+Since then, SPAGs monitoring has continued each spawning season.
+
+A risk with SPAGs is that they may become targets for fishers, who can obtain 
+high yields through the aggregations. However, this may lead to depletions in 
+which the population of the spawning fish can not replace itself or the aggregation 
+can no longer form (Van Overzee & Rijnsdorp, 2015). 
+
+Good management decisions, based on real data from SPAGs, can allow for timely 
+interventions where necessary and support healthy, sustainable fisheries.\
 
 
 ## Methods
@@ -347,4 +358,10 @@ CONCLUSION
 
 ## Literature Cited
 
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
 Reef Fish Spawning Aggregation Monitoring Protocol for the Meso-American Reef and the Wider Caribbean, Version 2.0. (2004). https://reefresilience.org/pdf/Spawning_Aggregation_Monitoring_Protocol_4July2004.pdf
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Van Overzee, H. M. J., & Rijnsdorp, A. D. (2015). Effects of fishing during the spawning period: Implications for sustainable management. Reviews in Fish Biology and Fisheries, 25(1), 65–83. https://doi.org/10.1007/s11160-014-9370-x
