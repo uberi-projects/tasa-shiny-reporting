@@ -215,7 +215,7 @@ Its reef provides coastal protection from extreme weather events (Fedler, 2011),
 
 ### Long-term Atoll Monitoring Program
 
-The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), is designed to monitor key fished taxa at the atoll over space and time, including finfish, queen conch (_Aliger gigas_) and milk conch (_Strombus costatus_), Caribbean spiny lobster (_Panulirus argus_) and spotted spiny lobster (_Panulirus guttatus_), black sea urchins (_Diadema antillarum_), and Caribbean king crab (_Mithrax spinosissumus_). 
+The Long-term Atoll Monitoring Program (LAMP) at TAMR, adapted from the original LAMP protocol for Glover’s Reef (Acosta 2004), is designed to monitor key fished taxa at the atoll over space and time, including finfish, queen conch (_Aliger gigas_) and milk conch (_Strombus costatus_), Caribbean spiny lobster (_Panulirus argus_) and spotted spiny lobster (_Panulirus guttatus_), black sea urchins (_Diadema antillarum_), and Caribbean king crab (_Maguimithrax spinosissumus_). 
 The program uses habitat sampling to estimate population sizes and physical characteristics of these taxa, enabling spatial and temporal comparison.
 
 LAMP's primary objectives are to assess the viability of these populations by identifying trends in abundance, reproduction, physical characteristics, and habitat quality where applicable. 

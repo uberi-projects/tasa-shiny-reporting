@@ -260,12 +260,12 @@ server <- function(input, output, session) {
         if (input$datatype_lamp_1per == "Conch") {
             check_datafiles_dates(
                 df_upload_lamp_1per(), "year", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         } else {
             check_datafiles_dates(
                 df_upload_lamp_1per(), "period", "lamp_1per_", lamp_1per_year_selection_flag, lamp_1per_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         }
     })
@@ -273,12 +273,12 @@ server <- function(input, output, session) {
         if (input$datatype_lamp_multiper == "Conch") {
             check_datafiles_dates(
                 df_upload_lamp_multiper1(), "year", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         } else {
             check_datafiles_dates(
                 df_upload_lamp_multiper1(), "period", "lamp_multiper1_", lamp_multiper1_year_selection_flag, lamp_multiper1_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         }
     })
@@ -286,12 +286,12 @@ server <- function(input, output, session) {
         if (input$datatype_lamp_multiper == "Conch") {
             check_datafiles_dates(
                 df_upload_lamp_multiper2(), "year", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         } else {
             check_datafiles_dates(
                 df_upload_lamp_multiper2(), "period", "lamp_multiper2_", lamp_multiper2_year_selection_flag, lamp_multiper2_period_selection_flag,
-                dud_flag, dud_flag, dud_flag
+                dud_flag, dud_flag, dud_flag, dud_flag
             )
         }
     })
@@ -300,12 +300,12 @@ server <- function(input, output, session) {
             if (input$datatype_lamp_multiper == "Conch") {
                 check_datafiles_dates(
                     df_upload_lamp_multiper3(), "year", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag,
-                    dud_flag, dud_flag, dud_flag
+                    dud_flag, dud_flag, dud_flag, dud_flag
                 )
             } else {
                 check_datafiles_dates(
                     df_upload_lamp_multiper3(), "period", "lamp_multiper3_", lamp_multiper3_year_selection_flag, lamp_multiper3_period_selection_flag,
-                    dud_flag, dud_flag, dud_flag
+                    dud_flag, dud_flag, dud_flag, dud_flag
                 )
             }
         }
@@ -315,12 +315,12 @@ server <- function(input, output, session) {
             if (input$datatype_lamp_multiper == "Conch") {
                 check_datafiles_dates(
                     df_upload_lamp_multiper4(), "year", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag,
-                    dud_flag, dud_flag, dud_flag
+                    dud_flag, dud_flag, dud_flag, dud_flag
                 )
             } else {
                 check_datafiles_dates(
                     df_upload_lamp_multiper4(), "period", "lamp_multiper4_", lamp_multiper4_year_selection_flag, lamp_multiper4_period_selection_flag,
-                    dud_flag, dud_flag, dud_flag
+                    dud_flag, dud_flag, dud_flag, dud_flag
                 )
             }
         }

@@ -71,7 +71,7 @@ df_urchin_crab <- if (study_urchin_crab_check) {
     mutate(
       `Adult Diadema antillarum` = as.numeric(`Adult Diadema antillarum`),
       `Juvenile Diadema antillarum` = as.numeric(`Juvenile Diadema antillarum`),
-      `Mithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
+      `Maguimithrax spinosissumus` = as.numeric(`Mithrax spinosissumus`)
     )
 } else {
   data.frame(matrix(ncol = 0, nrow = 0))
@@ -87,8 +87,8 @@ study_conch2 <- if (study_conch_check) "milk conch (_Strombus costatus_)"
 study_lobster <- if (study_lobster_check) "Caribbean spiny lobster (_Panulirus argus_)"
 study_lobster2 <- if (study_lobster_check) "spotted spiny lobster (_Panulirus guttatus_)"
 study_finfish <- if (study_finfish_check) "finfish"
-study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
-study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Mithrax spinosissimus_)"
+study_urchin_crab <- if (study_urchin_crab_check) "long-spined sea urchins (_Diadema antillarum_)"
+study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Maguimithrax spinosissimus_)"
 studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
 
 # Define study period ---------------------------
@@ -183,12 +183,12 @@ Tar spots on female lobsters indicate recent mating, and females with eggs (‘b
 Monitoring sex ratio and presence of reproductive indicators is key for this species."
 }
 text_urchin_crab <- if (study_urchin_crab_check) {
-  "Black sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
-Black sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
+  "Long-spined sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
+Long-spined sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
 A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean.
 Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015).
 The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize.
-The Caribbean king crab (_Mithrax spinosissimus_) has a similar, though less studied, role in coral reef ecosystems as an algal herbivore.
+The Caribbean king crab (_Maguimithrax spinosissimus_) has a similar, though less studied, role in coral reef ecosystems as an algal herbivore.
 Caribbean king crabs, a type of reddish-brown spider crab,  exceed the per capita grazing rate of many herbivorous fish.
 However, the crabs themselves typically appear in low densities on reefs (Butler & Mojica, 2012)."
 }
@@ -216,7 +216,7 @@ text_conch_methods <- if (study_conch_check) {
   "For conch specimens, data collected included total length, lip thickness, and the presence or absence of eggs."
 }
 text_lobster_methods <- if (study_lobster_check) {
-  "Lobster specimens were assessed for carapace length (measured with a tickle stick), sex, and egg presence (+/-)."
+  "Lobster specimens were assessed for carapace length (measured with a graduated tickle stick), sex, and egg presence (+/-)."
 }
 text_urchin_crab_methods <- if (study_urchin_crab_check) {
   "Urchins were counted and classified into juvenile and adult stages, while crab specimens were recorded using a count method."
@@ -317,12 +317,16 @@ df_table1_sum_conch <- if (study_conch_check) {
 df_table1_sum_lobster <- if (study_lobster_check) {
   df_lobster %>%
     group_by(`Mgmt Zone`) %>%
-    summarise(`Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    summarise(
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster")
+      ) %>%
     bind_rows(
       df_lobster %>%
         summarise(
           `Mgmt Zone` = "Overall",
-          `Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)
+          `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster")
         )
     )
 } else {
@@ -334,7 +338,7 @@ df_table1_sum_urchin_crab <- if (study_urchin_crab_check) {
     summarise(
       `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
         sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-      `Mithrax` = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+      `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
     ) %>%
     bind_rows(
       df_urchin_crab %>%
@@ -342,7 +346,7 @@ df_table1_sum_urchin_crab <- if (study_urchin_crab_check) {
           `Mgmt Zone` = "Overall",
           `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
             sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-          `Mithrax` = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+          `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
         )
     )
 } else {
@@ -368,14 +372,17 @@ total_finfish_div <- if (study_finfish_check) {
 total_conch <- if (study_conch_check) {
   filter(df_table1, Zone == "Overall")$`Conch`
 }
-total_lobster <- if (study_lobster_check) {
-  filter(df_table1, Zone == "Overall")$`Lobster`
+total_spiny <- if (study_lobster_check) {
+  filter(df_table1, Zone == "Overall")$`Caribbean Spiny`
+}
+total_spotted <- if (study_lobster_check) {
+  filter(df_table1, Zone == "Overall")$`Spotted Spiny`
 }
 total_urchin <- if (study_urchin_crab_check) {
   filter(df_table1, Zone == "Overall")$`Diadema`
 }
 total_crab <- if (study_urchin_crab_check) {
-  filter(df_table1, Zone == "Overall")$`Mithrax`
+  filter(df_table1, Zone == "Overall")$`Maguimithrax`
 }
 count_conservation <- filter(df_table1, Zone == "Conserv.")$Sites
 count_general <- filter(df_table1, Zone == "General")$Sites
@@ -460,14 +467,14 @@ df_table2_urchin_crab <- if (study_urchin_crab_check) {
         !(`Juvenile Diadema antillarum` %in% empty_counts),
         na.rm = TRUE
       ),
-      Mithrax_Count = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE),
+      Maguimithrax_Count = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE),
       .groups = "drop"
     ) %>%
     left_join(df_sites, by = "Site ID") %>%
     group_by(`Mgmt Zone`) %>%
     summarise(
       `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
-      `Mithrax / Site` = round(mean(Mithrax_Count, na.rm = TRUE), 1)
+      `Maguimithrax / Site` = round(mean(Maguimithrax_Count, na.rm = TRUE), 1)
     ) %>%
     bind_rows(
       df_urchin_crab %>%
@@ -480,12 +487,12 @@ df_table2_urchin_crab <- if (study_urchin_crab_check) {
             !(`Juvenile Diadema antillarum` %in% empty_counts),
             na.rm = TRUE
           ),
-          Mithrax_Count = sum(!(`Mithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+          Maguimithrax_Count = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
         ) %>%
         summarise(
           `Mgmt Zone` = "Overall",
           `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
-          `Mithrax / Site` = round(mean(Mithrax_Count, na.rm = TRUE), 1)
+          `Maguimithrax / Site` = round(mean(Maguimithrax_Count, na.rm = TRUE), 1)
         )
     )
 } else {
@@ -519,23 +526,23 @@ overall_urchin_av <- if (study_urchin_crab_check) {
   filter(df_table2, Zone == "Overall")$`Diadema / Site`
 }
 overall_crab_av <- if (study_urchin_crab_check) {
-  filter(df_table2, Zone == "Overall")$`Mithrax / Site`
+  filter(df_table2, Zone == "Overall")$`Maguimithrax / Site`
 }
 
 # Prepare dynamic text for Tables 1/2 ---------------------------
 tables1_2_text <- knitr::combine_words(na.omit(c(
   if (study_finfish_check) paste(total_finfish_div, "unique finfish species"),
   if (study_conch_check) paste(total_conch, "conch"),
-  if (study_lobster_check) paste(total_lobster, "lobsters"),
+  if (study_lobster_check) paste(total_spiny, "Caribbean Spiny lobster,", total_spotted, "Spotted Spiny lobster"),
   if (study_urchin_crab_check) paste(total_urchin, "_Diadema_"),
-  if (study_urchin_crab_check) paste(total_crab, "_Mithrax_")
+  if (study_urchin_crab_check) paste(total_crab, "_Maguimithrax_")
 )))
 tables1_2_text2 <- knitr::combine_words(na.omit(c(
   if (study_finfish_check) paste(overall_finfish_av, "finfish species"),
   if (study_conch_check) paste(overall_conch_av, "conch"),
   if (study_lobster_check) paste(overall_lobster_av, "lobsters"),
   if (study_urchin_crab_check) paste(overall_urchin_av, "_Diadema_"),
-  if (study_urchin_crab_check) paste(overall_crab_av, "_Mithrax_")
+  if (study_urchin_crab_check) paste(overall_crab_av, "_Maguimithrax_")
 )))
 
 
@@ -549,7 +556,7 @@ On average, `r tables1_2_text2` were found per site (Table 2).\
 
 
 **Table 1.** Summary of sampled management zones in `r study_year_month` at Turneffe Atoll Marine Reserve, including 
-finfish diversity (number of species), conch count, lobster count,  _Diadema_ count, and _Mithrax_ count. \
+finfish diversity (number of species), conch count, lobster count,  _Diadema_ count, and _Maguimithrax_ count. \
 
 ```{r table1, echo = FALSE}
 df_table1
@@ -560,7 +567,7 @@ df_table1
 
 **Table 2.** Summary of sampled management zones in `r study_year_month` at Turneffe Atoll Marine Reserve, including number of sampled sites, 
 average finfish diversity (number of species) per site, average conch count per site, average lobster count per site, 
-average  _Diadema_ count per site, and average _Mithrax_ count per site. \
+average  _Diadema_ count per site, and average _Maguimithrax_ count per site. \
 
 
 ```{r table2, echo = FALSE}
@@ -951,11 +958,11 @@ if (study_conch_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
-      `Area (Hec)` = `Area (m2)` / 10000,
+      `Area (Ha)` = `Area (m2)` / 10000,
       `Queen Conch` = sum(`Queen Conch Count`),
       `Milk Conch` = sum(`Milk Conch Count`),
-      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
-      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+      `Queen Conch / Ha` = round(`Queen Conch` / `Area (Ha)`, 1),
+      `Milk Conch / Ha` = round(`Milk Conch` / `Area (Ha)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`) %>%
     mutate(`Mgmt Zone` = "Overall")
@@ -974,11 +981,11 @@ if (study_conch_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
-      `Area (Hec)` = `Area (m2)` / 10000,
+      `Area (Ha)` = `Area (m2)` / 10000,
       `Queen Conch` = sum(`Queen Conch Count`),
       `Milk Conch` = sum(`Milk Conch Count`),
-      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
-      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+      `Queen Conch / Ha` = round(`Queen Conch` / `Area (Ha)`, 1),
+      `Milk Conch / Ha` = round(`Milk Conch` / `Area (Ha)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`)
   df_table1co <- bind_rows(df_table1co_zones, df_table1co_overall)
@@ -987,10 +994,10 @@ if (study_conch_check) {
   conch_number_sites <- filter(df_table1co, `Mgmt Zone` == "Overall")$Sites
   conch_number_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch`
   conch_number_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch`
-  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Hec`
-  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Hec`
-  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Hec`)
-  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Hec`)]
+  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Ha`
+  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Ha`
+  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Ha`)
+  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Ha`)]
 }
 ```
 
@@ -1050,7 +1057,7 @@ if (study_conch_check) {
 if (study_conch_check) {
   # Prepare df for Figure 1Co ---------------------------
   df_figure1co <- df_table1co_zones %>%
-    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
+    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Ha`, `Milk Conch` = `Milk Conch / Ha`) %>%
     pivot_longer(cols = c(`Queen Conch`, `Milk Conch`), names_to = "Species", values_to = "Density (Conch/Hectare)")
 
   # Define Figure 1Co
@@ -1180,30 +1187,30 @@ if (study_lobster_check) {
     filter(!is.na(`Site ID`)) %>%
     summarise(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Ha Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
-      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Caribbean Spiny / Ha` = round(`Caribbean Spiny` / `Ha Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
       Males = sum(Sex %in% c("M", "m", "Male", "male")),
       Females = sum(Sex %in% c("F", "f", "Female", "female")),
       Total = `Caribbean Spiny` + `Spotted Spiny`,
       Unsexed = Total - Males - Females
     ) %>%
-    select(-`Hec Sampled`) %>%
+    select(-`Ha Sampled`) %>%
     mutate(`Mgmt Zone` = "Overall")
   df_table1l_zones <- df_lobster %>%
     filter(!is.na(`Site ID`)) %>%
     group_by(`Mgmt Zone`) %>%
     summarise(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Ha Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
-      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Caribbean Spiny / Ha` = round(`Caribbean Spiny` / `Ha Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
       Males = sum(Sex %in% c("M", "m", "Male", "male")),
       Females = sum(Sex %in% c("F", "f", "Female", "female"))
     ) %>%
-    select(-`Hec Sampled`)
+    select(-`Ha Sampled`)
   df_table1l <- bind_rows(df_table1l_zones, df_table1l_overall)
   df_table1l <- select(df_table1l, -Unsexed, -Total)
 
@@ -1211,9 +1218,9 @@ if (study_lobster_check) {
   number_lobster_sites <- length(unique(df_lobster$`Site ID`))
   overall_lobster_car <- df_table1l_overall$`Caribbean Spiny`
   overall_lobster_spot <- df_table1l_overall$`Spotted Spiny`
-  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Hec`
-  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Hec`)
-  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Hec`)]
+  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Ha`
+  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Ha`)
+  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Ha`)]
   proportion_lob_male <- round(df_table1l_overall$Males / df_table1l_overall$Total * 100, 1)
   proportion_lob_female <- round(df_table1l_overall$Females / df_table1l_overall$Total * 100, 1)
   proportion_lob_unsexed <- round(df_table1l_overall$Unsexed / df_table1l_overall$Total * 100, 1)
@@ -1297,7 +1304,7 @@ if (study_lobster_check) {
     labs(title = "A") +
     theme(legend.box = "vertical", legend.direction = "vertical") +
     scale_fill_manual(values = palette[2:4])
-  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Hec`, fill = `Mgmt Zone`)) +
+  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Ha`, fill = `Mgmt Zone`)) +
     geom_col(color = "black") +
     theme_custom +
     xlab("Management Zone") +
@@ -1407,7 +1414,7 @@ if (study_lobster_check) {
 `r if (study_urchin_crab_check){"***"}`
 
 
-`r if (study_urchin_crab_check){"### *Diadema* and *Mithrax*"}`
+`r if (study_urchin_crab_check){"### *Diadema* and *Maguimithrax*"}`
 
 
 ```{r table1dm_prep, echo = FALSE, include = FALSE}
@@ -1418,7 +1425,7 @@ if (study_urchin_crab_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       `Adult Diadema` = sum(`Adult Diadema antillarum`, na.rm = TRUE),
       `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`, na.rm = TRUE),
-      `Mithrax` = sum(`Mithrax spinosissumus`, na.rm = TRUE)
+      `Maguimithrax` = sum(`Maguimithrax spinosissumus`, na.rm = TRUE)
     ) %>%
     mutate(`Mgmt Zone` = "Overall")
   df_table1dm_zones <- df_urchin_crab %>%
@@ -1427,7 +1434,7 @@ if (study_urchin_crab_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       `Adult Diadema` = sum(`Adult Diadema antillarum`, na.rm = TRUE),
       `Juvenile Diadema` = sum(`Juvenile Diadema antillarum`, na.rm = TRUE),
-      `Mithrax` = sum(`Mithrax spinosissumus`, na.rm = TRUE)
+      `Maguimithrax` = sum(`Maguimithrax spinosissumus`, na.rm = TRUE)
     )
   df_table1dm <- bind_rows(df_table1dm_zones, df_table1dm_overall)
 
@@ -1435,27 +1442,27 @@ if (study_urchin_crab_check) {
   sites_urchin_lobsters <- length(unique(df_urchin_crab$`Site ID`))
   total_diadema_ad <- df_table1dm_overall$`Adult Diadema`
   total_diadema_juv <- df_table1dm_overall$`Juvenile Diadema`
-  total_mithrax <- df_table1dm_overall$`Mithrax`
+  total_mithrax <- df_table1dm_overall$`Maguimithrax`
 }
 ```
 
 
 
 ```{r diademamithraxtext, echo = FALSE, include = FALSE}
-# Create text about Diadema/Mithrax results ---------------------------
+# Create text about Diadema/Maguimithrax results ---------------------------
 urchin_crab_summary_text <- if (study_urchin_crab_check) {
   paste(
     "Across a total of", sites_urchin_lobsters, "sites,",
     total_diadema_ad, "adult _Diadema_ were found,",
     total_diadema_juv, "juvenile _Diadema_ were found, and",
-    total_mithrax, "_Mithrax_ were found (Table 1DM; Figure 1DM).",
+    total_mithrax, "_Maguimithrax_ were found (Table 1DM; Figure 1DM).",
     "\n\n"
   )
 }
-# Create Diadema/Mithrax table/figure captions
+# Create Diadema/Maguimithrax table/figure captions
 table1dmcaption <- if (study_urchin_crab_check) {
   paste(
-    "**Table 1DM.** _Diadema antillarum_ and _Mithrax spinosissumus_ counts in sampled management zones and overall in",
+    "**Table 1DM.** _Diadema antillarum_ and _Maguimithrax spinosissumus_ counts in sampled management zones and overall in",
     study_year_month,
     "at Turneffe Atoll Marine Reserve.",
     "\n\n"
@@ -1463,7 +1470,7 @@ table1dmcaption <- if (study_urchin_crab_check) {
 }
 figure1dmcaption <- if (study_urchin_crab_check) {
   paste(
-    "_Figure 1DM_. Distribution of _Diadema antillarum_ and _Mithrax spinosissumus_ counts per site in",
+    "_Figure 1DM_. Distribution of _Diadema antillarum_ and _Maguimithrax spinosissumus_ counts per site in",
     study_year_month,
     "at Turneffe Atoll Marine Reserve. Black Xs represent the mean for each group.",
     "\n\n"
@@ -1493,7 +1500,7 @@ if (study_urchin_crab_check) {
   # Prepare df for Figure 1DM ---------------------------
   df_figure1dm <- df_urchin_crab %>%
     pivot_longer(
-      cols = c(`Adult Diadema antillarum`, `Juvenile Diadema antillarum`, `Mithrax spinosissumus`),
+      cols = c(`Adult Diadema antillarum`, `Juvenile Diadema antillarum`, `Maguimithrax spinosissumus`),
       names_to = "Species", values_to = "Count"
     ) %>%
     group_by(`Site ID`, Species) %>%
