@@ -951,11 +951,11 @@ if (study_conch_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
-      `Area (Hec)` = `Area (m2)` / 10000,
+      `Area (Ha)` = `Area (m2)` / 10000,
       `Queen Conch` = sum(`Queen Conch Count`),
       `Milk Conch` = sum(`Milk Conch Count`),
-      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
-      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+      `Queen Conch / Ha` = round(`Queen Conch` / `Area (Ha)`, 1),
+      `Milk Conch / Ha` = round(`Milk Conch` / `Area (Ha)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`) %>%
     mutate(`Mgmt Zone` = "Overall")
@@ -974,11 +974,11 @@ if (study_conch_check) {
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
       Transects = sum(Transects),
       `Area (m2)` = sum(`Area (m2)`),
-      `Area (Hec)` = `Area (m2)` / 10000,
+      `Area (Ha)` = `Area (m2)` / 10000,
       `Queen Conch` = sum(`Queen Conch Count`),
       `Milk Conch` = sum(`Milk Conch Count`),
-      `Queen Conch / Hec` = round(`Queen Conch` / `Area (Hec)`, 1),
-      `Milk Conch / Hec` = round(`Milk Conch` / `Area (Hec)`, 1)
+      `Queen Conch / Ha` = round(`Queen Conch` / `Area (Ha)`, 1),
+      `Milk Conch / Ha` = round(`Milk Conch` / `Area (Ha)`, 1)
     ) %>%
     select(-Transects, -`Area (m2)`)
   df_table1co <- bind_rows(df_table1co_zones, df_table1co_overall)
@@ -987,10 +987,10 @@ if (study_conch_check) {
   conch_number_sites <- filter(df_table1co, `Mgmt Zone` == "Overall")$Sites
   conch_number_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch`
   conch_number_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch`
-  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Hec`
-  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Hec`
-  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Hec`)
-  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Hec`)]
+  conch_density_overall_queen <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Queen Conch / Ha`
+  conch_density_overall_milk <- filter(df_table1co, `Mgmt Zone` == "Overall")$`Milk Conch / Ha`
+  conch_max_density <- max(filter(df_table1co, `Mgmt Zone` != "Overall")$`Queen Conch / Ha`)
+  zone_conch_max_density <- filter(df_table1co, `Mgmt Zone` != "Overall")$`Mgmt Zone`[which.max(df_table1co$`Queen Conch / Ha`)]
 }
 ```
 
@@ -1050,7 +1050,7 @@ if (study_conch_check) {
 if (study_conch_check) {
   # Prepare df for Figure 1Co ---------------------------
   df_figure1co <- df_table1co_zones %>%
-    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Hec`, `Milk Conch` = `Milk Conch / Hec`) %>%
+    select(`Mgmt Zone`, `Queen Conch` = `Queen Conch / Ha`, `Milk Conch` = `Milk Conch / Ha`) %>%
     pivot_longer(cols = c(`Queen Conch`, `Milk Conch`), names_to = "Species", values_to = "Density (Conch/Hectare)")
 
   # Define Figure 1Co
@@ -1180,30 +1180,30 @@ if (study_lobster_check) {
     filter(!is.na(`Site ID`)) %>%
     summarise(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Ha Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
-      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Caribbean Spiny / Ha` = round(`Caribbean Spiny` / `Ha Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
       Males = sum(Sex %in% c("M", "m", "Male", "male")),
       Females = sum(Sex %in% c("F", "f", "Female", "female")),
       Total = `Caribbean Spiny` + `Spotted Spiny`,
       Unsexed = Total - Males - Females
     ) %>%
-    select(-`Hec Sampled`) %>%
+    select(-`Ha Sampled`) %>%
     mutate(`Mgmt Zone` = "Overall")
   df_table1l_zones <- df_lobster %>%
     filter(!is.na(`Site ID`)) %>%
     group_by(`Mgmt Zone`) %>%
     summarise(
       Sites = n_distinct(`Site ID`, na.rm = TRUE),
-      `Hec Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
+      `Ha Sampled` = n_distinct(paste0(`Site ID`, Transect), na.rm = TRUE) * 200 / 10000,
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster"),
-      `Caribbean Spiny / Hec` = round(`Caribbean Spiny` / `Hec Sampled`, 1),
+      `Caribbean Spiny / Ha` = round(`Caribbean Spiny` / `Ha Sampled`, 1),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster"),
       Males = sum(Sex %in% c("M", "m", "Male", "male")),
       Females = sum(Sex %in% c("F", "f", "Female", "female"))
     ) %>%
-    select(-`Hec Sampled`)
+    select(-`Ha Sampled`)
   df_table1l <- bind_rows(df_table1l_zones, df_table1l_overall)
   df_table1l <- select(df_table1l, -Unsexed, -Total)
 
@@ -1211,9 +1211,9 @@ if (study_lobster_check) {
   number_lobster_sites <- length(unique(df_lobster$`Site ID`))
   overall_lobster_car <- df_table1l_overall$`Caribbean Spiny`
   overall_lobster_spot <- df_table1l_overall$`Spotted Spiny`
-  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Hec`
-  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Hec`)
-  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Hec`)]
+  density_lobster_car <- df_table1l_overall$`Caribbean Spiny / Ha`
+  max_density_lobster_car <- max(df_table1l_zones$`Caribbean Spiny / Ha`)
+  zone_max_density_lobster_car <- df_table1l_zones$`Mgmt Zone`[which.max(df_table1l_zones$`Caribbean Spiny / Ha`)]
   proportion_lob_male <- round(df_table1l_overall$Males / df_table1l_overall$Total * 100, 1)
   proportion_lob_female <- round(df_table1l_overall$Females / df_table1l_overall$Total * 100, 1)
   proportion_lob_unsexed <- round(df_table1l_overall$Unsexed / df_table1l_overall$Total * 100, 1)
@@ -1297,7 +1297,7 @@ if (study_lobster_check) {
     labs(title = "A") +
     theme(legend.box = "vertical", legend.direction = "vertical") +
     scale_fill_manual(values = palette[2:4])
-  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Hec`, fill = `Mgmt Zone`)) +
+  B <- ggplot(df_table1l_zones, aes(x = `Mgmt Zone`, y = `Caribbean Spiny / Ha`, fill = `Mgmt Zone`)) +
     geom_col(color = "black") +
     theme_custom +
     xlab("Management Zone") +
