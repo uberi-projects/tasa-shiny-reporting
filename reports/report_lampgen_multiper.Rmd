@@ -116,7 +116,7 @@ study_conch2 <- if (study_conch_check) "milk conch (_Strombus costatus_)"
 study_lobster <- if (study_lobster_check) "Caribbean spiny lobster (_Panulirus argus_)"
 study_lobster2 <- if (study_lobster_check) "spotted spiny lobster (_Panulirus guttatus_)"
 study_finfish <- if (study_finfish_check) "finfish"
-study_urchin_crab <- if (study_urchin_crab_check) "black sea urchins (_Diadema antillarum_)"
+study_urchin_crab <- if (study_urchin_crab_check) "long-spined sea urchins (_Diadema antillarum_)"
 study_urchin_crab2 <- if (study_urchin_crab_check) "Caribbean king crab (_Maguimithrax spinosissimus_)"
 studies <- knitr::combine_words(c(study_finfish, study_conch, study_conch2, study_lobster, study_lobster2, study_urchin_crab, study_urchin_crab2))
 
@@ -418,8 +418,8 @@ Tar spots on female lobsters indicate recent mating, and females with eggs (‘b
 Monitoring sex ratio and presence of reproductive indicators is key for this species."
 }
 text_urchin_crab <- if (study_urchin_crab_check) {
-  "Black sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
-Black sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
+  "Long-spined sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
+Long-spined sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
 A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean.
 Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015).
 The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize.
