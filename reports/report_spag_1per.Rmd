@@ -349,7 +349,12 @@ visual surveys at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ## Conclusion
 
-CONCLUSION
+By summarizing and visualizing the SPAG data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the SPAG data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
 
 
 ## Acknowledgments
