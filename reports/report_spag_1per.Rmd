@@ -66,7 +66,18 @@ Turneffe Atoll Sustainability Association (TASA)
 
 ***
 
-SUMMARY GOES HERE
+The health and stability of fisheries is a key metric for ecological and 
+economic well-being of a marine ecosystem. In Belize, 
+commercially important reef fish reproduce in spawning aggregations (SPAGs), 
+which indicate the success of the fisheries and provide opportunities for fishers 
+to exploit the aggregations for high yields. This can cause depletions in 
+SPAGs which harm the viability of commercially and ecologically important fish populations. 
+This report presents findings from SPAGs monitoring at 
+Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
+his report aims to summarize and visualize the SPAG dataset from `r study_timeframe` 
+to facilitate data interpretation and support sustainable fisheries and evidence-based 
+management decisions by TASA staff, collaborators, and stakeholders.\
+
 
 ## Background
 
@@ -80,7 +91,18 @@ Its reef provides coastal protection from extreme weather events (Fedler, 2011),
 
 ### Spawning Aggregations Monitoring
 
-INFO HERE
+SPAGs monitoring has been ongoing at TAMR since the 2022-2023 spawning season, 
+with the aim of advancing sustainable fisheries management by showing how 
+monitoring SPAGs can strengthen Belize's adaptive multispecies finfish management plan. 
+Since then, SPAGs monitoring has continued each spawning season.
+
+A risk with SPAGs is that they may become targets for fishers, who can obtain 
+high yields through the aggregations. However, this may lead to depletions in 
+which the population of the spawning fish can not replace itself or the aggregation 
+can no longer form (Van Overzee & Rijnsdorp, 2015). 
+
+Good management decisions, based on real data from SPAGs, can allow for timely 
+interventions where necessary and support healthy, sustainable fisheries.\
 
 
 ## Methods
@@ -159,6 +181,85 @@ df_laser_merged <- df_laser |>
 
 ```
 
+```{r table1_prep, echo = FALSE, fig.width = 7, fig.height = 7}
+table1_separate <- df_spec_merged |>
+  group_by(Site) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Fish = sum(`Total Count`, na.omit = TRUE),
+    Species = length(unique(`Species English Name`)),
+    Dives = length(unique(Dive)),
+    `Fish per Dive` = round(Fish/Dives)
+    )
+table1_overall <- df_spec_merged |>
+  mutate(Site = "Overall") |>
+  group_by(Site) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Fish = sum(`Total Count`, na.omit = TRUE),
+    Species = length(unique(`Species English Name`)),
+    Dives = length(unique(Dive)),
+    `Fish per Dive` = round(Fish/Dives)
+    )
+table1 <- bind_rows(table1_separate, table1_overall)
+total_fish <- format(table1_overall$Fish, big.mark = ",", scientific = FALSE)
+total_fish_num <- sum(as.numeric(table1_overall$Fish), na.rm = TRUE)
+total_species <- table1_overall$Species
+total_sites <- nrow(table1_separate)
+total_dives <- table1_overall$Dives
+```
+
+```{r table2_prep, echo = FALSE, fig.width = 7, fig.height = 7}
+table2 <- df_spec_merged |>
+  group_by(`Species English Name`) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Count = sum(`Total Count`, na.omit = TRUE),
+    Proportion = round(Count/total_fish_num, 2),
+    `Dives Found On` = length(unique(Dive))
+  ) |>
+  arrange(desc(Count)) |>
+  slice_head(n = 10)
+species_1 <- table2$`Species English Name`[1]
+count_1 <- table2$Count[1]
+prop_1 <- table2$Proportion[1]*100
+species_2 <- table2$`Species English Name`[2]
+count_2 <- table2$Count[2]
+prop_2 <- table2$Proportion[2]*100
+species_3 <- table2$`Species English Name`[3]
+count_3 <- table2$Count[3]
+prop_3 <- table2$Proportion[3]*100
+most_dives <- table2$`Species English Name`[which.max(table2$`Dives Found On`)]
+most_dives_num <- table2$`Dives Found On`[which.max(table2$`Dives Found On`)]
+families <- df_spec_merged %>%
+  group_by(Family.x) %>%
+  summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
+most_family <- families$`Family.x`[which.max(families$`Family.x`)]
+```
+
+
+In total, `r total_fish` fish of `r total_species` unique species were observed in 
+`r study_timeframe` across `r total_sites` sites and `r total_dives` dives (Table 1; Figure 2). 
+The most observed fish species were `r species_1` (`r count_1` individuals; `r prop_1`%), 
+`r species_2` (`r count_2` individuals; `r prop_2`%), 
+and `r species_3` (`r count_3` individuals; `r prop_3`%). 
+The fish species found on the most unique dives was `r most_dives` (`r most_dives_num` dives) (Table 2; Figure 2). 
+The most observed fish family was `r most_family` (Figure 3).\
+
+
+**Table 1.** Summary of SPAG monitoring by site and overall, including total fish observed, 
+number of unique species observed, number of survey dives, 
+and the average number of fish observed per dive. 
+Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE, fig.width = 7, fig.height = 7}
+table1
+```
+
+
+<br>
+
 
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig2 <- df_spec_merged %>%
@@ -176,6 +277,22 @@ ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
 *Figure 2.* Bar plot of observed fish species counts, colored by study site,  
 and recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
+
+
+<br>
+
+
+**Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed, 
+the proportion of overall fish that were that species, 
+and the number of unique dives that the fish species was found on. 
+Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+```{r table2, echo = FALSE, fig.width = 7, fig.height = 7}
+table2
+```
+
+
+<br>
 
 
 ```{r figure3, echo = FALSE, fig.width = 7, fig.height = 4.5}
@@ -196,7 +313,10 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+<br>
+
+
+```{r figure4_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig4 <- df_spec_merged %>%
   select(
   `Species English Name`, `10-20 cm`,	`21-30 cm`,	`31-40 cm`,	`41-50 cm`,	
@@ -231,8 +351,7 @@ df_fig4 <- df_spec_merged %>%
   ) %>%
   add_count(`Species English Name`, name = "Total") %>%
   filter(Total >= 10)  
-
-ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
+fig4 <- ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
   geom_violin()+
   theme_custom +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
@@ -245,24 +364,31 @@ ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
                "91-100 cm", "101-110 cm", "111-120 cm", "121-130 cm",
                "> 130 cm")
   )
-
+total_visuals <- sum(df_spec_merged$`10-20 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`21-30 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`31-40 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`41-50 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`51-60 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`61-70 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`71-80 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`81-90 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`91-100 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`101-110 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`111-120 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`121-130 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`> 130 cm`, na.rm = TRUE) 
+  
 ```
 
 
-*Figure 4.* Violin plot of recorded size classes for fish, 
-recorded during spawning aggregations visual surveys at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 
-observations of size class were excluded, and kernel densities were 
-calculated using the midpoints of size classes.\
 
-
-```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+```{r figure5_prep, echo = FALSE, fig.width = 7, fig.height = 6}
 df_fig5 <- df_laser_merged %>%
   mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
 top_species <- df_fig5 %>%
   count(Species) %>%
   arrange(desc(n)) %>%
-  slice_head(n = 6) %>%
+  slice_head(n = 5) %>%
   pull(Species)
 df_fig5 <- df_fig5 %>%
   filter(Species %in% top_species)
@@ -281,17 +407,16 @@ fig5B <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
   scale_x_continuous(breaks = seq(0, 120, by = 5)) +
   scale_color_manual(values = palette) +
   theme(legend.position = "none")
-ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
-
+fig5 <- ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
+total_lasers_df <-  df_laser_merged %>%
+  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`)) %>%
+  filter(`Fish Measurement (cm)`>= 0)
+total_lasers <- nrow(total_lasers_df)
+nassau_size <- round(mean(filter(df_fig5, Species == "Nassau Grouper")$`Fish Measurement (cm)`), 2)
 ```
 
-*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
-and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Only the six fish species with the 
-most laser sizing data are shown. \
 
-
-```{r figure6, echo = FALSE, fig.width = 7, fig.height = 4.5}
+```{r figure6_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig6 <- df_spec_merged %>%
   select(
     `Species English Name`, Site,
@@ -313,10 +438,54 @@ df_fig6 <- df_spec_merged %>%
   summarise(Count = sum(Number, na.rm = TRUE), .groups = "drop")%>%
   mutate(Behavior = str_remove(Behavior, " \\(1=yes\\)"))
 
-ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
+fig6 <- ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
   geom_tile() +
     scale_fill_gradient(low = "white", high = palette[2]) +
   theme_custom
+behaviors <- combine_words(unique(df_fig6$Behavior))
+```
+
+
+`r total_visuals` fish were measured using visual surveys, 
+and `r total_lasers` fish were measured using laser methodology (Figure 4; Figure 5). 
+The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 5). 
+Fish spawning behaviors observed included `r behaviors` (Figure 6).\
+
+
+<br>
+
+
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig4
+```
+
+
+*Figure 4.* Violin plot of recorded size classes for fish, 
+recorded during spawning aggregations visual surveys at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 10 
+observations of size class were excluded, and kernel densities were 
+calculated using the midpoints of size classes.\
+
+
+<br>
+
+
+```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+fig5
+```
+
+
+*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
+and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Only the four fish species with the 
+most laser sizing data are shown. \
+
+
+<br>
+
+
+```{r figure6, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig6
 
 ```
 
@@ -324,16 +493,30 @@ ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
 visual surveys at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
+<br>
+
 
 ## Conclusion
 
-CONCLUSION
+By summarizing and visualizing the SPAG data from `r study_timeframe`, 
+researchers, policy-makers, and other stakeholders are better able to interpret and use the dataset. 
+This report supports the aims of the SPAG data collection by offering a more understandable view 
+of the data itself, supporting future efforts to create recommendations on enforcement, monitoring, 
+education, outreach, and regulations to ensure the long-term sustainability of the TAMR fishery while safeguarding the 
+ecological value of the atoll.\
 
 
 ## Acknowledgments
 
+Thank you to all team leaders, data collectors, and captains who participated in this project.\
 
 
 ## Literature Cited
 
+Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turneffe Atoll Trust. http://www.turneffeatollmarinereserve.org/app/webroot/userfiles/214/File/Turneffe%20Atoll%20Valuation%20Study%20PDF%20-%20Final%20Report.pdf
+
 Reef Fish Spawning Aggregation Monitoring Protocol for the Meso-American Reef and the Wider Caribbean, Version 2.0. (2004). https://reefresilience.org/pdf/Spawning_Aggregation_Monitoring_Protocol_4July2004.pdf
+
+Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+Van Overzee, H. M. J., & Rijnsdorp, A. D. (2015). Effects of fishing during the spawning period: Implications for sustainable management. Reviews in Fish Biology and Fisheries, 25(1), 65–83. https://doi.org/10.1007/s11160-014-9370-x
