@@ -539,12 +539,15 @@ df_table1_sum_conch <- if (study_conch_check) {
 df_table1_sum_lobster <- if (study_lobster_check) {
   df_lobster %>%
     group_by(`Survey`) %>%
-    summarise(`Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)) %>%
+    summarise(
+      `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster", na.rm = TRUE)) %>%
     bind_rows(
       df_lobster %>%
         summarise(
           `Survey` = "Overall",
-          `Lobster` = sum(!(Species %in% empty_counts), na.rm = TRUE)
+          `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
+          `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster", na.rm = TRUE)
         )
     )
 } else {
@@ -583,8 +586,11 @@ total_finfish_div <- if (study_finfish_check) {
 total_conch <- if (study_conch_check) {
   filter(df_table1, Survey == "Overall")$`Conch`
 }
-total_lobster <- if (study_lobster_check) {
-  filter(df_table1, Survey == "Overall")$`Lobster`
+total_spiny <- if (study_lobster_check) {
+  filter(df_table1, Survey == "Overall")$`Caribbean Spiny`
+}
+total_spotted <- if (study_lobster_check) {
+  filter(df_table1, Survey == "Overall")$`Spotted Spiny`
 }
 total_urchin <- if (study_urchin_crab_check) {
   filter(df_table1, Survey == "Overall")$`Diadema`
@@ -726,7 +732,7 @@ overall_crab_av <- if (study_urchin_crab_check) {
 tables1_2_text <- knitr::combine_words(na.omit(c(
   if (study_finfish_check) paste(total_finfish_div, "unique finfish species"),
   if (study_conch_check) paste(total_conch, "conch"),
-  if (study_lobster_check) paste(total_lobster, "lobsters"),
+  if (study_lobster_check) paste(total_spiny, "Caribbean Spiny lobster,", total_spotted, "Spotted Spiny lobster"),
   if (study_urchin_crab_check) paste(total_urchin, "_Diadema_"),
   if (study_urchin_crab_check) paste(total_crab, "_Maguimithrax_")
 )))
