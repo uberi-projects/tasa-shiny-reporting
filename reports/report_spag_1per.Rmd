@@ -231,7 +231,10 @@ count_3 <- table2$Count[3]
 prop_3 <- table2$Proportion[3]*100
 most_dives <- table2$`Species English Name`[which.max(table2$`Dives Found On`)]
 most_dives_num <- table2$`Dives Found On`[which.max(table2$`Dives Found On`)]
-
+families <- df_spec_merged %>%
+  group_by(Family.x) %>%
+  summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
+most_family <- families$`Family.x`[which.max(families$`Family.x`)]
 ```
 
 
@@ -240,7 +243,8 @@ In total, `r total_fish` fish of `r total_species` unique species were observed 
 The most observed fish species were `r species_1` (`r count_1` individuals; `r prop_1`%), 
 `r species_2` (`r count_2` individuals; `r prop_2`%), 
 and `r species_3` (`r count_3` individuals; `r prop_3`%). 
-The fish species found on the most unique dives was `r most_dives` (`r most_dives_num` dives) (Table 2; Figure 2).
+The fish species found on the most unique dives was `r most_dives` (`r most_dives_num` dives) (Table 2; Figure 2). 
+The most observed fish family was `r most_family` (Figure 3).\
 
 
 **Table 1.** Summary of SPAG monitoring by site and overall, including total fish observed, 
@@ -252,6 +256,9 @@ Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study
 ```{r table1, echo = FALSE, fig.width = 7, fig.height = 7}
 table1
 ```
+
+
+<br>
 
 
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 4.5}
@@ -272,6 +279,9 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
+<br>
+
+
 **Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed, 
 the proportion of overall fish that were that species, 
 and the number of unique dives that the fish species was found on. 
@@ -281,6 +291,8 @@ Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study
 table2
 ```
 
+
+<br>
 
 
 ```{r figure3, echo = FALSE, fig.width = 7, fig.height = 4.5}
@@ -301,7 +313,10 @@ and recorded during spawning aggregations at Turneffe
 Atoll Marine Reserve, `r study_timeframe`.\
 
 
-```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+<br>
+
+
+```{r figure4_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig4 <- df_spec_merged %>%
   select(
   `Species English Name`, `10-20 cm`,	`21-30 cm`,	`31-40 cm`,	`41-50 cm`,	
@@ -336,8 +351,7 @@ df_fig4 <- df_spec_merged %>%
   ) %>%
   add_count(`Species English Name`, name = "Total") %>%
   filter(Total >= 10)  
-
-ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
+fig4 <- ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
   geom_violin()+
   theme_custom +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) +
@@ -350,24 +364,31 @@ ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
                "91-100 cm", "101-110 cm", "111-120 cm", "121-130 cm",
                "> 130 cm")
   )
-
+total_visuals <- sum(df_spec_merged$`10-20 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`21-30 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`31-40 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`41-50 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`51-60 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`61-70 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`71-80 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`81-90 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`91-100 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`101-110 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`111-120 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`121-130 cm`, na.rm = TRUE) +
+  sum(df_spec_merged$`> 130 cm`, na.rm = TRUE) 
+  
 ```
 
 
-*Figure 4.* Violin plot of recorded size classes for fish, 
-recorded during spawning aggregations visual surveys at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 
-observations of size class were excluded, and kernel densities were 
-calculated using the midpoints of size classes.\
 
-
-```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+```{r figure5_prep, echo = FALSE, fig.width = 7, fig.height = 6}
 df_fig5 <- df_laser_merged %>%
   mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
 top_species <- df_fig5 %>%
   count(Species) %>%
   arrange(desc(n)) %>%
-  slice_head(n = 6) %>%
+  slice_head(n = 5) %>%
   pull(Species)
 df_fig5 <- df_fig5 %>%
   filter(Species %in% top_species)
@@ -386,17 +407,16 @@ fig5B <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
   scale_x_continuous(breaks = seq(0, 120, by = 5)) +
   scale_color_manual(values = palette) +
   theme(legend.position = "none")
-ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
-
+fig5 <- ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
+total_lasers_df <-  df_laser_merged %>%
+  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`)) %>%
+  filter(`Fish Measurement (cm)`>= 0)
+total_lasers <- nrow(total_lasers_df)
+nassau_size <- round(mean(filter(df_fig5, Species == "Nassau Grouper")$`Fish Measurement (cm)`), 2)
 ```
 
-*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
-and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Only the six fish species with the 
-most laser sizing data are shown. \
 
-
-```{r figure6, echo = FALSE, fig.width = 7, fig.height = 4.5}
+```{r figure6_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig6 <- df_spec_merged %>%
   select(
     `Species English Name`, Site,
@@ -418,15 +438,62 @@ df_fig6 <- df_spec_merged %>%
   summarise(Count = sum(Number, na.rm = TRUE), .groups = "drop")%>%
   mutate(Behavior = str_remove(Behavior, " \\(1=yes\\)"))
 
-ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
+fig6 <- ggplot(df_fig6, aes(x = Behavior, y = Site, fill = Count)) +
   geom_tile() +
     scale_fill_gradient(low = "white", high = palette[2]) +
   theme_custom
+behaviors <- combine_words(unique(df_fig6$Behavior))
+```
+
+
+`r total_visuals` fish were measured using visual surveys, 
+and `r total_lasers` fish were measured using laser methodology (Figure 4; Figure 5). 
+The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 5). 
+Fish spawning behaviors observed included `r behaviors` (Figure 6).\
+
+
+<br>
+
+
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig4
+```
+
+
+*Figure 4.* Violin plot of recorded size classes for fish, 
+recorded during spawning aggregations visual surveys at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 10 
+observations of size class were excluded, and kernel densities were 
+calculated using the midpoints of size classes.\
+
+
+<br>
+
+
+```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+fig5
+```
+
+
+*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
+and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Only the four fish species with the 
+most laser sizing data are shown. \
+
+
+<br>
+
+
+```{r figure6, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig6
 
 ```
 
 *Figure 6.* Tile plot of observed fish spawning behaviors, recorded during spawning aggregations 
 visual surveys at Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+<br>
 
 
 ## Conclusion
