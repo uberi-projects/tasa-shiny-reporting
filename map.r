@@ -119,7 +119,7 @@ generate_map_historic <- function(df, lat, long, site_id) {
             ylim = c(17.117024, 17.664305),
             min.segment.length = 0
         ) +
-        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305, clip = "on")) +
+        coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305), clip = "on") +
         annotation_scale(location = "br", width_hint = 0.2, style = "ticks") +
         annotation_north_arrow(
             location = "tl", which_north = "true",

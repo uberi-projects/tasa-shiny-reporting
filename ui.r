@@ -1228,45 +1228,6 @@ ui <- navbarPage(
                     });"
                         )
                     ),
-                    div( # Temporary cover
-                        style = "position: relative; left: -15px; top:195px;",
-                        div(
-                            class = "temporary-cover",
-                            style = "
-                                position: fixed;
-                                height: 100vh;
-                                width: 100vw;
-                                background-color: rgba(200, 200, 200, 0.5);
-                                z-index: 3;
-                                margin-left: 0px;
-                            ",
-                            div(
-                                style = "
-                                    position: relative;
-                                    width: 25%;
-                                    height: 25%;
-                                    background-color: rgba(255,255,255,0.6);
-                                    margin: auto;
-                                    top: 160px;
-                                    border-radius: 10px;
-                                    ",
-                                h1(
-                                    "Coming Soon!",
-                                    style = "
-                                    position: absolute;
-                                    text-align: center;
-                                    top: 50%;
-                                    left: 50%;
-                                    margin: 0;
-                                    transform: translate(-50%, -50%);
-                                    font-size: 2em;
-                                    font-weight: 800;
-                                    color: black;
-                                    "
-                                )
-                            )
-                        ),
-                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -1285,15 +1246,6 @@ ui <- navbarPage(
                                     ),
                                     tags$ol(
                                         class = "content-list",
-                                        tags$li(
-                                            class = "input-list input-list-topbox",
-                                            "Choose Datatype",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("datatype_spag_1per", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
-                                            )
-                                        ),
-                                        hr(),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File",
@@ -1406,45 +1358,6 @@ ui <- navbarPage(
                     });"
                         )
                     ),
-                    div( # Temporary cover
-                        style = "position: relative; left: -15px; top:195px;",
-                        div(
-                            class = "temporary-cover",
-                            style = "
-                                position: fixed;
-                                height: 100vh;
-                                width: 100vw;
-                                background-color: rgba(200, 200, 200, 0.5);
-                                z-index: 3;
-                                margin-left: 0px;
-                            ",
-                            div(
-                                style = "
-                                    position: relative;
-                                    width: 25%;
-                                    height: 25%;
-                                    background-color: rgba(255,255,255,0.6);
-                                    margin: auto;
-                                    top: 160px;
-                                    border-radius: 10px;
-                                    ",
-                                h1(
-                                    "Coming Soon!",
-                                    style = "
-                                    position: absolute;
-                                    text-align: center;
-                                    top: 50%;
-                                    left: 50%;
-                                    margin: 0;
-                                    transform: translate(-50%, -50%);
-                                    font-size: 2em;
-                                    font-weight: 800;
-                                    color: black;
-                                    "
-                                )
-                            )
-                        ),
-                    ),
                     div(
                         class = "content-container-parent",
                         div(
@@ -1461,15 +1374,6 @@ ui <- navbarPage(
                                     h3("Upload Data"),
                                     tags$ol(
                                         class = "content-list",
-                                        tags$li(
-                                            class = "input-list input-list-topbox",
-                                            "Choose Datatype",
-                                            div(
-                                                class = "input-list-content",
-                                                prettyRadioButtons("datatype_spag_multiper", label = NULL, choices = c("Visual Census", "Laser"), selected = "Visual Census", inline = TRUE)
-                                            )
-                                        ),
-                                        hr(),
                                         tags$li(
                                             class = "input-list",
                                             "Choose File 1",
