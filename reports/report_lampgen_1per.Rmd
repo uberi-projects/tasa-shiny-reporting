@@ -216,7 +216,7 @@ text_conch_methods <- if (study_conch_check) {
   "For conch specimens, data collected included total length, lip thickness, and the presence or absence of eggs."
 }
 text_lobster_methods <- if (study_lobster_check) {
-  "Lobster specimens were assessed for carapace length (measured with a tickle stick), sex, and egg presence (+/-)."
+  "Lobster specimens were assessed for carapace length (measured with a graduated tickle stick), sex, and egg presence (+/-)."
 }
 text_urchin_crab_methods <- if (study_urchin_crab_check) {
   "Urchins were counted and classified into juvenile and adult stages, while crab specimens were recorded using a count method."
