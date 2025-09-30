@@ -71,7 +71,7 @@ economic well-being of a marine ecosystem. In Belize,
 commercially important reef fish reproduce in spawning aggregations (SPAGs), 
 which indicate the success of the fisheries and provide opportunities for fishers 
 to exploit the aggregations for high yields. This can cause depletions in 
-SPAGs which harm the viability of commerically and ecologically important fish populations. 
+SPAGs which harm the viability of commercially and ecologically important fish populations. 
 This report presents findings from SPAGs monitoring at 
 Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
 his report aims to summarize and visualize the SPAG dataset from `r study_timeframe` 
@@ -181,6 +181,55 @@ df_laser_merged <- df_laser |>
 
 ```
 
+```{r table1_prep, echo = FALSE, fig.width = 7, fig.height = 7}
+table1_separate <- df_spec_merged |>
+  group_by(Site) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Fish = sum(`Total Count`, na.omit = TRUE),
+    Species = length(unique(`Species English Name`)),
+    Dives = length(unique(Dive)),
+    `Fish per Dive` = round(Fish/Dives)
+    )
+table1_overall <- df_spec_merged |>
+  mutate(Site = "Overall") |>
+  group_by(Site) |>
+  mutate(`Total Count` = as.numeric(`Total Count`)) |>
+  summarise(
+    Fish = sum(`Total Count`, na.omit = TRUE),
+    Species = length(unique(`Species English Name`)),
+    Dives = length(unique(Dive)),
+    `Fish per Dive` = round(Fish/Dives)
+    )
+table1 <- bind_rows(table1_separate, table1_overall)
+total_fish <- format(table1_overall$Fish, big.mark = ",", scientific = FALSE)
+total_species <- table1_overall$Species
+total_sites <- nrow(table1_separate)
+total_dives <- table1_overall$Dives
+```
+
+In total, `r total_fish` fish of `r total_species` unique species were observed in 
+`r study_timeframe` across `r total_sites` sites and `r total_dives` dives (Table 1; Figure 2). 
+The most observed fish species were ______ (_____ individuals), 
+_______ (______ individuals), and _____ (_____ individuals) (Table 2; Figure 2).
+
+
+**Table 1.** Summary of SPAG monitoring by site and overall, including total fish observed, 
+number of unique species observed, number of survey dives, 
+and the average number of fish observed per dive. 
+Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table1, echo = FALSE, fig.width = 7, fig.height = 7}
+table1
+```
+
+
+
+
+Table 2:
+species total count proportion `number of dives found on`
+top 10 only shown
 
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 4.5}
 df_fig2 <- df_spec_merged %>%
