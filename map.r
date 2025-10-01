@@ -19,7 +19,7 @@ ecosystems_map <- st_read("Belize_Ecosystems_2015.shp") %>%
 
 areas_map <- st_read("CA.shp") %>%
     st_transform(4326) %>%
-    filter(name %in% c("Spawning Aggregation Site Reserve", "Conservation", "Preservation", "Special Management Area")) %>%
+    filter(name %in% c("General Use", "Spawning Aggregation Site Reserve", "Conservation", "Preservation", "Special Management Area")) %>%
     mutate(name = recode(name,
         "Spawning Aggregation Site Reserve" = "Spawning Aggregation Site",
         "Conservation" = "Conservation",
@@ -29,7 +29,7 @@ areas_map <- st_read("CA.shp") %>%
 
 areas_map_historic <- st_read("Zoning_January_Final_Proposal_2_Dissolve_General.shp") %>%
     st_transform(4326) %>%
-    filter(CLASS %in% c("Spawning Aggregation Site Reserve", "Conservation", "Preservation", "Special Management Area")) %>%
+    filter(CLASS %in% c("General Use", "Spawning Aggregation Site Reserve", "Conservation", "Preservation", "Special Management Area")) %>%
     mutate(name = recode(CLASS,
         "Spawning Aggregation Site Reserve" = "Spawning Aggregation Site",
         "Conservation" = "Conservation",
@@ -51,12 +51,23 @@ generate_map <- function(df, lat, long, site_id) {
             "Coral Reef" = "#bdb7e3ff"
         ), name = "Ecosystem") +
         new_scale_fill() +
-        geom_sf(data = areas_map, aes(fill = name), alpha = 0.85, linewidth = 0, color = "transparent") +
+        geom_sf(data = areas_map, aes(fill = name, alpha = name), color = "transparent", linewidth = 0) +
+        scale_alpha_manual(
+            values = c(
+                "Spawning Aggregation Site" = 0.85,
+                "Conservation" = 0.85,
+                "Preservation" = 0.85,
+                "Special Management" = 0.85,
+                "General Use" = 0.2
+            ),
+            guide = "none"
+        ) +
         scale_fill_manual(values = c(
-            "Spawning Aggregation Site" = "#ef9a95ff",
+            "Spawning Aggregation Site" = "#e77d7d",
             "Conservation" = "#f6f89dff",
-            "Preservation" = "#f7bf9aff",
-            "Special Management" = "#f5c8d5ff"
+            "Preservation" = "#ecae85",
+            "Special Management" = "#f7a3f4",
+            "General Use" = "#f3cdd2"
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         geom_text_repel(
@@ -99,12 +110,23 @@ generate_map_historic <- function(df, lat, long, site_id) {
             "Coral Reef" = "#bdb7e3ff"
         ), name = "Ecosystem") +
         new_scale_fill() +
-        geom_sf(data = areas_map_historic, aes(fill = name), alpha = 0.85, linewidth = 0, color = "transparent") +
+        geom_sf(data = areas_map_historic, aes(fill = name, alpha = name), color = "transparent", linewidth = 0) +
+        scale_alpha_manual(
+            values = c(
+                "Spawning Aggregation Site" = 0.85,
+                "Conservation" = 0.85,
+                "Preservation" = 0.85,
+                "Special Management" = 0.85,
+                "General Use" = 0.2
+            ),
+            guide = "none"
+        ) +
         scale_fill_manual(values = c(
-            "Spawning Aggregation Site" = "#ef9a95ff",
+            "Spawning Aggregation Site" = "#e77d7d",
             "Conservation" = "#f6f89dff",
-            "Preservation" = "#f7bf9aff",
-            "Special Management" = "#f5c8d5ff"
+            "Preservation" = "#ecae85",
+            "Special Management" = "#f7a3f4",
+            "General Use" = "#f3cdd2"
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         geom_text_repel(
@@ -148,12 +170,23 @@ generate_map_nolabels <- function(df, lat, long, site_id) {
             "Coral Reef" = "#bdb7e3ff"
         ), name = "Ecosystem") +
         new_scale_fill() +
-        geom_sf(data = areas_map, aes(fill = name), alpha = 0.85, linewidth = 0, color = "transparent") +
+        geom_sf(data = areas_map, aes(fill = name, alpha = name), color = "transparent", linewidth = 0) +
+        scale_alpha_manual(
+            values = c(
+                "Spawning Aggregation Site" = 0.85,
+                "Conservation" = 0.85,
+                "Preservation" = 0.85,
+                "Special Management" = 0.85,
+                "General Use" = 0.2
+            ),
+            guide = "none"
+        ) +
         scale_fill_manual(values = c(
-            "Spawning Aggregation Site" = "#ef9a95ff",
+            "Spawning Aggregation Site" = "#e77d7d",
             "Conservation" = "#f6f89dff",
-            "Preservation" = "#f7bf9aff",
-            "Special Management" = "#f5c8d5ff"
+            "Preservation" = "#ecae85",
+            "Special Management" = "#f7a3f4",
+            "General Use" = "#f3cdd2"
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305)) +
@@ -184,12 +217,23 @@ generate_map_nolabels_historic <- function(df, lat, long, site_id) {
             "Coral Reef" = "#bdb7e3ff"
         ), name = "Ecosystem") +
         new_scale_fill() +
-        geom_sf(data = areas_map_historic, aes(fill = name), alpha = 0.85, linewidth = 0, color = "transparent") +
+        geom_sf(data = areas_map_historic, aes(fill = name, alpha = name), color = "transparent", linewidth = 0) +
+        scale_alpha_manual(
+            values = c(
+                "Spawning Aggregation Site" = 0.85,
+                "Conservation" = 0.85,
+                "Preservation" = 0.85,
+                "Special Management" = 0.85,
+                "General Use" = 0.2
+            ),
+            guide = "none"
+        ) +
         scale_fill_manual(values = c(
-            "Spawning Aggregation Site" = "#ef9a95ff",
+            "Spawning Aggregation Site" = "#e77d7d",
             "Conservation" = "#f6f89dff",
-            "Preservation" = "#f7bf9aff",
-            "Special Management" = "#f5c8d5ff"
+            "Preservation" = "#ecae85",
+            "Special Management" = "#f7a3f4",
+            "General Use" = "#f3cdd2"
         ), name = "Zone") +
         geom_sf(data = df_sf, size = 2, color = "#302f2f", fill = "white", shape = 21) +
         coord_sf(xlim = c(-88.05, -87.66), ylim = c(17.117024, 17.664305)) +
