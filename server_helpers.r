@@ -152,13 +152,15 @@ check_datafile_dates <- function(df, type, id, year_flag, period_flag) {
         ))
     }
 }
-check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag, spag_season_flag) {
+check_datafiles_dates <- function(dfs, type, id, year_flag, period_flag, lobster_season_flag, conch_season_flag, finfish_season_flag, spag_season_flag = NULL) {
     year_flag(FALSE)
     period_flag(FALSE)
     conch_season_flag(FALSE)
     lobster_season_flag(FALSE)
     finfish_season_flag(FALSE)
-    spag_season_flag(FALSE)
+    if (!is.null(spag_season_flag)) {
+        spag_season_flag(FALSE)
+    }
     if (is.null(dfs) || length(dfs) == 0) {
         return(show_critical_error("No valid data uploaded"))
     }
