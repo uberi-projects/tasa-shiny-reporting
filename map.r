@@ -29,12 +29,12 @@ areas_map <- st_read("CA.shp") %>%
 
 areas_map_historic <- st_read("Zoning_January_Final_Proposal_2_Dissolve_General.shp") %>%
     st_transform(4326) %>%
-    filter(CLASS %in% c("General Use", "Spawning Aggregation Site Reserve", "Conservation", "Preservation", "Special Management Area")) %>%
     mutate(name = recode(CLASS,
         "Spawning Aggregation Site Reserve" = "Spawning Aggregation Site",
         "Conservation" = "Conservation",
         "Preservation" = "Preservation",
-        "Special Management Area" = "Special Management"
+        "Special Management Area" = "Special Management",
+        .missing = "General Use"
     ))
 
 # Create Function to Make Dynamic Map ---------------------------
