@@ -1,7 +1,7 @@
 ## server.R
 
 # Define release ---------------------------
-release_version <- "v2.0.1"
+release_version <- "v3.0.0"
 
 # Source code ---------------------------
 source("server_helpers.r")
