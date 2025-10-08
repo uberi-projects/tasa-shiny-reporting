@@ -384,26 +384,53 @@ df_fig5 <- df_laser_merged %>%
 top_species <- df_fig5 %>%
   count(Species) %>%
   arrange(desc(n)) %>%
-  slice_head(n = 5) %>%
+  slice_head(n = 6) %>%
   pull(Species)
 df_fig5 <- df_fig5 %>%
   filter(Species %in% top_species)
-fig5A <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
-  geom_histogram(binwidth = 1, color = "black", position = "identity") +
-  theme_custom +
-  ylab("Count") +
-  labs(title = "A") +
-  scale_x_continuous(breaks = seq(0, 120, by = 5)) +
-  scale_fill_manual(values = palette) 
-fig5B <- ggplot(df_fig5, aes(x = `Fish Measurement (cm)`, fill = Species)) +
-  geom_density(aes(y = ..count.., color = Species), size = 1, fill = "transparent") +
-  theme_custom +
-  ylab("Count") +
- labs(title = "B") +
-  scale_x_continuous(breaks = seq(0, 120, by = 5)) +
-  scale_color_manual(values = palette) +
-  theme(legend.position = "none")
-fig5 <- ggarrange(fig5A, fig5B, nrow = 2, ncol = 1)
+df_fig5_mc <- df_fig5 %>%
+  filter(Site.x %in% c("Mauger Caye", "Maugre Caye")) 
+df_fig5_cb <- df_fig5 %>%
+  filter(Site.x %in% c("Caye Bokel", "Bokel")) 
+df_fig5_df <- df_fig5 %>%
+  filter(Site.x %in% c("Dog Flea", "Dog Flea Caye")) 
+palette_named <- setNames(palette[seq_along(top_species)], top_species)
+fix_levels <- function(df, levels) {
+  df %>% mutate(Species = factor(as.character(Species), levels = levels))
+}
+df_fig5 <- fix_levels(df_fig5, top_species)
+df_fig5_mc <- fix_levels(df_fig5_mc, top_species)
+df_fig5_cb <- fix_levels(df_fig5_cb, top_species)
+df_fig5_df <- fix_levels(df_fig5_df, top_species)
+plot_or_message <- function(data, site_name, palette, title) {
+  has_data <- any(!is.na(data$`Fish Measurement (cm)`))
+  if (!has_data) {
+    ggplot() +
+      annotate("text", x = 0.5, y = 0.5,
+               label = paste("No data for", site_name),
+               size = 5, fontface = "italic", color = "grey40") +
+      theme_void() + theme(plot.title = element_text(size = 18, margin = margin(0, 0, 5, 0))) + 
+      labs(title = title)
+  } else {
+    ggplot(data, aes(x = `Fish Measurement (cm)`, fill = Species)) +
+      geom_histogram(binwidth = 1, color = "black", position = "identity") +
+      theme_custom +
+      theme(
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 9),
+        legend.key.size = unit(0.4, "cm")
+      ) +
+      ylab("Count") +
+      labs(title = title) +
+      scale_x_continuous(breaks = seq(0, 120, by = 5)) +
+      scale_fill_manual(values = palette)
+  }
+}
+fig5A <- plot_or_message(df_fig5, "All Sites", palette_named, "A. Overall")
+fig5B <- plot_or_message(df_fig5_mc, "Mauger Caye", palette_named, "B. Mauger Caye")
+fig5C <- plot_or_message(df_fig5_cb, "Caye Bokel", palette_named, "C. Caye Bokel")
+fig5D <- plot_or_message(df_fig5_df, "Dog Flea Caye", palette_named, "D. Dog Flea Caye")
+fig5 <- ggarrange(fig5A, fig5B, fig5C, fig5D, nrow = 4, ncol = 1)
 total_lasers_df <-  df_laser_merged %>%
   mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`)) %>%
   filter(`Fish Measurement (cm)`>= 0)
@@ -466,15 +493,16 @@ calculated using the midpoints of size classes.\
 <br>
 
 
-```{r figure5, echo = FALSE, fig.width = 7, fig.height = 6}
+```{r figure5, echo = FALSE, fig.width = 7, fig.height = 9}
 fig5
 ```
 
 
-*Figure 5.* Length-frequency distributions of key fish, as both a histogram (A) 
-and density curve (B), recorded during spawning aggregations laser sizing at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Only the four fish species with the 
-most laser sizing data are shown. \
+*Figure 5.* Length-frequency distributions of key fish, overall (A), at Mauger Caye (B), 
+at Caye Bokel (C), and at Dog Flea Caye (D), 
+recorded during spawning aggregations laser sizing at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Only the five fish species with the 
+most laser sizing data overall are shown. \
 
 
 <br>
