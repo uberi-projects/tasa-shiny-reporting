@@ -372,7 +372,8 @@ total_visuals <- sum(df_spec_merged$`10-20 cm`, na.rm = TRUE) +
   sum(df_spec_merged$`111-120 cm`, na.rm = TRUE) +
   sum(df_spec_merged$`121-130 cm`, na.rm = TRUE) +
   sum(df_spec_merged$`> 130 cm`, na.rm = TRUE) 
-  
+total_visuals <- format(total_visuals, big.mark = ",", scientific = FALSE)
+
 ```
 
 
