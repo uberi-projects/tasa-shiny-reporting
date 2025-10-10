@@ -557,6 +557,8 @@ most laser sizing data overall are shown. \
 **Table 3.** Summary of laser sizing by species and site, including the 
 average fish length (cm) for the top 10 most measured species as well as the corresponding 
 fish basket number, based on the United Nation Conference on Trade and Development (UNCTD, 2022). 
+A basket of 0 means the fish was not assigned a basket, and a basket of NA means that the basket is 
+unknown based on the common name provided. 
 Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
