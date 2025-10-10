@@ -435,7 +435,7 @@ df_fig5 <- df_laser_merged %>%
 top_species <- df_fig5 %>%
   count(Species) %>%
   arrange(desc(n)) %>%
-  slice_head(n = 6) %>%
+  slice_head(n = 5) %>%
   pull(Species)
 df_fig5 <- df_fig5 %>%
   filter(Species %in% top_species)
