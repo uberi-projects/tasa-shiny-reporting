@@ -222,13 +222,13 @@ mutate( Species = `Species English Name`) |>
   arrange(desc(Count)) |>
   slice_head(n = 10)
 species_1 <- table2$Species[1]
-count_1 <- table2$Count[1]
+count_1 <- format(table2$Count[1], scientific = FALSE)
 prop_1 <- table2$Proportion[1]*100
 species_2 <- table2$Species[2]
-count_2 <- table2$Count[2]
+count_2 <- format(table2$Count[2], scientific = FALSE)
 prop_2 <- table2$Proportion[2]*100
 species_3 <- table2$Species[3]
-count_3 <- table2$Count[3]
+count_3 <- format(table2$Count[3], scientific = FALSE)
 prop_3 <- table2$Proportion[3]*100
 families <- df_spec_merged %>%
   group_by(Family.x) %>%
@@ -430,14 +430,14 @@ total_visuals <- format(total_visuals, big.mark = ",", scientific = FALSE)
 
 
 ```{r figure5_prep, echo = FALSE, fig.width = 7, fig.height = 6}
-df_fig5 <- df_laser_merged %>%
+df_fig5_prelim <- df_laser_merged %>%
   mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
-top_species <- df_fig5 %>%
+top_species <- df_fig5_prelim %>%
   count(Species) %>%
   arrange(desc(n)) %>%
   slice_head(n = 5) %>%
   pull(Species)
-df_fig5 <- df_fig5 %>%
+df_fig5 <- df_fig5_prelim %>%
   filter(Species %in% top_species)
 df_fig5_mc <- df_fig5 %>%
   filter(Site.x %in% c("Mauger Caye", "Maugre Caye")) 
@@ -486,7 +486,7 @@ total_lasers_df <-  df_laser_merged %>%
   mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`)) %>%
   filter(`Fish Measurement (cm)`>= 0)
 total_lasers <- nrow(total_lasers_df)
-nassau_size <- round(mean(filter(df_fig5, Species == "Nassau Grouper")$`Fish Measurement (cm)`), 2)
+nassau_size <- round(mean(filter(df_fig5_prelim, Species == "Nassau Grouper")$`Fish Measurement (cm)`, na.rm = TRUE), 2)
 ```
 
 
@@ -524,6 +524,12 @@ behaviors <- combine_words(unique(df_fig6$Behavior))
 and `r total_lasers` fish were measured using laser methodology (Figure 4; Figure 5). 
 The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 5; Table 3). 
 Fish spawning behaviors observed included `r behaviors` (Figure 6).\
+
+
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig4
+```
+
 
 
 *Figure 4.* Violin plot of recorded size classes for fish, 
