@@ -522,16 +522,8 @@ behaviors <- combine_words(unique(df_fig6$Behavior))
 
 `r total_visuals` fish were measured using visual surveys, 
 and `r total_lasers` fish were measured using laser methodology (Figure 4; Figure 5). 
-The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 5). 
+The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 5; Table 3). 
 Fish spawning behaviors observed included `r behaviors` (Figure 6).\
-
-
-<br>
-
-
-```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
-fig4
-```
 
 
 *Figure 4.* Violin plot of recorded size classes for fish, 
@@ -554,6 +546,45 @@ at Caye Bokel (C), and at Dog Flea Caye (D),
 recorded during spawning aggregations laser sizing at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`. Only the five fish species with the 
 most laser sizing data overall are shown. \
+
+
+**Table 3.** Summary of laser sizing by species and site, including the 
+average fish length (cm) for the top 10 most measured species. 
+Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r table3, echo = FALSE, fig.width = 7, fig.height = 7}
+
+df_table3 <- df_laser_merged %>%
+  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
+top_species <- df_table3 %>%
+  filter(!is.na(Species) & Species != "∅") %>%
+  count(Species) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 10) %>%
+  pull(Species)
+df_table3 <- df_table3 %>%
+  filter(Species %in% top_species) %>%
+  ungroup() %>%
+  mutate(Site = Site.x) 
+df_table3_overall <- df_table3 %>%
+  mutate(Site = "Overall") %>%
+  group_by(Site, Species) %>%
+  summarise(`Average Fish Length (cm)` = round(mean(`Fish Measurement (cm)`, na.rm = TRUE), 2), .groups = "drop")
+df_table3 <- df_table3 %>%
+  group_by(Site, Species) %>%
+  summarise(`Average Fish Length (cm)` = round(mean(`Fish Measurement (cm)`, na.rm = TRUE), 2), .groups = "drop")
+df_table3 <- bind_rows(df_table3, df_table3_overall)
+df_table3_wide <- df_table3 %>%
+  mutate(`Average Fish Length (cm)` = as.character(`Average Fish Length (cm)`)) %>%
+    pivot_wider(
+    names_from = Site, 
+    values_from = `Average Fish Length (cm)`,
+    values_fill = "-",
+    names_prefix = "Length (cm) - ")
+as.data.frame(df_table3_wide)
+```
+
 
 
 <br>
