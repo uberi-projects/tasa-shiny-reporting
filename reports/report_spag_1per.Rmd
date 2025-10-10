@@ -555,14 +555,16 @@ most laser sizing data overall are shown. \
 
 
 **Table 3.** Summary of laser sizing by species and site, including the 
-average fish length (cm) for the top 10 most measured species. 
+average fish length (cm) for the top 10 most measured species as well as the corresponding 
+fish basket number, based on the United Nation Conference on Trade and Development (UNCTD, 2022). 
 Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
 ```{r table3, echo = FALSE, fig.width = 7, fig.height = 7}
 
 df_table3 <- df_laser_merged %>%
-  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`))
+  mutate(`Fish Measurement (cm)` = as.numeric(`Fish Measurement (cm)`)) |>
+  left_join(df_fish, by = c("Species" = "Common Name"))
 top_species <- df_table3 %>%
   filter(!is.na(Species) & Species != "∅") %>%
   count(Species) %>%
@@ -575,10 +577,10 @@ df_table3 <- df_table3 %>%
   mutate(Site = Site.x) 
 df_table3_overall <- df_table3 %>%
   mutate(Site = "Overall") %>%
-  group_by(Site, Species) %>%
+  group_by(Site, Species, Basket) %>%
   summarise(`Average Fish Length (cm)` = round(mean(`Fish Measurement (cm)`, na.rm = TRUE), 2), .groups = "drop")
 df_table3 <- df_table3 %>%
-  group_by(Site, Species) %>%
+  group_by(Site, Species, Basket) %>%
   summarise(`Average Fish Length (cm)` = round(mean(`Fish Measurement (cm)`, na.rm = TRUE), 2), .groups = "drop")
 df_table3 <- bind_rows(df_table3, df_table3_overall)
 df_table3_wide <- df_table3 %>%
@@ -638,5 +640,7 @@ Fedler, A. J. (2011). The Economic Value of Turneffe Atoll (Full Report). Turnef
 Reef Fish Spawning Aggregation Monitoring Protocol for the Meso-American Reef and the Wider Caribbean, Version 2.0. (2004). https://reefresilience.org/pdf/Spawning_Aggregation_Monitoring_Protocol_4July2004.pdf
 
 Stoddart, D. R. (1962). Three Caribbean atolls: Turneffe Islands, Lighthouse Reef and Glover’s Reef,  British Honduras. Atoll Research Bulletin, 87, 1–151.
+
+United Nations Conference on Trade and Development. (2022). Towards a Climate Resilient Multispecies Finfish Management Plan for Belize. United Nations.
 
 Van Overzee, H. M. J., & Rijnsdorp, A. D. (2015). Effects of fishing during the spawning period: Implications for sustainable management. Reviews in Fish Biology and Fisheries, 25(1), 65–83. https://doi.org/10.1007/s11160-014-9370-x
