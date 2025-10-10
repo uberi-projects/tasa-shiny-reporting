@@ -209,26 +209,27 @@ total_df <- format(filter(table1_separate, Site %in% c("Dog Flea", "Dog Flea Cay
 
 ```{r table2_prep, echo = FALSE, fig.width = 7, fig.height = 7}
 table2 <- df_spec_merged |>
-  group_by(`Species English Name`) |>
+mutate( Species = `Species English Name`) |>
+  group_by(Species) |>
   mutate(`Total Count` = as.numeric(`Total Count`)) |>
   summarise(
     Count = sum(`Total Count`, na.omit = TRUE),
     Proportion = round(Count/total_fish_num, 2),
-    `Dives Found On` = length(unique(Dive))
+    `Mauger Caye Count` = sum(`Total Count`[Site %in% c("Mauger Caye", "Maugre Caye")], na.rm = TRUE),
+    `Caye Bokel Count` = sum(`Total Count`[Site %in% c("Caye Bokel", "Bokel Caye")], na.rm = TRUE),
+    `Dog Flea Caye Count` = sum(`Total Count`[Site %in% c("Dog Flea Caye", "Dog Flea")], na.rm = TRUE)
   ) |>
   arrange(desc(Count)) |>
   slice_head(n = 10)
-species_1 <- table2$`Species English Name`[1]
+species_1 <- table2$Species[1]
 count_1 <- table2$Count[1]
 prop_1 <- table2$Proportion[1]*100
-species_2 <- table2$`Species English Name`[2]
+species_2 <- table2$Species[2]
 count_2 <- table2$Count[2]
 prop_2 <- table2$Proportion[2]*100
-species_3 <- table2$`Species English Name`[3]
+species_3 <- table2$Species[3]
 count_3 <- table2$Count[3]
 prop_3 <- table2$Proportion[3]*100
-most_dives <- table2$`Species English Name`[which.max(table2$`Dives Found On`)]
-most_dives_num <- table2$`Dives Found On`[which.max(table2$`Dives Found On`)]
 families <- df_spec_merged %>%
   group_by(Family.x) %>%
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
@@ -242,8 +243,7 @@ This included `r total_mc` fish at Mauger Caye, `r total_cb` fish at Caye Bokel,
 and `r total_df` fish at Dog Flea Caye (Table 1). 
 The most observed fish species were `r species_1` (`r count_1` individuals; `r prop_1`%), 
 `r species_2` (`r count_2` individuals; `r prop_2`%), 
-and `r species_3` (`r count_3` individuals; `r prop_3`%). 
-The fish species found on the most unique dives was `r most_dives` (`r most_dives_num` dives) (Table 2; Figure 2). 
+and `r species_3` (`r count_3` individuals; `r prop_3`%) (Table 2). 
 The most observed fish family was `r most_family` (Figure 3).\
 
 
@@ -308,7 +308,7 @@ Atoll Marine Reserve, `r study_timeframe`.\
 
 **Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed, 
 the proportion of overall fish that were that species, 
-and the number of unique dives that the fish species was found on. 
+and the number of that fish found at Mauger Caye, Caye Bokel, and Dog Flea Caye individually. 
 Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table2, echo = FALSE, fig.width = 7, fig.height = 7}
