@@ -410,6 +410,11 @@ fig4 <- ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
                "91-100 cm", "101-110 cm", "111-120 cm", "121-130 cm",
                "> 130 cm")
   )
+df_spec_merged <- df_spec_merged %>%
+  mutate(across(c(`10-20 cm`, `21-30 cm`, `31-40 cm`, `41-50 cm`,
+                  `51-60 cm`, `61-70 cm`, `71-80 cm`, `81-90 cm`,
+                  `91-100 cm`, `101-110 cm`, `111-120 cm`, `121-130 cm`,
+                  `> 130 cm`), as.numeric))
 total_visuals <- sum(df_spec_merged$`10-20 cm`, na.rm = TRUE) +
   sum(df_spec_merged$`21-30 cm`, na.rm = TRUE) +
   sum(df_spec_merged$`31-40 cm`, na.rm = TRUE) +
