@@ -73,8 +73,8 @@ if (timeframe == "Annual" && as.character(params$fisher_multiper1_year_selection
     filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper1_year_selection)
 } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper1_conch_season_selection) != "None") {
   season_years <- unlist(strsplit(params$fisher_multiper1_conch_season_selection, "-"))
-  start_date <- as.Date(paste0(season_years[1], "-07-01"))
-  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  start_date <- as.Date(paste0(season_years[1], "-10-01"))
+  end_date <- as.Date(paste0(season_years[2], "-06-28"))
   df_1 <- df_1 |>
     filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
 }
@@ -85,8 +85,8 @@ if (timeframe == "Annual" && as.character(params$fisher_multiper2_year_selection
     filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper2_year_selection)
 } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper2_conch_season_selection) != "None") {
   season_years <- unlist(strsplit(params$fisher_multiper2_conch_season_selection, "-"))
-  start_date <- as.Date(paste0(season_years[1], "-07-01"))
-  end_date <- as.Date(paste0(season_years[2], "-02-28"))
+  start_date <- as.Date(paste0(season_years[1], "-10-01"))
+  end_date <- as.Date(paste0(season_years[2], "-06-28"))
   df_2 <- df_2 |>
     filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
 }
@@ -98,8 +98,8 @@ if (!is.null(params$datafile3)) {
       filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper3_year_selection)
   } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper3_conch_season_selection) != "None") {
     season_years <- unlist(strsplit(params$fisher_multiper3_conch_season_selection, "-"))
-    start_date <- as.Date(paste0(season_years[1], "-07-01"))
-    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    start_date <- as.Date(paste0(season_years[1], "-10-01"))
+    end_date <- as.Date(paste0(season_years[2], "-06-28"))
     df_3 <- df_3 |>
       filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
   }
@@ -112,8 +112,8 @@ if (!is.null(params$datafile4)) {
       filter(format(`Waypoint Date`, "%Y") == params$fisher_multiper4_year_selection)
   } else if (timeframe == "Seasonal" && as.character(params$fisher_multiper4_conch_season_selection) != "None") {
     season_years <- unlist(strsplit(params$fisher_multiper4_conch_season_selection, "-"))
-    start_date <- as.Date(paste0(season_years[1], "-07-01"))
-    end_date <- as.Date(paste0(season_years[2], "-02-28"))
+    start_date <- as.Date(paste0(season_years[1], "-10-01"))
+    end_date <- as.Date(paste0(season_years[2], "-06-28"))
     df_4 <- df_4 |>
       filter(`Waypoint Date` >= start_date, `Waypoint Date` <= end_date)
   }
