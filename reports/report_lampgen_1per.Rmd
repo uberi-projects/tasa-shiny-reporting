@@ -179,7 +179,7 @@ Monitoring sex ratio and presence of reproductive indicators is key for this spe
 }
 text_urchin_crab <- if (study_urchin_crab_check) {
   "Long-spined sea urchins (_Diadema antillarum_) are a species of Diadema urchins with long black spines that can reach 30cm from its body.
-Long-spined sea urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
+These urchins are essential in maintaining healthy coral reef ecosystems, through their behavior in grazing algae and increasing space for new corals to settle.
 A massive die-off event in 1983 and 1984 resulted in loss of 93-98% of Diadema populations from throughout the Caribbean.
 Other cycles of population die-off and recovery have occurred since this initial recorded event (Precht & Precht, 2015).
 The role of Diadema urchins as keystone species, as well as the unpredictability of their populations, leads to a high importance of monitoring populations in Belize.
@@ -315,13 +315,13 @@ df_table1_sum_lobster <- if (study_lobster_check) {
     summarise(
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
       `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster")
-      ) %>%
+    ) %>%
     bind_rows(
       df_lobster %>%
         summarise(
           `Mgmt Zone` = "Overall",
           `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
-      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster")
+          `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster")
         )
     )
 } else {
@@ -354,9 +354,7 @@ df_table1 <- df_table1_sum_sites %>%
   left_join(df_table1_sum_urchin_crab, by = "Mgmt Zone") %>%
   rename(Zone = `Mgmt Zone`) %>%
   mutate(Zone = case_when(
-    Zone == "Conservation Zone" ~ "Conserv.",
-    Zone == "General Use Zone" ~ "General",
-    Zone == "Special Management Zone" ~ "Special",
+    Zone == "Special Management Zone" ~ "Special Mgmt Zone",
     TRUE ~ Zone
   ))
 
@@ -1232,7 +1230,7 @@ lobster_summary_text <- if (study_lobster_check) {
     overall_lobster_car, "Caribbean spiny lobsters (_Panulirus argus_) and",
     overall_lobster_spot,
     "spotted spiny lobsters (_Panulirus guttatus_) were found, resulting in a Caribbean spiny lobster density of",
-    density_lobster_car, "individuals per hectare.",
+    density_lobster_car, "individuals per hectare (ha).",
     "The highest recorded Caribbean spiny lobster density was found in the",
     zone_max_density_lobster_car, "with", max_density_lobster_car, "individuals per hectare.",
     "Of all lobsters sampled, ", proportion_lob_male, "% were males, ",
@@ -1245,13 +1243,15 @@ lobster_summary_text <- if (study_lobster_check) {
 table1lcaption <- if (study_lobster_check) {
   paste(
     "**Table 1L.** Lobster counts in sampled management zones and overall in", study_year_month,
-    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled, number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female lobsters found.",
+    "at Turneffe Atoll Marine Reserve, represented by number of sites sampled,
+    number of Caribbean spiny lobsters found, number of spotted spiny lobsters found, extrapolated density of Caribbean spiny lobsters found in individuals per hectare, and number of male and female Caribbean spiny lobsters found.",
     "\n\n"
   )
 }
 figure1lcaption <- if (study_lobster_check) {
   paste(
-    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density by management zone in", study_year_month,
+    "_Figure 1L._ Pie chart of lobster sex ratio (Panel A) and bar chart of lobster density
+    by management zone (Panel B) in", study_year_month,
     " at Turneffe Atoll Marine Reserve.",
     "\n\n"
   )
