@@ -331,17 +331,35 @@ df_table1_sum_urchin_crab <- if (study_urchin_crab_check) {
   df_urchin_crab %>%
     group_by(`Mgmt Zone`) %>%
     summarise(
-      `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
-        sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-      `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+      `Diadema` = sum(
+        `Adult Diadema antillarum`[!(`Adult Diadema antillarum` %in% empty_counts)],
+        na.rm = TRUE
+      ) +
+        sum(
+          `Juvenile Diadema antillarum`[!(`Juvenile Diadema antillarum` %in% empty_counts)],
+          na.rm = TRUE
+        ),
+      `Maguimithrax` = sum(
+        `Maguimithrax spinosissumus`[!(`Maguimithrax spinosissumus` %in% empty_counts)],
+        na.rm = TRUE
+      )
     ) %>%
     bind_rows(
       df_urchin_crab %>%
         summarise(
           `Mgmt Zone` = "Overall",
-          `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
-            sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-          `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+          `Diadema` = sum(
+            `Adult Diadema antillarum`[!(`Adult Diadema antillarum` %in% empty_counts)],
+            na.rm = TRUE
+          ) +
+            sum(
+              `Juvenile Diadema antillarum`[!(`Juvenile Diadema antillarum` %in% empty_counts)],
+              na.rm = TRUE
+            ),
+          `Maguimithrax` = sum(
+            `Maguimithrax spinosissumus`[!(`Maguimithrax spinosissumus` %in% empty_counts)],
+            na.rm = TRUE
+          )
         )
     )
 } else {
