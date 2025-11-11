@@ -535,7 +535,8 @@ df_table1_sum_lobster <- if (study_lobster_check) {
     group_by(`Survey`) %>%
     summarise(
       `Caribbean Spiny` = sum(Species == "Pa" | Species == "Panulirus argus" | Species == "Caribbean Spiny Lobster", na.rm = TRUE),
-      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster", na.rm = TRUE)) %>%
+      `Spotted Spiny` = sum(Species == "Pg" | Species == "Panulirus guttatus" | Species == "Spotted Spiny Lobster", na.rm = TRUE)
+    ) %>%
     bind_rows(
       df_lobster %>%
         summarise(
@@ -551,17 +552,35 @@ df_table1_sum_urchin_crab <- if (study_urchin_crab_check) {
   df_urchin_crab %>%
     group_by(`Survey`) %>%
     summarise(
-      `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
-        sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-      `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+      `Diadema` = sum(
+        `Adult Diadema antillarum`[!(`Adult Diadema antillarum` %in% empty_counts)],
+        na.rm = TRUE
+      ) +
+        sum(
+          `Juvenile Diadema antillarum`[!(`Juvenile Diadema antillarum` %in% empty_counts)],
+          na.rm = TRUE
+        ),
+      `Maguimithrax` = sum(
+        `Maguimithrax spinosissumus`[!(`Maguimithrax spinosissumus` %in% empty_counts)],
+        na.rm = TRUE
+      )
     ) %>%
     bind_rows(
       df_urchin_crab %>%
         summarise(
           `Survey` = "Overall",
-          `Diadema` = sum(!(`Adult Diadema antillarum` %in% empty_counts), na.rm = TRUE) +
-            sum(!(`Juvenile Diadema antillarum` %in% empty_counts), na.rm = TRUE),
-          `Maguimithrax` = sum(!(`Maguimithrax spinosissumus` %in% empty_counts), na.rm = TRUE)
+          `Diadema` = sum(
+            `Adult Diadema antillarum`[!(`Adult Diadema antillarum` %in% empty_counts)],
+            na.rm = TRUE
+          ) +
+            sum(
+              `Juvenile Diadema antillarum`[!(`Juvenile Diadema antillarum` %in% empty_counts)],
+              na.rm = TRUE
+            ),
+          `Maguimithrax` = sum(
+            `Maguimithrax spinosissumus`[!(`Maguimithrax spinosissumus` %in% empty_counts)],
+            na.rm = TRUE
+          )
         )
     )
 } else {
@@ -650,51 +669,30 @@ df_table2_lobster <- if (study_lobster_check) {
   tibble(Survey = character())
 }
 df_table2_urchin_crab <- if (study_urchin_crab_check) {
-  df_urchin_crab %>%
+  site_survey_summary <- df_urchin_crab %>%
     group_by(`Site ID`, Survey) %>%
     summarise(
-      Diadema_Count = sum(
-        !(`Adult Diadema antillarum` %in% empty_counts),
-        na.rm = TRUE
-      ) + sum(
-        !(`Juvenile Diadema antillarum` %in% empty_counts),
-        na.rm = TRUE
-      ),
-      Maguimithrax_Count = sum(
-        !(`Maguimithrax spinosissumus` %in% empty_counts),
-        na.rm = TRUE
-      ),
+      Diadema_Count =
+        sum(`Adult Diadema antillarum`[!(`Adult Diadema antillarum` %in% empty_counts)], na.rm = TRUE) +
+          sum(`Juvenile Diadema antillarum`[!(`Juvenile Diadema antillarum` %in% empty_counts)], na.rm = TRUE),
+      Maguimithrax_Count =
+        sum(`Maguimithrax spinosissumus`[!(`Maguimithrax spinosissumus` %in% empty_counts)], na.rm = TRUE),
       .groups = "drop"
-    ) %>%
+    )
+  survey_summary <- site_survey_summary %>%
     group_by(Survey) %>%
     summarise(
       `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
       `Maguimithrax / Site` = round(mean(Maguimithrax_Count, na.rm = TRUE), 1),
       .groups = "drop"
-    ) %>%
-    bind_rows(
-      df_urchin_crab %>%
-        group_by(`Site ID`, Survey) %>%
-        summarise(
-          Diadema_Count = sum(
-            !(`Adult Diadema antillarum` %in% empty_counts),
-            na.rm = TRUE
-          ) + sum(
-            !(`Juvenile Diadema antillarum` %in% empty_counts),
-            na.rm = TRUE
-          ),
-          Maguimithrax_Count = sum(
-            !(`Maguimithrax spinosissumus` %in% empty_counts),
-            na.rm = TRUE
-          ),
-          .groups = "drop"
-        ) %>%
-        summarise(
-          Survey = "Overall",
-          `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
-          `Maguimithrax / Site` = round(mean(Maguimithrax_Count, na.rm = TRUE), 1)
-        )
     )
+  overall_summary <- site_survey_summary %>%
+    summarise(
+      Survey = "Overall",
+      `Diadema / Site` = round(mean(Diadema_Count, na.rm = TRUE), 1),
+      `Maguimithrax / Site` = round(mean(Maguimithrax_Count, na.rm = TRUE), 1)
+    )
+  bind_rows(survey_summary, overall_summary)
 } else {
   tibble(Survey = character())
 }
