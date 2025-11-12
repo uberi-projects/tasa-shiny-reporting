@@ -635,6 +635,108 @@ The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest.
 `r study_timeframe`.\
 
 
+```{r table3, echo = FALSE, include = FALSE}
+# Create df for Table 3 ---------------------------
+df_table3_separate <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  select(`Mission Id`, Month, Month_sort, `Vessel Type`) %>%
+  group_by(`Vessel Type`, Month) %>%
+  summarize(
+    Vessels = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Month = as.character(Month))
+df_table3_overall <- df %>%
+  mutate(
+    Month = "Overall",
+    Month_sort = "Overall"
+  ) %>%
+  select(`Mission Id`, Month, Month_sort, `Vessel Type`) %>%
+  group_by(`Vessel Type`, Month) %>%
+  summarize(
+    Vessels = n(),
+    .groups = "drop"
+  )
+df_table3 <- bind_rows(df_table3_separate, df_table3_overall)
+df_table3 <- df_table3 %>%
+  mutate(`Vessel Type` = case_when(
+    `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+    TRUE ~ `Vessel Type`
+  )) %>%
+  pivot_wider(names_from = `Vessel Type`, values_from = `Vessels`, values_fn = sum, values_fill = 0)
+df_table3_notoverall <- filter(df_table3, Month != "Overall")
+
+# Prepare dynamic variables for Table 3 ---------------------------
+max_skiff <- max(df_table3_notoverall$Skiff, na.rm = TRUE)
+max_skiff_month <- df_table3_notoverall$Month[which.max(df_table3_notoverall$Skiff)]
+max_canoe <- max(df_table3_notoverall$`Canoe/Sailboat`, na.rm = TRUE)
+max_canoe_month <- df_table3_notoverall$Month[which.max(df_table3_notoverall$`Canoe/Sailboat`)]
+```
+
+
+Throughout the study period, fishers used multiple vessel types to complete missions. 
+Skiffs were used the most in `r max_skiff_month` with `r max_skiff` instances, 
+wheres sailboats/canoes were used the most in `r max_canoe_month` with `r max_canoe` instances (Table 3; Figure 4).\
+
+
+**Table 3.** Count of vessel type counts for each month, where one count corresponds to a vessel submitting data for a single mission. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r df_table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
+
+
+
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create dfs for Figure 4 ---------------------------
+df_fig4 <- df %>%
+  mutate(
+    Month = format(`Date of Encounter`, "%b %Y"),
+    Month_sort = as.Date(format(`Date of Encounter`, "%Y-%m-01"))
+  ) %>%
+  select(`Mission Id`, Month, Month_sort, `Vessel Type`) %>%
+  mutate(`Vessel Type` = case_when(
+    `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+    TRUE ~ `Vessel Type`
+  )) %>%
+  group_by(`Vessel Type`, Month_sort) %>%
+  summarize(
+    Vessels = n(),
+    .groups = "drop"
+  ) %>%
+  complete(`Vessel Type`, Month_sort, fill = list(Vessels = 0))
+
+# Create Figure 4 ---------------------------
+figure4 <- ggplot(df_fig4, aes(x = Month_sort, color = `Vessel Type`, y = Vessels)) +
+  geom_line() +
+  geom_point(color = "black") +
+  scale_color_manual(values = palette[2:5]) +
+  theme_custom +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%b '%y"
+  ) +
+  xlab("Month") +
+  ylab("Number of Vessels")
+```
+
+
+```{r figure4, fig.width=6, fig.height=2.5, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Line and scatter plot of vessel type counts for each month, where one count corresponds to a vessel submitting data for a single mission. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+
 <br>
 
 

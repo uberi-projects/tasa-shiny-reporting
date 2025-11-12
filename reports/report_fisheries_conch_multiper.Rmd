@@ -949,7 +949,7 @@ figure2
 
 *Figure 2.* Histogram of market clean weight (g) (A), histogram of whole weight (g) (B), and 
 line plot of different average weight types recorded over time (C).
-Data were collected using Fisheries catch lobster data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 
 ```{r figure3_prep, echo = FALSE, include = FALSE}
@@ -1004,6 +1004,160 @@ figure3
 for conch with no lip thickness data (A), conch with a lip from 0-5mm (B), conch with a lip >5mm (C), and all recordered conch (D).  
 The dotted vertical lines indicate the legal shell length (17.8 cm) for harvest. Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, 
 `r study_timeframe`.\
+
+
+
+```{r table3, echo = FALSE, include = FALSE}
+# Create df for annual Table 3 ---------------------------
+if (timeframe == "Annual") {
+  df_table3_separate <- df %>%
+    mutate(
+      Year = format(df$`Date of Encounter`, "%Y")
+    ) %>%
+    select(`Mission Id`, Year, `Vessel Type`) %>%
+    group_by(`Vessel Type`, Year) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(Year = as.character(Year))
+  df_table3_overall <- df %>%
+    mutate(
+      Year = "Overall"
+    ) %>%
+    select(`Mission Id`, Year, `Vessel Type`) %>%
+    group_by(`Vessel Type`, Year) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    )
+  df_table3 <- bind_rows(df_table3_separate, df_table3_overall)
+  df_table3 <- df_table3 %>%
+    mutate(`Vessel Type` = case_when(
+      `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+      TRUE ~ `Vessel Type`
+    )) %>%
+    pivot_wider(names_from = `Vessel Type`, values_from = `Vessels`, values_fn = sum, values_fill = 0)
+  df_table3_notoverall <- filter(df_table3, Year != "Overall")
+  max_skiff <- max(df_table3_notoverall$Skiff, na.rm = TRUE)
+  max_skiff_period <- df_table3_notoverall$Year[which.max(df_table3_notoverall$Skiff)]
+  max_canoe <- max(df_table3_notoverall$`Canoe/Sailboat`, na.rm = TRUE)
+  max_canoe_period <- df_table3_notoverall$Year[which.max(df_table3_notoverall$`Canoe/Sailboat`)]
+}
+
+# Create df for seasonal Table 3 ---------------------------
+if (timeframe == "Seasonal") {
+  df_table3_separate <- df %>%
+    select(`Mission Id`, Season, `Vessel Type`) %>%
+    group_by(`Vessel Type`, Season) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(Season = as.character(Season))
+  df_table3_overall <- df %>%
+    mutate(
+      Season = "Overall"
+    ) %>%
+    select(`Mission Id`, Season, `Vessel Type`) %>%
+    group_by(`Vessel Type`, Season) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    )
+  df_table3 <- bind_rows(df_table3_separate, df_table3_overall)
+  df_table3 <- df_table3 %>%
+    mutate(`Vessel Type` = case_when(
+      `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+      TRUE ~ `Vessel Type`
+    )) %>%
+    pivot_wider(names_from = `Vessel Type`, values_from = `Vessels`, values_fn = sum, values_fill = 0)
+  df_table3_notoverall <- filter(df_table3, Season != "Overall")
+  max_skiff <- max(df_table3_notoverall$Skiff, na.rm = TRUE)
+  max_skiff_period <- df_table3_notoverall$Season[which.max(df_table3_notoverall$Skiff)]
+  max_canoe <- max(df_table3_notoverall$`Canoe/Sailboat`, na.rm = TRUE)
+  max_canoe_period <- df_table3_notoverall$Season[which.max(df_table3_notoverall$`Canoe/Sailboat`)]
+}
+```
+
+
+Throughout the study period, fishers used multiple vessel types to complete missions. 
+Skiffs were used the most in `r max_skiff_period` with `r max_skiff` instances, 
+wheres sailboats/canoes were used the most in `r max_canoe_period` with `r max_canoe` instances (Table 3; Figure 4).\
+
+
+**Table 3.** Count of vessel type counts for each period, where one count corresponds to a vessel submitting data for a single mission. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
+```{r df_table3, echo = FALSE}
+# show table
+as.data.frame(df_table3)
+```
+
+
+
+```{r figure4_prep, echo = FALSE, include = FALSE}
+# Create annual Figure 4 ---------------------------
+if (timeframe == "Annual") {
+  df_fig4 <- df %>%
+    mutate(
+      Year = format(df$`Date of Encounter`, "%Y")
+    ) %>%
+    select(`Mission Id`, Year, `Vessel Type`) %>%
+    mutate(`Vessel Type` = case_when(
+      `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+      TRUE ~ `Vessel Type`
+    )) %>%
+    group_by(`Vessel Type`, Year) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    ) %>%
+    complete(`Vessel Type`, Year, fill = list(Vessels = 0))
+  figure4 <- ggplot(df_fig4, aes(x = Year, color = `Vessel Type`, y = Vessels)) +
+    geom_line() +
+    geom_point() +
+    scale_color_manual(values = palette[2:5]) +
+    theme_custom +
+    xlab("Year") +
+    ylab("Number of Vessels")
+}
+
+# Create seasonal Figure 4 ---------------------------
+if (timeframe == "Seasonal") {
+  df_fig4 <- df %>%
+    select(`Mission Id`, Season, `Vessel Type`) %>%
+    mutate(`Vessel Type` = case_when(
+      `Vessel Type` %in% c("Canoe", "canoe", "Sailboat") ~ "Canoe/Sailboat",
+      TRUE ~ `Vessel Type`
+    )) %>%
+    group_by(`Vessel Type`, Season) %>%
+    summarize(
+      Vessels = n(),
+      .groups = "drop"
+    ) %>%
+    complete(`Vessel Type`, Season, fill = list(Vessels = 0))
+  figure4 <- ggplot(df_fig4, aes(x = Season, color = `Vessel Type`, y = Vessels)) +
+    geom_line() +
+    geom_point() +
+    scale_color_manual(values = palette[2:5]) +
+    theme_custom +
+    xlab("Season") +
+    ylab("Number of Vessels")
+}
+```
+
+
+```{r figure4, fig.width=6, fig.height=2.5, fig.align = 'left', echo = FALSE}
+figure4
+```
+
+
+*Figure 4.* Line and scatter plot of vessel type counts for each period, where one count corresponds to a vessel submitting data for a single mission. 
+Data were collected using Fisheries catch conch data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
+
+
 
 
 <br>
