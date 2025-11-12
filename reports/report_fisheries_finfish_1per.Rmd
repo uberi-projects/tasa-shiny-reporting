@@ -726,7 +726,8 @@ df_fig5 <- df %>%
   summarize(
     Vessels = n(),
     .groups = "drop"
-  )
+  ) %>%
+  complete(`Vessel Type`, Month_sort, fill = list(Vessels = 0))
 
 # Create Figure 5 ---------------------------
 figure5 <- ggplot(df_fig5, aes(x = Month_sort, color = `Vessel Type`, y = Vessels)) +
