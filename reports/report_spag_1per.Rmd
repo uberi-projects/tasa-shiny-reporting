@@ -213,32 +213,39 @@ total_df <- format(filter(table1_separate, Site %in% c("Dog Flea", "Dog Flea Cay
 ```
 
 ```{r table2_prep, echo = FALSE, fig.width = 7, fig.height = 7}
-table2 <- df_spec_merged |>
-mutate( Species = `Species English Name`) |>
+table2_months <- df_spec_merged |>
+  mutate(Species = `Species English Name`) |>
+  group_by(Species, Month) |>
+  summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE), .groups = "drop" ) |>
+  pivot_wider(names_from = Month, values_from = Count, values_fill = 0) |>
+  mutate(Total = rowSums(across(where(is.numeric)))) 
+table2_sites <- df_spec_merged |>
+  mutate(Species = `Species English Name`) |>
   group_by(Species) |>
-  mutate(`Total Count` = as.numeric(`Total Count`)) |>
   summarise(
-    Count = sum(`Total Count`, na.omit = TRUE),
-    Proportion = round(Count/total_fish_num, 2),
-    `Mauger Caye Count` = sum(`Total Count`[Site %in% c("Mauger Caye", "Maugre Caye")], na.rm = TRUE),
-    `Caye Bokel Count` = sum(`Total Count`[Site %in% c("Caye Bokel", "Bokel Caye")], na.rm = TRUE),
-    `Dog Flea Caye Count` = sum(`Total Count`[Site %in% c("Dog Flea Caye", "Dog Flea")], na.rm = TRUE)
-  ) |>
-  arrange(desc(Count)) |>
+    "Mauger Caye" = sum(as.numeric(`Total Count`)[Site %in% c("Mauger Caye", "Maugre Caye")], na.rm = TRUE),
+    "Caye Bokel" = sum(as.numeric(`Total Count`)[Site %in% c("Caye Bokel", "Bokel Caye")], na.rm = TRUE),
+    "Dog Flea" = sum(as.numeric(`Total Count`)[Site %in% c("Dog Flea Caye", "Dog Flea")], na.rm = TRUE),
+    .groups = "drop"
+  )
+table2 <- table2_sites |>
+  left_join(table2_months, by = "Species") |>
+  mutate(Proportion = round(Total / total_fish_num, 3)) |>
+  arrange(desc(Total)) |>
   slice_head(n = 10)
 species_1 <- table2$Species[1]
-count_1 <- format(table2$Count[1], scientific = FALSE)
-prop_1 <- table2$Proportion[1]*100
+count_1 <- format(table2$Total[1], scientific = FALSE)
+prop_1 <- table2$Proportion[1] * 100
 species_2 <- table2$Species[2]
-count_2 <- format(table2$Count[2], scientific = FALSE)
-prop_2 <- table2$Proportion[2]*100
+count_2 <- format(table2$Total[2], scientific = FALSE)
+prop_2 <- table2$Proportion[2] * 100
 species_3 <- table2$Species[3]
-count_3 <- format(table2$Count[3], scientific = FALSE)
-prop_3 <- table2$Proportion[3]*100
-families <- df_spec_merged %>%
-  group_by(Family.x) %>%
+count_3 <- format(table2$Total[3], scientific = FALSE)
+prop_3 <- table2$Proportion[3] * 100
+families <- df_spec_merged |>
+  group_by(Family.x) |>
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE))
-most_family <- families$`Family.x`[which.max(families$Count)]
+most_family <- families$Family.x[which.max(families$Count)]
 ```
 
 
@@ -310,13 +317,12 @@ Atoll Marine Reserve, `r study_timeframe`.\
 <br>
 
 
-**Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed, 
-the proportion of overall fish that were that species, 
-and the number of that fish found at Mauger Caye, Caye Bokel, and Dog Flea Caye individually. 
+**Table 2.** Summary of SPAG monitoring by species, including how many of that fish were observed
+ at Mauger Caye, Caye Bokel, and Dog Flea Caye, as well as during each month individually. 
 Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table2, echo = FALSE, fig.width = 7, fig.height = 7}
-table2
+as.data.frame(select(table2, -Proportion))
 ```
 
 
