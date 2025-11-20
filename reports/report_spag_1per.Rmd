@@ -38,6 +38,7 @@ if (as.character(params$spag_1per_spag_season_selection) != "None") {
 }
 # Add month column  ---------------------------
 df$Month <- format(df$Date, "%b %Y")
+df$Month <- factor(df$Month, levels = unique(format(sort(unique(df$Date)), "%b %Y")), ordered = TRUE)
 
 # Define study timeframe ---------------------------
 study_start <- min(df$Date, na.rm = TRUE)
@@ -267,19 +268,19 @@ as.data.frame(table1)
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 8.5}
 df_fig2 <- df_spec_merged %>%
   mutate(`Total Count` = as.numeric(`Total Count`)) %>%
-  group_by(Site, `Species English Name`) %>%
+  group_by(Site, Month, `Species English Name`) %>%
   summarise(Count = sum(`Total Count`, na.rm = TRUE))  %>%
   filter(Count > 0) %>%
   mutate(Panel = case_when(
-    Site == "Mauger Caye" ~ "A.",
-    Site == "Maugre Caye" ~ "A.",
-    Site == "Caye Bokel" ~ "B.",
-    Site == "Dog Flea Caye" ~ "C.",
-    Site == "Dog Flea" ~ "C."
+    Site == "Mauger Caye" ~ "A. Mauger Caye",
+    Site == "Maugre Caye" ~ "A. Mauger Caye",
+    Site == "Caye Bokel" ~ "B. Caye Bokel",
+    Site == "Dog Flea Caye" ~ "C. Dog Flea Caye",
+    Site == "Dog Flea" ~ "C. Dog Flea Caye"
     )
     )
 
-ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
+ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Month)) +
   geom_col(position = position_dodge(width = 0.9), color = "black") + 
   scale_y_log10(
     breaks = 10^(0:6),
@@ -301,7 +302,7 @@ ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
 ```
 
 *Figure 2.* Bar plot of observed fish species counts in Mauger Caye (A), 
-Caye Bokel (B), and Dog Flea Caye (C), 
+Caye Bokel (B), and Dog Flea Caye (C), colored by month the fish were observed, and 
 recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
