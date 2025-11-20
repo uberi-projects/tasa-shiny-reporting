@@ -38,6 +38,7 @@ if (as.character(params$spag_1per_spag_season_selection) != "None") {
 }
 # Add month column  ---------------------------
 df$Month <- format(df$Date, "%b %Y")
+df$Month <- factor(df$Month, levels = unique(format(sort(unique(df$Date)), "%b %Y")), ordered = TRUE)
 
 # Define study timeframe ---------------------------
 study_start <- min(df$Date, na.rm = TRUE)
