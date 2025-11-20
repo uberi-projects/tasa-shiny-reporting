@@ -47,7 +47,13 @@ source("map.r")
 
 ### Turneffe Atoll Marine Reserve
 
-Background on Turneffe Atoll Marine Reserve \
+Turneffe Atoll is the largest atoll in Belize, encompassing mangrove and littoral forest cayes, seagrass beds, and extensive coral reef ecosystems (Stoddart, 1962). 
+It features an inner lagoon and a surrounding barrier reef that defines the atoll structure. 
+The Turneffe Atoll Marine Reserve (TAMR), which spans the entire atoll covers 1,471 km², and is divided into several management zones, 
+including general use, conservation, preservation, spawning aggregation sites, and special management areas. 
+TAMR plays a critical role in conserving biodiversity and sustaining the livelihoods of communities that rely on its resources. 
+The reef system provides coastal protection from extreme weather events (Fedler, 2011), 
+supports habitats for a wide range of marine species, and sustains key economic activities such as commercial and recreational fishing, SCUBA diving, and tourism.\
 
 ### Spawning Aggregations Reef Monitoring Program
 
