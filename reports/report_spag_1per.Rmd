@@ -331,19 +331,19 @@ as.data.frame(select(table2, -Proportion))
 
 ```{r figure3, echo = FALSE, fig.width = 7, fig.height = 8.5}
 df_fig3 <- df_spec_merged %>%
-  group_by(Site, Family.x) %>%
+  group_by(Site, Month, Family.x) %>%
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE)) %>%
   filter(Count > 0) %>%
   mutate(Panel = case_when(
-    Site == "Mauger Caye" ~ "A.",
-    Site == "Maugre Caye" ~ "A.",
-    Site == "Caye Bokel" ~ "B.",
-    Site == "Dog Flea Caye" ~ "C.",
-    Site == "Dog Flea" ~ "C."
+    Site == "Mauger Caye" ~ "A. Mauger Caye",
+    Site == "Maugre Caye" ~ "A. Mauger Caye",
+    Site == "Caye Bokel" ~ "B. Caye Bokel",
+    Site == "Dog Flea Caye" ~ "C. Dog Flea Caye",
+    Site == "Dog Flea" ~ "C. Dog Flea Caye"
     )
     )
 
-ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Site)) +
+ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Month)) +
   geom_col(position = position_dodge(width = 0.9), color = "black") + 
   scale_y_log10(
     breaks = 10^(0:6),
@@ -364,7 +364,7 @@ ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Site)) +
 ```
 
 *Figure 3.* Bar plot of observed fish family counts in Mauger Caye (A), 
-Caye Bokel (B), and Dog Flea Caye (C), 
+Caye Bokel (B), and Dog Flea Caye (C), colored by month data were collected, and 
 recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
