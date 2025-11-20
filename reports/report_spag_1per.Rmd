@@ -88,18 +88,22 @@ supports habitats for a wide range of marine species, and sustains key economic 
 
 ### Spawning Aggregations Monitoring
 
-SPAGs monitoring has been ongoing at TAMR since the 2022-2023 spawning season, 
-with the aim of advancing sustainable fisheries management by showing how 
-monitoring SPAGs can strengthen Belize's adaptive multispecies finfish management plan. 
-Since then, SPAGs monitoring has continued each spawning season.
+Monitoring spawning aggregations (SPAGs) at Turneffe Atoll Marine Reserve is critically important for sustaining Belize’s reef fisheries and ensuring long-term 
+ecosystem resilience. Turneffe hosts several historically significant aggregation sites, including Maugre Caye, Dog Flea Caye, and Caye Bokel, where key commercial 
+species such as Nassau grouper, snappers, and jacks gather to reproduce. These events make populations especially vulnerable to overfishing, as past declines across 
+Belize have shown that unchecked exploitation can collapse entire aggregations and diminish national fishery yields. Recent monitoring has demonstrated that robust, 
+standardized surveys, including underwater counts, laser sizing, and acoustic monitoring, not only provide fishery-independent data on abundance, size structure, 
+and spawning behavior but also strengthen Belize’s adaptive multispecies finfish management plan. By tracking population health and reproductive success over time, 
+SPAG monitoring at Turneffe safeguards critical breeding grounds, supports food security and tourism, and ensures that management interventions are guided by science 
+to prevent overexploitation and promote recovery of endangered species such as the Nassau grouper. 
 
-A risk with SPAGs is that they may become targets for fishers, who can obtain 
-high yields through the aggregations. However, this may lead to depletions in 
-which the population of the spawning fish can not replace itself or the aggregation 
-can no longer form (Van Overzee & Rijnsdorp, 2015). 
-
-Good management decisions, based on real data from SPAGs, can allow for timely 
-interventions where necessary and support healthy, sustainable fisheries.\
+Belize’s finfish management basket approach is a practical, ecosystem-based system that groups similar reef fish species into “management baskets” 
+so they can be regulated collectively rather than through species-specific rules. Because Belize’s commercial finfish fishery is multispecies, 
+with fishers catching a mix of snappers, groupers, jacks, grunts, and others on the same trip, the basket system streamlines management by 
+applying shared regulations, such as size limits, seasonal closures, catch monitoring, and effort controls, to each group. Indicator species 
+within each basket provide biological signals that guide adaptive decisions over time, including when to tighten or relax rules. Designed to be used 
+alongside Belize’s broader adaptive finfish management plan, the basket approach makes enforcement more feasible, reduces species misreporting, and 
+supports sustainability by managing ecological groups together rather than risking serial depletion of individual species.\
 
 
 ## Methods
