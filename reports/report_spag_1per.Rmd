@@ -541,34 +541,6 @@ The average laser-measured size of Nassau Grouper was `r nassau_size`cm (Figure 
 Fish spawning behaviors observed included `r behaviors` (Figure 6).\
 
 
-```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
-fig4
-```
-
-
-
-*Figure 4.* Violin plot of recorded size classes for fish, 
-recorded during spawning aggregations visual surveys at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 10 
-observations of size class were excluded, and kernel densities were 
-calculated using the midpoints of size classes.\
-
-
-<br>
-
-
-```{r figure5, echo = FALSE, fig.width = 7, fig.height = 9}
-fig5
-```
-
-
-*Figure 5.* Length-frequency distributions of key fish, overall (A), at Mauger Caye (B), 
-at Caye Bokel (C), and at Dog Flea Caye (D), 
-recorded during spawning aggregations laser sizing at Turneffe 
-Atoll Marine Reserve, `r study_timeframe`. Only the five fish species with the 
-most laser sizing data overall are shown. \
-
-
 **Table 3.** Summary of laser sizing by species and site, including the 
 average fish length (cm) for the top 10 most measured species as well as the corresponding 
 fish basket number, based on the United Nation Conference on Trade and Development (UNCTD, 2022). 
@@ -610,6 +582,35 @@ df_table3_wide <- df_table3 %>%
 as.data.frame(df_table3_wide)
 ```
 
+
+
+
+```{r figure4, echo = FALSE, fig.width = 7, fig.height = 4.5}
+fig4
+```
+
+
+
+*Figure 4.* Violin plot of recorded size classes for fish, 
+recorded during spawning aggregations visual surveys at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Fish species with fewer than 10 
+observations of size class were excluded, and kernel densities were 
+calculated using the midpoints of size classes.\
+
+
+<br>
+
+
+```{r figure5, echo = FALSE, fig.width = 7, fig.height = 9}
+fig5
+```
+
+
+*Figure 5.* Length-frequency distributions of key fish, overall (A), at Mauger Caye (B), 
+at Caye Bokel (C), and at Dog Flea Caye (D), 
+recorded during spawning aggregations laser sizing at Turneffe 
+Atoll Marine Reserve, `r study_timeframe`. Only the five fish species with the 
+most laser sizing data overall are shown. \
 
 
 <br>
