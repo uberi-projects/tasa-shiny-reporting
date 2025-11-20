@@ -51,7 +51,7 @@ ui <- navbarPage(
             div(
                 class = "header-container",
                 div(class = "border-top"),
-                div(p(class = "version-header", "Version 3.1.0")),
+                div(p(class = "version-header", "Version 3.2.0")),
                 div(class = "header-title", h1("Turneffe Reef-Monitoring Data Reporting Tool")),
                 span(a(href = link_text[1], target = "_blank", img(class = "header-logo", src = "images/TASA_logo.png", alt = "Logo"))),
                 tags$svg(
