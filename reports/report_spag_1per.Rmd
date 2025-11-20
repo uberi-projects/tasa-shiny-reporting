@@ -302,7 +302,7 @@ ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Month)) +
 ```
 
 *Figure 2.* Bar plot of observed fish species counts in Mauger Caye (A), 
-Caye Bokel (B), and Dog Flea Caye (C), 
+Caye Bokel (B), and Dog Flea Caye (C), colored by month the fish were observed, and 
 recorded during spawning aggregations at Turneffe 
 Atoll Marine Reserve, `r study_timeframe`.\
 
