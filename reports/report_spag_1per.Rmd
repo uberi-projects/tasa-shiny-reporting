@@ -205,7 +205,7 @@ table1 <- bind_rows(table1_separate, table1_overall)
 total_fish <- format(table1_overall$Fish, big.mark = ",", scientific = FALSE)
 total_fish_num <- sum(as.numeric(table1_overall$Fish), na.rm = TRUE)
 total_species <- table1_overall$Species
-total_sites <- nrow(table1_separate)
+total_sites <- length(unique(table1_separate$Site))
 total_dives <- table1_overall$Dives
 total_mc <- format(filter(table1_separate, Site %in% c("Mauger Caye", "Maugre Caye"))$Fish, big.mark = ",", scientific = FALSE)
 total_cb <- format(filter(table1_separate, Site %in% c("Caye Bokel", "Bokel"))$Fish, big.mark = ",", scientific = FALSE)
