@@ -59,6 +59,10 @@ if (timeframe == "Annual") {
 } else if (timeframe == "Seasonal") {
   study_timeframe <- paste0(format(study_start, "%Y"), "-", format(study_end, "%Y"))
 }
+
+# Filter out arrest data ---------------------------
+df <- df |>
+  filter(Arrest != "Yes")
 ```
 
 # Turneffe Atoll Fisheries Catch Conch `r timeframe` Dataset Report: `r study_timeframe`

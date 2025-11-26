@@ -68,6 +68,8 @@ timeframe <- params$fisheries_multiper_timeframe
 # Filter to year or season  ---------------------------
 df_1 <- params$datafile1[[1]]
 df_1$`Date of Encounter` <- as.Date(df_1$`Date of Encounter`)
+df_1 <- df_1 |>
+  filter(Arrest != "Yes")
 if (timeframe == "Annual" && as.character(params$fisheries_multiper1_year_selection) != "None") {
   df_1 <- df_1 |>
     filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper1_year_selection)
@@ -80,6 +82,8 @@ if (timeframe == "Annual" && as.character(params$fisheries_multiper1_year_select
 }
 df_2 <- params$datafile2[[1]]
 df_2$`Date of Encounter` <- as.Date(df_2$`Date of Encounter`)
+df_2 <- df_2 |>
+  filter(Arrest != "Yes")
 if (timeframe == "Annual" && as.character(params$fisheries_multiper2_year_selection) != "None") {
   df_2 <- df_2 |>
     filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper2_year_selection)
@@ -93,6 +97,8 @@ if (timeframe == "Annual" && as.character(params$fisheries_multiper2_year_select
 if (!is.null(params$datafile3)) {
   df_3 <- params$datafile3[[1]]
   df_3$`Date of Encounter` <- as.Date(df_3$`Date of Encounter`)
+  df_3 <- df_3 |>
+  filter(Arrest != "Yes")
   if (timeframe == "Annual" && as.character(params$fisheries_multiper3_year_selection) != "None") {
     df_3 <- df_3 |>
       filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper3_year_selection)
@@ -107,6 +113,8 @@ if (!is.null(params$datafile3)) {
 if (!is.null(params$datafile4)) {
   df_4 <- params$datafile4[[1]]
   df_4$`Date of Encounter` <- as.Date(df_4$`Date of Encounter`)
+  df_4 <- df_4 |>
+  filter(Arrest != "Yes")
   if (timeframe == "Annual" && as.character(params$fisheries_multiper4_year_selection) != "None") {
     df_4 <- df_4 |>
       filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper4_year_selection)
