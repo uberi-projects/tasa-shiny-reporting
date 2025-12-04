@@ -336,7 +336,12 @@ ggplot(df_fig2, aes(x = `Species English Name`, y = Count, fill = Site)) +
 Data were collected using SPAG data from Turneffe Atoll Marine Reserve, `r study_timeframe`.\
 
 ```{r table2, echo = FALSE, fig.width = 7, fig.height = 7}
-as.data.frame(select(table2, -Proportion))
+table2_display <- as.data.frame(table2 |> select(-Proportion))
+month_cols <- setdiff(names(table2_display), c("Species", "Mauger Caye", "Caye Bokel", "Dog Flea", "Total"))
+flextable(table2_display) %>%
+  bg(j = c("Mauger Caye", "Caye Bokel", "Dog Flea"), bg = "#ebeaea") %>%
+  bg(j = month_cols, bg = "white") %>%
+  bg(j = "Total", bg = "#ebeaea")
 ```
 
 
