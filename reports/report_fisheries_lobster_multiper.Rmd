@@ -98,7 +98,7 @@ if (!is.null(params$datafile3)) {
   df_3 <- params$datafile3[[1]]
   df_3$`Date of Encounter` <- as.Date(df_3$`Date of Encounter`)
   df_3 <- df_3 |>
-  filter(Arrest != "Yes")
+    filter(Arrest != "Yes")
   if (timeframe == "Annual" && as.character(params$fisheries_multiper3_year_selection) != "None") {
     df_3 <- df_3 |>
       filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper3_year_selection)
@@ -114,7 +114,7 @@ if (!is.null(params$datafile4)) {
   df_4 <- params$datafile4[[1]]
   df_4$`Date of Encounter` <- as.Date(df_4$`Date of Encounter`)
   df_4 <- df_4 |>
-  filter(Arrest != "Yes")
+    filter(Arrest != "Yes")
   if (timeframe == "Annual" && as.character(params$fisheries_multiper4_year_selection) != "None") {
     df_4 <- df_4 |>
       filter(format(`Date of Encounter`, "%Y") == params$fisheries_multiper4_year_selection)
@@ -249,6 +249,39 @@ and presence of reproductive indicators is key for this species.\
 
 
 ## Methods
+
+Fisheries-dependent data were collected opportunistically within the Turneffe Atoll Marine 
+Reserve (TAMR) by TASA Conservation Officers during routine patrols and field operations. 
+Officers conducted surveys with fishers encountered throughout the atoll, including those 
+operating from skiffs, sailboats, or temporary fishing camps established within the reserve. 
+
+Fishers typically conduct daily fishing trips lasting approximately six hours. To improve the 
+accuracy of catch per unit effort (CPUE) estimates, Conservation Officers collected detailed, 
+fisher-specific information on both time spent fishing and the composition of the catch. CPUE 
+was calculated as the number of product units (individual conch meats, whole or headed 
+lobster, or finfish) per fisher-hour (e.g., lobster/fisher-hr). 
+
+For each fisher interviewed, officers recorded the date, fisher name, boat type, species caught, 
+fishing gear used, and total fishing effort, measured to the nearest hour. Spatial data, including 
+the location where fishers were encountered or where fishing activities were reported, were 
+also documented to support spatial analyses of resource use across TAMR. 
+
+All information was recorded using the SMART (Spatial Monitoring and Reporting Tool) mobile 
+application, which standardizes data entry and integrates spatial positioning for improved data 
+quality and management. 
+
+Biological measurements were taken for individual catch items when encountered, although 
+data completeness varied depending on the level of processing at the time of sampling. The 
+following measurements were recorded: 
+
+- Caribbean Spiny Lobster (Panulirus argus): total mass (g), tail mass (g), carapace length
+(mm), sex, and reproductive indicators in females (presence of spermatophore or eggs). 
+- Queen Conch (Aliger gigas): shell length (mm), total unprocessed tissue mass (g),
+market-clean meat mass (g), and fillet mass (g). 
+- Finfish: fork or tail length (cm) and total mass (g).
+
+All mass measurements were recorded to the nearest 5–50 g based on the precision of the
+measuring scales available at the time of sampling.
 
 This report, including text, figures, and tables, was generated using the 
 Turneffe Reef-Monitoring Data Reporting Tool (TASA 2025, version `r params$release`), an R Shiny app which takes 
