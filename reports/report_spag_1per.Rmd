@@ -70,7 +70,7 @@ to exploit the aggregations for high yields. This can cause depletions in
 SPAGs which harm the viability of commercially and ecologically important fish populations. 
 This report presents findings from SPAGs monitoring at 
 Turneffe Atoll Marine Reserve (TAMR) from `r study_timeframe`. 
-his report aims to summarize and visualize the SPAG dataset from `r study_timeframe` 
+This report aims to summarize and visualize the SPAG dataset from `r study_timeframe` 
 to facilitate data interpretation and support sustainable fisheries and evidence-based 
 management decisions by TASA staff, collaborators, and stakeholders.\
 
@@ -171,9 +171,16 @@ standardized reef monitoring data, validates the dataset, and creates a shareabl
 df_spec <- params$datafile[[2]]
 df_laser <- params$datafile[[3]]
 df_fish <- params$datafile[[4]]
-df_spec_merged <- df_spec |>
+df$Season <- as.character(df$Season)
+df$Dive <- as.character(df$Dive)
+df_spec$Season <- as.character(df_spec$Season)
+df_spec$Dive <- as.character(df_spec$Dive)
+df_laser$Season <- as.character(df_laser$Season)
+df_laser$Dive <- as.character(df_laser$Dive)
+df_spec_base <- df_spec |>
   left_join(df, by = c("Season", "Dive")) |>
-  filter(Site != "" & !is.na(Site)) |>
+  filter(Site != "" & !is.na(Site))
+df_spec_merged <- df_spec_base |>
   left_join(df_fish, by = c("Species English Name" = "Common Name")) |>
   left_join(df_fish, by = c("Species English Name" = "Alternative Common Name")) |>
   filter((`Scientific Name.x` != "" & !is.na(`Scientific Name.x`)) | (`Scientific Name.y` != "" & !is.na(`Scientific Name.y`)))
@@ -183,22 +190,22 @@ df_laser_merged <- df_laser |>
 ```
 
 ```{r table1_prep, echo = FALSE, fig.width = 7, fig.height = 7}
-table1_separate <- df_spec_merged |>
+table1_separate <- df_spec_base |>
   group_by(Site, Month) |>
   mutate(`Total Count` = as.numeric(`Total Count`)) |>
   summarise(
-    Fish = sum(`Total Count`, na.omit = TRUE),
+    Fish = sum(`Total Count`, na.rm = TRUE),
     Species = length(unique(`Species English Name`)),
     Dives = length(unique(Dive)),
     .groups = "drop"
   )
 
-table1_overall <- df_spec_merged |>
+table1_overall <- df_spec_base |>
   mutate(Site = "Overall", Month = "Overall") |>
   group_by(Site, Month) |>
   mutate(`Total Count` = as.numeric(`Total Count`)) |>
   summarise(
-    Fish = sum(`Total Count`, na.omit = TRUE),
+    Fish = sum(`Total Count`, na.rm = TRUE),
     Species = length(unique(`Species English Name`)),
     Dives = length(unique(Dive))
   )
@@ -212,7 +219,7 @@ get_fish_or_zero <- function(df, sites) {
   val <- df |>
     filter(Site %in% sites) |>
     pull(Fish)
-  if (length(val) == 0) 0 else val
+  if (length(val) == 0) 0 else sum(val)
 }
 total_mc <- format(get_fish_or_zero(table1_separate, c("Mauger Caye", "Maugre Caye")), big.mark = ",", scientific = FALSE)
 total_cb <- format(get_fish_or_zero(table1_separate, c("Caye Bokel", "Bokel")), big.mark = ",", scientific = FALSE)
@@ -220,14 +227,16 @@ total_df <- format(get_fish_or_zero(table1_separate, c("Dog Flea", "Dog Flea Cay
 ```
 
 ```{r table2_prep, echo = FALSE, fig.width = 7, fig.height = 7}
-table2_months <- df_spec_merged |>
+table2_months <- df_spec_base |>
   mutate(Species = `Species English Name`) |>
+  filter(!is.na(Species) & Species != "") |>
   group_by(Species, Month) |>
   summarise(Count = sum(as.numeric(`Total Count`), na.rm = TRUE), .groups = "drop") |>
   pivot_wider(names_from = Month, values_from = Count, values_fill = 0) |>
   mutate(Total = rowSums(across(where(is.numeric))))
-table2_sites <- df_spec_merged |>
+table2_sites <- df_spec_base |>
   mutate(Species = `Species English Name`) |>
+  filter(!is.na(Species) & Species != "") |>
   group_by(Species) |>
   summarise(
     "Mauger Caye" = sum(as.numeric(`Total Count`)[Site %in% c("Mauger Caye", "Maugre Caye")], na.rm = TRUE),
@@ -280,8 +289,16 @@ as.data.frame(table1)
 
 
 ```{r figure2, echo = FALSE, fig.width = 7, fig.height = 8.5}
+top_species_fig2 <- df_spec_merged %>%
+  mutate(`Total Count` = as.numeric(`Total Count`)) %>%
+  group_by(`Species English Name`) %>%
+  summarise(Total = sum(`Total Count`, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(Total)) %>%
+  slice_head(n = 40) %>%
+  pull(`Species English Name`)
 df_fig2 <- df_spec_merged %>%
   mutate(`Total Count` = as.numeric(`Total Count`)) %>%
+  filter(`Species English Name` %in% top_species_fig2) %>%
   group_by(Site, `Species English Name`) %>%
   summarise(Count = sum(`Total Count`, na.rm = TRUE)) %>%
   filter(Count > 0) %>%
@@ -400,13 +417,30 @@ ggplot(df_fig3, aes(x = Family.x, y = Count, fill = Site)) +
 
 
 ```{r figure4_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
-df_fig4 <- df_spec_merged %>%
-  select(
-    `Species English Name`, `10-20 cm`, `21-30 cm`, `31-40 cm`, `41-50 cm`,
-    `51-60 cm`, `61-70 cm`, `71-80 cm`, `81-90 cm`, `91-100 cm`, `101-110 cm`,
-    `111-120 cm`, `121-130 cm`, `> 130 cm`
+size_class_cols <- c(
+  "10-20 cm", "21-30 cm", "31-40 cm", "41-50 cm",
+  "51-60 cm", "61-70 cm", "71-80 cm", "81-90 cm", "91-100 cm", "101-110 cm",
+  "111-120 cm", "121-130 cm", "> 130 cm"
+)
+df_fig4 <- df_spec_base %>%
+  select(`Species English Name`, `Total Count`, all_of(size_class_cols)) %>%
+  mutate(across(all_of(size_class_cols), as.character)) %>%
+  rowwise() %>%
+  mutate(
+    asterisk_count = sum(c_across(all_of(size_class_cols)) == "*", na.rm = TRUE),
+    numeric_sum = sum(suppressWarnings(as.numeric(c_across(all_of(size_class_cols)))), na.rm = TRUE),
+    remaining = as.numeric(`Total Count`) - numeric_sum,
+    share = if_else(asterisk_count > 0 & remaining > 0,
+      floor(remaining / asterisk_count), 0
+    )
   ) %>%
-  mutate(across(-`Species English Name`, as.numeric)) %>%
+  ungroup() %>%
+  mutate(across(all_of(size_class_cols), ~ {
+    is_asterisk <- .x == "*"
+    numeric_val <- suppressWarnings(as.numeric(.x))
+    if_else(is_asterisk, as.numeric(share), numeric_val)
+  })) %>%
+  select(-`Total Count`, -asterisk_count, -numeric_sum, -remaining, -share) %>%
   pivot_longer(
     cols = c(
       `10-20 cm`, `21-30 cm`, `31-40 cm`, `41-50 cm`,
@@ -451,26 +485,22 @@ fig4 <- ggplot(df_fig4, aes(x = `Species English Name`, y = Class)) +
       "> 130 cm"
     )
   )
-df_spec_merged <- df_spec_merged %>%
-  mutate(across(c(
-    `10-20 cm`, `21-30 cm`, `31-40 cm`, `41-50 cm`,
-    `51-60 cm`, `61-70 cm`, `71-80 cm`, `81-90 cm`,
-    `91-100 cm`, `101-110 cm`, `111-120 cm`, `121-130 cm`,
-    `> 130 cm`
-  ), as.numeric))
-total_visuals <- sum(df_spec_merged$`10-20 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`21-30 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`31-40 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`41-50 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`51-60 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`61-70 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`71-80 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`81-90 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`91-100 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`101-110 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`111-120 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`121-130 cm`, na.rm = TRUE) +
-  sum(df_spec_merged$`> 130 cm`, na.rm = TRUE)
+df_visuals <- df_spec_base %>%
+  select(`Total Count`, all_of(size_class_cols)) %>%
+  mutate(across(all_of(size_class_cols), as.character)) %>%
+  rowwise() %>%
+  mutate(
+    has_size_data = any(!is.na(c_across(all_of(size_class_cols))) &
+      c_across(all_of(size_class_cols)) != "", na.rm = TRUE),
+    numeric_sum = sum(suppressWarnings(as.numeric(c_across(all_of(size_class_cols)))), na.rm = TRUE),
+    has_asterisk = any(c_across(all_of(size_class_cols)) == "*", na.rm = TRUE),
+    visual_count = if_else(has_size_data,
+      if_else(has_asterisk, as.numeric(`Total Count`), numeric_sum),
+      0
+    )
+  ) %>%
+  ungroup()
+total_visuals <- sum(df_visuals$visual_count, na.rm = TRUE)
 total_visuals <- format(total_visuals, big.mark = ",", scientific = FALSE)
 ```
 
@@ -541,7 +571,7 @@ nassau_size <- round(mean(filter(df_fig5_prelim, Species == "Nassau Grouper")$`F
 
 
 ```{r figure6_prep, echo = FALSE, fig.width = 7, fig.height = 4.5}
-df_fig6 <- df_spec_merged %>%
+df_fig6 <- df_spec_base %>%
   select(
     `Species English Name`, Site,
     `Grouping (1=yes)`, `Fighting (1=yes)`, `Color Changes (1=yes)`,
